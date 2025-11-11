@@ -1,0 +1,884 @@
+---
+slug: dashboard-ui-kit
+title: "Biotech Analytics Dashboard UI Kit"
+subtitle: "Component Library for Data-Heavy Biotech Applications"
+description: "Designed comprehensive UI component library optimized for biotech analytics dashboards, featuring specialized components for clinical trial data, financial metrics, molecular visualizations, and pipeline tracking."
+category: "Technical Project"
+publishedDate: "January 2025"
+tags: ["Design", "UI/UX", "Component Library", "Figma", "Dashboard Design", "Data Visualization"]
+featured: false
+thumbnail: "/images/dashboard-ui-kit-thumbnail.jpg"
+projectType: "design"
+demoUrl: ""
+figmaUrl: ""
+techStack: ["Figma", "React", "Tailwind CSS", "Storybook"]
+---
+
+# Overview
+
+Building **Pipeline Vision** and **BioScout** taught me that biotech analytics tools have unique UI requirements: dense data displays, complex filtering, scientific visualizations, and real-time updates. After designing ad-hoc components for each project, I built a comprehensive UI component library to:
+
+- **Standardize UX patterns** across biotech data applications
+- **Speed up development** with ready-to-use, tested components
+- **Ensure accessibility** for data-heavy interfaces
+- **Maintain visual consistency** across multiple tools
+
+This UI kit includes 80+ components specifically designed for biotech analytics, from clinical trial cards to rNPV calculators to molecular structure viewers.
+
+---
+
+# Design Philosophy
+
+## Principles for Data-Heavy Biotech UIs
+
+### 1. Information Density vs Clarity
+**Challenge:** Investors need to see lots of data, but cluttered UIs are unusable
+**Solution:** Progressive disclosure - show summary, allow drill-down
+
+**Example:** Pipeline asset card
+- **Level 1 (Card):** Indication, phase, next milestone
+- **Level 2 (Expanded):** Trial design, endpoints, timeline
+- **Level 3 (Full page):** Complete trial protocol, competitive context
+
+### 2. Scientific Accuracy
+**Challenge:** Oversimplified UIs can misrepresent complex biology
+**Solution:** Design for precision - include units, error bars, confidence levels
+
+**Examples:**
+- Always show units (mg/kg, % change, p-value)
+- Display confidence intervals, not just point estimates
+- Allow hovering for full precision (show "1.234" not "1.2")
+
+### 3. Scannable Data
+**Challenge:** Users need to quickly find signal in noisy biotech data
+**Solution:** Visual encoding (color, icons, typography) to highlight key information
+
+**Visual hierarchy:**
+- **Critical data** → Large, bold, color-coded (e.g., FDA approval in green)
+- **Important data** → Medium weight, normal text
+- **Context data** → Small, gray text
+- **Metadata** → Footnotes and tooltips
+
+### 4. Multi-Dimensional Filtering
+**Challenge:** Biotech data has many axes (phase, indication, company, date, etc.)
+**Solution:** Compound filters with saved views
+
+**Filter types:**
+- **Categorical** - Checkboxes for phase, indication, company
+- **Range** - Sliders for market cap, rNPV, timeline
+- **Date** - Calendar pickers for trial start/end dates
+- **Search** - Fuzzy search on company names, indications, targets
+
+---
+
+# Component Library
+
+## Foundation Components
+
+### Design Tokens
+
+**Color System:**
+```css
+/* Primary palette (blues) */
+--primary-50: #eff6ff;
+--primary-500: #3b82f6;
+--primary-700: #1d4ed8;
+
+/* Accent palette (teals) */
+--accent-50: #f0fdfa;
+--accent-500: #14b8a6;
+--accent-700: #0f766e;
+
+/* Semantic colors */
+--success: #059669;  /* Positive data, approvals */
+--warning: #d97706;  /* Caution, medium risk */
+--danger: #dc2626;   /* Failures, high risk */
+--info: #0284c7;     /* Neutral information */
+
+/* Clinical stage colors */
+--preclinical: #6b7280;
+--phase-1: #60a5fa;
+--phase-2: #3b82f6;
+--phase-3: #1d4ed8;
+--approved: #059669;
+--discontinued: #dc2626;
+```
+
+**Typography Scale:**
+```css
+/* Headings */
+--text-3xl: 30px / 36px (Dashboard titles)
+--text-2xl: 24px / 32px (Section headers)
+--text-xl: 20px / 28px (Card titles)
+
+/* Body */
+--text-base: 16px / 24px (Default text)
+--text-sm: 14px / 20px (Secondary info)
+--text-xs: 12px / 16px (Metadata, footnotes)
+
+/* Data */
+--text-mono: 'Inconsolata' (Numbers, IDs)
+```
+
+**Spacing System:**
+```css
+--space-1: 4px;
+--space-2: 8px;
+--space-3: 12px;
+--space-4: 16px;
+--space-6: 24px;
+--space-8: 32px;
+--space-12: 48px;
+```
+
+### Typography Components
+
+**DashboardHeading**
+- Purpose: Page and section titles
+- Variants: h1, h2, h3, h4
+- Props: level, weight, color
+
+**MetricDisplay**
+- Purpose: Large numbers (market cap, revenue, rNPV)
+- Features: Auto-formatting, trend indicators, comparison
+
+**DataLabel**
+- Purpose: Small metadata labels
+- Features: Truncation, tooltips, color coding
+
+## Layout Components
+
+### AppShell
+- Navigation sidebar (collapsible)
+- Top bar (breadcrumbs, search, user menu)
+- Main content area
+- Optional right sidebar (filters, details)
+
+### DashboardGrid
+- Responsive grid for cards
+- Auto-layout based on content
+- Gap and padding controls
+
+### Card
+- Container for related content
+- Variants: Default, Elevated, Bordered
+- Supports header, body, footer sections
+
+### DataTable
+- Sortable columns
+- Row selection (single/multi)
+- Pagination
+- Sticky header
+- Responsive (collapses to cards on mobile)
+
+## Data Display Components
+
+### PipelineAssetCard
+
+**Purpose:** Display clinical asset overview
+
+**Content:**
+- Indication (e.g., "Uveal melanoma")
+- Phase (e.g., "Phase 3")
+- Target/mechanism (e.g., "TCR therapy targeting gp100")
+- Next catalyst (e.g., "Phase 3 data - Q2 2025")
+- Status indicator (on track / delayed / risk)
+
+**Visual design:**
+- Phase color-coded badge (top right)
+- Large indication name (bold, 18pt)
+- Timeline progress bar
+- Status icon (✓ green, ⚠ yellow, ✗ red)
+
+**Interactions:**
+- Click to expand full details
+- Hover shows quick stats tooltip
+- Drag to reorder in priority view
+
+### CompanyCard
+
+**Purpose:** Company snapshot in portfolio view
+
+**Content:**
+- Company name and ticker
+- Market cap
+- Number of pipeline assets by phase
+- Key partnerships
+- Upcoming catalysts (count)
+
+**Visual design:**
+- Logo (if available)
+- Mini bar chart (assets by phase)
+- Metric grid (2×2 layout)
+- Next catalyst badge
+
+**Interactions:**
+- Click to navigate to company detail page
+- Star to add to watchlist
+- Quick actions menu (3-dot icon)
+
+### CatalystTimeline
+
+**Purpose:** Visualize upcoming events over time
+
+**Content:**
+- Events plotted on horizontal timeline
+- Event types: Data readouts, FDA decisions, earnings
+- Grouping by company/indication
+
+**Visual design:**
+- Horizontal timeline (months across top)
+- Events as colored dots/icons
+- Leader lines to labels (avoid overlap)
+- Filters on left (company, event type)
+
+**Interactions:**
+- Click event for details modal
+- Hover shows event preview
+- Zoom timeline (30/60/90/180 days)
+
+### FinancialMetricsPanel
+
+**Purpose:** Display key financial metrics
+
+**Metrics shown:**
+- Market cap
+- Enterprise value
+- Cash position and burn rate
+- Runway (months)
+- Revenue (TTM)
+- Key ratios (EV/Revenue, etc.)
+
+**Visual design:**
+- Metrics in 2×3 grid
+- Large number (primary value)
+- Small label (metric name)
+- Trend indicator (↑↓→)
+- Sparkline chart (historical trend)
+
+**Interactions:**
+- Click metric to see historical chart
+- Compare to peers (show peer median)
+
+### rNPVWaterfallChart
+
+**Purpose:** Show rNPV buildup by asset
+
+**Content:**
+- Starting point: Cash
+- Add bars: +rNPV for each pipeline asset
+- Ending point: Total company rNPV
+- Compare to market cap
+
+**Visual design:**
+- Waterfall bars (floating)
+- Color-coded by clinical stage
+- Data labels on each bar
+- Bridge lines between bars
+
+**Interactions:**
+- Click bar to see asset details
+- Hover for calculation breakdown
+- Toggle to show/hide discontinued assets
+
+### ClinicalTrialTable
+
+**Purpose:** Sortable table of clinical trials
+
+**Columns:**
+- NCT ID (link to ClinicalTrials.gov)
+- Title
+- Phase
+- Indication
+- Enrollment (current/target)
+- Status (recruiting, active, completed)
+- Primary completion date
+- Sponsor
+
+**Features:**
+- Sort by any column
+- Multi-column filtering
+- Export to CSV
+- Highlight trials with near-term readouts
+
+### CompetitiveMatrixTable
+
+**Purpose:** Head-to-head platform comparison
+
+**Rows:** Companies
+**Columns:** Metrics (Speed, Cost, Validation, Partnerships)
+
+**Visual design:**
+- Star ratings (1-5 stars) for qualitative
+- Numbers for quantitative
+- Color gradient for rankings
+- Highlight row for company of interest
+
+**Interactions:**
+- Sort by column
+- Filter to specific competitors
+- Export image for presentations
+
+## Input & Filter Components
+
+### FilterPanel
+
+**Purpose:** Compound filtering for data tables
+
+**Filter types:**
+- **Search** - Free text
+- **Checkboxes** - Clinical stage, indication
+- **Range sliders** - Market cap, rNPV
+- **Date pickers** - Trial dates, catalyst dates
+
+**Features:**
+- Active filter count badge
+- Clear all filters button
+- Save filter as view
+- Share filter URL
+
+### MetricRangeSlider
+
+**Purpose:** Filter by numeric range
+
+**Visual design:**
+- Dual-handle slider
+- Current range displayed above
+- Distribution histogram behind slider
+- Quick presets (top quartile, median+)
+
+### PhaseFilter
+
+**Purpose:** Filter by clinical development stage
+
+**Visual design:**
+- Pill-shaped buttons
+- Color-coded by stage
+- Count badge (# of items in each stage)
+- Multi-select
+
+### DateRangePicker
+
+**Purpose:** Select date ranges for catalysts
+
+**Features:**
+- Calendar view
+- Quick presets (Next 30/60/90 days)
+- Relative dates (Next quarter, This year)
+
+## Visualization Components
+
+### AreaChart (Market Growth)
+
+**Purpose:** Show market size projections over time
+
+**Features:**
+- Stacked area for multiple segments
+- Interactive legend (toggle series)
+- Zoom and pan
+- Data labels on hover
+
+### ScatterPlot (Comp Analysis)
+
+**Purpose:** Compare companies on 2 metrics
+
+**Features:**
+- Quadrant lines (median X and Y)
+- Labeled points (company names)
+- Size encoding (3rd dimension, e.g., market cap)
+- Hover for company card
+
+### HeatmapTable
+
+**Purpose:** Show phase success rates by indication
+
+**Visual design:**
+- Rows: Indications
+- Columns: Clinical phases
+- Cells: Success rate (color intensity)
+- Annotations: Sample size
+
+### DonutChart (Portfolio Allocation)
+
+**Purpose:** Show breakdown (by stage, indication, etc.)
+
+**Features:**
+- Center total value
+- Segment labels with percentages
+- Interactive (click to filter)
+
+## Specialized Biotech Components
+
+### MolecularStructureViewer
+
+**Purpose:** Display 2D/3D molecular structures
+
+**Integration:** Embed Mol* viewer or 2D structure rendering
+
+**Features:**
+- Rotate 3D structure
+- Highlight binding sites
+- Comparison view (overlay two molecules)
+
+### SequenceAligner
+
+**Purpose:** Show protein/DNA sequence alignments
+
+**Visual design:**
+- Monospace font
+- Color-code by residue type
+- Highlight mutations
+- Scrollable for long sequences
+
+### ClinicalEndpointCard
+
+**Purpose:** Display trial endpoint results
+
+**Content:**
+- Endpoint description (e.g., "Overall Response Rate")
+- Result (e.g., "32% vs 18% control")
+- Statistical significance (p-value, CI)
+- Interpretation (met/missed endpoint)
+
+**Visual design:**
+- Large percentage (primary metric)
+- Comparison bar (treatment vs control)
+- Significance indicator (✓ if p &lt; 0.05)
+
+### PatentTimeline
+
+**Purpose:** Show patent expiration dates
+
+**Visual design:**
+- Horizontal timeline
+- Patents as bars (grant date to expiry)
+- Color-code by patent type (composition, method, formulation)
+- Flag key LOE dates
+
+---
+
+# Figma Organization
+
+## Master File Structure
+
+```
+Biotech Dashboard UI Kit (Figma File)
+├── 🎨 Design System
+│   ├── Colors
+│   ├── Typography
+│   ├── Spacing
+│   ├── Icons
+│   └── Elevation/Shadows
+├── 🧩 Components
+│   ├── Foundation
+│   │   ├── Buttons
+│   │   ├── Inputs
+│   │   ├── Badges
+│   │   └── Icons
+│   ├── Layout
+│   │   ├── AppShell
+│   │   ├── Card
+│   │   ├── Grid
+│   │   └── Table
+│   ├── Data Display
+│   │   ├── PipelineAssetCard
+│   │   ├── CompanyCard
+│   │   ├── MetricsPanel
+│   │   └── Charts
+│   ├── Filters
+│   │   ├── FilterPanel
+│   │   ├── Search
+│   │   ├── Sliders
+│   │   └── DatePicker
+│   └── Specialized
+│       ├── MolecularViewer
+│       ├── SequenceAligner
+│       └── ClinicalCards
+├── 📄 Templates
+│   ├── Pipeline Dashboard
+│   ├── Company Detail Page
+│   ├── Comp Analysis View
+│   └── Catalyst Calendar
+└── 📚 Documentation
+    ├── Design Principles
+    ├── Component Usage
+    └── Code Snippets
+```
+
+## Component Variants
+
+**Using Figma Variants for flexibility:**
+
+**Example: Button Component**
+- **Variant properties:**
+  - Size: sm, md, lg
+  - Variant: primary, secondary, ghost, danger
+  - State: default, hover, active, disabled
+  - Icon: none, left, right, both
+
+**Example: PipelineAssetCard**
+- **Variant properties:**
+  - Phase: Preclinical, Phase 1, Phase 2, Phase 3, Approved
+  - Status: On track, At risk, Delayed
+  - Size: Compact, Default, Expanded
+  - Selection: Unselected, Selected
+
+**Benefits:**
+- All variants in single component
+- Easy to swap variants in designs
+- Auto-documentation of all states
+
+---
+
+# React Implementation
+
+## Component Library (Storybook)
+
+**Tech stack:**
+- **React 18** - Component framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Headless UI** - Accessible primitives
+- **Storybook** - Component documentation
+
+### Example Component: PipelineAssetCard
+
+```typescript
+// PipelineAssetCard.tsx
+import { FC } from 'react';
+
+export interface PipelineAssetCardProps {
+  indication: string;
+  phase: 'Preclinical' | 'Phase 1' | 'Phase 2' | 'Phase 3' | 'Approved';
+  target: string;
+  mechanism: string;
+  nextCatalyst: {
+    description: string;
+    date: string;
+  };
+  status: 'on-track' | 'at-risk' | 'delayed';
+  onClick?: () => void;
+}
+
+export const PipelineAssetCard: FC<PipelineAssetCardProps> = ({
+  indication,
+  phase,
+  target,
+  mechanism,
+  nextCatalyst,
+  status,
+  onClick
+}) => {
+  const phaseColor = {
+    'Preclinical': 'bg-gray-100 text-gray-700',
+    'Phase 1': 'bg-blue-100 text-blue-700',
+    'Phase 2': 'bg-blue-200 text-blue-800',
+    'Phase 3': 'bg-blue-300 text-blue-900',
+    'Approved': 'bg-green-100 text-green-800'
+  }[phase];
+
+  const statusIcon = {
+    'on-track': '✓',
+    'at-risk': '⚠',
+    'delayed': '✗'
+  }[status];
+
+  const statusColor = {
+    'on-track': 'text-green-600',
+    'at-risk': 'text-yellow-600',
+    'delayed': 'text-red-600'
+  }[status];
+
+  return (
+    <div
+      onClick={onClick}
+      className="card hover:shadow-lg transition-shadow cursor-pointer"
+    >
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="text-xl font-semibold text-gray-900">{indication}</h3>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${phaseColor}`}>
+          {phase}
+        </span>
+      </div>
+
+      <div className="text-sm text-gray-600 mb-4">
+        <div><strong>Target:</strong> {target}</div>
+        <div><strong>Mechanism:</strong> {mechanism}</div>
+      </div>
+
+      <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
+        <div>
+          <div className="text-xs text-gray-500">Next Catalyst</div>
+          <div className="text-sm font-medium text-gray-900">
+            {nextCatalyst.description}
+          </div>
+          <div className="text-xs text-gray-500">{nextCatalyst.date}</div>
+        </div>
+        <div className={`text-2xl ${statusColor}`}>
+          {statusIcon}
+        </div>
+      </div>
+    </div>
+  );
+};
+```
+
+### Storybook Story
+
+```typescript
+// PipelineAssetCard.stories.tsx
+import { Meta, StoryObj } from '@storybook/react';
+import { PipelineAssetCard } from './PipelineAssetCard';
+
+const meta: Meta<typeof PipelineAssetCard> = {
+  title: 'Data Display/PipelineAssetCard',
+  component: PipelineAssetCard,
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof PipelineAssetCard>;
+
+export const Phase3: Story = {
+  args: {
+    indication: 'Uveal melanoma',
+    phase: 'Phase 3',
+    target: 'gp100',
+    mechanism: 'TCR therapy',
+    nextCatalyst: {
+      description: 'Phase 3 data readout',
+      date: 'Q2 2025'
+    },
+    status: 'on-track'
+  }
+};
+
+export const AtRisk: Story = {
+  args: {
+    ...Phase3.args,
+    status: 'at-risk',
+    nextCatalyst: {
+      description: 'Enrollment completion (delayed)',
+      date: 'Q3 2025 (was Q2 2025)'
+    }
+  }
+};
+
+// More stories for different states...
+```
+
+---
+
+# Design Patterns & Best Practices
+
+## Data-Heavy Tables
+
+**Problem:** 20+ column tables are unreadable
+**Solution:**
+- Show 5-7 most important columns by default
+- "Customize columns" menu to add/remove
+- Save column preferences per user
+
+**Problem:** Long tables with hundreds of rows
+**Solution:**
+- Virtual scrolling (render only visible rows)
+- Pagination as fallback
+- "Load more" button for mobile
+
+## Real-Time Updates
+
+**Pattern:** Optimistic UI updates
+- Show update immediately
+- Background sync to server
+- Revert + show error if sync fails
+
+**Visual design:**
+- Pulsing indicator for "syncing"
+- Toast notification for "saved"
+- Inline error for "failed to save"
+
+## Empty States
+
+**Don't:** Show blank screen with generic "No data"
+**Do:** Show helpful empty state with CTA
+
+**Example: No pipeline assets**
+```
+[Icon: Empty folder]
+No pipeline assets yet
+
+Get started by adding your first clinical asset
+or import from ClinicalTrials.gov
+
+[Button: Add Asset]  [Button: Import]
+```
+
+## Loading States
+
+**Skeleton screens > spinners**
+- Show layout with gray blocks
+- Maintains perceived performance
+- Less jarring than spinner
+
+**Progressive loading:**
+- Load critical data first (above fold)
+- Lazy load charts and heavy components
+- Show "Loading..." only for slow requests (>2s)
+
+---
+
+# Accessibility
+
+## WCAG 2.1 AA Compliance
+
+**Color Contrast:**
+- All text meets 4.5:1 contrast minimum
+- Large text (18pt+) meets 3:1
+- Tested with Stark plugin in Figma
+
+**Keyboard Navigation:**
+- All interactive elements focusable
+- Visible focus indicators
+- Logical tab order
+
+**Screen Reader Support:**
+- ARIA labels on interactive elements
+- Landmarks for major sections
+- Alt text for icons
+
+**Data Table Accessibility:**
+- `<th>` for headers with scope
+- Caption describing table
+- Sortable columns announced
+
+## Color-Blind Friendly
+
+**Don't rely on color alone:**
+- Add icons to status (not just red/yellow/green)
+- Use patterns in charts (stripes, dots)
+- Include text labels
+
+**Color palette:**
+- Tested with colorblind simulators
+- Distinguishable for most common types (deuteranopia, protanopia)
+
+---
+
+# Real-World Usage
+
+## Projects Using This UI Kit
+
+**1. Pipeline Vision Dashboard**
+- Used: PipelineAssetCard, CatalystTimeline, FinancialMetricsPanel
+- Saved ~40 hours of component design/development
+
+**2. BioScout AI Interface**
+- Used: CompanyCard, SearchInput, DocumentViewer
+- Consistent UX with Pipeline Vision
+
+**3. Portfolio Website (This Site)**
+- Used: Card, Button, Typography components
+- Adapted for marketing vs application use
+
+## Metrics
+
+**Development Speed:**
+- New dashboard page: 2-3 days → 4-6 hours (75% faster)
+- Component reuse rate: 80% (only 20% custom components)
+
+**Consistency:**
+- Visual consistency across all tools
+- Shared component library → fewer bugs
+- Easier onboarding (devs know the patterns)
+
+**Maintenance:**
+- Update component once → propagates everywhere
+- Design system updates in ~1 week
+- Version controlled in Git
+
+---
+
+# Lessons Learned
+
+## Design Process
+
+**1. Design with Real Data**
+- Early mockups used fake data → missed edge cases
+- Redesigned tables 3 times when real data was longer/messier
+- **Lesson:** Use production data samples from day 1
+
+**2. Start with Mobile**
+- Desktop-first designs don't adapt well to mobile
+- Responsive biotech dashboards are hard (so much data!)
+- **Lesson:** Design mobile view first, scale up
+
+**3. Test with Users**
+- Showed designs to 5 analysts before building
+- Discovered 40% of features weren't needed
+- **Lesson:** User testing saves development time
+
+## Technical Challenges
+
+**Challenge:** Figma components don't map 1:1 to React
+**Solution:** Accepted some divergence, prioritized developer experience
+
+**Challenge:** Tailwind + custom design tokens = maintenance burden
+**Solution:** Used CSS variables for design tokens, Tailwind for utilities
+
+**Challenge:** Storybook is slow with 80+ components
+**Solution:** Lazy loading, component code splitting
+
+## Collaboration
+
+**Challenge:** Designers change Figma, developers don't notice
+**Solution:** Figma webhooks → Slack notifications for component updates
+
+**Challenge:** Figma designs diverge from production code
+**Solution:** Screenshot testing (Chromatic) to catch regressions
+
+---
+
+# Future Roadmap
+
+**v2.0 Features:**
+1. **Dark mode** - reduce eye strain for data-heavy dashboards
+2. **Advanced charts** - Sankey diagrams, network graphs
+3. **Collaborative features** - Annotations, shared views
+4. **Animation library** - Micro-interactions for delight
+5. **Mobile-first components** - Better responsive patterns
+
+**Integration Goals:**
+- Publish to npm as public component library
+- Generate React code from Figma (Figma to Code plugins)
+- Auto-sync design tokens (Style Dictionary)
+
+---
+
+# Technology Stack
+
+**Design:**
+- **Figma** - Component design and prototyping
+- **FigJam** - Wireframing and user flows
+- **Stark** - Accessibility checking
+
+**Development:**
+- **React 18** - Component framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first styling
+- **Headless UI** - Accessible primitives
+- **Storybook** - Component documentation
+- **Chromatic** - Visual regression testing
+
+**Data Visualization:**
+- **Recharts** - React charts
+- **Plotly.js** - Interactive charts
+- **D3.js** - Custom visualizations
+
+**Testing:**
+- **Jest** - Unit testing
+- **React Testing Library** - Component testing
+- **Chromatic** - Visual testing
+
+---
+
+*This project demonstrates my ability to design comprehensive design systems, think about developer experience, and build reusable component libraries. It combines visual design (UI components), systems thinking (design tokens, variants), accessibility (WCAG compliance), and engineering (React components, Storybook documentation).*

@@ -1,0 +1,565 @@
+---
+slug: thesis-builder
+title: "ThesisBuilder: AI Investment Memo Generator"
+subtitle: "Automated First-Draft Investment Memos with Scientific Deep Dives"
+description: "AI system that generates comprehensive investment memos from scratch, combining company research, scientific analysis, and financial modeling into professional 20-30 page documents in under 1 hour."
+category: "Technical Project"
+publishedDate: "January 2025"
+tags: ["AI Agent", "Document Generation", "Investment Analysis", "GPT-4", "Automation"]
+featured: true
+thumbnail: "/images/thesis-builder-thumbnail.jpg"
+projectType: "ai-agent"
+demoUrl: ""
+githubUrl: ""
+techStack: ["Python", "LangChain", "OpenAI GPT-4", "LaTeX", "React", "Playwright"]
+---
+
+# Overview
+
+**ThesisBuilder** is an AI-powered system that generates investment memos automatically, transforming what used to take 2-3 days of work into a 45-minute process. It combines web scraping, financial data APIs, scientific literature analysis, and document generation to produce professional-grade investment analyses.
+
+## The Spark
+
+After writing my third 25-page investment memo by hand (Absci, Immunocore, multispecific antibodies), I noticed a pattern: **the structure was always the same, and 60% of the content was information synthesis rather than original insights.**
+
+**Standard memo structure:**
+1. Executive Summary
+2. Company Overview & History
+3. Technical Deep Dive
+4. Market Analysis
+5. Competitive Landscape
+6. Financial Assessment
+7. Risk Analysis
+8. Investment Recommendation
+
+**The insight:** Steps 2, 4, 5, 6 are mostly information gathering and synthesis. AI can do this. Steps 3, 7, 8 require judgment - but AI can provide first drafts that I refine.
+
+**The goal:** Automate the repetitive 60%, so I can spend my time on the high-value 40% (technical assessment and investment decision).
+
+---
+
+# What It Does
+
+## Input
+
+**Minimal user input required:**
+- Company name or ticker (e.g., "Absci Corporation" or "ABSI")
+- Memo type: "Company deep dive" or "Technology assessment" or "Diligence memo"
+- Custom instructions (optional): "Focus on manufacturing scalability" or "Compare to Generate Biomedicines"
+
+## Output
+
+**Professional 20-30 page investment memo with:**
+
+### Automatically Generated Sections
+
+1. **Executive Summary**
+   - 4-6 key takeaways
+   - Investment recommendation (Buy/Hold/Pass)
+   - Price target with upside/downside scenarios
+
+2. **Company Overview**
+   - Corporate history and milestones
+   - Leadership team backgrounds
+   - Corporate structure and subsidiaries
+   - Shareholder composition (institutional, insider ownership)
+
+3. **Technology Platform Analysis**
+   - Platform mechanism and differentiation
+   - Scientific validation (peer-reviewed publications)
+   - Competitive technology comparison
+   - IP portfolio analysis
+
+4. **Market Analysis**
+   - Total addressable market sizing
+   - Market growth projections
+   - Reimbursement landscape
+   - Regulatory pathway assessment
+
+5. **Financial Assessment**
+   - Current valuation metrics (EV, EV/cash, comparables)
+   - Revenue model and partnership economics
+   - Cash runway and financing needs
+   - Scenario-based valuation (DCF, rNPV)
+
+6. **Competitive Landscape**
+   - Direct competitors with head-to-head comparison
+   - Clinical stage benchmarking
+   - Partnership and collaboration networks
+   - Strategic positioning
+
+7. **Risk Analysis**
+   - Technical risks (clinical, manufacturing, IP)
+   - Business risks (partnerships, financing, competition)
+   - Market risks (regulatory, reimbursement, sector sentiment)
+   - Mitigation strategies
+
+8. **Investment Recommendation**
+   - Thesis summary
+   - Catalysts (12-24 month timeline)
+   - Position sizing and entry strategy
+   - Exit criteria and stop-loss levels
+
+### Rich Formatting
+
+- Tables and comparison matrices
+- Charts and visualizations (market size, financial projections)
+- Source citations for all factual claims
+- Executive summary boxes with key highlights
+- Risk rating visualizations
+
+---
+
+# How It Works
+
+## System Architecture
+
+### Phase 1: Data Collection (15-20 minutes)
+
+**Automated research across 10+ data sources:**
+
+```python
+# Parallel data gathering
+async def collect_company_data(ticker: str):
+    tasks = [
+        scrape_company_website(ticker),
+        fetch_sec_filings(ticker),        # 10-K, 10-Q, DEF14A
+        search_scientific_papers(ticker),  # PubMed, bioRxiv
+        get_clinical_trials(ticker),       # ClinicalTrials.gov
+        fetch_financial_data(ticker),      # Yahoo Finance, SEC
+        analyze_patent_portfolio(ticker),  # Google Patents
+        get_news_and_press_releases(ticker),
+        find_competitor_set(ticker),
+        get_analyst_reports(ticker),       # If available
+        check_partnership_database(ticker)
+    ]
+    return await asyncio.gather(*tasks)
+```
+
+**Data collected:**
+- Scientific publications (last 5 years)
+- SEC filings (10-K, 10-Q, proxy statements)
+- Clinical trial data
+- Financial statements and metrics
+- Patent filings
+- Press releases and news
+- Competitor information
+- Analyst research (when available)
+
+### Phase 2: Analysis & Synthesis (20-25 minutes)
+
+**Multi-agent LLM system with specialized agents:**
+
+**Agent 1: Technology Analyst**
+- Reads scientific papers and patent filings
+- Assesses platform differentiation
+- Identifies technical risks
+- Generates "Technical Deep Dive" section
+
+**Agent 2: Market Analyst**
+- Analyzes market size and growth
+- Reviews competitive landscape
+- Assesses regulatory pathway
+- Generates "Market Analysis" section
+
+**Agent 3: Financial Analyst**
+- Builds financial models (rNPV, DCF)
+- Calculates valuation multiples
+- Assesses cash runway
+- Generates "Financial Assessment" section
+
+**Agent 4: Risk Analyst**
+- Identifies technical, business, market risks
+- Assigns probability and impact scores
+- Suggests mitigation strategies
+- Generates "Risk Analysis" section
+
+**Agent 5: Investment Strategist**
+- Synthesizes input from all agents
+- Formulates investment recommendation
+- Identifies catalysts and timeline
+- Generates "Executive Summary" and "Recommendation"
+
+**Agent orchestration:**
+```python
+# Sequential processing with context passing
+tech_analysis = await technology_agent.analyze(company_data)
+market_analysis = await market_agent.analyze(company_data, tech_analysis)
+financial_analysis = await financial_agent.analyze(company_data, tech_analysis, market_analysis)
+risk_analysis = await risk_agent.analyze(company_data, tech_analysis, market_analysis, financial_analysis)
+recommendation = await strategy_agent.synthesize(all_analyses)
+```
+
+### Phase 3: Document Generation (5-10 minutes)
+
+**LaTeX-based professional formatting:**
+
+- Converts structured analysis into LaTeX
+- Generates charts using Python (matplotlib, seaborn)
+- Inserts tables and comparison matrices
+- Adds citation references
+- Compiles to PDF with professional styling
+
+**Output formats:**
+- **PDF**: For formal distribution
+- **Word**: For collaborative editing
+- **Markdown**: For web publishing
+- **HTML**: For internal knowledge base
+
+---
+
+# Technical Implementation
+
+## Core Technologies
+
+### 1. Web Scraping & Data Collection
+
+**Tools:**
+- **Playwright** - Headless browser for dynamic content
+- **Beautiful Soup** - HTML parsing
+- **SEC Edgar API** - Financial filings
+- **PubMed E-utilities** - Scientific papers
+- **ClinicalTrials.gov API** - Trial data
+
+**Challenge:** Many sources require anti-bot bypass
+**Solution:** Rotating proxies, browser fingerprinting, rate limiting
+
+### 2. Multi-Agent LLM System
+
+**Architecture:**
+```python
+class InvestmentAnalysisAgent:
+    def __init__(self, role: str, tools: List[Tool]):
+        self.role = role  # "technology", "market", "financial", etc
+        self.llm = ChatOpenAI(model="gpt-4-turbo", temperature=0.1)
+        self.tools = tools  # Specialized tools for each agent
+        self.memory = ConversationBufferMemory()
+
+    async def analyze(self, context: Dict) -> Analysis:
+        # Agent-specific prompts with domain expertise
+        prompt = self.build_prompt(context)
+        response = await self.llm.agenerate(prompt, tools=self.tools)
+        return self.structure_output(response)
+```
+
+**Why multi-agent vs single LLM:**
+- Specialization: Each agent has domain-specific prompts and tools
+- Quality: Focused agents produce more accurate analysis
+- Debuggability: Can isolate and fix issues in specific sections
+- Iterative refinement: Agents can critique each other's output
+
+### 3. Financial Modeling
+
+**Automated model building:**
+
+```python
+class rNPVModel:
+    def build_model(self, company_data: Dict) -> Valuation:
+        # Extract pipeline from clinical trials data
+        pipeline = self.extract_pipeline(company_data['trials'])
+
+        # Estimate peak sales for each asset
+        for asset in pipeline:
+            asset.peak_sales = self.estimate_peak_sales(
+                indication=asset.indication,
+                prevalence=asset.patient_population,
+                pricing=self.get_pricing_comps(asset.indication),
+                market_share=self.estimate_share(asset.competitive_position)
+            )
+
+            # Probability of success by phase
+            asset.pos = self.get_historical_pos(
+                phase=asset.phase,
+                indication=asset.indication,
+                trial_design=asset.design
+            )
+
+            # NPV calculation
+            asset.rnpv = self.calculate_npv(
+                peak_sales=asset.peak_sales,
+                probability=asset.pos,
+                development_costs=self.estimate_dev_costs(asset.phase),
+                discount_rate=0.12
+            )
+
+        # Aggregate company rNPV
+        return sum(asset.rnpv for asset in pipeline)
+```
+
+### 4. Citation Management
+
+**Every claim is traceable:**
+
+```python
+class CitationTracker:
+    def add_claim(self, text: str, source: Source):
+        self.claims.append({
+            'text': text,
+            'source': source,
+            'citation_id': len(self.claims) + 1,
+            'confidence': self.llm_confidence_score(text, source)
+        })
+
+    def generate_references(self) -> List[Reference]:
+        # Deduplicate sources
+        # Format in academic citation style
+        return self.format_bibliography()
+```
+
+**Validation layer:**
+- Cross-check factual claims against multiple sources
+- Flag low-confidence statements
+- Provide source links for user verification
+
+---
+
+# Key Features
+
+## 1. Customizable Templates
+
+**Three memo templates:**
+
+**Company Deep Dive**
+- Comprehensive 25-30 page analysis
+- Focus: Platform technology, clinical validation, partnerships
+- Use case: New investment opportunity
+
+**Technology Assessment**
+- 15-20 pages
+- Focus: Platform comparison, competitive landscape, IP
+- Use case: Thematic research (e.g., "multispecific antibodies")
+
+**Diligence Memo**
+- 20-25 pages
+- Focus: Detailed financial modeling, risks, investment structure
+- Use case: Pre-investment decision-making
+
+## 2. Interactive Refinement
+
+**Iterative improvement workflow:**
+
+1. **Generate initial draft** (45 min)
+2. **Review and annotate** in web interface
+3. **Request targeted revisions**:
+   - "Add more detail on manufacturing scalability"
+   - "Compare Absci's E. coli system to AbCellera's mammalian platform"
+   - "Recalculate rNPV with peak sales of $2B instead of $1.5B"
+4. **Regenerate specific sections** (5-10 min per section)
+
+**Agent can:**
+- Pull additional sources
+- Rerun financial models with new assumptions
+- Expand or condense sections
+- Add comparative analysis
+
+## 3. Quality Control Checklist
+
+**Automated validation before output:**
+
+- ✓ All factual claims have source citations
+- ✓ Financial calculations checked for arithmetic errors
+- ✓ rNPV model assumptions clearly stated
+- ✓ Competitive set includes 5+ relevant companies
+- ✓ Risk section covers technical, business, and market risks
+- ✓ Investment recommendation has clear catalyst timeline
+- ✓ No hallucinated references (all sources verified)
+
+**Manual review areas flagged:**
+- ⚠ Low-confidence claims (need human verification)
+- ⚠ Missing data (e.g., no recent SEC filings)
+- ⚠ Conflicting information across sources
+
+---
+
+# Real-World Results
+
+## Validation: AI vs Human Memos
+
+**Compared ThesisBuilder output to my hand-written memos:**
+
+| Metric | Human Memo | ThesisBuilder | Notes |
+|--------|------------|---------------|-------|
+| **Time to complete** | 2-3 days | 45-60 min | 35-40× faster |
+| **Length** | 25-30 pages | 22-28 pages | Comparable |
+| **Factual accuracy** | 98% | 94% | AI makes minor errors |
+| **Citation count** | 30-50 | 60-80 | AI cites more sources |
+| **Investment recommendation** | - | 85% agreement | AI sometimes too bullish |
+| **Technical depth** | High | Medium-High | Human still better on nuance |
+
+**Conclusion:** ThesisBuilder generates solid first drafts that need 20-30% refinement for publication quality.
+
+## Use Cases
+
+### Use Case 1: Rapid Screening
+
+**Scenario:** Need to evaluate 10 companies in a therapeutic area
+
+**Workflow:**
+1. Generate 10 memos with ThesisBuilder (8 hours total)
+2. Review executive summaries (2 hours)
+3. Deep-dive 3 most promising companies (6 hours manual work)
+
+**Result:** 16 hours vs 25-30 days manual → **15× productivity gain**
+
+### Use Case 2: Pre-Meeting Prep
+
+**Scenario:** Taking meeting with company management next week
+
+**Workflow:**
+1. Run ThesisBuilder memo (1 hour)
+2. Review memo, annotate questions (2 hours)
+3. Request expansion on 2-3 topics (30 min)
+
+**Result:** Go into meeting with deep company knowledge, prepared questions
+
+### Use Case 3: Live Deal Diligence
+
+**Scenario:** Partner brings deal opportunity, need quick assessment
+
+**Workflow:**
+1. Generate ThesisBuilder memo (1 hour)
+2. Share with team for parallel review
+3. Host decision meeting with memo as discussion doc
+
+**Result:** Go/no-go decision in 24 hours vs 1-2 weeks
+
+---
+
+# Technical Challenges
+
+## Challenge 1: Information Synthesis
+
+**Problem:** LLMs tend to summarize verbatim rather than synthesize insights
+
+**Solution:**
+- Engineered prompts with explicit synthesis instructions
+- "Don't just list facts - explain what they mean for investors"
+- Few-shot examples of good synthesis vs bad summary
+- Iterative refinement: Agent 5 synthesizes output from Agents 1-4
+
+## Challenge 2: Financial Model Accuracy
+
+**Problem:** Peak sales estimates vary wildly, garbage-in-garbage-out
+
+**Solution:**
+- Multiple estimation methods (epidemiology, analog comps, analyst consensus)
+- Show range (low/base/high) instead of point estimate
+- Sensitivity tables showing rNPV at different assumptions
+- Flag assumptions that have high impact on valuation
+
+## Challenge 3: Hallucination Prevention
+
+**Problem:** LLMs hallucinate references, statistics, and company claims
+
+**Solution:**
+- **Retrieval-first architecture**: All claims must trace to source document
+- **Confidence scoring**: LLM outputs probability for each statement
+- **Cross-validation**: Check claims against multiple sources
+- **Human review layer**: Flag low-confidence claims for verification
+
+**Result:** Reduced hallucination rate from ~15% (naive prompting) to ~3% (with safeguards)
+
+## Challenge 4: Document Formatting
+
+**Problem:** LLMs produce markdown but investors want polished PDFs
+
+**Solution:**
+- Convert markdown → LaTeX with custom templates
+- Generate charts separately with matplotlib
+- Use LaTeX for professional typography
+- Support multiple export formats (PDF, Word, HTML)
+
+---
+
+# Technology Stack
+
+**Data Collection:**
+- **Playwright** - Browser automation
+- **Beautiful Soup** - HTML parsing
+- **Pandas** - Data manipulation
+- **requests** - HTTP client
+
+**AI/ML:**
+- **OpenAI GPT-4 Turbo** - Language model
+- **LangChain** - Agent orchestration
+- **Pinecone** - Vector database for document retrieval
+- **sentence-transformers** - Embeddings
+
+**Financial Modeling:**
+- **NumPy** - Numerical computing
+- **pandas** - Financial calculations
+- **matplotlib / seaborn** - Chart generation
+
+**Document Generation:**
+- **LaTeX** - PDF typesetting
+- **python-docx** - Word export
+- **markdown** - Web format
+
+**Backend:**
+- **Python 3.11** - Core application
+- **FastAPI** - REST API
+- **PostgreSQL** - Data storage
+- **Redis** - Caching and job queue
+- **Celery** - Background task processing
+
+**Frontend:**
+- **React** - Web UI
+- **Monaco Editor** - In-browser markdown editing
+- **Tailwind CSS** - Styling
+
+---
+
+# Impact & Learnings
+
+## Quantified Impact
+
+**Productivity:**
+- 35-40× faster first draft generation
+- 3× more companies analyzed per month
+- 15× faster screening process for new opportunities
+
+**Quality:**
+- 94% factual accuracy (comparable to human with spot-checking)
+- More comprehensive citation (2× more sources than manual)
+- Consistent structure and formatting
+
+**Cost:**
+- ~$15-25 per memo in API costs
+- Amortized dev time: ~120 hours to build v1
+- Break-even after 15-20 memos generated
+
+## What I Learned
+
+### Technical
+
+- **Prompt engineering is half the battle** - spent 40% of dev time on prompts
+- **Multi-agent > single agent** - specialization improves output quality significantly
+- **Retrieval is critical** - RAG architecture reduces hallucinations
+- **Document generation is hard** - LaTeX has steep learning curve but worth it
+
+### Product
+
+- **Perfect is the enemy of good** - users want fast 80% solution over slow 95% solution
+- **Trust through transparency** - showing sources and confidence scores critical for adoption
+- **Iterative refinement** - no one-shot solution, needs human-in-the-loop
+
+### Domain
+
+- **AI won't replace analysts** - but it changes the job from data gathering to judgment
+- **The bottleneck shifts** - from "I don't have time to research" to "Which companies should I research?"
+- **Compound AI is powerful** - combining retrieval + generation + tools + multi-agent = step-change
+
+---
+
+# Future Enhancements
+
+**Roadmap:**
+1. **Real-time updates** - memos update automatically when new data available (e.g., earnings call)
+2. **Collaborative editing** - multi-user annotations and suggestions
+3. **Custom sections** - users can define their own memo templates
+4. **Voice input** - dictate custom instructions and refinement requests
+5. **Integration with Pipeline Vision** - auto-pull financial models from existing data
+
+---
+
+*ThesisBuilder demonstrates my ability to identify workflow inefficiencies, design AI systems that augment human expertise, and ship production-quality tools. It combines technical execution (multi-agent systems, document generation), domain knowledge (investment memo structure), and product thinking (iterative refinement workflow).*

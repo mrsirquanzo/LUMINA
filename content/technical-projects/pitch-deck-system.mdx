@@ -1,0 +1,656 @@
+---
+slug: pitch-deck-system
+title: "Biotech Pitch Deck Design System"
+subtitle: "Modular Presentation System for Investment Presentations"
+description: "Designed a comprehensive pitch deck system with 50+ reusable slide templates optimized for biotech investors. Features data visualization components, financial model slides, and scientific diagram templates."
+category: "Technical Project"
+publishedDate: "January 2025"
+tags: ["Design", "Presentations", "Information Design", "Data Visualization", "Figma"]
+featured: true
+thumbnail: "/images/pitch-deck-thumbnail.jpg"
+projectType: "design"
+demoUrl: ""
+figmaUrl: ""
+techStack: ["Figma", "Google Slides", "Python", "Keynote"]
+---
+
+# Overview
+
+Investment presentations need to tell a compelling story while presenting complex scientific and financial data. After watching dozens of poorly designed biotech pitch decks (cluttered slides, unreadable charts, no visual hierarchy), I built a modular design system that:
+
+- **50+ reusable slide templates** covering every section of a biotech pitch
+- **Consistent visual language** across scientific diagrams, financial charts, and text slides
+- **Optimized for readability** in both in-person and virtual presentations
+- **Exportable to multiple formats** (Google Slides, Keynote, PDF)
+
+This system has been used for 10+ internal investment pitches and 5+ presentations to external stakeholders.
+
+---
+
+# Design Philosophy
+
+## Core Principles
+
+### 1. One Idea Per Slide
+**Problem:** Investors see decks crammed with 5-6 messages per slide
+**Solution:** Each slide has single clear message, bolded at top
+
+**Example:**
+- ❌ Slide title: "Technology Platform Overview"
+  - (then 10 bullet points explaining mechanism, validation, partnerships, IP)
+- ✅ Slide title: "**Absci's E. coli expression system is 10-100× faster than mammalian platforms**"
+  - (then visual diagram + 3 supporting points)
+
+### 2. Visual First, Text Second
+**Problem:** Walls of text that lose audience attention
+**Solution:** Lead with visuals (diagrams, charts, images), use text sparingly
+
+**Hierarchy:**
+1. Visual (diagram, chart, or image) - 60% of slide
+2. Key insight - 1 sentence, large bold text
+3. Supporting points - 3 bullets maximum
+4. Citations - small footnote if needed
+
+### 3. Data Transparency
+**Problem:** Charts that hide unfavorable data or mislead with axis tricks
+**Solution:** Clear axes, labeled data points, source citations
+
+**Rules:**
+- Always start Y-axis at zero (unless log scale)
+- Label all data points on key charts
+- Show error bars when relevant
+- Cite data source in footnote
+
+### 4. Consistent Visual Language
+**Problem:** Every slide looks different, jarring for audience
+**Solution:** Strict design system with reusable components
+
+**Consistency:**
+- Same color palette throughout (6 colors maximum)
+- Same fonts (2 fonts: sans-serif for headings, sans-serif for body)
+- Same icon style (line icons, not mix of filled/outlined)
+- Same chart styling (colors, labels, grids)
+
+---
+
+# Slide Template Library
+
+## Section 1: Opening (3-5 slides)
+
+### Cover Slide
+- Company/thesis title
+- Presenter name and title
+- Date
+- Clean background with subtle brand element
+- Optional: Key visual (molecule diagram, platform illustration)
+
+### Investment Highlight
+- "Why this matters" in 1-2 sentences
+- Large bold text (60pt)
+- Minimal background image
+- Sets up the narrative
+
+### Agenda/Roadmap
+- 5-6 section headers
+- Visual timeline or numbered list
+- Sets expectations for presentation flow
+
+## Section 2: Problem/Opportunity (5-7 slides)
+
+### Market Opportunity
+- TAM/SAM/SOM with nested circles or bar chart
+- Market growth projections (line chart)
+- Key market drivers (icons + short descriptions)
+
+### Current Limitations
+- "What's broken today" slide
+- Visual showing inefficiency (timeline, cost bars, failure rates)
+- Sets up why new solution needed
+
+### Industry Trends
+- Macro trends driving the opportunity
+- Icons + short text
+- Optional: Timeline showing evolution
+
+## Section 3: Solution/Technology (8-12 slides)
+
+### Platform Overview (Single Slide)
+- High-level mechanism diagram
+- 3-4 key differentiation points
+- Analogies where helpful ("Like ChatGPT for antibodies")
+
+### How It Works (2-3 slides)
+- Step-by-step process flow
+- Numbered steps with visuals
+- Emphasize proprietary elements
+
+### Competitive Comparison Matrix
+- Table or scatter plot
+- Company vs 3-5 competitors
+- Metrics: speed, cost, validation stage, etc.
+- Highlight advantages in color
+
+### Scientific Validation
+- Published data (charts from papers)
+- Peer-reviewed citations
+- KOL endorsements or collaborations
+
+### IP & Moat
+- Patent portfolio overview
+- Freedom to operate
+- Barriers to entry for competitors
+
+## Section 4: Business Model (4-6 slides)
+
+### Revenue Model
+- Visual showing revenue streams
+- Partnership economics (upfront, milestones, royalties)
+- SaaS pricing if applicable
+
+### Go-to-Market Strategy
+- Target customers (icons + descriptions)
+- Sales channel (direct, partnerships, platform)
+- Traction to date
+
+### Partnerships & Validation
+- Logos of partners
+- Deal sizes and structures
+- Case studies (1-2 examples)
+
+## Section 5: Financial Projections (6-8 slides)
+
+### Revenue Forecast
+- 5-year revenue projection (bar or line chart)
+- Breakdown by revenue stream (stacked)
+- Key assumptions footnoted
+
+### Path to Profitability
+- Cash flow timeline
+- Burn rate and runway
+- Break-even date
+
+### Valuation Framework
+- rNPV model summary (waterfall chart)
+- Comparable company multiples
+- Target valuation range
+
+### Scenario Analysis
+- Bear/Base/Bull cases in table
+- Probability-weighted outcomes
+- Sensitivity analysis (tornado chart)
+
+### Use of Funds
+- Pie chart or bar chart
+- Allocation: R&D, operations, sales, G&A
+- Milestones achievable with raise
+
+## Section 6: Team & Execution (3-4 slides)
+
+### Team Slide
+- Photos + names + titles
+- 2-3 sentence bios highlighting relevant experience
+- Advisors/board members separately
+
+### Milestones Achieved
+- Timeline with completed milestones
+- Visual checkmarks or progress bar
+- Demonstrates execution capability
+
+### Roadmap
+- Next 12-24 months
+- Key catalysts and deliverables
+- Timeline with quarters
+
+## Section 7: Closing (2-3 slides)
+
+### Investment Summary
+- "Why invest" - 4-5 bullets
+- Each bullet has icon
+- Memorable, concise
+
+### The Ask
+- Clear call to action
+- Investment amount
+- Use of proceeds
+- Next steps
+
+### Q&A Slide
+- "Questions?" or "Let's discuss"
+- Contact information
+- Visual element (company logo or thematic image)
+
+---
+
+# Design System Components
+
+## Color Palette
+
+### Primary Colors
+
+**Primary Blue** (#2563eb)
+- Headings and key callouts
+- Chart primary data series
+- Button backgrounds
+
+**Accent Teal** (#0d9488)
+- Secondary data series
+- Highlights and emphasis
+- Icons
+
+**Success Green** (#059669)
+- Positive metrics (revenue growth, success rates)
+- Checkmarks and progress indicators
+
+**Warning Amber** (#d97706)
+- Caution items
+- Medium-risk indicators
+
+**Danger Red** (#dc2626)
+- Negative metrics
+- High-risk items
+
+### Neutral Colors
+
+**Dark Gray** (#1f2937) - body text
+**Medium Gray** (#6b7280) - secondary text
+**Light Gray** (#f3f4f6) - backgrounds
+**White** (#ffffff) - primary background
+
+## Typography
+
+### Fonts
+
+**Headings:** Inter Bold
+- Slide titles: 44pt
+- Section headers: 36pt
+- Subsections: 28pt
+
+**Body Text:** Inter Regular
+- Body: 20pt (minimum for readability)
+- Captions: 14pt
+- Footnotes: 12pt
+
+**Data/Numbers:** Inter Medium
+- Chart labels: 18pt
+- Table cells: 16pt
+
+### Type Hierarchy Rules
+
+1. **Slide title** - 44pt, bold, dark gray
+2. **Key insight** - 32pt, semibold, primary blue
+3. **Body text** - 20pt, regular, dark gray
+4. **Caption** - 14pt, regular, medium gray
+
+## Chart Styling
+
+### Line Charts
+- Line width: 3px
+- Data point markers: 8px circles
+- Grid: Horizontal only, light gray (#e5e7eb)
+- Axes: Dark gray, 2px
+- Labels: 18pt
+- Legend: Top right, 16pt
+
+### Bar Charts
+- Bar width: 60% of available space
+- Corner radius: 4px
+- Gap between bars: 20% of bar width
+- Data labels: On top of bars, 18pt bold
+- Axis labels: 18pt
+
+### Pie/Donut Charts
+- Segment labels: Inside if space, otherwise outside with leader line
+- Percentage: 20pt bold
+- Category: 16pt regular
+- Total in center for donut charts
+
+### Scatter Plots
+- Point size: 12px
+- Opacity: 80% (if many points)
+- Quadrant lines: 1px dashed gray
+- Labels for key points only
+
+## Icon Style
+
+**Line icons only** (consistent style)
+- Stroke width: 2px
+- Size: 48px for section headers, 32px for bullets
+- Color: Matches text or accent color
+- Sources: Heroicons, Lucide Icons
+
+**Common icons used:**
+- 💊 Molecule - therapeutic assets
+- 📊 Chart - financial data
+- 🔬 Microscope - R&D and science
+- 🤝 Handshake - partnerships
+- 🎯 Target - goals and milestones
+- ⚡ Lightning - speed/efficiency
+- 🔒 Lock - IP and proprietary tech
+- ✓ Checkmark - achievements
+- 📈 Growth - market trends
+
+## Diagram Patterns
+
+### Process Flows
+- Left-to-right horizontal flow
+- Numbered steps (1, 2, 3) in circles
+- Arrows between steps (3px, primary blue)
+- Each step has icon + short label
+- Maximum 5 steps per slide
+
+### Comparison Matrices
+- 2-3 companies maximum per slide
+- Consistent metrics (rows)
+- Visual indicators (stars, dots, checkmarks)
+- Color-code to highlight differences
+
+### Scientific Diagrams
+- Simplified vs overly technical
+- Clear labels (16pt minimum)
+- Consistent color coding (proteins, cells, etc.)
+- Annotations with leader lines
+- Source citation in footnote
+
+---
+
+# Implementation
+
+## Figma Master File
+
+**Organization:**
+```
+Pages:
+├── 🎨 Design System
+│   ├── Colors
+│   ├── Typography
+│   ├── Icons
+│   └── Components
+├── 📊 Chart Templates
+│   ├── Line charts
+│   ├── Bar charts
+│   ├── Scatter plots
+│   └── Financial charts
+├── 🧬 Science Diagrams
+│   ├── Platform mechanisms
+│   ├── MOA diagrams
+│   └── Clinical endpoints
+├── 📑 Slide Templates
+│   ├── Opening
+│   ├── Problem/Opportunity
+│   ├── Solution
+│   ├── Business Model
+│   ├── Financials
+│   ├── Team
+│   └── Closing
+└── 📖 Example Decks
+    ├── Absci pitch
+    ├── Immunocore pitch
+    └── Generic biotech template
+```
+
+**Components library:**
+- Reusable components for common elements
+- Variants for different use cases
+- Auto-layout for responsive resizing
+- Consistent spacing and padding
+
+## Export Workflow
+
+### Figma → Google Slides
+
+1. Design slides in Figma
+2. Export each frame as PDF (vector)
+3. Import PDFs into Google Slides (one per slide)
+4. Add animations if needed (Figma doesn't support)
+5. Share link for collaboration
+
+**Pros:** High fidelity, maintains design quality
+**Cons:** Not easily editable after import
+
+### Figma → Slides Plugin
+
+1. Use "Figma to Google Slides" plugin
+2. Automatically creates slides from frames
+3. Text remains editable
+4. Images exported separately
+
+**Pros:** Maintains some editability
+**Cons:** Formatting can break, requires manual fixes
+
+### Native Google Slides Template
+
+1. Recreate design system in Google Slides
+2. Build slide templates using Google Slides components
+3. Less precise than Figma, but fully editable
+4. Best for team collaboration
+
+**Pros:** Easy collaboration, version control
+**Cons:** Design fidelity compromised
+
+**My workflow:** Figma for design → Google Slides for delivery
+
+---
+
+# Data Visualization Scripts
+
+## Automated Chart Generation
+
+**Python script for consistent chart styling:**
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load design system colors
+PRIMARY_BLUE = '#2563eb'
+ACCENT_TEAL = '#0d9488'
+SUCCESS_GREEN = '#059669'
+
+# Set global style
+sns.set_style("whitegrid")
+plt.rcParams['font.family'] = 'Inter'
+plt.rcParams['font.size'] = 18
+
+def create_revenue_forecast_chart(data):
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    # Stacked bar chart
+    ax.bar(data['year'], data['partnerships'], label='Partnerships',
+           color=PRIMARY_BLUE, width=0.6)
+    ax.bar(data['year'], data['platform'], bottom=data['partnerships'],
+           label='Platform Revenue', color=ACCENT_TEAL, width=0.6)
+
+    # Styling
+    ax.set_xlabel('Year', fontsize=20, fontweight='semibold')
+    ax.set_ylabel('Revenue ($M)', fontsize=20, fontweight='semibold')
+    ax.legend(loc='upper left', fontsize=16)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    # Export for slides
+    plt.savefig('revenue_forecast.pdf', bbox_inches='tight', dpi=300)
+    plt.savefig('revenue_forecast.png', bbox_inches='tight', dpi=300)
+
+# Generate all charts for pitch deck
+generate_all_charts(company='Absci')
+```
+
+**Charts generated:**
+- Revenue forecast (stacked bars)
+- Market growth (line chart)
+- Competitive comparison (scatter plot)
+- rNPV waterfall (waterfall chart)
+- Use of funds (pie chart)
+
+**Result:** Consistent styling across all financial charts, easy to update with new data
+
+---
+
+# Real-World Usage
+
+## Decks Created
+
+**Investment Committee Pitches (Internal):**
+1. Absci Corporation investment thesis
+2. Immunocore Holdings analysis
+3. Multispecific antibody landscape
+4. CAR-T sector overview
+5. AI drug discovery platforms comparison
+
+**External Presentations:**
+1. Portfolio overview for LPs (fund investors)
+2. Company introduction for BD teams
+3. Technology assessment for pharma partners
+4. Conference presentation (biotech investing trends)
+
+## Metrics
+
+**Time Savings:**
+- Deck creation time: 6-8 hours → 2-3 hours (60-70% reduction)
+- Slide polishing time: 2 hours → 15 minutes (90% reduction)
+
+**Quality Improvements:**
+- Consistent branding across all decks
+- Positive feedback from 8/10 stakeholders on clarity
+- "Most professional biotech deck I've seen" (partner feedback)
+
+**Reusability:**
+- 70% of slides reused across multiple decks
+- New deck = 30% new content + 70% adapted templates
+- Easy to update data without redesigning
+
+---
+
+# Lessons Learned
+
+## Design Insights
+
+**1. Less is More**
+- Early versions had too much on each slide
+- Cut 40% of text, improved comprehension
+
+**2. Consistency > Creativity**
+- Tempting to make every slide unique
+- Consistency helps audience focus on content, not design
+
+**3. Test with Non-Experts**
+- Showed early decks to friends outside biotech
+- If they can follow the story, investors can too
+
+**4. Accessibility Matters**
+- Checked color contrast for colorblind viewers
+- Avoided red/green comparisons
+- Added patterns to chart elements in addition to colors
+
+## Technical Challenges
+
+**Challenge:** Figma → Google Slides workflow is clunky
+**Solution:** Created Google Slides native version for easy collaboration
+
+**Challenge:** Charts look different when exported vs Figma preview
+**Solution:** Always export as PDF (vector), not PNG
+
+**Challenge:** Animations can't be designed in Figma
+**Solution:** Annotate Figma with notes for where to add animations later
+
+## Presentation Insights
+
+**What Works:**
+- Build slides (reveal bullets one at a time) keeps attention
+- Data labels on charts (no one wants to squint at axes)
+- Visual metaphors for complex science (easier to remember)
+
+**What Doesn't Work:**
+- Slide transitions (distracting, not professional)
+- Too many animations (feels gimmicky)
+- Video backgrounds (loading issues in virtual meetings)
+
+---
+
+# Before/After Examples
+
+## Slide 1: Technology Platform
+
+**Before:**
+- Title: "Technology Platform"
+- 12 bullets explaining how platform works
+- No visual
+- Tiny font (14pt)
+
+**After:**
+- Title: "**Absci's zero-shot AI designs novel antibodies 10× faster than traditional discovery**"
+- Visual: Platform diagram (3 steps with icons)
+- 3 supporting bullets (20pt font)
+- Result: Message clear at a glance
+
+## Slide 2: Competitive Landscape
+
+**Before:**
+- Title: "Competitive Landscape"
+- Paragraph describing 5 competitors
+- No visual comparison
+- Hard to see differentiation
+
+**After:**
+- Title: "**Absci's E. coli expression system provides unique cost and speed advantages**"
+- Visual: Scatter plot (Speed vs Cost)
+- Absci highlighted in blue, competitors in gray
+- Clear positioning
+
+## Slide 3: Financial Projections
+
+**Before:**
+- Title: "Revenue Projections"
+- Excel screenshot pasted in
+- Unreadable axis labels
+- No context
+
+**After:**
+- Title: "**Partnership model drives revenue growth to $150M+ by 2028**"
+- Visual: Stacked bar chart with clean styling
+- Data labels on bars
+- Footnote: Key assumptions
+
+---
+
+# Technology Stack
+
+**Design:**
+- **Figma** - Primary design tool
+- **Adobe Illustrator** - Complex scientific diagrams
+- **Adobe Color** - Color palette development
+
+**Data Visualization:**
+- **Python + matplotlib** - Chart generation
+- **seaborn** - Statistical charts
+- **Plotly** - Interactive charts (web version)
+
+**Presentation Software:**
+- **Google Slides** - Primary delivery format
+- **Keynote** - For Mac-based presentations
+- **PDF export** - Read-only sharing
+
+**Collaboration:**
+- **Figma** - Design collaboration and comments
+- **Google Slides** - Content collaboration
+- **Loom** - Walkthrough videos for templates
+
+---
+
+# Future Enhancements
+
+**Roadmap:**
+1. **Animated transitions** - Smooth data reveals for key charts
+2. **Interactive slides** - Clickable prototypes in Figma
+3. **Video integration** - Short product demos embedded
+4. **Template marketplace** - Share templates with wider community
+5. **AI generation** - Auto-create slides from investment memos
+
+**Wish list:**
+- Better Figma → Slides export (preserve more formatting)
+- Master slide templates with variants
+- Presentation mode with speaker notes and timing
+
+---
+
+*This project demonstrates my design sensibility, understanding of effective communication, and ability to build reusable systems. It combines visual design (typography, color, layout), data visualization (chart design, information hierarchy), and product thinking (templates that save time and improve quality).*

@@ -33,6 +33,17 @@ export default function ValueProp() {
       description:
         "Combining WallStreetPrep financial modeling with technical due diligence capabilities",
     },
+    {
+      icon: (
+        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M13 7H7v6h6V7z" />
+          <path fillRule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h8v8H5V5z" clipRule="evenodd" />
+        </svg>
+      ),
+      title: "Technical Builder",
+      description:
+        "Full-stack developer building AI agents and analytics dashboards that make investment workflows 10× faster",
+    },
   ];
 
   return (
@@ -49,7 +60,7 @@ export default function ValueProp() {
         </div>
 
         {/* Value Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {values.map((value, index) => (
             <div key={index} className="card text-center">
               <div className="flex justify-center text-primary-600 mb-4">

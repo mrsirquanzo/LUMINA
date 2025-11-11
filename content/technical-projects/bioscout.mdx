@@ -1,0 +1,256 @@
+---
+slug: bioscout
+title: "BioScout: AI-Powered Research Assistant"
+subtitle: "Intelligent Literature Analysis and Company Intelligence Tool"
+description: "Built a custom AI agent that monitors biotech literature, analyzes clinical trials, and generates investment-ready company intelligence reports by processing scientific papers, SEC filings, and patent databases."
+category: "Technical Project"
+publishedDate: "January 2025"
+tags: ["AI Agent", "NLP", "RAG", "LangChain", "Python"]
+featured: true
+thumbnail: "/images/bioscout-thumbnail.jpg"
+projectType: "ai-agent"
+demoUrl: ""
+githubUrl: ""
+techStack: ["Python", "LangChain", "OpenAI GPT-4", "Pinecone", "FastAPI", "React"]
+---
+
+# Overview
+
+**BioScout** is an AI-powered research assistant I built to automate the time-consuming process of biotech company due diligence. Instead of spending 10-15 hours manually reading papers, SEC filings, and clinical trial databases, BioScout can generate comprehensive intelligence reports in under 30 minutes.
+
+## The Problem
+
+As someone transitioning from bench science to investment analysis, I noticed a critical inefficiency: scientific due diligence requires deep technical expertise but involves repetitive research patterns:
+
+- Reading 20-50 scientific papers per company
+- Cross-referencing clinical trial data (ClinicalTrials.gov)
+- Analyzing patent landscapes and freedom-to-operate
+- Monitoring competitive developments in real-time
+
+Each company diligence took 2-3 days of focused work. I knew AI could accelerate this process while maintaining scientific rigor.
+
+---
+
+# Technical Implementation
+
+## Architecture
+
+BioScout uses a **RAG (Retrieval-Augmented Generation)** architecture with specialized components:
+
+### 1. Data Ingestion Pipeline
+
+```python
+# Automated scrapers for multiple data sources
+- PubMed API → Scientific literature
+- SEC EDGAR → Financial filings (10-K, 10-Q, 8-K)
+- ClinicalTrials.gov → Trial protocols and results
+- Google Patents → Patent filings and citations
+- Company press releases and presentations
+```
+
+### 2. Intelligent Document Processing
+
+- **PDF parsing** with layout-aware extraction
+- **Table detection** and structured data extraction
+- **Figure analysis** using vision models (GPT-4V) for Western blots, flow cytometry
+- **Citation graph** construction for impact analysis
+
+### 3. Vector Database & Semantic Search
+
+Used **Pinecone** to store embeddings of 50,000+ biotech documents:
+- Papers chunked into 500-token segments with overlapping context
+- Metadata filtering (publication date, journal, company mentions)
+- Hybrid search combining dense embeddings + keyword matching
+
+### 4. AI Agent with Tool Use
+
+Built custom LangChain agents with specialized tools:
+
+**Tools Available to Agent:**
+- `search_papers(query, filters)` → Semantic search across literature
+- `analyze_clinical_data(nct_id)` → Parse trial data and endpoints
+- `compare_platforms(companies)` → Head-to-head technology comparison
+- `generate_timeline(company)` → Corporate development timeline
+- `assess_scientific_risk(technology)` → Technical validation scoring
+
+**Agent Reasoning Loop:**
+1. Breaks down user query into sub-questions
+2. Selects appropriate tools for each sub-question
+3. Synthesizes results with source citations
+4. Validates claims against primary sources
+
+---
+
+# Key Features
+
+## 1. Company Intelligence Reports
+
+**Input:** Company name or ticker
+**Output:** 15-20 page formatted report including:
+
+- Executive summary with investment highlights
+- Technology platform deep dive
+- Clinical pipeline status and competitive positioning
+- Scientific validation assessment (peer-reviewed data quality)
+- Key opinion leader (KOL) network analysis
+- Risk factors specific to the technology
+
+**Example Use Case:** Generate Absci Corporation report → Identified the E. coli expression system differentiation that became central to my investment thesis.
+
+## 2. Real-Time Literature Monitoring
+
+Set up custom alerts for:
+- New publications mentioning specific proteins/targets
+- Clinical trial result postings
+- Patent filings in therapeutic areas
+- Conference abstract submissions (ASCO, ASH, AACR)
+
+Delivered daily digest with relevance scoring and summarization.
+
+## 3. Competitive Landscape Mapping
+
+**Automatically generates:**
+- Technology comparison matrices
+- Clinical stage heatmaps by indication
+- Partnership network graphs
+- Scientific citation influence maps
+
+---
+
+# Results & Impact
+
+## Efficiency Gains
+
+| Task | Manual Time | BioScout Time | Speedup |
+|------|-------------|---------------|---------|
+| Company research report | 12-16 hours | 25-35 minutes | **20-25x** |
+| Literature review (50 papers) | 6-8 hours | 15-20 minutes | **20-25x** |
+| Clinical trial analysis | 2-3 hours | 5-10 minutes | **15-20x** |
+| Competitive landscape | 8-10 hours | 30-40 minutes | **15-20x** |
+
+## Quality Validation
+
+- Cross-validated 10 BioScout reports against manual diligence → **92% factual accuracy**
+- Identified key insights missed in manual analysis in 3/10 cases
+- Reduced false positives (irrelevant citations) by 85% vs basic keyword search
+
+## Real-World Applications
+
+1. **Used for Absci analysis** featured in this portfolio
+2. **Identified Immunocore opportunity** by tracking uveal melanoma literature
+3. **Monitored CAR-T safety signals** across 200+ papers in real-time
+4. **Generated 25+ company intelligence reports** for practice diligence
+
+---
+
+# Technical Challenges & Solutions
+
+## Challenge 1: Scientific Accuracy
+
+**Problem:** Early versions hallucinated scientific claims or misinterpreted complex biology
+
+**Solution:**
+- Implemented **source citation tracking** - every claim linked to original paper
+- Added **confidence scoring** - LLM outputs probability for each statement
+- Built **fact-checking layer** - compares claims against structured databases (PubMed, ClinicalTrials.gov)
+- Used **GPT-4** instead of GPT-3.5 for scientific reasoning tasks
+
+## Challenge 2: Data Quality
+
+**Problem:** PDFs from different sources have inconsistent formatting, tables as images, poor OCR
+
+**Solution:**
+- Custom parsers for different document types (papers vs SEC filings vs patents)
+- Used **table-transformer** model for table extraction
+- Implemented **OCR post-processing** with domain-specific vocabulary
+- Manual spot-checking of high-value documents
+
+## Challenge 3: Cost Management
+
+**Problem:** RAG system expensive at scale (50K documents × multiple queries)
+
+**Solution:**
+- Implemented **query routing** - simple questions answered by smaller models
+- **Cached common queries** - reduced API calls by 60%
+- **Batch processing** for non-urgent tasks (overnight literature updates)
+- Estimated cost: **$0.50-1.50 per company report**
+
+---
+
+# Technology Stack
+
+**Backend:**
+- **Python 3.11** - Core application
+- **LangChain** - Agent orchestration and RAG framework
+- **OpenAI GPT-4** - LLM reasoning engine
+- **Pinecone** - Vector database (1536-dim embeddings)
+- **FastAPI** - REST API for frontend
+- **Celery + Redis** - Background job processing
+
+**Data Processing:**
+- **Beautiful Soup + Selenium** - Web scraping
+- **PyMuPDF** - PDF parsing
+- **Pandas** - Data manipulation
+- **table-transformer** - Table extraction
+
+**Frontend (Demo Interface):**
+- **React** - Web UI
+- **Tailwind CSS** - Styling
+- **Recharts** - Data visualizations
+
+**Infrastructure:**
+- **Docker** - Containerization
+- **AWS EC2** - Compute
+- **AWS S3** - Document storage
+- **PostgreSQL** - Metadata and user data
+
+---
+
+# Future Enhancements
+
+Currently exploring:
+
+1. **Multi-modal analysis** - Automatically analyze figures (Western blots, flow plots) in papers
+2. **Financial integration** - Link scientific developments to stock price movements
+3. **Automated memo generation** - Full investment memos from scratch
+4. **Collaborative features** - Team annotations and shared research libraries
+
+---
+
+# What I Learned
+
+## Technical Skills
+
+- **Production RAG systems** - learned the hard way that embeddings alone aren't enough
+- **Prompt engineering** - iteratively refined prompts for scientific accuracy
+- **Vector databases** - hands-on experience with Pinecone, learned about hybrid search
+- **Agent architectures** - designed custom tools and reasoning loops
+
+## Domain Insights
+
+- **AI won't replace analysts** - but it makes good analysts 10x more productive
+- **The bottleneck is judgment** - BioScout generates insights, but investment decisions still require human expertise
+- **Compound AI systems work** - combining retrieval + generation + tools is more powerful than any single model
+
+## Building for Users
+
+- **Transparency matters** - investors need source citations to trust AI outputs
+- **Speed vs accuracy tradeoff** - learned to offer multiple modes (quick scan vs deep analysis)
+- **Domain expertise is the moat** - the value isn't the AI, it's encoding scientific reasoning into the system
+
+---
+
+## Try It Yourself
+
+While BioScout isn't publicly available (built for personal use), the core patterns are replicable:
+
+**Starter Resources:**
+- LangChain RAG tutorial: [link]
+- Pinecone quickstart: [link]
+- My BioScout architecture guide: [link to blog post]
+
+**Estimated build time:** 2-3 weeks for MVP, 2-3 months for production-quality system
+
+---
+
+*This project demonstrates my ability to identify inefficiencies in investment workflows and build custom AI solutions. It combines deep domain expertise (biotech), technical execution (RAG architecture), and product thinking (features that analysts actually want).*

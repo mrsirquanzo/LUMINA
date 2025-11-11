@@ -1,0 +1,520 @@
+---
+slug: investment-memo-template
+title: "Investment Memo Design System"
+subtitle: "Professional LaTeX Template for Biotech Investment Analysis"
+description: "Designed and built a comprehensive LaTeX template system for biotech investment memos, featuring custom components for financial tables, risk matrices, and scientific diagrams. Used across 25+ investment analyses."
+category: "Technical Project"
+publishedDate: "January 2025"
+tags: ["Design", "LaTeX", "Typography", "Document Design", "Information Design"]
+featured: true
+thumbnail: "/images/memo-template-thumbnail.jpg"
+projectType: "design"
+demoUrl: ""
+figmaUrl: ""
+techStack: ["LaTeX", "TikZ", "Python", "Figma"]
+---
+
+# Overview
+
+Professional investment memos require both rigorous analysis and polished presentation. After writing my first few memos in Google Docs with painful formatting, I built a comprehensive LaTeX template system that:
+
+- Enforces consistent structure and visual hierarchy
+- Automates tables, charts, and financial models
+- Produces publication-quality PDFs
+- Saves 2-3 hours per memo on formatting alone
+
+This template has been used for 25+ investment analyses and is the foundation for the ThesisBuilder document generation system.
+
+---
+
+# Design Philosophy
+
+## Principles
+
+**1. Information Hierarchy**
+- Clear visual distinction between sections, subsections, and body text
+- Executive summaries styled as callout boxes
+- Key insights highlighted with accent colors
+
+**2. Readability First**
+- 11pt serif font for body text (optimal for extended reading)
+- 1.5× line spacing
+- Wide margins (2.5cm) for annotations
+- Maximum 65 characters per line
+
+**3. Data Density**
+- Tables optimized for financial data (aligned decimals, clear headers)
+- Charts integrated inline with consistent styling
+- Risk matrices with visual encoding (color + icons)
+
+**4. Professional Polish**
+- Consistent typography throughout
+- Branded header/footer with company name and date
+- Automated table of contents with hyperlinks
+- Citation management with bibliography
+
+---
+
+# Template Structure
+
+## Document Sections
+
+### Cover Page
+- Memo title and subtitle
+- Company name and ticker
+- Author and date
+- Confidentiality disclaimer
+- Professional layout with brand colors
+
+### Executive Summary (1-2 pages)
+- **Investment Recommendation** callout box (Buy/Hold/Pass)
+- **Key Takeaways** bulleted list (4-6 points)
+- **Catalysts Timeline** table
+- **Valuation Summary** table
+
+### Main Content (15-25 pages)
+Structured sections with consistent formatting:
+1. Company Overview
+2. Technical Deep Dive
+3. Market Analysis
+4. Competitive Landscape
+5. Financial Assessment
+6. Risk Analysis
+7. Investment Recommendation
+
+### Appendices
+- Detailed financial models
+- Source documents and citations
+- Glossary of technical terms
+
+---
+
+# Custom LaTeX Components
+
+## 1. Callout Boxes
+
+**Three types for different message types:**
+
+**Highlight Box** (Key Insights)
+```latex
+\begin{highlightbox}{blue}
+  Platform Differentiation: Absci's zero-shot generative AI
+  represents a step-function improvement in speed-to-clinic
+\end{highlightbox}
+```
+*Visual: Light blue background, left accent border, bold heading*
+
+**Warning Box** (Risks)
+```latex
+\begin{warningbox}
+  Clinical validation of AI-designed molecules remains
+  unproven at scale
+\end{warningbox}
+```
+*Visual: Light yellow background, warning icon, italic text*
+
+**Recommendation Box** (Investment Thesis)
+```latex
+\begin{recommendationbox}{BUY}
+  Attractive risk/reward for growth investors with
+  3-5 year horizon
+\end{recommendationbox}
+```
+*Visual: Green (BUY) or red (PASS) background, large centered text*
+
+## 2. Financial Tables
+
+**Formatted for readability:**
+
+- Aligned decimal points for currency
+- Thousands separators
+- Percentage formatting
+- Row shading (alternating)
+- Header with background color
+- Bottom border for totals
+
+**Example: Valuation Summary Table**
+```latex
+\begin{financialtable}{Scenario Analysis}
+  Scenario & Probability & Price Target & Upside \\
+  \hline
+  Bear    & 30\% & \$3-4  & -40\% to -20\% \\
+  Base    & 50\% & \$6-8  & +15\% to +55\% \\
+  Bull    & 20\% & \$10-15 & +90\% to +190\% \\
+\end{financialtable}
+```
+
+## 3. Risk Matrix
+
+**Visual 2D grid showing probability vs impact:**
+
+```latex
+\begin{riskmatrix}
+  \risk{Clinical Failure}{High}{High}{1}
+  \risk{Competition}{Medium}{High}{2}
+  \risk{Financing}{Medium}{Medium}{3}
+  \risk{Regulatory}{Low}{Medium}{4}
+\end{riskmatrix}
+```
+
+*Visual: 3×3 grid with colored cells, risks plotted by coordinates*
+
+## 4. Timeline Diagrams
+
+**Catalyst timeline with milestones:**
+
+```latex
+\begin{timeline}{2025-2027 Catalysts}
+  \milestone{Q2 2025}{Phase 1 Data Readout}{High}
+  \milestone{Q3 2025}{New Partnership}{Medium}
+  \milestone{Q1 2026}{IND Filing}{High}
+  \milestone{Q4 2026}{Phase 2 Data}{Critical}
+\end{timeline}
+```
+
+*Visual: Horizontal timeline with labeled points, color-coded by importance*
+
+## 5. Competitive Comparison Matrix
+
+**Side-by-side technology comparison:**
+
+```latex
+\begin{compmatrix}{AI Drug Discovery Platforms}
+  \company{Absci}{4/5}{High}{Phase 1}{8 partnerships}
+  \company{Generate Bio}{5/5}{Medium}{Preclinical}{5 partnerships}
+  \company{AbCellera}{3/5}{High}{Approved}{6 partnerships}
+\end{compmatrix}
+```
+
+*Visual: Table with star ratings, color-coded clinical stages*
+
+---
+
+# Typography & Visual Design
+
+## Font Choices
+
+**Body Text:**
+- **Serif**: Linux Libertine (elegant, highly readable)
+- Size: 11pt
+- Line height: 1.5×
+
+**Headings:**
+- **Sans-serif**: Helvetica Neue (clean, professional)
+- Section headings: 18pt, bold, color: primary blue
+- Subsections: 14pt, semibold, color: dark gray
+
+**Tables/Data:**
+- **Monospace**: Inconsolata (aligned numbers)
+- Size: 10pt
+
+**Emphasis:**
+- Bold for key terms on first use
+- Italic for technical terms and Latin phrases
+- Underline for hyperlinks
+
+## Color Palette
+
+**Primary Blue** (#1e40af)
+- Section headings
+- Callout box accents
+- Chart primary color
+
+**Accent Teal** (#0d9488)
+- Highlights and emphasis
+- Recommendation boxes (BUY)
+- Timeline milestones
+
+**Warning Yellow** (#fbbf24)
+- Risk callouts
+- Caution indicators
+
+**Danger Red** (#dc2626)
+- PASS recommendations
+- High-risk items
+- Negative metrics
+
+**Neutral Grays**
+- Dark gray (#374151) - body text
+- Medium gray (#6b7280) - metadata
+- Light gray (#f3f4f6) - table shading
+
+---
+
+# Automation & Integration
+
+## Automated Chart Generation
+
+**Python script generates charts, LaTeX imports:**
+
+```python
+# generate_charts.py
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def generate_market_growth_chart(data, output_path):
+    fig, ax = plt.subplots(figsize=(8, 5))
+    sns.lineplot(data=data, x='year', y='market_size', ax=ax)
+    ax.set_title('Market Size Projection (2020-2030)')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+
+# Run before LaTeX compilation
+generate_all_charts(company='Absci')
+```
+
+**LaTeX includes generated images:**
+```latex
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{charts/market_growth.pdf}
+  \caption{AI-enabled drug discovery market growth}
+\end{figure}
+```
+
+## Data-Driven Tables
+
+**CSV → LaTeX table:**
+
+```python
+import pandas as pd
+
+def csv_to_latex_table(csv_path, caption):
+    df = pd.read_csv(csv_path)
+    latex = df.to_latex(
+        index=False,
+        caption=caption,
+        column_format='lrrrr',
+        float_format="%.1f",
+        escape=False
+    )
+    return latex
+
+# Insert in LaTeX document
+\input{tables/financial_summary.tex}
+```
+
+## Template Variables
+
+**One config file drives entire document:**
+
+```yaml
+# config.yaml
+company:
+  name: "Absci Corporation"
+  ticker: "ABSI"
+  sector: "Biotech"
+
+author:
+  name: "Quan Ho"
+  title: "Investment Analyst"
+
+metadata:
+  date: "2025-01-11"
+  version: "v1.2"
+  confidentiality: "Internal Use Only"
+
+branding:
+  primary_color: "#1e40af"
+  accent_color: "#0d9488"
+  logo_path: "assets/logo.pdf"
+```
+
+**LaTeX reads config:**
+```latex
+\documentclass[11pt]{article}
+\input{config.tex}  % Auto-generated from YAML
+
+\title{\companyname: Investment Analysis}
+\author{\authorname}
+\date{\documentdate}
+```
+
+---
+
+# Design Iterations
+
+## Version 1.0: Basic Template
+- Standard LaTeX article class
+- Manual formatting for all elements
+- Time per memo: 6-8 hours formatting
+
+**Problems:**
+- Inconsistent spacing
+- Tables looked amateurish
+- No visual hierarchy
+
+## Version 2.0: Custom Components
+- Built custom environments (callout boxes, tables)
+- Defined typography system
+- Color palette for visual interest
+- Time per memo: 3-4 hours formatting
+
+**Improvements:**
+- Professional appearance
+- Consistent structure
+- Easier to maintain
+
+## Version 3.0: Automation (Current)
+- Python scripts generate charts
+- CSV data → LaTeX tables
+- Config-driven metadata
+- Time per memo: 30-60 minutes formatting
+
+**Game changer:**
+- Most formatting now automated
+- Focus on content, not layout
+- Consistent across all memos
+
+---
+
+# Real-World Usage
+
+## Stats
+
+**Usage across portfolio:**
+- 25+ investment memos generated
+- 3 published on this portfolio site (Absci, Multispecifics, Immunocore)
+- Average length: 22-28 pages
+- Average time savings: 2-3 hours per memo
+
+**User feedback:**
+- "Looks like a professional sell-side research report"
+- "Tables are actually readable compared to my Excel screenshots"
+- "Love the callout boxes for key insights"
+
+## Integration with ThesisBuilder
+
+**Template powers AI-generated memos:**
+
+1. ThesisBuilder generates markdown content
+2. Python script converts markdown → LaTeX
+3. Inserts into template structure
+4. Compiles to PDF
+
+**Result:** AI-generated memos have same polished appearance as hand-written ones
+
+---
+
+# Sample Pages
+
+## Cover Page
+*[Screenshot of cover page with professional layout, company name, author, date]*
+
+## Executive Summary
+*[Screenshot showing highlighted recommendation box, key takeaways, catalyst table]*
+
+## Financial Analysis Section
+*[Screenshot of formatted financial tables with aligned decimals, shaded rows]*
+
+## Risk Matrix
+*[Screenshot of 2D risk matrix with colored cells and labeled risks]*
+
+## Timeline Diagram
+*[Screenshot of horizontal timeline with milestones and color coding]*
+
+---
+
+# Technical Implementation
+
+## File Structure
+
+```
+investment-memo-template/
+├── main.tex                 # Main document
+├── config.yaml              # Template variables
+├── sections/
+│   ├── executive-summary.tex
+│   ├── company-overview.tex
+│   ├── technical-analysis.tex
+│   ├── market-analysis.tex
+│   ├── financial-assessment.tex
+│   ├── risk-analysis.tex
+│   └── recommendation.tex
+├── components/
+│   ├── calloutbox.sty       # Custom LaTeX packages
+│   ├── financialtable.sty
+│   ├── riskmatrix.sty
+│   └── timeline.sty
+├── scripts/
+│   ├── generate_charts.py   # Chart generation
+│   ├── csv_to_latex.py      # Table conversion
+│   └── compile.sh           # Build script
+├── data/
+│   ├── financial_data.csv
+│   └── competitive_matrix.csv
+├── charts/                  # Generated chart images
+└── output/
+    └── memo.pdf             # Final compiled PDF
+```
+
+## Build Process
+
+```bash
+# Automated build script
+./scripts/compile.sh
+
+# Steps:
+# 1. Parse config.yaml → config.tex
+# 2. Run generate_charts.py
+# 3. Run csv_to_latex.py for all tables
+# 4. Compile LaTeX (pdflatex × 2 for references)
+# 5. Output: output/memo.pdf
+```
+
+---
+
+# Lessons Learned
+
+## Design
+
+- **White space is your friend** - resist urge to cram information
+- **Consistency matters** - small inconsistencies (font sizes, spacing) are jarring
+- **Visual hierarchy** - readers should know what's important at a glance
+- **Tables are hard** - spent 40% of design time on table formatting
+
+## Technical
+
+- **LaTeX has steep learning curve** - but worth it for quality output
+- **TikZ is powerful** - can create any diagram, but syntax is brutal
+- **Automation pays off** - upfront time investment, but saves hours long-term
+- **Version control LaTeX** - Git diffs are surprisingly readable for .tex files
+
+## Workflow
+
+- **Separate content from formatting** - markdown first, then compile
+- **Test with real data** - fake lorem ipsum hides formatting issues
+- **Iterate based on usage** - early versions had features no one used
+- **Documentation critical** - future-me forgets how to use custom commands
+
+---
+
+# Future Enhancements
+
+1. **Interactive PDF** - embedded links, collapsible sections
+2. **Web version** - HTML export with same styling
+3. **Collaborative editing** - Overleaf-style multi-user editing
+4. **Template gallery** - variations for different memo types
+5. **Style presets** - different color schemes and typography
+
+---
+
+# Technology Stack
+
+**Document Generation:**
+- **LaTeX** - Document typesetting
+- **TikZ/PGFPlots** - Diagrams and charts
+- **BibTeX** - Citation management
+
+**Automation:**
+- **Python 3.11** - Scripting
+- **pandas** - Data processing
+- **matplotlib/seaborn** - Chart generation
+- **PyYAML** - Config parsing
+
+**Design:**
+- **Figma** - Initial mockups and component design
+- **Adobe Color** - Color palette development
+
+---
+
+*This project demonstrates my attention to design detail, ability to build reusable systems, and understanding that professional presentation matters in investment analysis. It combines technical skills (LaTeX, Python automation) with design sensibility (typography, information hierarchy) to create a tool that's been used across 25+ analyses.*
