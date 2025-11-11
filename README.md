@@ -139,8 +139,8 @@ Each investment analysis follows a structured format:
 
 **Quan Ho**
 - Location: Boston, MA
-- LinkedIn: [linkedin.com/in/quanho](https://linkedin.com/in/quanho)
-- Email: quan@example.com
+- LinkedIn: [linkedin.com/in/quan-ho](https://www.linkedin.com/in/quan-ho)
+- Email: hoquan12@gmail.com
 
 ## License
 

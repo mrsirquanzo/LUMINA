@@ -40,7 +40,7 @@ export default function ContactPage() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">LinkedIn</h3>
                   <p className="text-gray-700 mb-2">Best for professional inquiries and networking</p>
                   <Button
-                    href="https://linkedin.com/in/quanho"
+                    href="https://www.linkedin.com/in/quan-ho"
                     external
                     variant="primary"
                     className="text-sm"
@@ -61,10 +61,10 @@ export default function ContactPage() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Email</h3>
                   <p className="text-gray-700 mb-2">For detailed discussions and collaborations</p>
                   <a
-                    href="mailto:quan@example.com"
+                    href="mailto:hoquan12@gmail.com"
                     className="text-primary-600 hover:text-primary-700 font-medium"
                   >
-                    quan@example.com
+                    hoquan12@gmail.com
                   </a>
                 </div>
               </div>

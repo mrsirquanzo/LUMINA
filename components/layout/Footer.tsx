@@ -48,7 +48,7 @@ export default function Footer() {
             <h3 className="text-white text-lg font-semibold mb-4">Connect</h3>
             <div className="flex space-x-4 mb-4">
               <a
-                href="https://linkedin.com/in/quanho"
+                href="https://www.linkedin.com/in/quan-ho"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"
@@ -59,7 +59,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="mailto:quan@example.com"
+                href="mailto:hoquan12@gmail.com"
                 className="hover:text-white transition-colors"
                 aria-label="Email"
               >
