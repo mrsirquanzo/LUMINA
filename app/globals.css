@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary - Professional Blue */
+    --primary-50: #eff6ff;
+    --primary-500: #3b82f6;
+    --primary-700: #1d4ed8;
+    --primary-900: #1e3a8a;
+
+    /* Accent - Biotech Teal */
+    --accent-500: #14b8a6;
+    --accent-700: #0f766e;
+
+    /* Neutrals */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-700: #374151;
+    --gray-900: #111827;
+
+    /* Semantic */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+  }
+
+  body {
+    @apply text-gray-900 bg-gray-50;
+  }
+
+  h1 {
+    @apply text-h1;
+  }
+
+  h2 {
+    @apply text-h2;
+  }
+
+  h3 {
+    @apply text-h3;
+  }
+
+  h4 {
+    @apply text-h4;
+  }
+
+  p {
+    @apply text-body;
+  }
+
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply max-w-site mx-auto px-gutter-mobile md:px-gutter-desktop;
+  }
+
+  .container-content {
+    @apply max-w-content mx-auto;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold
+           hover:bg-primary-700 transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white text-primary-600 border-2 border-primary-600
+           rounded-lg font-semibold hover:bg-primary-50 transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300;
+  }
+
+  .link-animated {
+    @apply text-primary-600 hover:text-primary-700 underline-offset-4
+           hover:underline transition-all duration-200;
+  }
+}
