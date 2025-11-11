@@ -10,16 +10,16 @@ export default function FeaturedProjects() {
 
   return (
     <>
-      {/* Investment Portfolio Section */}
+      {/* Business Intelligence Case Studies Section */}
       <Section>
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Investment Analysis Portfolio
+              Business Intelligence Case Studies
             </h2>
             <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-              Deep-dive analyses combining scientific expertise with financial acumen
+              Translating biotech complexity into clear insights
             </p>
           </div>
 
@@ -28,7 +28,7 @@ export default function FeaturedProjects() {
             {projects.map((project) => (
               <Link
                 key={project.slug}
-                href={`/portfolio/${project.slug}`}
+                href={`/case-studies/${project.slug}`}
                 className="card group hover:border-primary-200 border-2 border-transparent transition-all"
               >
                 {/* Thumbnail Placeholder */}
@@ -88,23 +88,23 @@ export default function FeaturedProjects() {
 
           {/* View All CTA */}
           <div className="text-center">
-            <Button href="/portfolio" variant="secondary">
-              View All Analyses
+            <Button href="/case-studies" variant="secondary">
+              View All Case Studies
             </Button>
           </div>
         </div>
       </Section>
 
-      {/* Technical Projects Section */}
+      {/* AI Projects Section */}
       <Section background="gray">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Technical Projects
+              AI Agents & Design Systems
             </h2>
             <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-              AI agents and design systems that make investment workflows faster and smarter
+              AI prototypes and data visualization frameworks
             </p>
           </div>
 
@@ -117,7 +117,7 @@ export default function FeaturedProjects() {
               return (
                 <Link
                   key={slug}
-                  href={`/technical-projects/${slug}`}
+                  href={`/ai-projects/${slug}`}
                   className="card group hover:border-accent-200 border-2 border-transparent transition-all"
                 >
                   {/* Icon/Visual */}
@@ -184,8 +184,8 @@ export default function FeaturedProjects() {
 
           {/* View All CTA */}
           <div className="text-center">
-            <Button href="/technical-projects" variant="secondary">
-              View All Technical Projects
+            <Button href="/ai-projects" variant="secondary">
+              View All AI Projects
             </Button>
           </div>
         </div>

@@ -62,7 +62,7 @@ export function getMDXContent(directory: string, slug: string): MDXContent | nul
   }
 }
 
-// Get all investment project contents
+// Get all investment project contents (legacy - for backward compatibility)
 export function getAllProjects(): MDXContent[] {
   const files = getMDXFiles('projects');
   return files
@@ -77,7 +77,22 @@ export function getAllProjects(): MDXContent[] {
     });
 }
 
-// Get all technical projects
+// Get all case studies
+export function getAllCaseStudies(): MDXContent[] {
+  const files = getMDXFiles('case-studies');
+  return files
+    .map((filename) => {
+      const slug = filename.replace(/\.mdx$/, '');
+      return getMDXContent('case-studies', slug);
+    })
+    .filter((content): content is MDXContent => content !== null)
+    .sort((a, b) => {
+      // Sort by publishedDate descending
+      return new Date(b.frontmatter.publishedDate).getTime() - new Date(a.frontmatter.publishedDate).getTime();
+    });
+}
+
+// Get all technical projects (legacy - for backward compatibility)
 export function getAllTechnicalProjects(): MDXContent[] {
   const files = getMDXFiles('technical-projects');
   return files
@@ -88,14 +103,37 @@ export function getAllTechnicalProjects(): MDXContent[] {
     .filter((content): content is MDXContent => content !== null);
 }
 
-// Get featured projects
+// Get all AI projects
+export function getAllAIProjects(): MDXContent[] {
+  const files = getMDXFiles('ai-projects');
+  return files
+    .map((filename) => {
+      const slug = filename.replace(/\.mdx$/, '');
+      return getMDXContent('ai-projects', slug);
+    })
+    .filter((content): content is MDXContent => content !== null);
+}
+
+// Get featured projects (legacy)
 export function getFeaturedProjects(): MDXContent[] {
   return getAllProjects().filter((project) => project.frontmatter.featured);
 }
 
-// Get technical projects by type
+// Get featured case studies
+export function getFeaturedCaseStudies(): MDXContent[] {
+  return getAllCaseStudies().filter((project) => project.frontmatter.featured);
+}
+
+// Get technical projects by type (legacy)
 export function getTechnicalProjectsByType(type: 'ai-agent' | 'design' | 'all'): MDXContent[] {
   const allProjects = getAllTechnicalProjects();
+  if (type === 'all') return allProjects;
+  return allProjects.filter((project) => project.frontmatter.projectType === type);
+}
+
+// Get AI projects by type
+export function getAIProjectsByType(type: 'ai-agent' | 'design' | 'all'): MDXContent[] {
+  const allProjects = getAllAIProjects();
   if (type === 'all') return allProjects;
   return allProjects.filter((project) => project.frontmatter.projectType === type);
 }

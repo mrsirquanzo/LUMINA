@@ -5,13 +5,13 @@ import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://quanho.io'),
-  title: "Quan Ho | Biotech Investment Analysis",
-  description: "Professional portfolio showcasing deep scientific expertise in biotech investment analysis, due diligence, and technology assessment. 10+ years in immunology, oncology, and AI-driven drug discovery.",
-  keywords: ["biotech", "investment analysis", "venture capital", "private equity", "drug discovery", "AI", "oncology", "immunology"],
+  title: "Quan Ho | Biotech Business Intelligence & AI Systems",
+  description: "Bridging biotech, data, and intelligent design. Scientist × Strategist × Builder specializing in business intelligence and AI agents for life sciences.",
+  keywords: ["biotech", "business intelligence", "AI agents", "case studies", "data analysis", "patent intelligence", "financial modeling"],
   authors: [{ name: "Quan Ho" }],
   openGraph: {
-    title: "Quan Ho | Biotech Investment Analysis",
-    description: "Translating Breakthrough Biology into Investment Insights",
+    title: "Quan Ho | Biotech Business Intelligence & AI Systems",
+    description: "Bridging biotech, data, and intelligent design",
     type: "website",
     locale: "en_US",
   },
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans">
+      <body className="font-sans antialiased">
         <Header />
         <main className="min-h-screen">
           {children}

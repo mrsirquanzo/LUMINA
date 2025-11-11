@@ -1,0 +1,47 @@
+'use client';
+
+import { useState } from 'react';
+import CategoryFilter, { ProjectCategory } from '@/components/ai-projects/CategoryFilter';
+import AIProjectCard from '@/components/ai-projects/AIProjectCard';
+import { MDXContent } from '@/lib/mdx';
+
+interface AIProjectsClientProps {
+  projects: MDXContent[];
+}
+
+export default function AIProjectsClient({ projects }: AIProjectsClientProps) {
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>('all');
+
+  // Filter projects based on active category
+  const filteredProjects = activeCategory === 'all'
+    ? projects
+    : projects.filter(project => project.frontmatter.projectType === activeCategory);
+
+  return (
+    <>
+      {/* Category Filter */}
+      <CategoryFilter
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
+
+      {/* Project Grid */}
+      {filteredProjects.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProjects.map((project) => (
+            <AIProjectCard
+              key={project.frontmatter.slug}
+              project={project}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">
+            No projects found in this category.
+          </p>
+        </div>
+      )}
+    </>
+  );
+}
