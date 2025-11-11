@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://quanho.io'),
   title: "Quan Ho | Biotech Investment Analysis",
   description: "Professional portfolio showcasing deep scientific expertise in biotech investment analysis, due diligence, and technology assessment. 10+ years in immunology, oncology, and AI-driven drug discovery.",
   keywords: ["biotech", "investment analysis", "venture capital", "private equity", "drug discovery", "AI", "oncology", "immunology"],
