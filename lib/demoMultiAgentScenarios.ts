@@ -429,19 +429,30 @@ export function playDemoScenario(
   scenario: DemoScenario,
   onEvent: (event: any) => void,
   speedMultiplier: number = 1
-): () => void {
-  const timeouts: NodeJS.Timeout[] = [];
+): Promise<void> {
+  return new Promise((resolve) => {
+    const timeouts: NodeJS.Timeout[] = [];
+    let maxDelay = 0;
 
-  scenario.events.forEach(event => {
-    const adjustedDelay = event.timestamp! / speedMultiplier;
-    const timeout = setTimeout(() => {
-      onEvent(event);
-    }, adjustedDelay);
-    timeouts.push(timeout);
+    console.log('[playDemoScenario] Starting playback of', scenario.events.length, 'events');
+
+    scenario.events.forEach(event => {
+      const adjustedDelay = event.timestamp! / speedMultiplier;
+      maxDelay = Math.max(maxDelay, adjustedDelay);
+
+      const timeout = setTimeout(() => {
+        console.log('[playDemoScenario] Firing event:', event.type, 'at', adjustedDelay, 'ms');
+        onEvent(event);
+      }, adjustedDelay);
+      timeouts.push(timeout);
+    });
+
+    console.log('[playDemoScenario] Max delay:', maxDelay, 'ms');
+
+    // Resolve after all events have fired
+    setTimeout(() => {
+      console.log('[playDemoScenario] All events fired, resolving');
+      resolve();
+    }, maxDelay + 100); // Add small buffer
   });
-
-  // Return cleanup function
-  return () => {
-    timeouts.forEach(timeout => clearTimeout(timeout));
-  };
 }

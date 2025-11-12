@@ -37,10 +37,15 @@ export async function runOrchestration(
 ): Promise<void> {
   // If demo mode, play pre-recorded scenario
   if (isDemo && demoScenarioId) {
+    console.log('[Orchestration] Demo mode detected, loading scenario:', demoScenarioId);
     const scenario = getDemoScenario(demoScenarioId);
     if (scenario) {
-      playDemoScenario(scenario, sendEvent, 1.0); // Real-time playback
+      console.log('[Orchestration] Playing demo scenario with', scenario.events.length, 'events');
+      await playDemoScenario(scenario, sendEvent, 1.0); // Real-time playback
+      console.log('[Orchestration] Demo scenario playback complete');
       return;
+    } else {
+      console.error('[Orchestration] Demo scenario not found:', demoScenarioId);
     }
   }
 

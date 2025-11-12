@@ -47,14 +47,8 @@ export default function MultiAgentCollaboration({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new content arrives
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [agentActivities, agentQuestions, synthesisStep, synthesis]);
+  // Auto-scroll disabled to allow users to freely scroll and track progress
+  // Users can manually scroll to see updates as they happen
 
   const startOrchestration = async () => {
     setIsRunning(true);
