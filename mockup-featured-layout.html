@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Featured Layout Mockup - Experience Section</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              600: '#0284c7',
+            },
+            accent: {
+              50: '#fef3c7',
+              500: '#f59e0b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white py-12">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        Featured R&D + 3-Column Grid Layout
+      </h1>
+      <p class="text-lg text-gray-600">
+        R&D Leadership featured at full width, followed by 3 sections in grid below
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="bg-gray-100 py-12">
+    <div class="max-w-6xl mx-auto px-4">
+
+      <!-- Featured Section: Biotech R&D Leadership (Full Width) -->
+      <div class="card mb-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center">
+          Experience & Background
+        </h2>
+
+        <h3 class="text-2xl font-semibold text-gray-900 mb-6">
+          Biotech R&D Leadership
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Generate Biomedicines -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                GB
+              </div>
+              <h4 class="font-semibold text-gray-900 text-base">
+                Generate Biomedicines
+              </h4>
+            </div>
+            <p class="text-sm text-gray-600 mb-1 ml-8 font-medium">
+              Immunogenicity & AI Collaboration
+            </p>
+            <p class="text-sm text-gray-700 ml-8">
+              Partnered with ML engineers to define biological requirements, generate validation datasets, and interpret results that guided improvements to generative protein models and immunogenicity prediction workflows.
+            </p>
+          </div>
+
+          <!-- Novartis -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                N
+              </div>
+              <h4 class="font-semibold text-gray-900 text-base">
+                Novartis
+              </h4>
+            </div>
+            <p class="text-sm text-gray-600 mb-1 ml-8 font-medium">
+              Oncology Translational Research
+            </p>
+            <p class="text-sm text-gray-700 ml-8">
+              Designed and validated biomarker assays, led pharmacodynamic method transfer to clinical sites, and guided multi-program biomarker strategy supporting adenosine pathway trials.
+            </p>
+          </div>
+
+          <!-- Intellia -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-6 h-6 bg-gradient-to-br from-purple-500 to-purple-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                I
+              </div>
+              <h4 class="font-semibold text-gray-900 text-base">
+                Intellia Therapeutics
+              </h4>
+            </div>
+            <p class="text-sm text-gray-600 mb-1 ml-8 font-medium">
+              CRISPR Gene Editing
+            </p>
+            <p class="text-sm text-gray-700 ml-8">
+              Conducted large-scale CRISPR HSPC screens, analyzed editing outcomes, and generated datasets that supported IP filings (U.S. Patent 20200308603).
+            </p>
+          </div>
+
+          <!-- Juno Therapeutics -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-6 h-6 bg-gradient-to-br from-teal-500 to-teal-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                J
+              </div>
+              <h4 class="font-semibold text-gray-900 text-base">
+                Juno Therapeutics
+              </h4>
+            </div>
+            <p class="text-sm text-gray-600 mb-1 ml-8 font-medium">
+              CAR-T Discovery
+            </p>
+            <p class="text-sm text-gray-700 ml-8">
+              Developed high-throughput CAR-T screening assays to assess binding specificity and activation potential, enabling early-stage therapeutic candidate selection.
+            </p>
+          </div>
+
+          <!-- Massachusetts General Hospital -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-6 h-6 bg-gradient-to-br from-green-500 to-green-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                MGH
+              </div>
+              <h4 class="font-semibold text-gray-900 text-base">
+                Massachusetts General Hospital
+              </h4>
+            </div>
+            <p class="text-sm text-gray-600 mb-1 ml-8 font-medium">
+              Molecular Pathology
+            </p>
+            <p class="text-sm text-gray-700 ml-8">
+              Implemented anchored multiplex PCR for NGS-based gene fusion detection in collaboration with Blueprint Medicines and supported pharma partnerships investigating treatment resistance in GBM and solid tumors.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Three Column Grid Below -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Section 2: AI, Data & Systems Engineering -->
+        <div class="card">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">
+            AI, Data & Systems Engineering
+          </h3>
+
+          <ul class="space-y-3 text-gray-700">
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <div>
+                <span class="text-sm font-medium text-gray-900">Computational analysis & data visualization</span>
+                <span class="text-sm text-gray-700"> — Python, R, SQL, Qiagen Omicsoft, Tableau, Spotfire</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <div>
+                <span class="text-sm font-medium text-gray-900">AI agent prototyping</span>
+                <span class="text-sm text-gray-700"> — Developing portfolio-ready agents for patent analysis, business intelligence, and data-driven decision support</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <div>
+                <span class="text-sm font-medium text-gray-900">Prompt engineering & automation</span>
+                <span class="text-sm text-gray-700"> — Building LLM-based agents that convert technical or IP documents into strategic insights</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 3: Business Intelligence & Strategy -->
+        <div class="card">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">
+            Business Intelligence & Strategy
+          </h3>
+
+          <ul class="space-y-2.5 text-gray-700">
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <span class="text-sm">Competitive landscape & patent analysis</span>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <span class="text-sm">IP strategy and technology assessment</span>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <span class="text-sm">Clinical and biomarker data interpretation</span>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <span class="text-sm">Market opportunity and portfolio evaluation</span>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <span class="text-sm">Vendor coordination, requirements definition, and platform adoption leadership</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 4: Scientific & Technical Expertise -->
+        <div class="card">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">
+            Scientific & Technical Expertise
+          </h3>
+
+          <ul class="space-y-2.5 text-gray-700">
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <div>
+                <span class="text-sm font-medium text-gray-900">Therapeutic areas:</span>
+                <span class="text-sm text-gray-700"> Immunology & oncology, cell & gene therapy</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <div>
+                <span class="text-sm font-medium text-gray-900">Modalities:</span>
+                <span class="text-sm text-gray-700"> ADCs, TCEs, bispecifics, CRISPR, CAR-T, organ-on-chip</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <div>
+                <span class="text-sm font-medium text-gray-900">Analytical skills:</span>
+                <span class="text-sm text-gray-700"> Transcriptomics, multi-omics, flow cytometry, immunogenicity assays</span>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-2 mt-0.5">•</span>
+              <div>
+                <span class="text-sm font-medium text-gray-900">Computational tools:</span>
+                <span class="text-sm text-gray-700"> RNA-seq pipelines, data visualization, AI model validation</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Philosophy Section -->
+  <div class="bg-white py-12">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+        Philosophy
+      </h2>
+
+      <div class="prose prose-lg max-w-none">
+        <p class="text-body text-gray-700 mb-6">
+          I see innovation as the intersection of science, strategy, and systems thinking. My approach combines the curiosity of a scientist, the analytical mindset of a strategist, and the pragmatism of a builder.
+        </p>
+
+        <p class="text-body text-gray-700 mb-6">
+          I'm drawn to problems where biology meets computation—where data can sharpen intuition and translate discovery into real decisions. Whether it's advancing therapeutic programs, refining AI tools, or evaluating emerging technologies, I focus on turning complex information into clear, actionable insight.
+        </p>
+
+        <p class="text-body text-gray-700 text-center font-semibold text-xl mt-8">
+          Scientist × Strategist × Builder
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beyond Work Section -->
+  <div class="bg-gray-100 py-12">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+        Beyond Work
+      </h2>
+
+      <div class="card text-center">
+        <p class="text-body text-gray-700 mb-6">
+          <strong>Boston-based</strong> · <strong>Balancing curiosity & chaos</strong>
+        </p>
+        <p class="text-sm text-gray-600">
+          Outside of work, I'm learning as much from parenthood as I do from building AI systems—both push you to stay patient, flexible, and quick on your feet. When I'm not debugging models or baby sleep cycles, I'm on the soccer or squash court, diving into new research, or watching Manchester United test my resilience.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout Benefits -->
+  <div class="bg-white py-12">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="bg-gray-50 p-6 rounded-lg">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+          Why This Layout Works Better
+        </h2>
+
+        <ul class="space-y-2 text-sm text-gray-700">
+          <li>✓ <strong>Better visual hierarchy:</strong> R&D experience gets prominent placement as your primary credential</li>
+          <li>✓ <strong>More balanced:</strong> 3-column grid below distributes content more evenly</li>
+          <li>✓ <strong>Improved scannability:</strong> Full-width R&D section easier to scan with 2-column company grid</li>
+          <li>✓ <strong>Handles varying content:</strong> Dense R&D content gets room to breathe, shorter sections fit cleanly in columns</li>
+          <li>✓ <strong>Professional appearance:</strong> Creates visual interest without feeling crowded</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
