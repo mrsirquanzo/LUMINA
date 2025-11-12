@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import LoginModal from '@/components/shared/LoginModal';
 import { PATENT_EXPERT_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
 
@@ -28,28 +28,26 @@ export default function DataAnalystAgent() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [demoIndex, setDemoIndex] = useState(0);
 
-  // Check auth status on mount
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
   const checkAuthStatus = async () => {
     try {
       const response = await fetch('/api/auth/check');
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
+      if (data.authenticated) {
+        setMode('live');
+        setMessages([]);
+      } else {
+        setShowLoginModal(true);
+      }
     } catch (err) {
       console.error('Auth check failed:', err);
+      setShowLoginModal(true);
     }
   };
 
   const switchToLiveMode = () => {
-    if (!isAuthenticated) {
-      setShowLoginModal(true);
-    } else {
-      setMode('live');
-      setMessages([]);
-    }
+    // Check auth when switching to live mode
+    checkAuthStatus();
   };
 
   const handleLoginSuccess = () => {
