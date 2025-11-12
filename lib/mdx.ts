@@ -137,3 +137,23 @@ export function getAIProjectsByType(type: 'ai-agent' | 'design' | 'all'): MDXCon
   if (type === 'all') return allProjects;
   return allProjects.filter((project) => project.frontmatter.projectType === type);
 }
+
+// Get all blog posts
+export function getAllBlogPosts(): MDXContent[] {
+  const files = getMDXFiles('blog');
+  return files
+    .map((filename) => {
+      const slug = filename.replace(/\.mdx$/, '');
+      return getMDXContent('blog', slug);
+    })
+    .filter((content): content is MDXContent => content !== null)
+    .sort((a, b) => {
+      // Sort by publishedDate descending
+      return new Date(b.frontmatter.publishedDate).getTime() - new Date(a.frontmatter.publishedDate).getTime();
+    });
+}
+
+// Get featured blog posts (for home page)
+export function getFeaturedBlogPosts(limit: number = 3): MDXContent[] {
+  return getAllBlogPosts().slice(0, limit);
+}
