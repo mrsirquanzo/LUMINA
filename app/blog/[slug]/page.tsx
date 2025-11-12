@@ -1,10 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMDXContent, getAllBlogPosts } from '@/lib/mdx';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import remarkGfm from 'remark-gfm';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import Section from '@/components/shared/Section';
 import Link from 'next/link';
 
@@ -31,14 +27,18 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = getMDXContent('blog', params.slug);
 
   if (!post) {
     notFound();
   }
 
-  const { frontmatter, content } = post;
+  const { frontmatter } = post;
+
+  // Dynamically import the MDX content
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const MDXContent = require(`@/content/blog/${params.slug}.mdx`).default;
 
   const categoryStyles: Record<string, { gradient: string; color: string }> = {
     Opinion: { gradient: 'from-purple-100 to-violet-50', color: 'text-purple-600' },
@@ -103,15 +103,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           prose-code:text-primary-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
           prose-blockquote:border-l-4 prose-blockquote:border-primary-600 prose-blockquote:pl-4 prose-blockquote:italic
         ">
-          <MDXRemote
-            source={content}
-            options={{
-              mdxOptions: {
-                remarkPlugins: [remarkGfm],
-                rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-              },
-            }}
-          />
+          <MDXContent />
         </article>
 
         {/* Tags */}
