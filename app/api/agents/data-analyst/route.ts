@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse request body
-    const { messages } = await req.json();
+    const { messages, documents } = await req.json();
 
     // Validate messages
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
@@ -52,6 +52,48 @@ export async function POST(req: NextRequest) {
         { error: 'Messages array is required and must not be empty' },
         { status: 400 }
       );
+    }
+
+    // If documents are provided, add them to the first user message
+    const processedMessages = [...messages];
+    if (documents && documents.length > 0) {
+      // Find the last user message or create one
+      const lastUserMsgIndex = processedMessages.map(m => m.role).lastIndexOf('user');
+
+      if (lastUserMsgIndex !== -1) {
+        const lastUserMsg = processedMessages[lastUserMsgIndex];
+
+        // Convert message content to array format if it's a string
+        const content = typeof lastUserMsg.content === 'string'
+          ? [{ type: 'text', text: lastUserMsg.content }]
+          : [...lastUserMsg.content];
+
+        // Add document content blocks
+        for (const doc of documents) {
+          if (doc.isImage && doc.base64) {
+            // Add image content block
+            content.push({
+              type: 'image',
+              source: {
+                type: 'base64',
+                media_type: doc.mimeType,
+                data: doc.base64,
+              },
+            });
+          } else if (doc.text) {
+            // Add document text as a content block
+            content.push({
+              type: 'text',
+              text: `\n\n--- Document: ${doc.fileName} ---\n${doc.text}`,
+            });
+          }
+        }
+
+        processedMessages[lastUserMsgIndex] = {
+          ...lastUserMsg,
+          content,
+        };
+      }
     }
 
     // Validate API key
@@ -68,7 +110,7 @@ export async function POST(req: NextRequest) {
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
-      messages: messages,
+      messages: processedMessages,
     });
 
     // Extract the assistant's message
