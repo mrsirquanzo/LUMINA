@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { NextRequest, NextResponse } from 'next/server';
+import { isAuthenticated } from '@/lib/auth';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -33,6 +34,15 @@ Guidelines:
 
 export async function POST(req: NextRequest) {
   try {
+    // Check authentication
+    const authenticated = await isAuthenticated();
+    if (!authenticated) {
+      return NextResponse.json(
+        { error: 'Authentication required. Please log in to use the live agent.' },
+        { status: 401 }
+      );
+    }
+
     // Parse request body
     const { messages } = await req.json();
 
