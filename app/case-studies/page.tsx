@@ -5,9 +5,9 @@ import { getAllCaseStudies } from "@/lib/mdx";
 import { generateSEO } from "@/components/layout/SEO";
 
 export const metadata: Metadata = generateSEO({
-  title: "Business Intelligence Case Studies",
+  title: "Case Studies",
   description: "Translating biotech complexity into clear insights. Data-driven analyses combining scientific expertise with business strategy.",
-  keywords: ["biotech", "business intelligence", "case studies", "competitive analysis", "market research"],
+  keywords: ["biotech", "case studies", "competitive analysis", "market research", "strategic analysis"],
 });
 
 export default function CaseStudiesPage() {
@@ -18,7 +18,7 @@ export default function CaseStudiesPage() {
       <Section className="bg-gradient-to-br from-primary-50 via-white to-accent-50">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Business Intelligence Case Studies
+            Case Studies
           </h1>
           <p className="text-xl text-gray-700">
             Translating biotech complexity into clear insights
