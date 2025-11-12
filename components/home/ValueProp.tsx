@@ -4,44 +4,48 @@ export default function ValueProp() {
   const values = [
     {
       icon: (
-        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+        <svg viewBox="0 0 24 24" className="w-10 h-10">
+          <path d="M4 5h16M8 5v14m8-14v14M4 19h16" fill="none" stroke="currentColor" strokeWidth="1.8" />
         </svg>
       ),
       title: "Translate Deep Science",
       description:
-        "Turn R&D and clinical data into actionable insight",
+        "Transform complex R&D and clinical data into clear, actionable insights for investment decisions.",
+      hover: "Examples: target evaluation briefs, assay readouts to strategy memos, clinical data synthesis",
     },
     {
       icon: (
-        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+        <svg viewBox="0 0 24 24" className="w-10 h-10">
+          <path d="M4 18h4V6H4v12zm6 0h4V10h-4v8zm6 0h4V4h-4v14z" fill="currentColor" />
         </svg>
       ),
       title: "Deliver Business Intelligence",
       description:
-        "Build frameworks for competitive analysis",
+        "Build analytical frameworks for competitive intelligence, market assessment, and strategic planning.",
+      hover: "Examples: competitive landscape maps, pipeline trackers, investment diligence scorecards",
     },
     {
       icon: (
-        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M13 7H7v6h6V7z" />
-          <path fillRule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h8v8H5V5z" clipRule="evenodd" />
+        <svg viewBox="0 0 24 24" className="w-10 h-10">
+          <rect x="3" y="3" width="18" height="18" rx="3" fill="currentColor" />
+          <rect x="7" y="7" width="10" height="10" rx="2" fill="white" />
         </svg>
       ),
       title: "Build AI Agents",
       description:
-        "Automate diligence and synthesis",
+        "Create intelligent systems that automate due diligence, accelerate analysis, and scale expertise.",
+      hover: "Examples: data analyst agent, patent expert agent, financial analyst agent",
     },
     {
       icon: (
-        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+        <svg viewBox="0 0 24 24" className="w-10 h-10">
+          <path d="M5 6h14M5 12h14M5 18h14" stroke="currentColor" strokeWidth="1.8" />
         </svg>
       ),
       title: "Design Data Systems",
       description:
-        "Create dashboards and visual systems",
+        "Develop interactive dashboards and visualization systems that make complex data immediately actionable.",
+      hover: "Examples: interactive dashboards, data visualizations, real-time analytics",
     },
   ];
 
@@ -61,19 +65,31 @@ export default function ValueProp() {
         {/* Value Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {values.map((value, index) => (
-            <div key={index} className="card text-center">
+            <div
+              key={index}
+              className="group card text-center hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+              title={value.hover}
+            >
               <div className="flex justify-center text-primary-600 mb-4">
                 {value.icon}
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {value.title}
               </h3>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed mb-3">
                 {value.description}
               </p>
+              <div className="opacity-0 group-hover:opacity-100 mt-3 text-xs text-gray-500 transition-opacity">
+                {value.hover}
+              </div>
             </div>
           ))}
         </div>
+
+        {/* Closing Statement */}
+        <p className="mt-10 text-center text-gray-700 max-w-2xl mx-auto leading-relaxed">
+          These capabilities work together to transform scientific complexity into strategic clarity—and strategy into scalable, intelligent systems.
+        </p>
       </div>
     </Section>
   );

@@ -7,13 +7,12 @@ export default function Hero() {
       <div className="max-w-4xl mx-auto text-center">
         {/* Main Heading */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-          Bridging biotech, data, and{" "}
-          <span className="text-primary-700">intelligent design</span>
+          Biology. Business. Build.
         </h1>
 
         {/* Subheading */}
         <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
-          I turn complex science into clear business insight—and build AI tools that make those insights scalable.
+          I combine scientific expertise with strategic business intelligence to identify promising biotech opportunities—and develop AI-powered tools that make sophisticated due diligence accessible and scalable.
         </p>
 
         {/* CTA Buttons */}
