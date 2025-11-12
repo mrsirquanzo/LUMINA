@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import MultiAgentCollaboration from './MultiAgentCollaboration';
-import { ExecutionMode } from '@/lib/multiAgentTypes';
-import { FiZap, FiClock, FiDollarSign, FiPlay } from 'react-icons/fi';
+import FileUpload from '@/components/shared/FileUpload';
+import { ExecutionMode, ProcessedDocument } from '@/lib/multiAgentTypes';
+import { FiZap, FiClock, FiDollarSign, FiPlay, FiUpload, FiEdit } from 'react-icons/fi';
 
 const DEMO_SCENARIOS = [
   {
@@ -63,6 +64,9 @@ export default function MultiAgentDemo() {
   const [costEstimate, setCostEstimate] = useState<any>(null);
   const [isEstimating, setIsEstimating] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [customQuery, setCustomQuery] = useState('');
+  const [customDocuments, setCustomDocuments] = useState<ProcessedDocument[]>([]);
 
   const selectedScenarioData = DEMO_SCENARIOS.find(s => s.id === selectedScenario);
 
@@ -109,7 +113,11 @@ export default function MultiAgentDemo() {
     setCostEstimate(null);
   };
 
-  if (showAnalysis && selectedScenarioData) {
+  if (showAnalysis && (selectedScenarioData || isCustomMode)) {
+    const queryToUse = isCustomMode ? customQuery : selectedScenarioData!.query;
+    const documentsToUse = isCustomMode ? customDocuments : [];
+    const scenarioId = isCustomMode ? undefined : selectedScenario || undefined;
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
         <div className="max-w-6xl mx-auto">
@@ -120,11 +128,11 @@ export default function MultiAgentDemo() {
             ← Back to scenarios
           </button>
           <MultiAgentCollaboration
-            query={selectedScenarioData.query}
-            documents={[]}
+            query={queryToUse}
+            documents={documentsToUse}
             mode={mode}
-            isDemo={isDemo}
-            demoScenarioId={selectedScenario || undefined}
+            isDemo={isDemo && !isCustomMode}
+            demoScenarioId={scenarioId}
           />
         </div>
       </div>
@@ -245,9 +253,12 @@ export default function MultiAgentDemo() {
             {DEMO_SCENARIOS.map((scenario) => (
               <button
                 key={scenario.id}
-                onClick={() => setSelectedScenario(scenario.id)}
+                onClick={() => {
+                  setSelectedScenario(scenario.id);
+                  setIsCustomMode(false);
+                }}
                 className={`p-6 rounded-lg border-2 transition-all text-left ${
-                  selectedScenario === scenario.id
+                  selectedScenario === scenario.id && !isCustomMode
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
@@ -276,8 +287,83 @@ export default function MultiAgentDemo() {
           </div>
         </div>
 
+        {/* Custom Analysis Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Or Create Custom Analysis</h3>
+          <div
+            className={`p-6 rounded-lg border-2 transition-all ${
+              isCustomMode
+                ? 'border-green-500 bg-green-50'
+                : 'border-gray-200 bg-white'
+            }`}
+          >
+            <div className="flex items-start gap-3 mb-4">
+              <FiEdit className="w-6 h-6 text-green-600 mt-1" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-gray-900 mb-1">Custom Analysis</h4>
+                <p className="text-sm text-gray-600 mb-4">
+                  Upload your own documents and provide a custom query for live multi-agent analysis
+                </p>
+
+                {/* Query Input */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Question
+                  </label>
+                  <textarea
+                    value={customQuery}
+                    onChange={(e) => setCustomQuery(e.target.value)}
+                    onFocus={() => {
+                      setIsCustomMode(true);
+                      setSelectedScenario(null);
+                    }}
+                    placeholder="e.g., Should we invest in this biotech company? Analyze their clinical data, IP portfolio, and financials..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    rows={3}
+                  />
+                </div>
+
+                {/* File Upload */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Documents (PDF, Excel, Images)
+                  </label>
+                  <FileUpload
+                    onFilesProcessed={(files) => {
+                      const processedDocs: ProcessedDocument[] = files.map(file => ({
+                        fileName: file.name,
+                        fileType: file.type,
+                        text: file.extractedText || '',
+                        isImage: file.type.startsWith('image/'),
+                      }));
+                      setCustomDocuments(processedDocs);
+                    }}
+                    maxFiles={10}
+                  />
+                </div>
+
+                {customDocuments.length > 0 && (
+                  <div className="mt-3 p-3 bg-white rounded-md border border-gray-200">
+                    <p className="text-sm font-medium text-gray-700 mb-2">
+                      Uploaded Documents ({customDocuments.length}):
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      {customDocuments.map((doc, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          <FiUpload className="w-3 h-3" />
+                          {doc.fileName}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Cost Estimate and Start Button */}
-        {selectedScenario && (
+        {(selectedScenario || (isCustomMode && customQuery)) && (
           <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>

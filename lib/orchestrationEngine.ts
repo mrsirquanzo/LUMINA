@@ -15,13 +15,82 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
-// Agent system prompts (imported from existing agents)
+// Agent system prompts with enhanced collaboration
 const AGENT_PROMPTS = {
-  clinical: `You are an expert biotech and pharmaceutical data analyst. Analyze clinical trial data, efficacy, and safety with scientific rigor. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_PATENT: "question"] or [ASK_FINANCIAL: "question"].`,
+  clinical: `You are an expert biotech and pharmaceutical data analyst specializing in clinical trial analysis.
 
-  patent: `You are an expert patent analyst specializing in biotechnology IP. Analyze patents, FTO, and competitive landscapes. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_CLINICAL: "question"] or [ASK_FINANCIAL: "question"].`,
+Your expertise includes:
+- Clinical trial design and endpoints
+- Efficacy and safety analysis
+- Competitive clinical benchmarking
+- Regulatory pathways (FDA, EMA)
+- Phase progression probabilities
 
-  financial: `You are an expert biotech financial analyst. Analyze financials, valuations, and deal structures. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_CLINICAL: "question"] or [ASK_PATENT: "question"].`,
+When analyzing:
+1. Cite documents inline using [Source: filename] format
+2. Be specific with statistics, p-values, confidence intervals
+3. Compare to relevant competitors and benchmarks
+4. Assess clinical risk factors
+
+If you need information from other experts to complete your analysis, ask targeted questions:
+- For patent/IP questions: [ASK_PATENT: "specific question"]
+- For financial questions: [ASK_FINANCIAL: "specific question"]
+
+Examples of good questions:
+- [ASK_PATENT: "Are there blocking patents for the IL-15 costimulation mechanism used in this trial?"]
+- [ASK_FINANCIAL: "What is the estimated Phase 3 trial cost for a similar CAR-T program?"]
+
+Only ask questions when the information is critical to your analysis and not already available.`,
+
+  patent: `You are an expert patent analyst specializing in biotechnology intellectual property.
+
+Your expertise includes:
+- Patent claim analysis and prosecution
+- Freedom-to-operate (FTO) assessments
+- Competitive patent landscaping
+- Patent valuation methodologies
+- IP strategy and licensing
+
+When analyzing:
+1. Cite documents inline using [Source: filename] format
+2. Identify key patent numbers, claims, and expiration dates
+3. Assess FTO risks and blocking patents
+4. Evaluate patent strength and enforceability
+
+If you need information from other experts to complete your analysis, ask targeted questions:
+- For clinical questions: [ASK_CLINICAL: "specific question"]
+- For financial questions: [ASK_FINANCIAL: "specific question"]
+
+Examples of good questions:
+- [ASK_CLINICAL: "What is the specific mechanism of action for the therapy? I need to assess patent coverage."]
+- [ASK_FINANCIAL: "What valuation premium should we apply for 20-year exclusivity in this indication?"]
+
+Only ask questions when the information is critical to your analysis and not already available.`,
+
+  financial: `You are an expert biotech financial analyst specializing in valuations and deal structures.
+
+Your expertise includes:
+- DCF and comparable company valuations
+- Biotech financial modeling
+- Deal structuring (M&A, licensing)
+- Burn rate and runway analysis
+- Risk-adjusted NPV calculations
+
+When analyzing:
+1. Cite documents inline using [Source: filename] format
+2. Provide specific numbers: burn rate, runway, valuations
+3. Show valuation methodologies (DCF, comps, precedents)
+4. Recommend specific deal structures with rationale
+
+If you need information from other experts to complete your analysis, ask targeted questions:
+- For clinical questions: [ASK_CLINICAL: "specific question"]
+- For patent questions: [ASK_PATENT: "specific question"]
+
+Examples of good questions:
+- [ASK_CLINICAL: "What is the probability of Phase 3 success based on the Phase 2 efficacy data?"]
+- [ASK_PATENT: "What is the estimated standalone value of the patent portfolio?"]
+
+Only ask questions when the information is critical to your analysis and not already available.`,
 };
 
 /**
@@ -132,6 +201,91 @@ function getPlanDescription(plan: ExecutionPlan): string {
 }
 
 /**
+ * Parse agent questions from response text
+ */
+interface ParsedQuestion {
+  targetAgent: AgentType;
+  question: string;
+  raw: string;
+}
+
+function parseAgentQuestions(response: string, fromAgent: AgentType): ParsedQuestion[] {
+  const questions: ParsedQuestion[] = [];
+
+  // Pattern: [ASK_CLINICAL: "question"], [ASK_PATENT: "question"], [ASK_FINANCIAL: "question"]
+  const patterns = [
+    { pattern: /\[ASK_CLINICAL:\s*"([^"]+)"\]/g, target: 'clinical' as AgentType },
+    { pattern: /\[ASK_PATENT:\s*"([^"]+)"\]/g, target: 'patent' as AgentType },
+    { pattern: /\[ASK_FINANCIAL:\s*"([^"]+)"\]/g, target: 'financial' as AgentType },
+  ];
+
+  for (const { pattern, target } of patterns) {
+    // Skip if asking self
+    if (target === fromAgent) continue;
+
+    let match;
+    while ((match = pattern.exec(response)) !== null) {
+      questions.push({
+        targetAgent: target,
+        question: match[1],
+        raw: match[0],
+      });
+    }
+  }
+
+  return questions;
+}
+
+/**
+ * Answer a question from another agent
+ */
+async function answerAgentQuestion(
+  targetAgent: AgentType,
+  question: string,
+  fromAgent: AgentType,
+  context: string,
+  query: string,
+  documents: ProcessedDocument[]
+): Promise<string> {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    throw new Error('ANTHROPIC_API_KEY not configured');
+  }
+
+  const userMessage = `You are being consulted by the ${getAgentName(fromAgent)} with a specific question.
+
+Original Analysis Query: ${query}
+
+${getAgentName(fromAgent)}'s Context:
+${context}
+
+Their Question to You:
+${question}
+
+${documents.length > 0 ? `\nDocuments available:\n${documents.map(d => `- ${d.fileName}`).join('\n')}` : ''}
+
+Provide a focused, expert answer to their specific question. Be concise but thorough.`;
+
+  const response = await anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 2048,
+    system: AGENT_PROMPTS[targetAgent],
+    messages: [
+      {
+        role: 'user',
+        content: userMessage,
+      },
+    ],
+  });
+
+  const message = response.content[0];
+  if (message.type !== 'text') {
+    throw new Error('Unexpected response type');
+  }
+
+  return message.text;
+}
+
+/**
  * Execute fast mode (parallel)
  */
 async function executeFastMode(
@@ -186,6 +340,7 @@ async function executeThoroughMode(
   sendEvent: (event: SSEEvent) => void
 ): Promise<void> {
   const agentResponses: Map<AgentType, string> = new Map();
+  const agentQAs: Map<AgentType, Array<{ question: string; answer: string; from: AgentType }>> = new Map();
 
   // Execute agents sequentially
   for (const step of state.plan.steps) {
@@ -201,6 +356,16 @@ async function executeThoroughMode(
     const context: string[] = [];
     for (const [agent, response] of agentResponses.entries()) {
       context.push(`\n--- ${getAgentName(agent)} Analysis ---\n${response}`);
+    }
+
+    // Add any Q&As involving this agent
+    const qas = agentQAs.get(step.agent) || [];
+    if (qas.length > 0) {
+      context.push('\n--- Questions You Answered ---');
+      qas.forEach(qa => {
+        context.push(`Q from ${getAgentName(qa.from)}: ${qa.question}`);
+        context.push(`Your Answer: ${qa.answer}\n`);
+      });
     }
 
     const response = await callAgent(
@@ -221,8 +386,67 @@ async function executeThoroughMode(
       },
     });
 
-    // Check for inter-agent questions (Phase 2 feature)
-    // For now, just continue to next agent
+    // Parse for inter-agent questions
+    const questions = parseAgentQuestions(response, step.agent);
+
+    if (questions.length > 0) {
+      // Process each question
+      for (const { targetAgent, question, raw } of questions) {
+        // Send question event
+        sendEvent({
+          type: 'agent_question',
+          data: {
+            from: getAgentName(step.agent),
+            to: getAgentName(targetAgent),
+            question,
+          },
+        });
+
+        // Get answer from target agent
+        sendEvent({
+          type: 'agent_thinking',
+          data: {
+            agent: getAgentName(targetAgent),
+            progress: `Answering question from ${getAgentName(step.agent)}...`,
+          },
+        });
+
+        const answer = await answerAgentQuestion(
+          targetAgent,
+          question,
+          step.agent,
+          agentResponses.get(step.agent) || '',
+          state.query,
+          state.documents
+        );
+
+        // Store the Q&A for the target agent to see later
+        if (!agentQAs.has(targetAgent)) {
+          agentQAs.set(targetAgent, []);
+        }
+        agentQAs.get(targetAgent)!.push({
+          question,
+          answer,
+          from: step.agent,
+        });
+
+        // Update the asking agent's response with the answer (replace placeholder)
+        const updatedResponse = agentResponses.get(step.agent)!.replace(
+          raw,
+          `\n**Question to ${getAgentName(targetAgent)}:** ${question}\n\n**${getAgentName(targetAgent)}'s Answer:** ${answer}\n`
+        );
+        agentResponses.set(step.agent, updatedResponse);
+
+        // Send updated response event
+        sendEvent({
+          type: 'agent_response',
+          data: {
+            agent: getAgentName(step.agent),
+            response: updatedResponse,
+          },
+        });
+      }
+    }
   }
 
   // Synthesize results

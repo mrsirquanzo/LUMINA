@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ProcessedDocument, ExecutionMode, SSEEvent } from '@/lib/multiAgentTypes';
-import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle } from 'react-icons/fi';
+import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiCopy, FiDownload } from 'react-icons/fi';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -44,8 +44,32 @@ export default function MultiAgentCollaboration({
   const [cost, setCost] = useState<number>(0);
   const [error, setError] = useState<string>('');
   const [estimatedCost, setEstimatedCost] = useState<string>('');
+  const [copied, setCopied] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Export functions
+  const handleCopyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(synthesis);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  const handleDownloadMarkdown = () => {
+    const blob = new Blob([synthesis], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `multi-agent-analysis-${new Date().toISOString().split('T')[0]}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   // Auto-scroll to bottom when new content arrives
   const scrollToBottom = () => {
@@ -362,11 +386,27 @@ export default function MultiAgentCollaboration({
           <div className="flex items-center gap-2 mb-4">
             <FiCheck className="w-6 h-6 text-green-600" />
             <h3 className="text-lg font-semibold text-gray-900">Analysis Complete</h3>
-            {cost > 0 && (
-              <span className="ml-auto text-sm text-gray-600">
-                Cost: ${cost.toFixed(2)}
-              </span>
-            )}
+            <div className="ml-auto flex items-center gap-2">
+              {cost > 0 && (
+                <span className="text-sm text-gray-600 mr-2">
+                  Cost: ${cost.toFixed(2)}
+                </span>
+              )}
+              <button
+                onClick={handleCopyToClipboard}
+                className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2 transition-colors"
+              >
+                <FiCopy className="w-4 h-4" />
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+              <button
+                onClick={handleDownloadMarkdown}
+                className="px-3 py-1.5 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2 transition-colors"
+              >
+                <FiDownload className="w-4 h-4" />
+                Download
+              </button>
+            </div>
           </div>
           <div className="prose prose-sm max-w-none">
             <div className="text-sm text-gray-800 whitespace-pre-wrap">
