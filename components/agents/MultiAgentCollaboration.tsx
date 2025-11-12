@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { ProcessedDocument, ExecutionMode, SSEEvent } from '@/lib/multiAgentTypes';
 import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle } from 'react-icons/fi';
 
