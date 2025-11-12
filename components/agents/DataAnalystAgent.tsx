@@ -58,7 +58,7 @@ export default function DataAnalystAgent() {
     setMessages([]);
   };
 
-  const sendDemoMessage = (queryText: string) => {
+  const sendDemoMessage = () => {
     if (isLoading) return;
 
     const demo: MockConversation = DATA_ANALYST_DEMOS[demoIndex % DATA_ANALYST_DEMOS.length];
@@ -257,7 +257,7 @@ export default function DataAnalystAgent() {
                 {SAMPLE_QUERIES.map((query, index) => (
                   <button
                     key={index}
-                    onClick={() => mode === 'demo' ? sendDemoMessage(query) : sendLiveMessage(query)}
+                    onClick={() => mode === 'demo' ? sendDemoMessage() : sendLiveMessage(query)}
                     className="block w-full text-left px-4 py-3 text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
                   >
                     {query}
@@ -355,7 +355,7 @@ export default function DataAnalystAgent() {
         {mode === 'demo' && messages.length > 0 && (
           <div className="border-t border-gray-200 p-4 bg-gray-50 text-center">
             <button
-              onClick={() => sendDemoMessage('')}
+              onClick={() => sendDemoMessage()}
               disabled={isLoading}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium mr-3"
             >
