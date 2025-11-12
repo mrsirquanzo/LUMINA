@@ -5,7 +5,7 @@ import { generateSEO } from "@/components/layout/SEO";
 
 export const metadata: Metadata = generateSEO({
   title: "About Quan Ho",
-  description: "Scientist × Strategist × Builder. Bridging biotech, data, and intelligent design with 10+ years of experience in immunology, oncology, and AI-driven drug discovery.",
+  description: "Scientist × Strategist × Builder. Bridging science and strategy to transform complex research into data-driven insight that drives meaningful impact.",
   keywords: ["biotech scientist", "business intelligence", "AI agents", "data systems", "scientific strategy"],
 });
 
@@ -16,11 +16,10 @@ export default function AboutPage() {
       <Section className="bg-gradient-to-br from-primary-50 via-white to-accent-50">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">
-            From Bench to Business Intelligence
+            Scientist × Strategist × Builder
           </h1>
-          <p className="text-xl text-gray-700 text-center mb-8">
-            After a decade in R&D—Generate Biomedicines, Novartis, Juno Therapeutics—I became
-            fascinated by how discoveries translate into impact.
+          <p className="text-xl text-gray-700 text-center">
+            Bridging science and strategy to transform complex research into data-driven insight that drives meaningful impact.
           </p>
         </div>
       </Section>
@@ -73,108 +72,207 @@ export default function AboutPage() {
 
       {/* Experience & Background */}
       <Section background="gray">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
             Experience & Background
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Biotech R&D */}
+          {/* Featured: Biotech R&D Leadership (Full Width) */}
+          <div className="card mb-6">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+              Biotech R&D Leadership
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Generate Biomedicines */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                    GB
+                  </div>
+                  <h4 className="font-semibold text-gray-900 text-base">
+                    Generate Biomedicines
+                  </h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-1 ml-8 font-medium">
+                  Immunogenicity & AI Collaboration
+                </p>
+                <p className="text-sm text-gray-700 ml-8">
+                  Partnered with ML engineers to define biological requirements, generate validation datasets, and interpret results that guided improvements to generative protein models and immunogenicity prediction workflows.
+                </p>
+              </div>
+
+              {/* Novartis */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                    N
+                  </div>
+                  <h4 className="font-semibold text-gray-900 text-base">
+                    Novartis
+                  </h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-1 ml-8 font-medium">
+                  Oncology Translational Research
+                </p>
+                <p className="text-sm text-gray-700 ml-8">
+                  Designed and validated biomarker assays, led pharmacodynamic method transfer to clinical sites, and guided multi-program biomarker strategy supporting adenosine pathway trials.
+                </p>
+              </div>
+
+              {/* Intellia */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-purple-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                    I
+                  </div>
+                  <h4 className="font-semibold text-gray-900 text-base">
+                    Intellia Therapeutics
+                  </h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-1 ml-8 font-medium">
+                  CRISPR Gene Editing
+                </p>
+                <p className="text-sm text-gray-700 ml-8">
+                  Conducted large-scale CRISPR HSPC screens, analyzed editing outcomes, and generated datasets that supported IP filings (U.S. Patent 20200308603).
+                </p>
+              </div>
+
+              {/* Juno Therapeutics */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 bg-gradient-to-br from-teal-500 to-teal-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                    J
+                  </div>
+                  <h4 className="font-semibold text-gray-900 text-base">
+                    Juno Therapeutics
+                  </h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-1 ml-8 font-medium">
+                  CAR-T Discovery
+                </p>
+                <p className="text-sm text-gray-700 ml-8">
+                  Developed high-throughput CAR-T screening assays to assess binding specificity and activation potential, enabling early-stage therapeutic candidate selection.
+                </p>
+              </div>
+
+              {/* Massachusetts General Hospital */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-green-600 rounded flex-shrink-0 flex items-center justify-center text-white text-xs font-bold">
+                    MGH
+                  </div>
+                  <h4 className="font-semibold text-gray-900 text-base">
+                    Massachusetts General Hospital
+                  </h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-1 ml-8 font-medium">
+                  Molecular Pathology
+                </p>
+                <p className="text-sm text-gray-700 ml-8">
+                  Implemented anchored multiplex PCR for NGS-based gene fusion detection in collaboration with Blueprint Medicines and supported pharma partnerships investigating treatment resistance in GBM and solid tumors.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Three Column Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* AI, Data & Systems Engineering */}
             <div className="card">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Biotech R&D Experience
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                AI, Data & Systems Engineering
               </h3>
-              <ul className="space-y-2 text-gray-700">
+
+              <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Generate Biomedicines — AI-driven protein design
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Computational analysis & data visualization</span>
+                    <span className="text-sm text-gray-700"> — Python, R, SQL, Qiagen Omicsoft, Tableau, Spotfire</span>
+                  </div>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Novartis — Cell therapy development
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">AI agent prototyping</span>
+                    <span className="text-sm text-gray-700"> — Developing portfolio-ready agents for patent analysis, business intelligence, and data-driven decision support</span>
+                  </div>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Juno Therapeutics — Immunology & oncology
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  MGH — Translational research
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Prompt engineering & automation</span>
+                    <span className="text-sm text-gray-700"> — Building LLM-based agents that convert technical or IP documents into strategic insights</span>
+                  </div>
                 </li>
               </ul>
             </div>
 
-            {/* Technical Skills */}
+            {/* Business Intelligence & Strategy */}
             <div className="card">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Technical Skills
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Business Intelligence & Strategy
               </h3>
-              <ul className="space-y-2 text-gray-700">
+
+              <ul className="space-y-2.5 text-gray-700">
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  AI/ML systems & agent architecture
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <span className="text-sm">Competitive landscape & patent analysis</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Data analysis (Python, R, SQL)
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <span className="text-sm">IP strategy and technology assessment</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Financial modeling & valuation
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <span className="text-sm">Clinical and biomarker data interpretation</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Design systems & data visualization
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <span className="text-sm">Market opportunity and portfolio evaluation</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <span className="text-sm">Vendor coordination, requirements definition, and platform adoption leadership</span>
                 </li>
               </ul>
             </div>
 
-            {/* Business Intelligence */}
+            {/* Scientific & Technical Expertise */}
             <div className="card">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Business Intelligence
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Scientific & Technical Expertise
               </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Competitive landscape analysis
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Patent intelligence & IP strategy
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Clinical data interpretation
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Market opportunity assessment
-                </li>
-              </ul>
-            </div>
 
-            {/* Scientific Expertise */}
-            <div className="card">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Scientific Expertise
-              </h3>
-              <ul className="space-y-2 text-gray-700">
+              <ul className="space-y-2.5 text-gray-700">
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Immunology & oncology
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Therapeutic areas:</span>
+                    <span className="text-sm text-gray-700"> Immunology & oncology, cell & gene therapy</span>
+                  </div>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Cell & gene therapy modalities
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Modalities:</span>
+                    <span className="text-sm text-gray-700"> ADCs, TCEs, bispecifics, CRISPR, CAR-T, organ-on-chip</span>
+                  </div>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Platform technology validation
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Analytical skills:</span>
+                    <span className="text-sm text-gray-700"> Transcriptomics, multi-omics, flow cytometry, immunogenicity assays</span>
+                  </div>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary-600 mr-2">•</span>
-                  Transcriptomics & multi-omics
+                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Computational tools:</span>
+                    <span className="text-sm text-gray-700"> RNA-seq pipelines, data visualization, AI model validation</span>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -190,42 +288,16 @@ export default function AboutPage() {
           </h2>
 
           <div className="prose prose-lg max-w-none">
-            <div className="bg-accent-50 border-l-4 border-accent-500 p-6 rounded-r-lg mb-8">
-              <p className="text-gray-800 italic">
-                "The best business intelligence doesn't just describe what's happening—it explains why it matters and what to do about it."
-              </p>
-            </div>
-
             <p className="text-body text-gray-700 mb-6">
-              Throughout my career, I've learned that great analysis requires three things:
+              I see innovation as the intersection of science, strategy, and systems thinking. My approach combines the curiosity of a scientist, the analytical mindset of a strategist, and the pragmatism of a builder.
             </p>
 
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-start">
-                <span className="text-primary-600 text-2xl mr-3 leading-none">1</span>
-                <div>
-                  <strong className="text-gray-900">Deep scientific literacy</strong> —
-                  <span className="text-gray-700"> Understanding the biology well enough to ask the right questions</span>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 text-2xl mr-3 leading-none">2</span>
-                <div>
-                  <strong className="text-gray-900">Technical execution</strong> —
-                  <span className="text-gray-700"> Building systems that scale insights beyond manual work</span>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 text-2xl mr-3 leading-none">3</span>
-                <div>
-                  <strong className="text-gray-900">Clear communication</strong> —
-                  <span className="text-gray-700"> Translating complexity into actionable recommendations</span>
-                </div>
-              </li>
-            </ul>
+            <p className="text-body text-gray-700 mb-6">
+              I'm drawn to problems where biology meets computation—where data can sharpen intuition and translate discovery into real decisions. Whether it's advancing therapeutic programs, refining AI tools, or evaluating emerging technologies, I focus on turning complex information into clear, actionable insight.
+            </p>
 
-            <p className="text-body text-gray-700">
-              This is the intersection where I operate: <strong>Scientist × Strategist × Builder</strong>.
+            <p className="text-body text-gray-700 text-center font-semibold text-xl mt-8">
+              Scientist × Strategist × Builder
             </p>
           </div>
         </div>
@@ -240,11 +312,10 @@ export default function AboutPage() {
 
           <div className="card text-center">
             <p className="text-body text-gray-700 mb-6">
-              <strong>Boston-based</strong> • <strong>New parent</strong> • <strong>Always learning</strong>
+              <strong>Boston-based</strong> · <strong>Balancing curiosity & chaos</strong>
             </p>
             <p className="text-sm text-gray-600 mb-6">
-              When I'm not building AI agents or analyzing biotech companies, I'm navigating
-              the chaos of new parenthood and staying current with the latest research.
+              Outside of work, I'm learning as much from parenthood as I do from building AI systems—both push you to stay patient, flexible, and quick on your feet. When I'm not debugging models or baby sleep cycles, I'm playing soccer or squash, diving into new research, or watching Manchester United test my resilience.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
