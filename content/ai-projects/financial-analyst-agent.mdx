@@ -1,395 +1,200 @@
 ---
 slug: financial-analyst-agent
 title: "Financial Intelligence AI Agent"
-subtitle: "Automated analysis of 10-Ks, financial modeling, and competitive benchmarking"
-description: "AI agent that extracts insights from SEC filings (10-K, 10-Q, 8-K), builds financial models, performs ratio analysis, and generates investment-grade financial summaries for biotech companies."
+subtitle: "AI assistant for analyzing SEC filings, financial models, and biotech company valuations"
+description: "Upload 10-Ks, financial models, or earnings reports and get expert analysis of financial metrics, valuations, and investment thesis."
 category: "AI Agent"
 publishedDate: "2025-01-15"
-tags: ["AI Agent", "Financial Analysis", "SEC Filings", "Financial Modeling"]
+tags: ["AI Agent", "Financial Analysis", "SEC Filings", "Valuation"]
 featured: true
 thumbnail: "/images/financial-agent-thumbnail.jpg"
 projectType: "ai-agent"
 demoUrl: "/ai-projects/financial-analyst-demo"
 githubUrl: ""
-techStack: ["Python", "LangChain", "OpenAI GPT-4", "Pandas", "SEC EDGAR API"]
+techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Vision API", "PDF-parse", "XLSX"]
 ---
-
-# Financial Intelligence AI Agent
 
 ## Overview
 
-The **Financial Intelligence Agent** automates the extraction and analysis of financial data from SEC filings, earnings calls, and financial statements—turning dense regulatory documents into actionable business intelligence.
+The Financial Intelligence Agent is an AI-powered assistant that analyzes SEC filings, financial models, and biotech company financials. Upload 10-K/10-Q PDFs, Excel models, earnings presentations, or provide investor relations URLs to get instant analysis of burn rate, runway, valuations, and investment risks.
 
-### The Problem
-
-Biotech financial analysis is time-consuming:
-- **10-Ks are 100-300 pages** of dense regulatory text
-- **Key metrics buried** in footnotes and MD&A sections
-- **Cross-company comparison** requires normalizing different reporting standards
-- **Manual data entry** into Excel models is error-prone
-
-**Time per company analysis**: 6-8 hours
-**Error rate**: High (easy to miss critical disclosures)
-
-### The Solution
-
-An AI agent that:
-- **Extracts** financial data from 10-K, 10-Q, 8-K filings
-- **Builds** automated financial models (3-statement, DCF, rNPV)
-- **Analyzes** financial health metrics and trends
-- **Compares** across peer companies
-- **Generates** investment-grade summaries
+**Built with Claude Sonnet 4** featuring vision capabilities for analyzing charts and financial visualizations.
 
 ---
 
-## Key Capabilities
+## What It Can Do
 
-### 1. SEC Filing Analysis
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
 
-Automatically processes:
-- **10-K** (Annual Report) - Full financial statements
-- **10-Q** (Quarterly Report) - Quarterly updates
-- **8-K** (Current Report) - Material events
-- **DEF 14A** (Proxy Statement) - Executive compensation
-- **S-1** (IPO Registration) - Pre-IPO financials
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">📊</div>
+<h3 className="text-lg font-semibold mb-2">Analyze SEC Filings</h3>
+<p className="text-gray-700 text-sm">Upload 10-K/10-Q documents and extract key financial metrics, revenue trends, burn rate, and risk factors automatically.</p>
+</div>
 
-**Extracted data:**
-- Income statement (revenue, R&D, SG&A, net income)
-- Balance sheet (cash, debt, equity, burn rate)
-- Cash flow statement (operating, investing, financing)
-- Key metrics (runway, partnerships, pipeline value)
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">💰</div>
+<h3 className="text-lg font-semibold mb-2">Company Valuations</h3>
+<p className="text-gray-700 text-sm">Perform DCF analysis, comparable company valuations, and precedent transaction analysis for biotech companies.</p>
+</div>
 
-### 2. Financial Modeling
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">📈</div>
+<h3 className="text-lg font-semibold mb-2">Financial Model Review</h3>
+<p className="text-gray-700 text-sm">Upload Excel financial models and get analysis of assumptions, sensitivities, and recommendations for improvement.</p>
+</div>
 
-Auto-generates:
-- **3-statement model** (Income, Balance Sheet, Cash Flow)
-- **DCF model** (Discounted Cash Flow valuation)
-- **rNPV model** (Risk-adjusted Net Present Value for biotech)
-- **Scenario analysis** (bull/base/bear cases)
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">🎯</div>
+<h3 className="text-lg font-semibold mb-2">Deal Analysis</h3>
+<p className="text-gray-700 text-sm">Evaluate M&A transactions, licensing deals, and partnerships with analysis of terms, structure, and strategic rationale.</p>
+</div>
 
-**Example Output:**
-```
-Absci Corporation (ABSI) - Financial Model
-
-Revenue Forecast (2025-2030):
-2025E: $45M (partnerships + platform fees)
-2026E: $72M (milestone payments accelerate)
-2027E: $98M (royalty streams begin)
-2028E: $145M (expanded partnerships)
-2029E: $215M (commercial products)
-2030E: $320M (multiple revenue streams)
-
-Valuation Summary:
-DCF (WACC 12%): $8.50/share
-rNPV (Pipeline): $6.20/share
-Peer Multiple: $7.80/share
-Current Price: $5.20/share
-Implied Upside: 30-60%
-```
-
-### 3. Financial Health Metrics
-
-Calculates key ratios:
-- **Liquidity**: Current ratio, quick ratio, cash runway
-- **Leverage**: Debt-to-equity, interest coverage
-- **Efficiency**: R&D efficiency, SG&A as % of revenue
-- **Valuation**: EV/Revenue, EV/Cash, P/B ratio
-
-**Flags red flags:**
-- Cash runway < 12 months
-- R&D spend declining YoY
-- Increasing debt load
-- Insider selling patterns
-
-### 4. Competitive Benchmarking
-
-Compares financial metrics across peers:
-- **Revenue growth** rates
-- **R&D spend** as % of revenue
-- **Cash burn** rates
-- **Market cap** vs enterprise value
-- **Partnership deal structures**
-
-**Output:** Ranked table showing company vs peer medians/quartiles.
-
-### 5. Earnings Call Analysis
-
-Processes earnings call transcripts:
-- **Extracts** key guidance updates
-- **Identifies** management tone (bullish/cautious)
-- **Tracks** Q&A themes (what analysts care about)
-- **Flags** discrepancies between prepared remarks and Q&A
+</div>
 
 ---
 
-## Technical Architecture
+## Example Questions
 
-### Data Ingestion
+Here are specific questions the agent can answer when you upload relevant financial documents:
 
-**SEC EDGAR API:**
-- Real-time access to all public filings
-- Historical data back to 1994
-- Full-text search capabilities
-- XBRL tagged data (structured financials)
+### Financial Statement Analysis
+- "What's the quarterly burn rate and estimated cash runway?"
+- "Extract and analyze all revenue line items from this 10-K"
+- "What are the key risk factors mentioned in the MD&A section?"
+- "Compare Q3 vs Q4 operating expenses—where did spending increase?"
 
-**Earnings Call Transcripts:**
-- **AlphaSense** integration
-- **Seeking Alpha** scraping
-- **Company IR sites** direct download
+### Valuation & Investment Thesis
+- "Perform a DCF valuation with 12% discount rate and these revenue assumptions"
+- "What comparable companies should be used for this gene therapy developer?"
+- "Assess the investment thesis for this Phase 2 oncology company"
+- "What's a fair valuation for this pre-revenue platform company?"
 
-### Document Processing
+### Deal & Transaction Analysis
+- "Analyze the terms of this $2B acquisition—is it favorable for the buyer?"
+- "What's the NPV of this licensing deal with 8% royalty on $500M peak sales?"
+- "Compare this M&A multiple to recent biotech transactions"
+- "Assess the financial impact of this partnership announcement"
 
-**PDF/HTML Parsing:**
-- Extract tables from 10-K PDFs
-- Parse XBRL tagged data
-- Handle multi-column layouts
-- OCR for scanned documents (older filings)
-
-**Natural Language Processing:**
-- **GPT-4** for management commentary analysis
-- **FinBERT** for financial sentiment analysis
-- **Named Entity Recognition** for company/product mentions
-- **Table extraction** models
-
-### Financial Modeling Engine
-
-**Automated model building:**
-```python
-class FinancialModel:
-    def __init__(self, company_ticker):
-        self.historical = extract_financials(ticker, years=5)
-        self.assumptions = load_assumptions(ticker)
-
-    def build_income_statement(self):
-        # Revenue projections
-        revenue = self.project_revenue(
-            partnerships=self.assumptions['partnerships'],
-            milestones=self.assumptions['milestones'],
-            royalties=self.assumptions['royalties']
-        )
-
-        # Expense projections
-        rd_expense = revenue * self.assumptions['rd_pct']
-        sga_expense = revenue * self.assumptions['sga_pct']
-
-        # Operating income
-        ebitda = revenue - rd_expense - sga_expense
-        return revenue, ebitda
-
-    def calculate_dcf(self):
-        # Project free cash flows
-        fcf = self.project_fcf(years=10)
-
-        # Discount at WACC
-        pv = sum(fcf[i] / (1 + self.wacc)**i for i in range(10))
-
-        # Terminal value
-        terminal = fcf[-1] * (1 + self.terminal_growth) / (self.wacc - self.terminal_growth)
-        pv_terminal = terminal / (1 + self.wacc)**10
-
-        # Enterprise value
-        ev = pv + pv_terminal
-        equity_value = ev - net_debt
-        return equity_value / shares_outstanding
-```
+### Risk Assessment
+- "What are the top 3 financial risks for this company?"
+- "Analyze the debt covenants and refinancing risks"
+- "How does the burn rate compare to peer companies?"
+- "What's the probability of needing additional financing in the next 18 months?"
 
 ---
 
-## Real-World Applications
+## How It Works
 
-### Use Case 1: Quarterly Earnings Analysis
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
 
-**Scenario:** Absci reports Q3 2024 earnings
+<div className="text-center">
+<div className="text-4xl mb-3">1️⃣</div>
+<h3 className="font-semibold mb-2">Upload Documents</h3>
+<p className="text-sm text-gray-700">Drag and drop 10-Ks, Excel models, earnings presentations, or paste SEC EDGAR URLs</p>
+</div>
 
-**Agent Workflow:**
-1. Download 10-Q within minutes of filing
-2. Extract financial statements (revenue, cash, burn)
-3. Compare vs analyst estimates and prior quarter
-4. Analyze MD&A for forward guidance
-5. Generate 2-page earnings summary
+<div className="text-center">
+<div className="text-4xl mb-3">2️⃣</div>
+<h3 className="font-semibold mb-2">Ask Questions</h3>
+<p className="text-sm text-gray-700">Ask about financials, valuations, deal terms, or risk factors in plain English</p>
+</div>
 
-**Time:** 20 minutes (vs 3-4 hours manual)
+<div className="text-center">
+<div className="text-4xl mb-3">3️⃣</div>
+<h3 className="font-semibold mb-2">Get Financial Analysis</h3>
+<p className="text-sm text-gray-700">Receive detailed insights with calculations, assumptions, and citations to source documents</p>
+</div>
 
-**Output Example:**
-```
-Absci Q3 2024 Earnings Summary
-
-Revenue: $12.3M (vs $11.8M est) - BEAT
-- Partnership revenue: $10.1M
-- Platform fees: $2.2M
-
-Operating Expense: $28.5M (vs $27.2M prior Q)
-- R&D: $18.2M (+8% QoQ)
-- SG&A: $10.3M (+12% QoQ)
-
-Cash Position: $185M
-- Burn rate: $16.2M/quarter
-- Runway: ~11 quarters (Q2 2027)
-
-Key Updates:
-- 2 new partnerships announced (undisclosed terms)
-- Phase 1 trial initiated for lead program
-- Expanding AI capabilities (hiring 15 ML engineers)
-
-Red Flags:
-⚠ Cash runway < 3 years (may need financing 2025-2026)
-⚠ SG&A growing faster than revenue
-```
-
-### Use Case 2: Pre-Investment Due Diligence
-
-**Scenario:** Evaluating Immunocore for potential investment
-
-**Agent Workflow:**
-1. Analyze last 3 years of 10-Ks + 10-Qs
-2. Build 5-year financial model
-3. Calculate runway and financing needs
-4. Compare vs TCR therapy peers
-5. Generate investment memo financial section
-
-**Time:** 4-5 hours (vs 2-3 days manual)
-
-### Use Case 3: Portfolio Monitoring
-
-**Scenario:** Track 20 biotech holdings for red flags
-
-**Agent Workflow:**
-1. Monitor all 8-K filings (material events)
-2. Track cash balances and burn rates
-3. Flag companies with < 18 months runway
-4. Alert on insider selling or debt raises
-5. Generate weekly portfolio health report
-
-**Output:** Dashboard showing cash runway, recent filings, alerts
+</div>
 
 ---
 
-## Results & Impact
+## Supported Formats
 
-### Efficiency Gains
+**Documents**
+- PDF (10-K, 10-Q, 8-K, S-1, earnings presentations)
+- Excel/CSV (financial models, pro forma financials, cap tables)
+- Plain text (press releases, investor updates)
 
-| Task | Manual Time | Agent Time | Speedup |
-|------|-------------|------------|---------|
-| 10-K analysis | 6-8 hours | 30-45 min | **8-12×** |
-| Financial model build | 4-6 hours | 20-30 min | **10-15×** |
-| Earnings call summary | 2-3 hours | 15-20 min | **6-10×** |
-| Peer comparison | 8-10 hours | 45-60 min | **8-12×** |
-| Portfolio monitoring (20 cos) | 40 hours/month | 4-5 hours/month | **8-10×** |
+**Images**
+- Charts and graphs from investor presentations
+- Financial visualizations and dashboards
 
-### Quality Improvements
+**Web Content**
+- SEC EDGAR filing URLs
+- Company investor relations pages
+- Deal announcement press releases
 
-- **Accuracy**: 98%+ correct extraction of financial data (vs 85-90% manual)
-- **Completeness**: Never misses footnote disclosures or MD&A insights
-- **Timeliness**: Analysis within 30 minutes of filing (vs next-day manual)
-- **Consistency**: Standardized formatting across all companies
-
----
-
-## Technical Challenges Solved
-
-### Challenge 1: Non-Standard Reporting
-
-**Problem:** Biotech companies report differently (partnership accounting, R&D capitalization)
-
-**Solution:**
-- Built biotech-specific parsing rules
-- Trained on 1,000+ biotech 10-Ks
-- Normalized to common framework
-- Flagged non-GAAP adjustments
-
-### Challenge 2: Table Extraction from PDFs
-
-**Problem:** 10-K tables have complex layouts (multi-level headers, merged cells)
-
-**Solution:**
-- Used table detection models (Camelot, Tabula)
-- Custom post-processing for financial statements
-- Validation checks (debits = credits, rows sum correctly)
-- Human review for low-confidence extractions
-
-### Challenge 3: Forward-Looking Statements
-
-**Problem:** Need to extract guidance without confusing with historical data
-
-**Solution:**
-- Trained NER model on temporal markers ("expects", "2025E", "forecast")
-- Separated historical vs projected data
-- Flagged assumptions and sensitivities
-- Tracked management guidance accuracy over time
-
-### Challenge 4: Partnership Accounting
-
-**Problem:** Biotech partnership deals have complex milestone structures
-
-**Solution:**
-- Built partnership database (1,000+ deals)
-- Extracted upfront, milestone, royalty terms
-- Modeled probability-weighted milestone payments
-- Tracked actual vs potential deal value
+**Limits**: Up to 5 files per query, 10MB max file size
 
 ---
 
-## Technology Stack
+## Key Features
 
-**AI/ML:**
-- **OpenAI GPT-4** - Financial analysis and synthesis
-- **FinBERT** - Financial sentiment analysis
-- **BERT-NER** - Entity extraction (company, product, financial terms)
-- **LangChain** - Agent orchestration
+**Citation Tracking** ✅
+Every financial metric and insight references its source document and page number. Citations appear inline as `[Source: 10-K FY2024, Page 42]`.
 
-**Data Sources:**
-- **SEC EDGAR API** - Official SEC filings
-- **XBRL-US** - Structured financial data
-- **Yahoo Finance** - Stock prices and market data
-- **AlphaSense** - Earnings transcripts
+**Multi-Document Analysis**
+Upload multiple filings (e.g., 10-K + 10-Q) to analyze trends over time or compare financial performance across periods.
 
-**Financial Modeling:**
-- **Pandas** - Data manipulation
-- **NumPy** - Financial calculations
-- **SciPy** - Statistical analysis
-- **OpenPyXL** - Excel model generation
+**Vision-Enabled**
+Claude's vision API analyzes financial charts, revenue breakdowns, and waterfall charts directly from images or presentation slides.
 
-**Visualization:**
-- **Plotly** - Interactive financial charts
-- **Matplotlib** - Static charts for reports
-- **Seaborn** - Statistical visualizations
-
----
-
-## Integration with Business Intelligence
-
-### Financial + Clinical Data
-
-Cross-reference:
-- **R&D spend** vs pipeline progress (efficiency metrics)
-- **Partnership payments** vs clinical milestones
-- **Stock price** reactions to clinical data releases
-
-### Financial + Patent Data
-
-Analyze:
-- **R&D spend** vs patent filing activity
-- **Asset valuation** vs IP protection
-- **LOE impact** on revenue projections
-
-### Financial + Market Data
-
-Track:
-- **Insider trading** patterns
-- **Institutional ownership** changes
-- **Short interest** and borrow rates
-- **Options flow** around earnings/FDA decisions
+**Calculation Transparency**
+All valuation calculations show their work—assumptions, formulas, and sensitivity analyses are explained step-by-step.
 
 ---
 
 ## Future Enhancements
 
-1. **Predictive Modeling** - ML to forecast earnings beats/misses
-2. **Real-Time Alerts** - Push notifications for material 8-K filings
-3. **Natural Language Queries** - "Show me all biotechs with < 12mo runway"
-4. **Automated Pitch Books** - Generate investment committee presentations
-5. **Integration with Portfolio Management Systems**
+**In Development**
+- ✅ Citation Tracking (LIVE)
+
+**Coming Soon**
+- 📊 Financial Visualization Export - Auto-generate charts from financial data
+- 📁 Batch Company Analysis - Compare up to 4 companies simultaneously
+- 💾 Structured Export - Download financial models and analyses as Excel
+- 📈 Integration with Bloomberg/CapIQ - Pull live market data and comps
+
+**Roadmap**
+- 📉 Historical Performance Database - Compare to 500+ biotech company financials
+- 🤖 Multi-Agent Collaboration - Combine Financial + Clinical + Patent analysis
+- 🔔 Deal Alert Monitoring - Track new M&A and financing announcements
+- 💼 Portfolio Tracking - Monitor multiple investments with automated updates
 
 ---
 
-*This agent transforms financial analysis from a time sink into a strategic advantage, enabling faster decisions with deeper insights.*
+## Technical Details
+
+<details>
+<summary><strong>Click to expand technical implementation details</strong></summary>
+
+**AI Model**
+- Claude Sonnet 4 (claude-sonnet-4-20250514)
+- Vision API for chart and graph analysis
+- 4K token context window per query
+
+**Document Processing**
+- PDF parsing for SEC filings and presentations
+- Excel/CSV processing for financial models
+- HTML extraction for investor relations websites
+- Base64 encoding for image analysis
+
+**Architecture**
+- Next.js 14 with App Router
+- TypeScript for type safety
+- Server-side API routes for document processing
+- Client-side React components for interactive UI
+
+**Security**
+- Session-based authentication
+- Environment variable configuration
+- No financial data storage (privacy-preserving)
+- All processing happens in real-time
+
+</details>
+
+---
+
+**Ready to try it?** Click the "View Demo" button above to start analyzing financial intelligence with AI.

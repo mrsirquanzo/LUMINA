@@ -1,265 +1,192 @@
 ---
 slug: data-analyst-agent
 title: "Clinical Data Analyst AI Agent"
-subtitle: "Automated analysis of preclinical and clinical trial data"
-description: "AI agent that processes and analyzes preclinical study results and clinical trial data, extracting key endpoints, statistical significance, and safety signals to accelerate decision-making."
+subtitle: "AI assistant for analyzing clinical trial reports, datasets, and competitive intelligence documents"
+description: "Upload clinical trial PDFs, Excel data, or URLs and get expert-level analysis of efficacy endpoints, safety profiles, and competitive intelligence in seconds."
 category: "AI Agent"
 publishedDate: "2025-01-15"
-tags: ["AI Agent", "Clinical Data", "NLP", "Data Analysis"]
+tags: ["AI Agent", "Clinical Data", "Document Analysis", "Vision AI"]
 featured: true
 thumbnail: "/images/data-analyst-thumbnail.jpg"
 projectType: "ai-agent"
 demoUrl: "/ai-projects/data-analyst-demo"
 githubUrl: ""
-techStack: ["Python", "LangChain", "OpenAI GPT-4", "Pandas", "Plotly"]
+techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Vision API", "PDF-parse", "XLSX"]
 ---
-
-# Clinical Data Analyst AI Agent
 
 ## Overview
 
-The **Clinical Data Analyst Agent** automates the extraction and analysis of preclinical and clinical trial data, transforming raw study reports into actionable insights for business intelligence and decision-making.
+The Clinical Data Analyst Agent is an AI-powered assistant that analyzes clinical trial reports, study data, and competitive intelligence documents. Upload PDFs, Excel files, images, or provide URLs to get instant analysis of efficacy endpoints, safety profiles, biomarker trends, and market intelligence.
 
-### The Problem
-
-Biotech analysts spend hours manually:
-- Reading 50-100 page clinical study reports
-- Extracting key endpoints from dense statistical tables
-- Comparing results across multiple studies
-- Identifying safety signals in adverse event data
-- Synthesizing findings into executive summaries
-
-**Time per analysis**: 4-6 hours
-**Error rate**: High (easy to miss critical data points)
-
-### The Solution
-
-An AI agent that:
-- **Ingests** clinical study reports (PDF, XML, API data)
-- **Extracts** primary/secondary endpoints, p-values, confidence intervals
-- **Analyzes** efficacy signals and safety profiles
-- **Compares** results across trials and competitive therapies
-- **Generates** structured summaries with visualizations
+**Built with Claude Sonnet 4** featuring vision capabilities for analyzing charts, graphs, and figures from scientific publications.
 
 ---
 
-## Key Capabilities
+## What It Can Do
 
-### 1. Endpoint Extraction
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
 
-Automatically identifies and structures:
-- Primary and secondary endpoints
-- Treatment vs control comparisons
-- Statistical significance (p-values, CIs)
-- Subgroup analyses
-- Time-to-event data (survival curves)
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">📄</div>
+<h3 className="text-lg font-semibold mb-2">Analyze Clinical Trial Reports</h3>
+<p className="text-gray-700 text-sm">Upload Phase 1-3 trial PDFs and extract key endpoints, statistical significance, patient populations, and study design details.</p>
+</div>
 
-**Example Output:**
-```
-Primary Endpoint: Overall Response Rate (ORR)
-- Treatment arm: 32% (95% CI: 28-36%)
-- Control arm: 18% (95% CI: 14-22%)
-- p-value: 0.0023 (statistically significant)
-- Odds ratio: 2.1 (95% CI: 1.4-3.2)
-```
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">📊</div>
+<h3 className="text-lg font-semibold mb-2">Extract Key Endpoints</h3>
+<p className="text-gray-700 text-sm">Identify ORR, PFS, OS, p-values, confidence intervals, subgroup analyses, and safety signals from dense statistical tables.</p>
+</div>
 
-### 2. Safety Signal Detection
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">🔬</div>
+<h3 className="text-lg font-semibold mb-2">Process Multiple Data Formats</h3>
+<p className="text-gray-700 text-sm">Handle Excel spreadsheets, CSV files, and images of charts/graphs using AI vision to extract data from figures.</p>
+</div>
 
-Scans adverse event tables for:
-- Grade 3+ adverse events
-- Dose-limiting toxicities
-- Treatment discontinuations
-- Serious adverse events (SAEs)
-- Dose-response relationships
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">🌐</div>
+<h3 className="text-lg font-semibold mb-2">Competitive Intelligence</h3>
+<p className="text-gray-700 text-sm">Analyze competitor websites, ClinicalTrials.gov entries, press releases, and conference presentations for strategic insights.</p>
+</div>
 
-**Output:** Ranked list of safety concerns with frequencies and severity.
-
-### 3. Cross-Study Comparison
-
-Compares results across:
-- Multiple trials of same drug
-- Competitive therapies in same indication
-- Historical benchmarks
-- Different patient populations
-
-**Generates:** Comparison tables and forest plots showing relative efficacy.
-
-### 4. Data Visualization
-
-Auto-generates:
-- Kaplan-Meier survival curves
-- Waterfall plots (tumor response)
-- Forest plots (subgroup analyses)
-- Adverse event frequency charts
+</div>
 
 ---
 
-## Technical Architecture
+## Example Questions
 
-### Data Ingestion Pipeline
+Here are specific questions the agent can answer when you upload relevant documents:
 
-```python
-# Support for multiple data sources
-- ClinicalTrials.gov API (structured data)
-- FDA drug labels (PDF parsing)
-- Company press releases (NLP extraction)
-- Published papers (PubMed integration)
-- Internal study reports (secure upload)
-```
+### Efficacy Analysis
+- "What's the ORR and statistical significance in this Phase 2 trial?"
+- "Compare progression-free survival across these three studies"
+- "Analyze biomarker response trends in this dataset"
+- "How do these results compare to standard of care?"
 
-### NLP Processing
+### Safety & Tolerability
+- "Identify all Grade 3+ adverse events in this study"
+- "Compare safety profiles between the treatment and control arms"
+- "What dose-limiting toxicities were observed?"
+- "Are there any concerning safety signals in the adverse event data?"
 
-Uses specialized medical NLP models:
-- **BioBERT** for biomedical entity recognition
-- **Clinical BERT** for clinical notes
-- **GPT-4** for reasoning and synthesis
-- **Custom regex** for statistical value extraction
-
-### Analysis Engine
-
-**Statistical Analysis:**
-- Calculates effect sizes and confidence intervals
-- Performs meta-analysis across studies
-- Identifies trends and outliers
-- Flags data quality issues
-
-**Safety Analysis:**
-- CTCAE grade mapping
-- Causality assessment hints
-- Dose-toxicity modeling
-- Comparator safety profiles
+### Competitive Intelligence
+- "How do these trial results compare to competitor X's Phase 2 data?"
+- "What are the key takeaways from this conference presentation?"
+- "Summarize the competitive landscape for CAR-T therapies in this indication"
+- "Extract key metrics from this press release and benchmark against our pipeline"
 
 ---
 
-## Real-World Applications
+## How It Works
 
-### Use Case 1: Rapid Trial Assessment
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
 
-**Scenario:** Competitor announces Phase 2 results for rival therapy
+<div className="text-center">
+<div className="text-4xl mb-3">1️⃣</div>
+<h3 className="font-semibold mb-2">Upload Documents</h3>
+<p className="text-sm text-gray-700">Drag and drop PDFs, Excel files, CSVs, images, or paste URLs</p>
+</div>
 
-**Agent Workflow:**
-1. Ingest press release and presentation slides
-2. Extract ORR, PFS, and safety data
-3. Compare to our internal program and historical data
-4. Generate 2-page executive summary
+<div className="text-center">
+<div className="text-4xl mb-3">2️⃣</div>
+<h3 className="font-semibold mb-2">Ask Questions</h3>
+<p className="text-sm text-gray-700">Use plain English—no technical syntax or special commands needed</p>
+</div>
 
-**Time:** 15 minutes (vs 2-3 hours manual)
+<div className="text-center">
+<div className="text-4xl mb-3">3️⃣</div>
+<h3 className="font-semibold mb-2">Get Expert Analysis</h3>
+<p className="text-sm text-gray-700">Receive detailed insights with citations linking back to source documents</p>
+</div>
 
-### Use Case 2: Portfolio Review
-
-**Scenario:** Quarterly review of 10 internal programs
-
-**Agent Workflow:**
-1. Pull latest data from all ongoing trials
-2. Extract enrollment, endpoint, and safety metrics
-3. Flag trials with concerning trends
-4. Generate portfolio dashboard
-
-**Output:** Interactive dashboard showing all programs at a glance
-
-### Use Case 3: Competitive Intelligence
-
-**Scenario:** Monitor competitive landscape in oncology
-
-**Agent Workflow:**
-1. Track all new trial registrations (ClinicalTrials.gov)
-2. Monitor conference abstracts (ASCO, ASH, AACR)
-3. Extract results from published papers
-4. Maintain competitive database with key metrics
-
-**Frequency:** Weekly automated updates
+</div>
 
 ---
 
-## Results & Impact
+## Supported Formats
 
-### Efficiency Gains
+**Documents**
+- PDF (clinical trial reports, publications, regulatory documents)
+- Excel/CSV (study data, endpoint tables, patient demographics)
+- Plain text files
 
-| Task | Manual Time | Agent Time | Speedup |
-|------|-------------|------------|---------|
-| Single trial analysis | 4-6 hours | 15-20 min | **15-20×** |
-| Cross-study comparison | 8-10 hours | 30-45 min | **12-15×** |
-| Safety signal review | 2-3 hours | 10-15 min | **10-12×** |
-| Competitive landscape | 16-20 hours/month | 2-3 hours/month | **6-8×** |
+**Images**
+- PNG, JPG, WebP (charts, graphs, Kaplan-Meier curves, waterfall plots)
+- AI vision automatically extracts data from figures
 
-### Quality Improvements
+**Web Content**
+- Any URL (ClinicalTrials.gov, company press releases, conference abstracts)
+- Automatic content extraction and analysis
 
-- **Consistency**: Standardized extraction eliminates analyst variability
-- **Completeness**: Never misses reported endpoints or safety events
-- **Accuracy**: 95%+ correct extraction of numerical values
-- **Speed**: Enables real-time monitoring vs quarterly reviews
-
----
-
-## Technical Challenges Solved
-
-### Challenge 1: Heterogeneous Data Formats
-
-**Problem:** Clinical data comes in many formats (PDF tables, XML, unstructured text)
-
-**Solution:**
-- Built custom parsers for common formats
-- Used table detection models for PDF tables
-- Implemented fuzzy matching for variable endpoint naming
-- Created validation layer to catch parsing errors
-
-### Challenge 2: Statistical Rigor
-
-**Problem:** Must correctly interpret complex statistical analyses
-
-**Solution:**
-- Trained agent on 1,000+ clinical trial reports
-- Built knowledge base of statistical concepts
-- Implemented validation checks (e.g., p-value range 0-1)
-- Added confidence scoring for extracted values
-
-### Challenge 3: Medical Terminology
-
-**Problem:** Clinical reports use specialized vocabulary
-
-**Solution:**
-- Fine-tuned on biomedical text corpora
-- Integrated MedDRA for adverse event coding
-- Used CTCAE for toxicity grading
-- Maintained glossary of 10,000+ medical terms
+**Limits**: Up to 5 files per query, 10MB max file size
 
 ---
 
-## Technology Stack
+## Key Features
 
-**AI/ML:**
-- **OpenAI GPT-4** - Reasoning and synthesis
-- **BioBERT** - Biomedical entity recognition
-- **Hugging Face Transformers** - Custom fine-tuning
-- **LangChain** - Agent orchestration
+**Citation Tracking** ✅
+Every insight references its source document, so you know exactly where each finding came from. Citations appear inline as `[Source: filename.pdf]`.
 
-**Data Processing:**
-- **Python 3.11** - Core application
-- **Pandas** - Data manipulation
-- **NumPy** - Statistical calculations
-- **SciPy** - Advanced statistics
+**Multi-Document Analysis**
+Upload multiple trials and compare them side-by-side. The agent synthesizes information across documents to provide comprehensive analysis.
 
-**Data Sources:**
-- **ClinicalTrials.gov API** - Trial registry
-- **PubMed E-utilities** - Published literature
-- **FDA API** - Drug labels and approvals
-- **Custom scrapers** - Conference abstracts
+**Vision-Enabled**
+Claude's vision API analyzes charts, graphs, and figures directly from images or PDFs—no manual data entry required.
 
-**Visualization:**
-- **Plotly** - Interactive charts
-- **Matplotlib** - Static figures
-- **Seaborn** - Statistical visualizations
+**Document History**
+All uploaded files are tracked with timestamps. Easily re-analyze previous documents or compare with new data.
 
 ---
 
 ## Future Enhancements
 
-1. **Predictive Analytics** - ML models to predict trial outcomes
-2. **Real-Time Monitoring** - Alerts for new competitive data
-3. **Natural Language Queries** - "Show me all PD-1 trials with ORR > 30%"
-4. **Integration with BI Tools** - Export to Tableau, Power BI
-5. **Regulatory Intelligence** - Track FDA review timelines and trends
+**In Development**
+- ✅ Citation Tracking (LIVE)
+
+**Coming Soon**
+- 📊 Data Visualization Export - Auto-generate charts from analysis
+- 📁 Batch Processing - Compare up to 4 trials simultaneously with structured comparison tables
+- 💾 Structured Data Export - Download findings as CSV/JSON for further analysis
+- 📈 Export to BI Tools - Direct integration with Tableau and Power BI
+
+**Roadmap**
+- 🔍 Historical Benchmarking - Compare results to database of approved therapies
+- 🤖 Multi-Agent Collaboration - Combine Data Analyst + Patent Expert + Financial Analyst
+- 🔐 Audit Trail - Complete logging of queries and responses for regulatory compliance
 
 ---
 
-*This agent demonstrates deep domain expertise in clinical data analysis combined with modern AI/NLP techniques to deliver actionable insights at unprecedented speed.*
+## Technical Details
+
+<details>
+<summary><strong>Click to expand technical implementation details</strong></summary>
+
+**AI Model**
+- Claude Sonnet 4 (claude-sonnet-4-20250514)
+- Vision API for image and chart analysis
+- 4K token context window per query
+
+**Document Processing**
+- PDF parsing via pdf-parse library
+- Excel/CSV processing with xlsx and papaparse
+- HTML extraction with cheerio for URLs
+- Base64 encoding for image analysis
+
+**Architecture**
+- Next.js 14 with App Router
+- TypeScript for type safety
+- Server-side API routes for document processing
+- Client-side React components for interactive UI
+
+**Security**
+- Session-based authentication
+- Environment variable configuration
+- No document storage (privacy-preserving)
+- All processing happens in real-time
+
+</details>
+
+---
+
+**Ready to try it?** Click the "View Demo" button above to start analyzing clinical data with AI.

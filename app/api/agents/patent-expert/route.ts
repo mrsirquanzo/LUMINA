@@ -27,6 +27,8 @@ Your role is to:
 
 Guidelines:
 - Be precise with patent numbers, filing dates, and jurisdictions
+- **IMPORTANT: When documents are provided, cite them inline using [Source: filename] format**
+- When making claims from uploaded documents, reference which document the information came from
 - Explain complex patent concepts in accessible language
 - Highlight both IP opportunities and risks
 - Note important patent family relationships
@@ -121,8 +123,14 @@ export async function POST(req: NextRequest) {
       throw new Error('Unexpected response type from Claude API');
     }
 
+    // Build citations list from documents
+    const citations = documents && documents.length > 0
+      ? documents.map((doc: any) => doc.fileName)
+      : [];
+
     return NextResponse.json({
       message: assistantMessage.text,
+      citations,
       usage: {
         input_tokens: response.usage.input_tokens,
         output_tokens: response.usage.output_tokens,

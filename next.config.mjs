@@ -19,7 +19,7 @@ const withMDX = createMDX({
     remarkPlugins: [remarkGfm, remarkFrontmatter],
     rehypePlugins: [
       rehypeSlug,
-      [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+      // Remove autolink headings to prevent hyperlinked headings
     ],
   },
 })
