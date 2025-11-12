@@ -17,14 +17,14 @@ export default function Hero() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          <Button href="/case-studies" variant="primary">
-            View Case Studies
-          </Button>
-          <Button href="/ai-projects" variant="secondary">
+          <Button href="/ai-projects" variant="primary">
             Explore AI Projects
           </Button>
           <Button href="/about" variant="secondary">
             About Quan
+          </Button>
+          <Button href="/contact" variant="secondary">
+            Get in Touch
           </Button>
         </div>
 
