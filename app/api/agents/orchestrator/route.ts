@@ -8,20 +8,22 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-    // Check authentication
-    const authenticated = await isAuthenticated();
-    if (!authenticated) {
-      return new Response(
-        JSON.stringify({ error: 'Authentication required' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // Parse request body
+    // Parse request body first to check if it's demo mode
     const { query, documents, mode, isDemo, demoScenarioId } = await req.json();
+
+    // Skip authentication for demo mode (no API calls needed)
+    if (!isDemo) {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        return new Response(
+          JSON.stringify({ error: 'Authentication required for live analysis' }),
+          {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+    }
 
     // Validate inputs
     if (!query || typeof query !== 'string') {
