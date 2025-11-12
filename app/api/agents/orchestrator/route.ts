@@ -8,20 +8,36 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-    // Check authentication
-    const authenticated = await isAuthenticated();
-    if (!authenticated) {
-      return new Response(
-        JSON.stringify({ error: 'Authentication required' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // Parse request body
+    // Parse request body first to check if it's demo mode
     const { query, documents, mode, isDemo, demoScenarioId } = await req.json();
+
+    console.log('[Orchestrator API] Received request:', {
+      query: query?.substring(0, 50) + '...',
+      mode,
+      isDemo,
+      isDemoType: typeof isDemo,
+      demoScenarioId,
+      documentsCount: documents?.length || 0,
+    });
+
+    // Skip authentication for demo mode (no API calls needed)
+    if (!isDemo) {
+      console.log('[Orchestrator API] Not demo mode, checking authentication...');
+      const authenticated = await isAuthenticated();
+      console.log('[Orchestrator API] Authentication result:', authenticated);
+      if (!authenticated) {
+        console.log('[Orchestrator API] Authentication failed - returning 401');
+        return new Response(
+          JSON.stringify({ error: 'Authentication required for live analysis' }),
+          {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+    } else {
+      console.log('[Orchestrator API] Demo mode - skipping authentication check');
+    }
 
     // Validate inputs
     if (!query || typeof query !== 'string') {

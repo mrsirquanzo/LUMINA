@@ -110,6 +110,13 @@ export default function MultiAgentDemo() {
   };
 
   if (showAnalysis && selectedScenarioData) {
+    console.log('[MultiAgentDemo] Starting analysis:', {
+      isDemo,
+      scenarioId: selectedScenario,
+      mode,
+      query: selectedScenarioData.query.substring(0, 50) + '...',
+    });
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
         <div className="max-w-6xl mx-auto">

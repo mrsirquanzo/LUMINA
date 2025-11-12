@@ -66,19 +66,25 @@ export default function MultiAgentCollaboration({
     setSynthesis('');
     setCost(0);
 
+    const requestPayload = {
+      query,
+      documents,
+      mode,
+      isDemo,
+      demoScenarioId,
+    };
+
+    console.log('[MultiAgentCollaboration] Sending request to orchestrator:', requestPayload);
+
     try {
       // Create SSE connection
       const response = await fetch('/api/agents/orchestrator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query,
-          documents,
-          mode,
-          isDemo,
-          demoScenarioId,
-        }),
+        body: JSON.stringify(requestPayload),
       });
+
+      console.log('[MultiAgentCollaboration] Response status:', response.status, response.statusText);
 
       if (!response.ok) {
         const errorData = await response.json();
