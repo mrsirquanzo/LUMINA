@@ -108,7 +108,7 @@ export async function runOrchestration(
   if (isDemo && demoScenarioId) {
     const scenario = getDemoScenario(demoScenarioId);
     if (scenario) {
-      playDemoScenario(scenario, sendEvent, 1.0); // Real-time playback
+      await playDemoScenario(scenario, sendEvent, 1.0); // Real-time playback
       return;
     }
   }
