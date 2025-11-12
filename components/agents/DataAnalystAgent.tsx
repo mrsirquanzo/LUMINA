@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import LoginModal from '@/components/shared/LoginModal';
+import { DATA_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
 }
+
+type AgentMode = 'demo' | 'live';
 
 const SAMPLE_QUERIES = [
   "Analyze the efficacy endpoints from this Phase 2 trial data. What are the key biomarker trends?",
@@ -15,12 +19,74 @@ const SAMPLE_QUERIES = [
 ];
 
 export default function DataAnalystAgent() {
+  const [mode, setMode] = useState<AgentMode>('demo');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [demoIndex, setDemoIndex] = useState(0);
 
-  const sendMessage = async (messageText?: string) => {
+  // Check auth status on mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('/api/auth/check');
+      const data = await response.json();
+      setIsAuthenticated(data.authenticated);
+    } catch (err) {
+      console.error('Auth check failed:', err);
+    }
+  };
+
+  const switchToLiveMode = () => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+    } else {
+      setMode('live');
+      setMessages([]);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    setMode('live');
+    setMessages([]);
+  };
+
+  const sendDemoMessage = (queryText: string) => {
+    if (isLoading) return;
+
+    const demo: MockConversation = DATA_ANALYST_DEMOS[demoIndex % DATA_ANALYST_DEMOS.length];
+    setDemoIndex(prev => prev + 1);
+
+    // Add user message
+    const userMessage: Message = {
+      role: 'user',
+      content: demo.query,
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    // Simulate typing delay
+    setTimeout(() => {
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: demo.response,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const sendLiveMessage = async (messageText?: string) => {
     const textToSend = messageText || input;
 
     if (!textToSend.trim() || isLoading) return;
@@ -80,13 +146,26 @@ export default function DataAnalystAgent() {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      if (mode === 'live') {
+        sendLiveMessage();
+      }
     }
   };
 
   const clearConversation = () => {
     setMessages([]);
     setError(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setIsAuthenticated(false);
+      setMode('demo');
+      setMessages([]);
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
   };
 
   return (
@@ -96,9 +175,61 @@ export default function DataAnalystAgent() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Clinical Data Analyst Agent
         </h1>
-        <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-6">
           AI-powered analyst for biotech clinical trials, competitive intelligence, and market analysis
         </p>
+
+        {/* Mode Switcher */}
+        <div className="flex items-center justify-center gap-4">
+          <div className="inline-flex rounded-lg border border-gray-300 p-1 bg-white">
+            <button
+              onClick={() => { setMode('demo'); setMessages([]); }}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                mode === 'demo'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              📺 Demo Mode (Free)
+            </button>
+            <button
+              onClick={switchToLiveMode}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                mode === 'live'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              🚀 Live AI Agent
+            </button>
+          </div>
+
+          {isAuthenticated && mode === 'live' && (
+            <button
+              onClick={handleLogout}
+              className="text-sm text-gray-600 hover:text-gray-900"
+            >
+              Logout
+            </button>
+          )}
+        </div>
+
+        {/* Mode Info Banner */}
+        {mode === 'demo' && (
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg max-w-2xl mx-auto">
+            <p className="text-sm text-blue-800">
+              <strong>Demo Mode:</strong> Pre-recorded conversations showing agent capabilities. No API calls, completely free!
+            </p>
+          </div>
+        )}
+
+        {mode === 'live' && (
+          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg max-w-2xl mx-auto">
+            <p className="text-sm text-green-800">
+              <strong>Live Mode:</strong> Real-time AI responses powered by Claude API. Authenticated session active.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Main Chat Interface */}
@@ -112,16 +243,21 @@ export default function DataAnalystAgent() {
                 Ready to analyze data
               </h3>
               <p className="text-gray-600 mb-6 max-w-md">
-                Ask me about clinical trials, biomarker data, competitive analysis, or market trends.
+                {mode === 'demo'
+                  ? 'Click a sample query below to see a demo conversation'
+                  : 'Ask me about clinical trials, biomarker data, competitive analysis, or market trends'
+                }
               </p>
 
               {/* Sample Queries */}
               <div className="space-y-2 w-full max-w-xl">
-                <p className="text-sm font-medium text-gray-700 mb-3">Try these examples:</p>
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  {mode === 'demo' ? 'Try these demo examples:' : 'Try these examples:'}
+                </p>
                 {SAMPLE_QUERIES.map((query, index) => (
                   <button
                     key={index}
-                    onClick={() => sendMessage(query)}
+                    onClick={() => mode === 'demo' ? sendDemoMessage(query) : sendLiveMessage(query)}
                     className="block w-full text-left px-4 py-3 text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
                   >
                     {query}
@@ -159,7 +295,9 @@ export default function DataAnalystAgent() {
                 <div className="flex justify-start">
                   <div className="bg-gray-100 text-gray-900 rounded-lg px-4 py-3">
                     <div className="flex items-center space-x-2">
-                      <div className="animate-pulse">Analyzing</div>
+                      <div className="animate-pulse">
+                        {mode === 'demo' ? 'Loading demo response' : 'Analyzing'}
+                      </div>
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -180,36 +318,57 @@ export default function DataAnalystAgent() {
           </div>
         )}
 
-        {/* Input Area */}
-        <div className="border-t border-gray-200 p-4 bg-gray-50">
-          <div className="flex items-end space-x-2">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask about clinical data, trials, or market analysis..."
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              rows={2}
-              disabled={isLoading}
-            />
-            <button
-              onClick={() => sendMessage()}
-              disabled={isLoading || !input.trim()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
-            >
-              Send
-            </button>
-          </div>
+        {/* Input Area - Only for Live Mode */}
+        {mode === 'live' && (
+          <div className="border-t border-gray-200 p-4 bg-gray-50">
+            <div className="flex items-end space-x-2">
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ask about clinical data, trials, or market analysis..."
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                rows={2}
+                disabled={isLoading}
+              />
+              <button
+                onClick={() => sendLiveMessage()}
+                disabled={isLoading || !input.trim()}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+              >
+                Send
+              </button>
+            </div>
 
-          {messages.length > 0 && (
+            {messages.length > 0 && (
+              <button
+                onClick={clearConversation}
+                className="mt-3 text-sm text-gray-600 hover:text-gray-900"
+              >
+                Clear conversation
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Demo Mode Controls */}
+        {mode === 'demo' && messages.length > 0 && (
+          <div className="border-t border-gray-200 p-4 bg-gray-50 text-center">
+            <button
+              onClick={() => sendDemoMessage('')}
+              disabled={isLoading}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium mr-3"
+            >
+              Next Demo
+            </button>
             <button
               onClick={clearConversation}
-              className="mt-3 text-sm text-gray-600 hover:text-gray-900"
+              className="text-sm text-gray-600 hover:text-gray-900"
             >
               Clear conversation
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Behind the Scenes */}
@@ -219,8 +378,8 @@ export default function DataAnalystAgent() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
-            <p className="font-medium text-gray-900 mb-1">Model</p>
-            <p>Claude Sonnet 4 (claude-sonnet-4-20250514)</p>
+            <p className="font-medium text-gray-900 mb-1">Mode</p>
+            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Live (Claude Sonnet 4)'}</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Specialization</p>
@@ -231,11 +390,18 @@ export default function DataAnalystAgent() {
             <p>Data analysis, statistical interpretation, market trends</p>
           </div>
           <div>
-            <p className="font-medium text-gray-900 mb-1">Tech Stack</p>
-            <p>Next.js, TypeScript, Anthropic API</p>
+            <p className="font-medium text-gray-900 mb-1">Cost</p>
+            <p>{mode === 'demo' ? 'Free (No API calls)' : '$0.01-0.10 per query'}</p>
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
+      />
     </div>
   );
 }
