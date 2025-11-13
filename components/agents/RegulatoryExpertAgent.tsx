@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import FileUpload from '@/components/shared/FileUpload';
+import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import LoginModal from '@/components/shared/LoginModal';
 
 interface Message {
@@ -9,6 +9,15 @@ interface Message {
   content: string;
   timestamp: Date;
   cost?: number;
+}
+
+interface ProcessedDocument {
+  name: string;
+  fileType: string;
+  extractedText?: string;
+  isImage: boolean;
+  base64?: string;
+  mimeType?: string;
 }
 
 type AgentMode = 'demo' | 'live';
@@ -129,7 +138,7 @@ export default function RegulatoryExpertAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+  const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -158,6 +167,19 @@ export default function RegulatoryExpertAgent() {
   const handleLoginSuccess = () => {
     setMode('live');
     setMessages([]);
+  };
+
+  const handleFilesProcessed = (files: UploadedFile[]) => {
+    const newDocs: ProcessedDocument[] = files
+      .filter(f => f.status === 'processed')
+      .map(f => ({
+        name: f.name,
+        fileType: f.type,
+        extractedText: f.extractedText,
+        isImage: false,
+      }));
+
+    setProcessedDocuments(prev => [...prev, ...newDocs]);
   };
 
   const sendDemoMessage = () => {
@@ -210,7 +232,7 @@ export default function RegulatoryExpertAgent() {
         },
         body: JSON.stringify({
           query: textToSend,
-          documents: uploadedFiles,
+          documents: processedDocuments,
         }),
       });
 
@@ -325,7 +347,7 @@ export default function RegulatoryExpertAgent() {
       {/* File Upload (Live Mode Only) */}
       {mode === 'live' && (
         <div className="mb-6">
-          <FileUpload onFilesProcessed={setUploadedFiles} />
+          <FileUpload onFilesProcessed={handleFilesProcessed} />
         </div>
       )}
 
@@ -394,7 +416,7 @@ export default function RegulatoryExpertAgent() {
           />
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-500">
-              {uploadedFiles.length > 0 && `${uploadedFiles.length} file(s) attached`}
+              {processedDocuments.length > 0 && `${processedDocuments.length} file(s) attached`}
             </span>
             <button
               onClick={() => sendLiveMessage()}
