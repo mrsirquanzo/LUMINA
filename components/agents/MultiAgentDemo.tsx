@@ -69,6 +69,8 @@ export default function MultiAgentDemo() {
   const [showHistory, setShowHistory] = useState(false);
   const [viewMode, setViewMode] = useState<'chat' | 'custom'>('chat');
   const [selectedCustomTeam, setSelectedCustomTeam] = useState<CustomAgentTeam | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(false);
 
   const estimateCost = useCallback(async () => {
     if (!query.trim()) return;
@@ -119,6 +121,40 @@ export default function MultiAgentDemo() {
   const handleSampleQueryClick = (sampleQuery: string) => {
     setQuery(sampleQuery);
   };
+
+  const checkAuthentication = async () => {
+    setIsCheckingAuth(true);
+    try {
+      const response = await fetch('/api/auth/check');
+      const data = await response.json();
+      setIsAuthenticated(data.authenticated);
+      return data.authenticated;
+    } catch (error) {
+      console.error('Failed to check authentication:', error);
+      setIsAuthenticated(false);
+      return false;
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  };
+
+  const handleToggleLiveMode = async (enableLive: boolean) => {
+    if (enableLive) {
+      // Check authentication before enabling live mode
+      const authenticated = await checkAuthentication();
+      if (!authenticated) {
+        // Show error/warning - user will see the auth warning in UI
+        setIsDemo(true);
+        return;
+      }
+    }
+    setIsDemo(!enableLive);
+  };
+
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
 
   // Show history view
   if (showHistory) {
@@ -252,7 +288,7 @@ export default function MultiAgentDemo() {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Type</h3>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setIsDemo(true)}
+              onClick={() => handleToggleLiveMode(false)}
               className={`px-4 py-2 rounded-md transition-all ${
                 isDemo
                   ? 'bg-blue-600 text-white'
@@ -262,24 +298,40 @@ export default function MultiAgentDemo() {
               Demo Mode (Free)
             </button>
             <button
-              onClick={() => setIsDemo(false)}
+              onClick={() => handleToggleLiveMode(true)}
+              disabled={isCheckingAuth}
               className={`px-4 py-2 rounded-md transition-all ${
                 !isDemo
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              } disabled:opacity-50`}
             >
-              Live Analysis (Uses API Credits)
+              {isCheckingAuth ? 'Checking...' : 'Live Analysis (Uses API Credits)'}
             </button>
           </div>
           {isDemo ? (
             <p className="text-sm text-gray-600 mt-3">
               Demo mode plays a pre-recorded analysis with realistic AI responses. No API costs.
             </p>
-          ) : (
+          ) : isAuthenticated ? (
             <p className="text-sm text-gray-600 mt-3">
               Live mode runs real AI agents with actual API calls. Authentication required.
             </p>
+          ) : (
+            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+              <p className="text-sm text-yellow-800 mb-2">
+                <strong>⚠️ Authentication Required</strong>
+              </p>
+              <p className="text-sm text-yellow-700 mb-3">
+                You need to log in to use Live Analysis mode. Please authenticate to access real AI agent capabilities.
+              </p>
+              <a
+                href="/api/auth/login"
+                className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Log In to Continue
+              </a>
+            </div>
           )}
         </div>
 
@@ -407,11 +459,11 @@ export default function MultiAgentDemo() {
               </div>
               <button
                 onClick={handleStartAnalysis}
-                disabled={isEstimating || !query.trim()}
+                disabled={isEstimating || !query.trim() || (!isDemo && !isAuthenticated)}
                 className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiPlay className="w-5 h-5" />
-                {isEstimating ? 'Estimating...' : 'Start Analysis'}
+                {isEstimating ? 'Estimating...' : (!isDemo && !isAuthenticated) ? 'Login Required' : 'Start Analysis'}
               </button>
             </div>
           )}
