@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     // Parse request body first to check if it's demo mode
-    const { query, documents, mode, isDemo, demoScenarioId } = await req.json();
+    const { query, documents, mode, isDemo, demoScenarioId, customAgents } = await req.json();
 
     console.log('[Orchestrator API] Received request:', {
       query: query?.substring(0, 50) + '...',
@@ -80,7 +80,8 @@ export async function POST(req: NextRequest) {
             mode as ExecutionMode,
             sendEvent,
             isDemo,
-            demoScenarioId
+            demoScenarioId,
+            customAgents
           );
 
           controller.close();

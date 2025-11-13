@@ -37,7 +37,8 @@ export async function runOrchestration(
   mode: ExecutionMode,
   sendEvent: (event: SSEEvent) => void,
   isDemo?: boolean,
-  demoScenarioId?: string
+  demoScenarioId?: string,
+  customAgents?: AgentType[]
 ): Promise<void> {
   // If demo mode, play pre-recorded scenario
   if (isDemo && demoScenarioId) {
@@ -58,7 +59,7 @@ export async function runOrchestration(
     query,
     documents,
     mode,
-    plan: createInitialPlan(mode),
+    plan: createInitialPlan(mode, customAgents),
     messages: [],
     currentStep: 0,
     iteration: 0,
@@ -96,8 +97,8 @@ export async function runOrchestration(
 /**
  * Create initial execution plan
  */
-function createInitialPlan(mode: ExecutionMode): ExecutionPlan {
-  const agents: AgentType[] = ['clinical', 'patent', 'financial'];
+function createInitialPlan(mode: ExecutionMode, customAgents?: AgentType[]): ExecutionPlan {
+  const agents: AgentType[] = customAgents || ['clinical', 'patent', 'financial'];
 
   if (mode === 'fast') {
     // Parallel execution

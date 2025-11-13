@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { ProcessedDocument, ExecutionMode, SSEEvent } from '@/lib/multiAgentTypes';
+import { ProcessedDocument, ExecutionMode, SSEEvent, AgentType } from '@/lib/multiAgentTypes';
 import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy } from 'react-icons/fi';
 import { saveAnalysisToHistory } from '@/lib/analysisHistory';
 
@@ -11,6 +11,7 @@ interface MultiAgentCollaborationProps {
   mode: ExecutionMode;
   isDemo?: boolean;
   demoScenarioId?: string;
+  customAgents?: AgentType[];
   onComplete?: (synthesis: string, cost: number) => void;
 }
 
@@ -34,6 +35,7 @@ export default function MultiAgentCollaboration({
   mode,
   isDemo = false,
   demoScenarioId,
+  customAgents,
   onComplete,
 }: MultiAgentCollaborationProps) {
   const [isRunning, setIsRunning] = useState(false);
@@ -83,6 +85,7 @@ export default function MultiAgentCollaboration({
       mode,
       isDemo,
       demoScenarioId,
+      customAgents,
     };
 
     console.log('[MultiAgentCollaboration] Sending request to orchestrator:', requestPayload);

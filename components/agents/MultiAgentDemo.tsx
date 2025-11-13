@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import MultiAgentCollaboration from './MultiAgentCollaboration';
 import { ExecutionMode } from '@/lib/multiAgentTypes';
 import { ANALYSIS_TEMPLATES, fillTemplate, AnalysisTemplate } from '@/lib/analysisTemplates';
-import { FiZap, FiClock, FiDollarSign, FiPlay, FiFileText, FiLayers, FiClock as FiHistory } from 'react-icons/fi';
+import { FiZap, FiClock, FiDollarSign, FiPlay, FiFileText, FiLayers, FiClock as FiHistory, FiUsers } from 'react-icons/fi';
 import AnalysisHistory from './AnalysisHistory';
+import CustomAgentTeamBuilder from './CustomAgentTeamBuilder';
+import { CustomAgentTeam } from '@/lib/customAgentTeams';
 
 const DEMO_SCENARIOS = [
   {
@@ -68,7 +70,9 @@ export default function MultiAgentDemo() {
   const [isEstimating, setIsEstimating] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  const [viewMode, setViewMode] = useState<'demos' | 'templates'>('demos');
+  const [viewMode, setViewMode] = useState<'demos' | 'templates' | 'custom'>('demos');
+  const [selectedCustomTeam, setSelectedCustomTeam] = useState<CustomAgentTeam | null>(null);
+  const [customQuery, setCustomQuery] = useState('');
 
   const selectedScenarioData = DEMO_SCENARIOS.find(s => s.id === selectedScenario);
 
@@ -160,8 +164,12 @@ export default function MultiAgentDemo() {
     );
   }
 
-  if (showAnalysis && (selectedScenarioData || selectedTemplate)) {
-    const query = selectedScenarioData ? selectedScenarioData.query : getTemplateQuery();
+  if (showAnalysis && (selectedScenarioData || selectedTemplate || selectedCustomTeam)) {
+    const query = selectedScenarioData
+      ? selectedScenarioData.query
+      : selectedTemplate
+      ? getTemplateQuery()
+      : customQuery;
 
     console.log('[MultiAgentDemo] Starting analysis:', {
       isDemo,
@@ -186,6 +194,7 @@ export default function MultiAgentDemo() {
             mode={mode}
             isDemo={isDemo && !!selectedScenarioData}
             demoScenarioId={selectedScenario || undefined}
+            customAgents={selectedCustomTeam?.agents}
           />
         </div>
       </div>
@@ -343,11 +352,28 @@ export default function MultiAgentDemo() {
               <FiFileText className="w-4 h-4" />
               Analysis Templates
             </button>
+            <button
+              onClick={() => {
+                setViewMode('custom');
+                setSelectedTemplate(null);
+                setSelectedScenario(null);
+              }}
+              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
+                viewMode === 'custom'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <FiUsers className="w-4 h-4" />
+              Custom Teams
+            </button>
           </div>
           <p className="text-sm text-gray-600 mt-3">
             {viewMode === 'demos'
               ? 'Choose from pre-recorded demo scenarios with realistic AI responses'
-              : 'Use templated workflows for common biotech analysis tasks'}
+              : viewMode === 'templates'
+              ? 'Use templated workflows for common biotech analysis tasks'
+              : 'Build custom agent teams or use preset configurations'}
           </p>
         </div>
 
@@ -481,8 +507,42 @@ export default function MultiAgentDemo() {
           </div>
         )}
 
+        {/* Custom Teams View */}
+        {viewMode === 'custom' && (
+          <div className="mb-8">
+            <CustomAgentTeamBuilder
+              onTeamSelect={(team) => {
+                setSelectedCustomTeam(team);
+                setMode(team.mode);
+                setIsDemo(false); // Custom teams always use live mode
+              }}
+              selectedTeam={selectedCustomTeam}
+            />
+
+            {/* Query Input for Custom Team */}
+            {selectedCustomTeam && (
+              <div className="mt-6 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Analysis Query
+                </h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Enter your question for the {selectedCustomTeam.name} team
+                  ({selectedCustomTeam.agents.length} agents)
+                </p>
+                <textarea
+                  value={customQuery}
+                  onChange={(e) => setCustomQuery(e.target.value)}
+                  placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Cost Estimate and Start Button */}
-        {(selectedScenario || (selectedTemplate && isTemplateReady())) && (
+        {(selectedScenario || (selectedTemplate && isTemplateReady()) || (selectedCustomTeam && customQuery.trim())) && (
           <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
