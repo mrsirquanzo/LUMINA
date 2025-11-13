@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { ProcessedDocument, ExecutionMode, SSEEvent, AgentType } from '@/lib/multiAgentTypes';
-import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy } from 'react-icons/fi';
+import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend } from 'react-icons/fi';
 import { saveAnalysisToHistory } from '@/lib/analysisHistory';
 
 interface MultiAgentCollaborationProps {
@@ -20,6 +22,8 @@ interface AgentActivity {
   status: 'thinking' | 'speaking' | 'complete';
   currentThought?: string;
   response?: string;
+  chatMessages?: Array<{ role: 'user' | 'assistant'; content: string }>;
+  isProcessingChat?: boolean;
 }
 
 interface AgentQuestion {
