@@ -438,13 +438,6 @@ export default function MarketResearchAgent() {
         </div>
       )}
 
-      {/* File Upload (Live Mode Only) */}
-      {mode === 'live' && (
-        <div className="mb-6">
-          <FileUpload onFilesProcessed={handleFilesProcessed} />
-        </div>
-      )}
-
       {/* Messages */}
       {messages.length > 0 && (
         <div className="mb-6 space-y-4">
@@ -494,6 +487,13 @@ export default function MarketResearchAgent() {
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
+      {/* File Upload - Live Mode Only */}
+      {mode === 'live' && (
+        <div className="mb-6">
+          <FileUpload onFilesProcessed={handleFilesProcessed} />
         </div>
       )}
 

@@ -3,15 +3,12 @@
 import { useState } from 'react';
 import LoginModal from '@/components/shared/LoginModal';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
-import URLInput from '@/components/shared/URLInput';
-import DocumentHistory, { DocumentRecord } from '@/components/shared/DocumentHistory';
 import { DATA_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  attachments?: string[]; // Document names attached to this message
 }
 
 type AgentMode = 'demo' | 'live';
@@ -43,8 +40,6 @@ export default function DataAnalystAgent() {
 
   // Document management
   const [currentDocuments, setCurrentDocuments] = useState<ProcessedDocument[]>([]);
-  const [documentHistory, setDocumentHistory] = useState<DocumentRecord[]>([]);
-  const [showDocuments, setShowDocuments] = useState(false);
 
   const checkAuthStatus = async () => {
     try {
@@ -85,45 +80,6 @@ export default function DataAnalystAgent() {
       }));
 
     setCurrentDocuments(prev => [...prev, ...newDocs]);
-
-    // Add to history
-    const newHistoryItems: DocumentRecord[] = files.map(f => ({
-      id: `doc-${Date.now()}-${Math.random()}`,
-      name: f.name,
-      type: 'file' as const,
-      timestamp: new Date(),
-      fileType: f.type,
-    }));
-    setDocumentHistory(prev => [...prev, ...newHistoryItems]);
-  };
-
-  const handleURLProcessed = (url: string, content: string) => {
-    const newDoc: ProcessedDocument = {
-      fileName: url,
-      fileType: 'text/html',
-      text: content,
-      isImage: false,
-    };
-
-    setCurrentDocuments(prev => [...prev, newDoc]);
-
-    // Add to history
-    const newHistoryItem: DocumentRecord = {
-      id: `url-${Date.now()}`,
-      name: url,
-      type: 'url',
-      timestamp: new Date(),
-      url,
-    };
-    setDocumentHistory(prev => [...prev, newHistoryItem]);
-  };
-
-  const removeDocument = (index: number) => {
-    setCurrentDocuments(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const clearDocuments = () => {
-    setCurrentDocuments([]);
   };
 
   const sendDemoMessage = () => {
@@ -137,12 +93,10 @@ export default function DataAnalystAgent() {
       role: 'user',
       content: demo.query,
       timestamp: new Date(),
-      attachments: currentDocuments.map(d => d.fileName),
     };
 
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
-    clearDocuments(); // Clear after sending
 
     // Simulate typing delay
     setTimeout(() => {
@@ -166,7 +120,6 @@ export default function DataAnalystAgent() {
       role: 'user',
       content: textToSend,
       timestamp: new Date(),
-      attachments: currentDocuments.map(d => d.fileName),
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -208,7 +161,6 @@ export default function DataAnalystAgent() {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-      clearDocuments(); // Clear after successful send
 
     } catch (err: any) {
       console.error('Error sending message:', err);
@@ -230,7 +182,7 @@ export default function DataAnalystAgent() {
   const clearConversation = () => {
     setMessages([]);
     setError(null);
-    clearDocuments();
+    setCurrentDocuments([]);
   };
 
   const handleLogout = async () => {
@@ -309,105 +261,6 @@ export default function DataAnalystAgent() {
         )}
       </div>
 
-      {/* Document Upload Section */}
-      {mode === 'live' && (
-        <div className="mb-6">
-          <button
-            onClick={() => setShowDocuments(!showDocuments)}
-            className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-center">
-              <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <span className="font-medium text-gray-900">
-                Upload Documents or Analyze URLs
-                {currentDocuments.length > 0 && (
-                  <span className="ml-2 text-sm text-blue-600">
-                    ({currentDocuments.length} attached)
-                  </span>
-                )}
-              </span>
-            </div>
-            <svg
-              className={`w-5 h-5 text-gray-400 transition-transform ${showDocuments ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {showDocuments && (
-            <div className="mt-4 p-6 bg-white border border-gray-200 rounded-lg space-y-6">
-              {/* File Upload */}
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Upload Files</h3>
-                <FileUpload onFilesProcessed={handleFilesProcessed} />
-              </div>
-
-              {/* URL Input */}
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Analyze Website</h3>
-                <URLInput onURLProcessed={handleURLProcessed} />
-              </div>
-
-              {/* Current Attachments */}
-              {currentDocuments.length > 0 && (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      Current Attachments ({currentDocuments.length})
-                    </h3>
-                    <button
-                      onClick={clearDocuments}
-                      className="text-xs text-red-600 hover:text-red-700"
-                    >
-                      Clear All
-                    </button>
-                  </div>
-                  <div className="space-y-2">
-                    {currentDocuments.map((doc, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg"
-                      >
-                        <div className="flex items-center flex-1 min-w-0">
-                          <svg className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          <span className="text-sm font-medium text-blue-900 truncate">
-                            {doc.fileName}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => removeDocument(index)}
-                          className="ml-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Document History */}
-              {documentHistory.length > 0 && (
-                <DocumentHistory
-                  documents={documentHistory}
-                  onSelectDocument={() => {}}
-                  onClearHistory={() => setDocumentHistory([])}
-                />
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
       {/* Main Chat Interface */}
       <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
         {/* Messages Area */}
@@ -455,16 +308,6 @@ export default function DataAnalystAgent() {
                         : 'bg-gray-100 text-gray-900'
                     }`}
                   >
-                    {message.attachments && message.attachments.length > 0 && (
-                      <div className="mb-2 pb-2 border-b border-blue-500">
-                        <div className="text-xs opacity-75 mb-1">Attachments:</div>
-                        {message.attachments.map((att, i) => (
-                          <div key={i} className="text-xs opacity-90 truncate">
-                            📎 {att}
-                          </div>
-                        ))}
-                      </div>
-                    )}
                     <div className="whitespace-pre-wrap">{message.content}</div>
                     <div
                       className={`text-xs mt-2 ${
@@ -501,6 +344,13 @@ export default function DataAnalystAgent() {
         {error && (
           <div className="px-6 py-3 bg-red-50 border-t border-red-200">
             <p className="text-sm text-red-700">⚠️ {error}</p>
+          </div>
+        )}
+
+        {/* File Upload - Only for Live Mode */}
+        {mode === 'live' && (
+          <div className="border-t border-gray-200 px-4 pt-4 bg-gray-50">
+            <FileUpload onFilesProcessed={handleFilesProcessed} />
           </div>
         )}
 
