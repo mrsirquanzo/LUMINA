@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60; // 60 seconds for Vercel
 
 // Handle CORS preflight
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
