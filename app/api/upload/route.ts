@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       console.log(`Processing PDF: ${fileName}, size: ${file.size} bytes`);
       try {
         // Dynamically import pdf-parse only when needed
-        const pdfParse = await import('pdf-parse');
+        const pdfParse: any = await import('pdf-parse');
         const pdf = pdfParse.default || pdfParse;
 
         const arrayBuffer = await file.arrayBuffer();
