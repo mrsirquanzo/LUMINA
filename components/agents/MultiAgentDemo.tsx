@@ -3,8 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import MultiAgentCollaboration from './MultiAgentCollaboration';
 import { ExecutionMode } from '@/lib/multiAgentTypes';
-import { ANALYSIS_TEMPLATES, fillTemplate, AnalysisTemplate } from '@/lib/analysisTemplates';
-import { FiZap, FiClock, FiDollarSign, FiPlay, FiFileText, FiLayers, FiClock as FiHistory, FiUsers } from 'react-icons/fi';
+import { FiZap, FiClock, FiDollarSign, FiPlay, FiMessageSquare, FiClock as FiHistory, FiUsers } from 'react-icons/fi';
 import AnalysisHistory from './AnalysisHistory';
 import CustomAgentTeamBuilder from './CustomAgentTeamBuilder';
 import { CustomAgentTeam } from '@/lib/customAgentTeams';
@@ -61,23 +60,18 @@ const DEMO_SCENARIOS = [
 ];
 
 export default function MultiAgentDemo() {
-  const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
-  const [selectedTemplate, setSelectedTemplate] = useState<AnalysisTemplate | null>(null);
-  const [templateVariables, setTemplateVariables] = useState<Record<string, string>>({});
   const [mode, setMode] = useState<ExecutionMode>('thorough');
   const [isDemo, setIsDemo] = useState(true);
+  const [query, setQuery] = useState('');
   const [costEstimate, setCostEstimate] = useState<any>(null);
   const [isEstimating, setIsEstimating] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  const [viewMode, setViewMode] = useState<'demos' | 'templates' | 'custom'>('demos');
+  const [viewMode, setViewMode] = useState<'chat' | 'custom'>('chat');
   const [selectedCustomTeam, setSelectedCustomTeam] = useState<CustomAgentTeam | null>(null);
-  const [customQuery, setCustomQuery] = useState('');
-
-  const selectedScenarioData = DEMO_SCENARIOS.find(s => s.id === selectedScenario);
 
   const estimateCost = useCallback(async () => {
-    if (!selectedScenarioData) return;
+    if (!query.trim()) return;
 
     setIsEstimating(true);
     try {
@@ -85,7 +79,7 @@ export default function MultiAgentDemo() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query: selectedScenarioData.query,
+          query,
           documents: [],
           mode,
         }),
@@ -100,14 +94,17 @@ export default function MultiAgentDemo() {
     } finally {
       setIsEstimating(false);
     }
-  }, [selectedScenarioData, mode]);
+  }, [query, mode]);
 
-  // Get cost estimate when mode or scenario changes
+  // Get cost estimate when mode or query changes
   useEffect(() => {
-    if (selectedScenario && !isDemo) {
-      estimateCost();
+    if (query.trim() && !isDemo) {
+      const debounce = setTimeout(() => {
+        estimateCost();
+      }, 500);
+      return () => clearTimeout(debounce);
     }
-  }, [selectedScenario, isDemo, estimateCost]);
+  }, [query, isDemo, estimateCost]);
 
   const handleStartAnalysis = () => {
     setShowAnalysis(true);
@@ -115,36 +112,12 @@ export default function MultiAgentDemo() {
 
   const handleReset = () => {
     setShowAnalysis(false);
-    setSelectedScenario(null);
-    setSelectedTemplate(null);
-    setTemplateVariables({});
+    setQuery('');
     setCostEstimate(null);
   };
 
-  const handleTemplateSelect = (template: AnalysisTemplate) => {
-    setSelectedTemplate(template);
-    setSelectedScenario(null);
-    setMode(template.recommendedMode);
-    // Extract variables from template
-    const matches = template.promptTemplate.match(/\{\{([^}]+)\}\}/g);
-    const vars: Record<string, string> = {};
-    if (matches) {
-      matches.forEach(match => {
-        const varName = match.replace(/\{\{|\}\}/g, '');
-        vars[varName] = '';
-      });
-    }
-    setTemplateVariables(vars);
-  };
-
-  const getTemplateQuery = () => {
-    if (!selectedTemplate) return '';
-    return fillTemplate(selectedTemplate, templateVariables);
-  };
-
-  const isTemplateReady = () => {
-    if (!selectedTemplate) return false;
-    return Object.values(templateVariables).every(v => v.trim() !== '');
+  const handleSampleQueryClick = (sampleQuery: string) => {
+    setQuery(sampleQuery);
   };
 
   // Show history view
@@ -164,19 +137,12 @@ export default function MultiAgentDemo() {
     );
   }
 
-  if (showAnalysis && (selectedScenarioData || selectedTemplate || selectedCustomTeam)) {
-    const query = selectedScenarioData
-      ? selectedScenarioData.query
-      : selectedTemplate
-      ? getTemplateQuery()
-      : customQuery;
-
+  if (showAnalysis && query.trim()) {
     console.log('[MultiAgentDemo] Starting analysis:', {
       isDemo,
-      scenarioId: selectedScenario,
-      templateId: selectedTemplate?.id,
       mode,
       query: query.substring(0, 50) + '...',
+      customAgents: selectedCustomTeam?.agents.length || 'default',
     });
 
     return (
@@ -186,14 +152,13 @@ export default function MultiAgentDemo() {
             onClick={handleReset}
             className="mb-6 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2"
           >
-            ← Back to scenarios
+            ← Back to input
           </button>
           <MultiAgentCollaboration
             query={query}
             documents={[]}
             mode={mode}
-            isDemo={isDemo && !!selectedScenarioData}
-            demoScenarioId={selectedScenario || undefined}
+            isDemo={isDemo}
             customAgents={selectedCustomTeam?.agents}
           />
         </div>
@@ -318,47 +283,99 @@ export default function MultiAgentDemo() {
           )}
         </div>
 
-        {/* View Mode Toggle */}
+        {/* Main Query Input Section */}
         <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Get Started</h3>
-          <div className="flex items-center gap-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            {viewMode === 'chat' ? 'Ask Your Question' : 'Custom Team Analysis'}
+          </h3>
+
+          {viewMode === 'chat' && (
+            <>
+              <p className="text-sm text-gray-600 mb-4">
+                Enter your question and let our specialized AI agents collaborate to provide comprehensive insights.
+              </p>
+
+              {/* Query Textarea */}
+              <textarea
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
+                rows={5}
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 mb-4"
+              />
+
+              {/* Sample Queries */}
+              <div className="mb-4">
+                <p className="text-sm font-medium text-gray-700 mb-3">Try these example queries:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {DEMO_SCENARIOS.map((scenario) => (
+                    <button
+                      key={scenario.id}
+                      onClick={() => handleSampleQueryClick(scenario.query)}
+                      className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-md transition-colors border border-gray-200"
+                    >
+                      <div className="flex items-start gap-2">
+                        <span className="text-lg">{scenario.icon}</span>
+                        <div>
+                          <div className="font-medium text-gray-900 text-xs mb-1">{scenario.title}</div>
+                          <div className="text-gray-600 text-xs line-clamp-2">{scenario.query}</div>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {viewMode === 'custom' && (
+            <div className="mb-4">
+              <CustomAgentTeamBuilder
+                onTeamSelect={(team) => {
+                  setSelectedCustomTeam(team);
+                  setMode(team.mode);
+                  setIsDemo(false);
+                }}
+                selectedTeam={selectedCustomTeam}
+              />
+
+              {selectedCustomTeam && (
+                <div className="mt-6">
+                  <p className="text-sm text-gray-600 mb-3">
+                    Enter your question for the {selectedCustomTeam.name} team
+                    ({selectedCustomTeam.agents.length} agents)
+                  </p>
+                  <textarea
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
+                    rows={5}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-3 mb-4">
             <button
               onClick={() => {
-                setViewMode('demos');
-                setSelectedTemplate(null);
-                setSelectedScenario(null);
+                setViewMode('chat');
+                setSelectedCustomTeam(null);
               }}
-              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
-                viewMode === 'demos'
+              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 text-sm ${
+                viewMode === 'chat'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              <FiPlay className="w-4 h-4" />
-              Demo Scenarios
+              <FiMessageSquare className="w-4 h-4" />
+              Simple Chat
             </button>
             <button
-              onClick={() => {
-                setViewMode('templates');
-                setSelectedTemplate(null);
-                setSelectedScenario(null);
-              }}
-              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
-                viewMode === 'templates'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <FiFileText className="w-4 h-4" />
-              Analysis Templates
-            </button>
-            <button
-              onClick={() => {
-                setViewMode('custom');
-                setSelectedTemplate(null);
-                setSelectedScenario(null);
-              }}
-              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
+              onClick={() => setViewMode('custom')}
+              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 text-sm ${
                 viewMode === 'custom'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -368,185 +385,12 @@ export default function MultiAgentDemo() {
               Custom Teams
             </button>
           </div>
-          <p className="text-sm text-gray-600 mt-3">
-            {viewMode === 'demos'
-              ? 'Choose from pre-recorded demo scenarios with realistic AI responses'
-              : viewMode === 'templates'
-              ? 'Use templated workflows for common biotech analysis tasks'
-              : 'Build custom agent teams or use preset configurations'}
-          </p>
-        </div>
 
-        {/* Demo Scenario Selection */}
-        {viewMode === 'demos' && (
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose a Demo Scenario</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {DEMO_SCENARIOS.map((scenario) => (
-              <button
-                key={scenario.id}
-                onClick={() => setSelectedScenario(scenario.id)}
-                className={`p-6 rounded-lg border-2 transition-all text-left ${
-                  selectedScenario === scenario.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
-                }`}
-              >
-                <div className="flex items-start gap-3 mb-3">
-                  <span className="text-3xl">{scenario.icon}</span>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{scenario.title}</h4>
-                    <p className="text-sm text-gray-600">{scenario.description}</p>
-                  </div>
-                </div>
-                <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                  <p className="text-sm text-gray-700 font-medium mb-2">Query:</p>
-                  <p className="text-sm text-gray-600 italic">"{scenario.query}"</p>
-                </div>
-                <div className="mt-3">
-                  <p className="text-xs text-gray-500 font-medium mb-1">Documents:</p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    {scenario.documents.map((doc, idx) => (
-                      <li key={idx}>• {doc.fileName} ({doc.size})</li>
-                    ))}
-                  </ul>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-        )}
-
-        {/* Template Selection */}
-        {viewMode === 'templates' && (
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose an Analysis Template</h3>
-
-            {/* Group by category */}
-            {['due-diligence', 'strategy', 'regulatory', 'commercial'].map(category => {
-              const templates = ANALYSIS_TEMPLATES.filter(t => t.category === category);
-              if (templates.length === 0) return null;
-
-              const categoryNames: Record<string, string> = {
-                'due-diligence': 'Due Diligence',
-                'strategy': 'Strategic Analysis',
-                'regulatory': 'Regulatory & Compliance',
-                'commercial': 'Commercial & Market',
-              };
-
-              return (
-                <div key={category} className="mb-6">
-                  <h4 className="text-md font-medium text-gray-700 mb-3 flex items-center gap-2">
-                    <FiLayers className="w-4 h-4" />
-                    {categoryNames[category]}
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {templates.map(template => (
-                      <button
-                        key={template.id}
-                        onClick={() => handleTemplateSelect(template)}
-                        className={`p-4 rounded-lg border-2 transition-all text-left ${
-                          selectedTemplate?.id === template.id
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300 bg-white'
-                        }`}
-                      >
-                        <div className="flex items-start gap-3 mb-2">
-                          <span className="text-2xl">{template.icon}</span>
-                          <div className="flex-1">
-                            <h5 className="font-semibold text-gray-900 mb-1">{template.title}</h5>
-                            <p className="text-sm text-gray-600">{template.description}</p>
-                          </div>
-                        </div>
-                        <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
-                          <span>{template.agents.length} agents</span>
-                          <span>•</span>
-                          <span>{template.estimatedTime}</span>
-                          <span>•</span>
-                          <span className="capitalize">{template.recommendedMode} mode</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Template Variable Input Form */}
-        {selectedTemplate && Object.keys(templateVariables).length > 0 && (
-          <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Fill in Analysis Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.keys(templateVariables).map(varName => (
-                <div key={varName}>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {varName.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                  </label>
-                  <input
-                    type="text"
-                    value={templateVariables[varName]}
-                    onChange={(e) =>
-                      setTemplateVariables({ ...templateVariables, [varName]: e.target.value })
-                    }
-                    placeholder={`Enter ${varName.replace(/_/g, ' ')}`}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Preview generated query */}
-            {isTemplateReady() && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-md">
-                <p className="text-sm font-medium text-gray-700 mb-2">Generated Query:</p>
-                <p className="text-sm text-gray-600 italic">"{getTemplateQuery()}"</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Custom Teams View */}
-        {viewMode === 'custom' && (
-          <div className="mb-8">
-            <CustomAgentTeamBuilder
-              onTeamSelect={(team) => {
-                setSelectedCustomTeam(team);
-                setMode(team.mode);
-                setIsDemo(false); // Custom teams always use live mode
-              }}
-              selectedTeam={selectedCustomTeam}
-            />
-
-            {/* Query Input for Custom Team */}
-            {selectedCustomTeam && (
-              <div className="mt-6 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Analysis Query
-                </h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  Enter your question for the {selectedCustomTeam.name} team
-                  ({selectedCustomTeam.agents.length} agents)
-                </p>
-                <textarea
-                  value={customQuery}
-                  onChange={(e) => setCustomQuery(e.target.value)}
-                  placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Cost Estimate and Start Button */}
-        {(selectedScenario || (selectedTemplate && isTemplateReady()) || (selectedCustomTeam && customQuery.trim())) && (
-          <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <div className="flex items-center justify-between">
+          {/* Cost Estimate and Start Button */}
+          {query.trim() && (
+            <div className="flex items-center justify-between pt-4 border-t border-gray-200">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Ready to Start</h4>
+                <h4 className="font-semibold text-gray-900 mb-1">Ready to Start</h4>
                 {!isDemo && costEstimate && (
                   <div className="text-sm text-gray-600">
                     <p>Estimated cost: ${costEstimate.minCost.toFixed(2)} - ${costEstimate.maxCost.toFixed(2)}</p>
@@ -563,15 +407,15 @@ export default function MultiAgentDemo() {
               </div>
               <button
                 onClick={handleStartAnalysis}
-                disabled={isEstimating}
-                className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+                disabled={isEstimating || !query.trim()}
+                className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiPlay className="w-5 h-5" />
                 {isEstimating ? 'Estimating...' : 'Start Analysis'}
               </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Info Section */}
         <div className="mt-12 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
@@ -615,14 +459,14 @@ export default function MultiAgentDemo() {
           </div>
           <div className="mt-6 p-4 bg-white rounded-md">
             <p className="text-sm text-gray-700">
-              <strong>In Thorough Mode:</strong> Agents work sequentially, building on each other's insights.
-              The Clinical Analyst might ask the Patent Expert about IP protection for a specific mechanism,
-              who then asks the Financial Analyst about valuation implications.
+              <strong>How it works:</strong> In Fast Mode, all agents analyze your query in parallel for quick results.
+              In Thorough Mode, agents work sequentially, building on each other's insights. For example, the Clinical
+              Analyst might ask the Patent Expert about IP protection for a specific mechanism, who then asks the
+              Financial Analyst about valuation implications.
             </p>
             <p className="text-sm text-gray-700 mt-2">
-              <strong>Analysis Templates:</strong> Pre-configured workflows automatically select the optimal
-              agent team for each scenario. For example, M&A Due Diligence uses all 5 agents, while
-              Regulatory Strategy focuses on Clinical and Regulatory experts.
+              <strong>Custom Teams:</strong> For advanced users, you can create custom agent teams with specific
+              combinations of agents tailored to your analysis needs. Simply switch to "Custom Teams" mode to get started.
             </p>
           </div>
         </div>

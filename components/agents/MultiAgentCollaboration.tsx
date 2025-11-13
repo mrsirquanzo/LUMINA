@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ProcessedDocument, ExecutionMode, SSEEvent, AgentType } from '@/lib/multiAgentTypes';
-import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend } from 'react-icons/fi';
+import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { saveAnalysisToHistory } from '@/lib/analysisHistory';
 
 interface MultiAgentCollaborationProps {
@@ -24,6 +24,9 @@ interface AgentActivity {
   response?: string;
   chatMessages?: Array<{ role: 'user' | 'assistant'; content: string }>;
   isProcessingChat?: boolean;
+  isExpanded?: boolean;
+  chatInput?: string;
+  lastUpdate?: number;
 }
 
 interface AgentQuestion {
@@ -52,11 +55,40 @@ export default function MultiAgentCollaboration({
   const [error, setError] = useState<string>('');
   const [estimatedCost, setEstimatedCost] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [lastActivityTime, setLastActivityTime] = useState<number>(Date.now());
+  const [timeoutWarning, setTimeoutWarning] = useState<boolean>(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const timeoutCheckInterval = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-scroll disabled to allow users to freely scroll and track progress
-  // Users can manually scroll to see updates as they happen
+  // Monitor for timeout/freezing
+  useEffect(() => {
+    if (isRunning && !synthesis) {
+      timeoutCheckInterval.current = setInterval(() => {
+        const timeSinceLastUpdate = Date.now() - lastActivityTime;
+
+        // Show warning after 45 seconds of no activity
+        if (timeSinceLastUpdate > 45000 && !timeoutWarning) {
+          setTimeoutWarning(true);
+        }
+
+        // Auto-cancel after 3 minutes of no activity
+        if (timeSinceLastUpdate > 180000) {
+          setError('Analysis timed out. The request took too long to complete. Please try again.');
+          setIsRunning(false);
+          if (timeoutCheckInterval.current) {
+            clearInterval(timeoutCheckInterval.current);
+          }
+        }
+      }, 5000); // Check every 5 seconds
+
+      return () => {
+        if (timeoutCheckInterval.current) {
+          clearInterval(timeoutCheckInterval.current);
+        }
+      };
+    }
+  }, [isRunning, synthesis, lastActivityTime, timeoutWarning]);
 
   // Save analysis to history when complete
   useEffect(() => {
@@ -82,6 +114,8 @@ export default function MultiAgentCollaboration({
     setSynthesisStep('');
     setSynthesis('');
     setCost(0);
+    setLastActivityTime(Date.now());
+    setTimeoutWarning(false);
 
     const requestPayload = {
       query,
@@ -134,6 +168,8 @@ export default function MultiAgentCollaboration({
             try {
               const event: SSEEvent = JSON.parse(eventData);
               handleSSEEvent(event);
+              setLastActivityTime(Date.now());
+              setTimeoutWarning(false);
             } catch (e) {
               console.error('Failed to parse SSE event:', e);
             }
@@ -146,6 +182,9 @@ export default function MultiAgentCollaboration({
       setError(err.message || 'An error occurred during orchestration');
     } finally {
       setIsRunning(false);
+      if (timeoutCheckInterval.current) {
+        clearInterval(timeoutCheckInterval.current);
+      }
     }
   };
 
@@ -158,40 +197,43 @@ export default function MultiAgentCollaboration({
 
       case 'agent_start':
         setAgentActivities(prev => {
-          const next = new Map(prev);
-          next.set(event.data.agent, {
+          const updated = new Map(prev);
+          updated.set(event.data.agent, {
             agent: event.data.agent,
             status: 'thinking',
-            currentThought: event.data.task,
+            currentThought: event.data.task || 'Starting analysis...',
+            chatMessages: [],
+            isExpanded: true,
+            chatInput: '',
+            lastUpdate: Date.now(),
           });
-          return next;
+          return updated;
         });
         break;
 
       case 'agent_thinking':
         setAgentActivities(prev => {
-          const next = new Map(prev);
-          const existing = next.get(event.data.agent) || {
-            agent: event.data.agent,
-            status: 'thinking' as const,
-          };
-          next.set(event.data.agent, {
-            ...existing,
-            currentThought: event.data.progress,
-          });
-          return next;
+          const updated = new Map(prev);
+          const activity = updated.get(event.data.agent);
+          if (activity) {
+            activity.currentThought = event.data.thought;
+            activity.lastUpdate = Date.now();
+          }
+          return updated;
         });
         break;
 
       case 'agent_response':
         setAgentActivities(prev => {
-          const next = new Map(prev);
-          next.set(event.data.agent, {
-            agent: event.data.agent,
-            status: 'complete',
-            response: event.data.response,
-          });
-          return next;
+          const updated = new Map(prev);
+          const activity = updated.get(event.data.agent);
+          if (activity) {
+            activity.status = 'complete';
+            activity.response = event.data.response;
+            activity.currentThought = undefined;
+            activity.lastUpdate = Date.now();
+          }
+          return updated;
         });
         break;
 
@@ -230,8 +272,103 @@ export default function MultiAgentCollaboration({
     }
   };
 
+  const toggleAgentExpansion = (agentName: string) => {
+    setAgentActivities(prev => {
+      const updated = new Map(prev);
+      const activity = updated.get(agentName);
+      if (activity) {
+        activity.isExpanded = !activity.isExpanded;
+      }
+      return updated;
+    });
+  };
+
+  const handleAgentChatInput = (agentName: string, value: string) => {
+    setAgentActivities(prev => {
+      const updated = new Map(prev);
+      const activity = updated.get(agentName);
+      if (activity) {
+        activity.chatInput = value;
+      }
+      return updated;
+    });
+  };
+
+  const sendChatToAgent = async (agentName: string) => {
+    const activity = agentActivities.get(agentName);
+    if (!activity || !activity.chatInput?.trim() || activity.isProcessingChat) return;
+
+    const userMessage = activity.chatInput.trim();
+
+    // Add user message to chat
+    setAgentActivities(prev => {
+      const updated = new Map(prev);
+      const act = updated.get(agentName);
+      if (act) {
+        act.chatMessages = [...(act.chatMessages || []), { role: 'user', content: userMessage }];
+        act.chatInput = '';
+        act.isProcessingChat = true;
+      }
+      return updated;
+    });
+
+    try {
+      // Determine which API endpoint to call based on agent name
+      let endpoint = '/api/agents/data-analyst';
+      if (agentName.includes('Patent')) endpoint = '/api/agents/patent-expert';
+      if (agentName.includes('Financial')) endpoint = '/api/agents/financial-analyst';
+      if (agentName.includes('Regulatory')) endpoint = '/api/agents/regulatory-expert';
+      if (agentName.includes('Market')) endpoint = '/api/agents/market-research';
+
+      // Build context from original response
+      const context = activity.response || '';
+      const fullQuery = `Context from earlier analysis:\n${context.substring(0, 500)}...\n\nFollow-up question: ${userMessage}`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: fullQuery }],
+          documents: [],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from agent');
+      }
+
+      const data = await response.json();
+
+      // Add assistant response to chat
+      setAgentActivities(prev => {
+        const updated = new Map(prev);
+        const act = updated.get(agentName);
+        if (act) {
+          act.chatMessages = [...(act.chatMessages || []), { role: 'assistant', content: data.message }];
+          act.isProcessingChat = false;
+        }
+        return updated;
+      });
+
+    } catch (err: any) {
+      console.error('Chat error:', err);
+      setAgentActivities(prev => {
+        const updated = new Map(prev);
+        const act = updated.get(agentName);
+        if (act) {
+          act.chatMessages = [...(act.chatMessages || []), {
+            role: 'assistant',
+            content: 'Sorry, I encountered an error processing your question. Please try again.'
+          }];
+          act.isProcessingChat = false;
+        }
+        return updated;
+      });
+    }
+  };
+
   const getAgentIcon = (agent: string) => {
-    if (agent.includes('Clinical')) return '🔬';
+    if (agent.includes('Clinical') || agent.includes('Data')) return '🔬';
     if (agent.includes('Patent')) return '⚖️';
     if (agent.includes('Financial')) return '💰';
     if (agent.includes('Regulatory')) return '📋';
@@ -240,12 +377,21 @@ export default function MultiAgentCollaboration({
   };
 
   const getAgentColor = (agent: string) => {
-    if (agent.includes('Clinical')) return 'text-blue-600 bg-blue-50 border-blue-200';
-    if (agent.includes('Patent')) return 'text-purple-600 bg-purple-50 border-purple-200';
-    if (agent.includes('Financial')) return 'text-green-600 bg-green-50 border-green-200';
-    if (agent.includes('Regulatory')) return 'text-orange-600 bg-orange-50 border-orange-200';
-    if (agent.includes('Market')) return 'text-teal-600 bg-teal-50 border-teal-200';
-    return 'text-gray-600 bg-gray-50 border-gray-200';
+    if (agent.includes('Clinical') || agent.includes('Data')) return 'from-blue-50 to-blue-100 border-blue-300';
+    if (agent.includes('Patent')) return 'from-purple-50 to-purple-100 border-purple-300';
+    if (agent.includes('Financial')) return 'from-green-50 to-green-100 border-green-300';
+    if (agent.includes('Regulatory')) return 'from-orange-50 to-orange-100 border-orange-300';
+    if (agent.includes('Market')) return 'from-teal-50 to-teal-100 border-teal-300';
+    return 'from-gray-50 to-gray-100 border-gray-300';
+  };
+
+  const getAgentTextColor = (agent: string) => {
+    if (agent.includes('Clinical') || agent.includes('Data')) return 'text-blue-900';
+    if (agent.includes('Patent')) return 'text-purple-900';
+    if (agent.includes('Financial')) return 'text-green-900';
+    if (agent.includes('Regulatory')) return 'text-orange-900';
+    if (agent.includes('Market')) return 'text-teal-900';
+    return 'text-gray-900';
   };
 
   const getProgressPercentage = () => {
@@ -253,9 +399,9 @@ export default function MultiAgentCollaboration({
     if (synthesisStep) return 90;
     if (agentActivities.size === 0) return 0;
 
-    const totalAgents = 3; // Clinical, Patent, Financial
+    const totalAgents = customAgents?.length || 3;
     const completedAgents = Array.from(agentActivities.values()).filter(a => a.status === 'complete').length;
-    return (completedAgents / totalAgents) * 80; // Reserve 80% for agents, 20% for synthesis
+    return (completedAgents / totalAgents) * 80;
   };
 
   const generateExportContent = () => {
@@ -303,17 +449,13 @@ ${synthesis}
     URL.revokeObjectURL(url);
   };
 
-  const handleDownloadText = () => {
-    const content = generateExportContent();
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `analysis-${Date.now()}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const getTimeSinceLastUpdate = (activity: AgentActivity) => {
+    if (!activity.lastUpdate) return '';
+    const seconds = Math.floor((Date.now() - activity.lastUpdate) / 1000);
+    if (seconds < 5) return 'just now';
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}m ago`;
   };
 
   return (
@@ -324,7 +466,7 @@ ${synthesis}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Multi-Agent Analysis</h3>
             <p className="text-sm text-gray-600">
-              Query: <span className="font-medium">{query}</span>
+              <span className="font-medium">{query}</span>
             </p>
             {documents.length > 0 && (
               <p className="text-sm text-gray-600 mt-1">
@@ -348,7 +490,7 @@ ${synthesis}
             {!isRunning && !synthesis && (
               <button
                 onClick={startOrchestration}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
               >
                 <FiPlay className="w-4 h-4" />
                 Start Analysis
@@ -361,39 +503,52 @@ ${synthesis}
         {isRunning && !synthesis && (
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-              <span>Analysis Progress</span>
-              <span>{Math.round(getProgressPercentage())}%</span>
+              <span className="font-medium">Analysis Progress</span>
+              <span className="font-semibold">{Math.round(getProgressPercentage())}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${getProgressPercentage()}%` }}
               />
             </div>
 
+            {/* Timeout Warning */}
+            {timeoutWarning && (
+              <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md flex items-start gap-2">
+                <FiClock className="w-4 h-4 text-yellow-600 mt-0.5" />
+                <div className="text-sm text-yellow-800">
+                  <p className="font-medium">Analysis is taking longer than expected...</p>
+                  <p className="text-xs mt-1">Still processing. This may take a few more minutes.</p>
+                </div>
+              </div>
+            )}
+
             {/* Agent Status Indicators */}
-            <div className="flex items-center gap-4 text-sm">
-              {['Clinical Analyst', 'Patent Expert', 'Financial Analyst'].map((agentName) => {
-                const activity = agentActivities.get(agentName);
-                return (
-                  <div key={agentName} className="flex items-center gap-2">
-                    {activity?.status === 'complete' ? (
-                      <FiCheck className="w-4 h-4 text-green-600" />
-                    ) : activity?.status === 'thinking' ? (
-                      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <div className="w-4 h-4 border-2 border-gray-300 rounded-full" />
-                    )}
-                    <span className={activity ? 'text-gray-900' : 'text-gray-400'}>
-                      {agentName.split(' ')[0]}
+            <div className="flex items-center gap-4 text-sm flex-wrap">
+              {Array.from(agentActivities.values()).map((activity) => (
+                <div key={activity.agent} className="flex items-center gap-2">
+                  {activity.status === 'complete' ? (
+                    <FiCheck className="w-4 h-4 text-green-600" />
+                  ) : activity.status === 'thinking' ? (
+                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <div className="w-4 h-4 border-2 border-gray-300 rounded-full" />
+                  )}
+                  <span className={activity.status === 'complete' ? 'text-gray-900 font-medium' : 'text-gray-600'}>
+                    {activity.agent.split(' ')[0]}
+                  </span>
+                  {activity.lastUpdate && activity.status === 'thinking' && (
+                    <span className="text-xs text-gray-400">
+                      {getTimeSinceLastUpdate(activity)}
                     </span>
-                  </div>
-                );
-              })}
+                  )}
+                </div>
+              ))}
               {synthesisStep && (
                 <div className="flex items-center gap-2 ml-4">
                   <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
-                  <span className="text-gray-900">Synthesis</span>
+                  <span className="text-gray-900 font-medium">Synthesis</span>
                 </div>
               )}
             </div>
@@ -426,39 +581,126 @@ ${synthesis}
           {Array.from(agentActivities.values()).map((activity) => (
             <div
               key={activity.agent}
-              className={`p-6 bg-white rounded-lg border shadow-sm transition-all duration-500 ${getAgentColor(activity.agent)} ${
-                activity.status === 'complete' ? 'animate-in fade-in slide-in-from-left-2' : ''
-              }`}
+              className={`bg-gradient-to-br ${getAgentColor(activity.agent)} rounded-lg border-2 shadow-sm transition-all duration-300`}
             >
-              <div className="flex items-start gap-3">
-                <div className="text-3xl">{getAgentIcon(activity.agent)}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-semibold text-gray-900">{activity.agent}</h4>
-                    {activity.status === 'thinking' && (
-                      <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">
-                        Thinking...
-                      </span>
-                    )}
-                    {activity.status === 'complete' && (
-                      <FiCheck className="w-5 h-5 text-green-600" />
-                    )}
+              {/* Agent Header */}
+              <div className="p-5">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-3 flex-1">
+                    <div className="text-3xl">{getAgentIcon(activity.agent)}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className={`font-bold text-lg ${getAgentTextColor(activity.agent)}`}>
+                          {activity.agent}
+                        </h4>
+                        {activity.status === 'thinking' && (
+                          <span className="text-xs px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded-full font-medium animate-pulse">
+                            Analyzing...
+                          </span>
+                        )}
+                        {activity.status === 'complete' && (
+                          <FiCheck className="w-5 h-5 text-green-600" />
+                        )}
+                      </div>
+
+                      {activity.currentThought && activity.status === 'thinking' && (
+                        <p className="text-sm text-gray-700 italic mb-3 bg-white/50 p-2 rounded">
+                          💭 {activity.currentThought}
+                        </p>
+                      )}
+
+                      {activity.response && (
+                        <div className={`mt-3 ${activity.isExpanded ? '' : 'max-h-32 overflow-hidden relative'}`}>
+                          <div className="prose prose-sm max-w-none bg-white/60 p-4 rounded-lg">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {activity.response}
+                            </ReactMarkdown>
+                          </div>
+                          {!activity.isExpanded && (
+                            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {activity.currentThought && activity.status === 'thinking' && (
-                    <p className="text-sm text-gray-600 italic mb-2">
-                      {activity.currentThought}
-                    </p>
-                  )}
-
                   {activity.response && (
-                    <div className="mt-3 prose prose-sm max-w-none">
-                      <div className="text-sm text-gray-800 whitespace-pre-wrap">
-                        {activity.response}
-                      </div>
-                    </div>
+                    <button
+                      onClick={() => toggleAgentExpansion(activity.agent)}
+                      className="ml-3 p-2 hover:bg-white/50 rounded-md transition-colors"
+                    >
+                      {activity.isExpanded ? (
+                        <FiChevronUp className="w-5 h-5" />
+                      ) : (
+                        <FiChevronDown className="w-5 h-5" />
+                      )}
+                    </button>
                   )}
                 </div>
+
+                {/* Interactive Chat Section */}
+                {activity.status === 'complete' && activity.isExpanded && (
+                  <div className="mt-4 pt-4 border-t border-gray-300">
+                    <div className="flex items-center gap-2 mb-3">
+                      <FiMessageSquare className="w-4 h-4 text-gray-600" />
+                      <h5 className="text-sm font-semibold text-gray-700">Ask Follow-up Questions</h5>
+                    </div>
+
+                    {/* Chat Messages */}
+                    {activity.chatMessages && activity.chatMessages.length > 0 && (
+                      <div className="mb-3 space-y-2 max-h-64 overflow-y-auto">
+                        {activity.chatMessages.map((msg, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-3 rounded-lg ${
+                              msg.role === 'user'
+                                ? 'bg-blue-100 ml-8'
+                                : 'bg-white/80 mr-8'
+                            }`}
+                          >
+                            <div className="text-xs font-medium text-gray-600 mb-1">
+                              {msg.role === 'user' ? 'You' : activity.agent}
+                            </div>
+                            <div className="prose prose-sm max-w-none">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {msg.content}
+                              </ReactMarkdown>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Chat Input */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={activity.chatInput || ''}
+                        onChange={(e) => handleAgentChatInput(activity.agent, e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            sendChatToAgent(activity.agent);
+                          }
+                        }}
+                        placeholder="Ask a follow-up question..."
+                        disabled={activity.isProcessingChat}
+                        className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                      />
+                      <button
+                        onClick={() => sendChatToAgent(activity.agent)}
+                        disabled={activity.isProcessingChat || !activity.chatInput?.trim()}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      >
+                        {activity.isProcessingChat ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <FiSend className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -471,7 +713,7 @@ ${synthesis}
           {agentQuestions.map((question, idx) => (
             <div
               key={idx}
-              className="p-4 bg-amber-50 border border-amber-200 rounded-lg"
+              className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-300 rounded-lg shadow-sm"
             >
               <div className="flex items-center gap-2 text-sm font-medium text-amber-900 mb-1">
                 <span>{getAgentIcon(question.from)} {question.from}</span>
@@ -486,11 +728,11 @@ ${synthesis}
 
       {/* Synthesis Progress */}
       {synthesisStep && (
-        <div className="mb-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg">
+        <div className="mb-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300 rounded-lg shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
             <div>
-              <p className="text-sm font-medium text-indigo-900">Synthesis in Progress</p>
+              <p className="text-sm font-semibold text-indigo-900">Synthesis in Progress</p>
               <p className="text-sm text-indigo-700 mt-1">{synthesisStep}</p>
             </div>
           </div>
@@ -499,13 +741,13 @@ ${synthesis}
 
       {/* Final Synthesis */}
       {synthesis && (
-        <div className="mb-6 p-6 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-md">
+        <div className="mb-6 p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg shadow-md">
           <div className="flex items-center gap-2 mb-4">
             <FiCheck className="w-6 h-6 text-green-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Analysis Complete</h3>
+            <h3 className="text-xl font-bold text-gray-900">Analysis Complete</h3>
             {cost > 0 && (
-              <span className="ml-auto text-sm text-gray-600">
-                Cost: ${cost.toFixed(2)}
+              <span className="ml-auto text-sm font-medium text-gray-600 bg-white px-3 py-1 rounded-full">
+                Cost: ${cost.toFixed(4)}
               </span>
             )}
           </div>
@@ -514,7 +756,7 @@ ${synthesis}
           <div className="mb-4 flex items-center gap-2 flex-wrap">
             <button
               onClick={handleCopyToClipboard}
-              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm"
+              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
             >
               {copied ? (
                 <>
@@ -530,24 +772,17 @@ ${synthesis}
             </button>
             <button
               onClick={handleDownloadMarkdown}
-              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm"
+              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
             >
               <FiDownload className="w-4 h-4" />
               <span>Download Markdown</span>
             </button>
-            <button
-              onClick={handleDownloadText}
-              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm"
-            >
-              <FiDownload className="w-4 h-4" />
-              <span>Download Text</span>
-            </button>
           </div>
 
-          <div className="prose prose-sm max-w-none">
-            <div className="text-sm text-gray-800 whitespace-pre-wrap">
+          <div className="prose prose-sm max-w-none bg-white p-5 rounded-lg">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {synthesis}
-            </div>
+            </ReactMarkdown>
           </div>
         </div>
       )}
