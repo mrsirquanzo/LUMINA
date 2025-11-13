@@ -43,6 +43,13 @@ export async function POST(req: NextRequest) {
       // PDF Processing - use dynamic import to avoid DOMMatrix error
       console.log(`Processing PDF: ${fileName}, size: ${file.size} bytes`);
       try {
+        // Mock DOMMatrix for Node.js environment (required by pdf-parse dependencies)
+        if (typeof globalThis.DOMMatrix === 'undefined') {
+          (globalThis as any).DOMMatrix = class DOMMatrix {
+            constructor() {}
+          };
+        }
+
         // Dynamically import pdf-parse only when needed
         const pdfParse: any = await import('pdf-parse');
         const pdf = pdfParse.default || pdfParse;
