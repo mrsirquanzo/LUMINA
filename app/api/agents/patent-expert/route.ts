@@ -83,12 +83,16 @@ export async function POST(req: NextRequest) {
                 data: doc.base64,
               },
             });
-          } else if (doc.text) {
-            // Add document text as a content block
-            content.push({
-              type: 'text',
-              text: `\n\n--- Document: ${doc.fileName} ---\n${doc.text}`,
-            });
+          } else {
+            const text = doc.extractedText || doc.text || '';
+            if (text) {
+              // Add document text as a content block
+              const fileName = doc.fileName || doc.name || 'Unknown';
+              content.push({
+                type: 'text',
+                text: `\n\n--- Document: ${fileName} ---\n${text}`,
+              });
+            }
           }
         }
 
@@ -125,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     // Build citations list from documents
     const citations = documents && documents.length > 0
-      ? documents.map((doc: any) => doc.fileName)
+      ? documents.map((doc: any) => doc.fileName || doc.name || 'Unknown')
       : [];
 
     return NextResponse.json({
