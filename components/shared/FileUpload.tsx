@@ -122,11 +122,22 @@ export default function FileUpload({
           body: formData,
         });
 
-        const data = await response.json();
-
+        // Check response status first, then parse JSON
         if (!response.ok) {
-          throw new Error(data.error || 'Upload failed');
+          let errorMessage = 'Upload failed';
+          try {
+            const data = await response.json();
+            errorMessage = data.error || errorMessage;
+          } catch (jsonError) {
+            // If JSON parsing fails, use status text
+            console.error('Failed to parse error response:', jsonError);
+            errorMessage = `Upload failed: ${response.statusText} (${response.status})`;
+          }
+          throw new Error(errorMessage);
         }
+
+        // Only parse JSON if response was successful
+        const data = await response.json();
 
         // Update with processed data
         setFiles(prev =>
