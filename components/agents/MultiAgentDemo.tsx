@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import MultiAgentCollaboration from './MultiAgentCollaboration';
 import { ExecutionMode } from '@/lib/multiAgentTypes';
 import { ANALYSIS_TEMPLATES, fillTemplate, AnalysisTemplate } from '@/lib/analysisTemplates';
-import { FiZap, FiClock, FiDollarSign, FiPlay, FiFileText, FiLayers } from 'react-icons/fi';
+import { FiZap, FiClock, FiDollarSign, FiPlay, FiFileText, FiLayers, FiClock as FiHistory } from 'react-icons/fi';
+import AnalysisHistory from './AnalysisHistory';
 
 const DEMO_SCENARIOS = [
   {
@@ -66,6 +67,7 @@ export default function MultiAgentDemo() {
   const [costEstimate, setCostEstimate] = useState<any>(null);
   const [isEstimating, setIsEstimating] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [viewMode, setViewMode] = useState<'demos' | 'templates'>('demos');
 
   const selectedScenarioData = DEMO_SCENARIOS.find(s => s.id === selectedScenario);
@@ -141,6 +143,23 @@ export default function MultiAgentDemo() {
     return Object.values(templateVariables).every(v => v.trim() !== '');
   };
 
+  // Show history view
+  if (showHistory) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <button
+            onClick={() => setShowHistory(false)}
+            className="mb-6 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2"
+          >
+            ← Back to demo
+          </button>
+          <AnalysisHistory />
+        </div>
+      </div>
+    );
+  }
+
   if (showAnalysis && (selectedScenarioData || selectedTemplate)) {
     const query = selectedScenarioData ? selectedScenarioData.query : getTemplateQuery();
 
@@ -178,8 +197,18 @@ export default function MultiAgentDemo() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-4">
-            🤖 Multi-Agent AI System
+          <div className="flex items-center justify-between mb-4">
+            <div></div> {/* Spacer */}
+            <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+              🤖 Multi-Agent AI System
+            </div>
+            <button
+              onClick={() => setShowHistory(true)}
+              className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm"
+            >
+              <FiHistory className="w-4 h-4" />
+              View History
+            </button>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Multi-Agent Collaboration Demo
