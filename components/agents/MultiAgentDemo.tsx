@@ -7,6 +7,7 @@ import { FiZap, FiClock, FiDollarSign, FiPlay, FiMessageSquare, FiClock as FiHis
 import AnalysisHistory from './AnalysisHistory';
 import CustomAgentTeamBuilder from './CustomAgentTeamBuilder';
 import { CustomAgentTeam } from '@/lib/customAgentTeams';
+import LoginModal from '@/components/shared/LoginModal';
 
 const DEMO_SCENARIOS = [
   {
@@ -71,6 +72,7 @@ export default function MultiAgentDemo() {
   const [selectedCustomTeam, setSelectedCustomTeam] = useState<CustomAgentTeam | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(false);
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
   const estimateCost = useCallback(async () => {
     if (!query.trim()) return;
@@ -151,14 +153,19 @@ export default function MultiAgentDemo() {
       // Check authentication before enabling live mode
       const authenticated = await checkAuthentication();
       if (!authenticated) {
-        // Redirect to login page
-        window.location.href = '/api/auth/login';
+        // Show login modal
+        setShowLoginModal(true);
         return;
       }
       setIsDemo(false);
     } else {
       setIsDemo(true);
     }
+  };
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    setIsDemo(false);
   };
 
   // Check authentication on mount
@@ -531,6 +538,13 @@ export default function MultiAgentDemo() {
             </p>
           </div>
         </div>
+
+        {/* Login Modal */}
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSuccess={handleLoginSuccess}
+        />
       </div>
     </div>
   );

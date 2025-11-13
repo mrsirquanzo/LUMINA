@@ -260,8 +260,8 @@ export default function MarketResearchAgent() {
       setMode('live');
       setMessages([]);
     } else {
-      // Redirect to login page
-      window.location.href = '/api/auth/login';
+      // Show login modal
+      setShowLoginModal(true);
     }
   };
 

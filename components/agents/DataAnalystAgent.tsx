@@ -62,8 +62,8 @@ export default function DataAnalystAgent() {
       setMode('live');
       setMessages([]);
     } else {
-      // Redirect to login page
-      window.location.href = '/api/auth/login';
+      // Show login modal
+      setShowLoginModal(true);
     }
   };
 
