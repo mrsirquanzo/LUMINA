@@ -139,6 +139,13 @@ export default function FileUpload({
         // Only parse JSON if response was successful
         const data = await response.json();
 
+        // Log extracted text for debugging
+        console.log('=== Extracted Text ===');
+        console.log(`File: ${uploadedFile.name}`);
+        console.log(`Text length: ${data.text?.length || 0} characters`);
+        console.log('First 500 characters:', data.text?.substring(0, 500));
+        console.log('==================');
+
         // Update with processed data
         setFiles(prev =>
           prev.map(f =>
@@ -339,6 +346,19 @@ export default function FileUpload({
                     )}
                   </div>
                 </div>
+
+                {/* Extracted Text Preview */}
+                {file.status === 'processed' && file.extractedText && (
+                  <div className="mt-2 p-3 bg-gray-50 rounded border border-gray-200">
+                    <p className="text-xs font-semibold text-gray-700 mb-1">
+                      Extracted Text Preview ({file.extractedText.length} characters):
+                    </p>
+                    <p className="text-xs text-gray-600 whitespace-pre-wrap break-words">
+                      {file.extractedText.substring(0, 300)}
+                      {file.extractedText.length > 300 && '...'}
+                    </p>
+                  </div>
+                )}
 
                 {/* Remove Button */}
                 <button
