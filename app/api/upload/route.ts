@@ -46,28 +46,51 @@ export async function POST(req: NextRequest) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        // Convert buffer to string and extract visible text
-        // This is a simplified approach that extracts basic text content
-        const pdfString = buffer.toString('binary');
+        // Convert buffer to string
+        const pdfString = buffer.toString('latin1');
 
-        // Extract text between stream objects (simplified PDF text extraction)
-        const textMatches = pdfString.match(/\(([^)]+)\)/g);
-        if (textMatches) {
-          extractedText = textMatches
-            .map(match => match.slice(1, -1)) // Remove parentheses
-            .join(' ')
-            .replace(/\\n/g, '\n')
-            .replace(/\\r/g, '\r')
-            .replace(/\\t/g, '\t')
-            .trim();
+        // Extract text from PDF streams - look for BT...ET blocks (text objects)
+        const textBlocks: string[] = [];
+
+        // Match text between BT (Begin Text) and ET (End Text) markers
+        const btEtRegex = /BT(.*?)ET/gs;
+        const matches = pdfString.matchAll(btEtRegex);
+
+        for (const match of matches) {
+          const textBlock = match[1];
+          // Extract strings in parentheses (actual text content)
+          const strings = textBlock.match(/\(([^)]+)\)/g);
+          if (strings) {
+            const cleanedStrings = strings
+              .map(s => s.slice(1, -1)) // Remove parentheses
+              .filter(s => {
+                // Filter out binary garbage and keep only readable text
+                // Check if string has mostly printable ASCII characters
+                const printableChars = s.split('').filter(c => {
+                  const code = c.charCodeAt(0);
+                  return (code >= 32 && code <= 126) || code === 10 || code === 13 || code === 9;
+                }).length;
+                return printableChars / s.length > 0.7; // At least 70% printable
+              })
+              .map(s =>
+                s.replace(/\\n/g, '\n')
+                 .replace(/\\r/g, '\r')
+                 .replace(/\\t/g, '\t')
+                 .replace(/\\/g, '')
+              );
+
+            textBlocks.push(...cleanedStrings);
+          }
         }
 
-        // If no text found, return a message
-        if (!extractedText) {
-          extractedText = `PDF file uploaded: ${fileName} (${(file.size / 1024).toFixed(2)} KB). Text extraction requires OCR or advanced parsing.`;
+        extractedText = textBlocks.join(' ').trim();
+
+        // If no text found or too much garbage, return a message
+        if (!extractedText || extractedText.length < 100) {
+          extractedText = `PDF file uploaded: ${fileName} (${(file.size / 1024).toFixed(2)} KB).\n\nNote: Automated text extraction failed for this PDF. This may be because:\n- The PDF contains scanned images requiring OCR\n- The PDF uses complex encoding\n- The PDF is password protected\n\nYou can still ask questions, and I'll do my best to help based on the filename and context.`;
         }
 
-        console.log(`PDF processed, extracted ${extractedText.length} characters`);
+        console.log(`PDF processed, extracted ${extractedText.length} characters of readable text`);
       } catch (pdfError: any) {
         console.error('PDF processing error:', pdfError);
         // Don't fail completely - just note that we have the file
