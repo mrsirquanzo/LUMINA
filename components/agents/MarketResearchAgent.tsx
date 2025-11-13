@@ -255,13 +255,12 @@ export default function MarketResearchAgent() {
   };
 
   const switchToLiveMode = async () => {
-    // Check auth when switching to live mode
     const authenticated = await checkAuthStatus();
     if (authenticated) {
       setMode('live');
       setMessages([]);
     } else {
-      // Stay in demo mode, user will see auth warning
+      // Stay in demo mode if not authenticated
       setMode('demo');
     }
   };

@@ -146,17 +146,19 @@ export default function MultiAgentDemo() {
     }
   };
 
-  const handleToggleLiveMode = async (enableLive: boolean) => {
-    if (enableLive) {
+  const handleToggleLiveMode = async (newMode: 'demo' | 'live') => {
+    if (newMode === 'live') {
       // Check authentication before enabling live mode
       const authenticated = await checkAuthentication();
       if (!authenticated) {
-        // Show error/warning - user will see the auth warning in UI
+        // Stay in demo mode - user will see the auth warning in UI
         setIsDemo(true);
         return;
       }
+      setIsDemo(false);
+    } else {
+      setIsDemo(true);
     }
-    setIsDemo(!enableLive);
   };
 
   // Check authentication on mount
@@ -296,7 +298,7 @@ export default function MultiAgentDemo() {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Type</h3>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => handleToggleLiveMode(false)}
+              onClick={() => handleToggleLiveMode('demo')}
               className={`px-4 py-2 rounded-md transition-all ${
                 isDemo
                   ? 'bg-blue-600 text-white'
@@ -306,7 +308,7 @@ export default function MultiAgentDemo() {
               Demo Mode (Free)
             </button>
             <button
-              onClick={() => handleToggleLiveMode(true)}
+              onClick={() => handleToggleLiveMode('live')}
               className={`px-4 py-2 rounded-md transition-all ${
                 !isDemo
                   ? 'bg-blue-600 text-white'
