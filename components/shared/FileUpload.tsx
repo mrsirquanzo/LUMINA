@@ -122,11 +122,11 @@ export default function FileUpload({
           body: formData,
         });
 
-        if (!response.ok) {
-          throw new Error('Upload failed');
-        }
-
         const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Upload failed');
+        }
 
         // Update with processed data
         setFiles(prev =>
@@ -136,11 +136,12 @@ export default function FileUpload({
               : f
           )
         );
-      } catch {
+      } catch (error: any) {
+        console.error('Upload error:', error);
         setFiles(prev =>
           prev.map(f =>
             f.id === uploadedFile.id
-              ? { ...f, status: 'error' as const, error: 'Failed to process file' }
+              ? { ...f, status: 'error' as const, error: error.message || 'Failed to process file' }
               : f
           )
         );
