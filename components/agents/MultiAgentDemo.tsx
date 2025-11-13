@@ -125,7 +125,15 @@ export default function MultiAgentDemo() {
   const checkAuthentication = async () => {
     setIsCheckingAuth(true);
     try {
-      const response = await fetch('/api/auth/check');
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch('/api/auth/check', {
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
       return data.authenticated;
@@ -299,12 +307,11 @@ export default function MultiAgentDemo() {
             </button>
             <button
               onClick={() => handleToggleLiveMode(true)}
-              disabled={isCheckingAuth}
               className={`px-4 py-2 rounded-md transition-all ${
                 !isDemo
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              } disabled:opacity-50`}
+              }`}
             >
               {isCheckingAuth ? 'Checking...' : 'Live Analysis (Uses API Credits)'}
             </button>
