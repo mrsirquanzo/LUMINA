@@ -2,12 +2,24 @@
 
 import { useState } from 'react';
 import LoginModal from '@/components/shared/LoginModal';
+import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import { FINANCIAL_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+}
+
+interface ProcessedDocument {
+  name: string;
+  fileName: string;
+  fileType: string;
+  extractedText?: string;
+  text?: string;
+  isImage: boolean;
+  base64?: string;
+  mimeType?: string;
 }
 
 type AgentMode = 'demo' | 'live';
@@ -18,10 +30,11 @@ const SAMPLE_QUERIES = [
   "Compare the M&A premiums for recent ADC acquisitions. What are buyers paying per asset?",
 ];
 
-export default function DataAnalystAgent() {
+export default function FinancialAnalystAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,6 +67,21 @@ export default function DataAnalystAgent() {
     setIsAuthenticated(true);
     setMode('live');
     setMessages([]);
+  };
+
+  const handleFilesProcessed = (files: UploadedFile[]) => {
+    const newDocs: ProcessedDocument[] = files
+      .filter(f => f.status === 'processed')
+      .map(f => ({
+        name: f.name,
+        fileName: f.name,
+        fileType: f.type,
+        extractedText: f.extractedText,
+        text: f.extractedText,
+        isImage: false,
+      }));
+
+    setProcessedDocuments(prev => [...prev, ...newDocs]);
   };
 
   const sendDemoMessage = () => {
@@ -114,7 +142,10 @@ export default function DataAnalystAgent() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({
+          messages: apiMessages,
+          documents: processedDocuments,
+        }),
       });
 
       if (!response.ok) {
@@ -313,6 +344,13 @@ export default function DataAnalystAgent() {
         {error && (
           <div className="px-6 py-3 bg-red-50 border-t border-red-200">
             <p className="text-sm text-red-700">⚠️ {error}</p>
+          </div>
+        )}
+
+        {/* File Upload - Only for Live Mode */}
+        {mode === 'live' && (
+          <div className="border-t border-gray-200 px-4 pt-4 bg-gray-50">
+            <FileUpload onFilesProcessed={handleFilesProcessed} />
           </div>
         )}
 
