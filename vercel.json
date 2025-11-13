@@ -5,11 +5,11 @@
   "installCommand": "npm install",
   "outputDirectory": ".next",
   "functions": {
-    "app/api/upload/route.ts": {
+    "api/upload": {
       "maxDuration": 60,
       "memory": 1024
     },
-    "app/api/**/*.ts": {
+    "api/**": {
       "maxDuration": 30,
       "memory": 1024
     }
