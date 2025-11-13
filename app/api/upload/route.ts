@@ -11,6 +11,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 // Configure route for file uploads
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // 60 seconds for Vercel
 
 // Handle CORS preflight
 export async function OPTIONS(req: NextRequest) {
