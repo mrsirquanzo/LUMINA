@@ -147,13 +147,22 @@ export default function FileUpload({
         console.log('==================');
 
         // Update with processed data
-        setFiles(prev =>
-          prev.map(f =>
-            f.id === uploadedFile.id
-              ? { ...f, status: 'processed' as const, extractedText: data.text }
-              : f
-          )
-        );
+        const updatedFile = { ...uploadedFile, status: 'processed' as const, extractedText: data.text };
+
+        setFiles(prev => {
+          const updated = prev.map(f =>
+            f.id === uploadedFile.id ? updatedFile : f
+          );
+
+          // Notify parent immediately with the newly processed file
+          const allProcessed = updated.filter(f => f.status === 'processed');
+          if (allProcessed.length > 0) {
+            // Use setTimeout to ensure state has updated
+            setTimeout(() => onFilesProcessed(allProcessed), 0);
+          }
+
+          return updated;
+        });
       } catch (error: any) {
         console.error('Upload error:', error);
         setFiles(prev =>
@@ -167,12 +176,8 @@ export default function FileUpload({
     }
 
     setIsProcessing(false);
-
-    // Notify parent component
-    const processedFiles = files.filter(f => f.status === 'processed');
-    if (processedFiles.length > 0) {
-      onFilesProcessed(processedFiles);
-    }
+    // Note: onFilesProcessed is called immediately after each file is processed
+    // (see the setFiles callback above) to ensure fresh data is passed
   };
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
