@@ -53,10 +53,11 @@ export async function POST(req: NextRequest) {
         const textBlocks: string[] = [];
 
         // Match text between BT (Begin Text) and ET (End Text) markers
-        const btEtRegex = /BT(.*?)ET/gs;
-        const matches = pdfString.matchAll(btEtRegex);
+        // Use [\s\S] instead of . with s flag for older ES versions
+        const btEtRegex = /BT([\s\S]*?)ET/g;
+        let match;
 
-        for (const match of matches) {
+        while ((match = btEtRegex.exec(pdfString)) !== null) {
           const textBlock = match[1];
           // Extract strings in parentheses (actual text content)
           const strings = textBlock.match(/\(([^)]+)\)/g);
