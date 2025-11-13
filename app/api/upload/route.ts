@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 
-// Import pdf-parse using require (CommonJS)
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdf = require('pdf-parse');
-
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 // Configure route for file uploads
@@ -44,9 +40,12 @@ export async function POST(req: NextRequest) {
 
     // Process based on file type
     if (fileType === 'application/pdf') {
-      // PDF Processing
+      // PDF Processing - use dynamic import to avoid DOMMatrix error
       console.log(`Processing PDF: ${fileName}, size: ${file.size} bytes`);
       try {
+        // Dynamically import pdf-parse only when needed
+        const pdf = (await import('pdf-parse')).default;
+
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         console.log('PDF buffer created, parsing...');
