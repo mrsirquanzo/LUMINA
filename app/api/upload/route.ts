@@ -12,6 +12,18 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// Handle CORS preflight
+export async function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
