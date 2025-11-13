@@ -1,6 +1,6 @@
 // Multi-Agent Collaboration Types
 
-export type AgentType = 'clinical' | 'patent' | 'financial';
+export type AgentType = 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
 export type ExecutionMode = 'fast' | 'thorough';
 export type StepStatus = 'pending' | 'running' | 'complete' | 'failed';
 

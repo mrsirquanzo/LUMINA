@@ -210,6 +210,8 @@ export default function MultiAgentCollaboration({
     if (agent.includes('Clinical')) return '🔬';
     if (agent.includes('Patent')) return '⚖️';
     if (agent.includes('Financial')) return '💰';
+    if (agent.includes('Regulatory')) return '📋';
+    if (agent.includes('Market')) return '📊';
     return '🤖';
   };
 
@@ -217,6 +219,8 @@ export default function MultiAgentCollaboration({
     if (agent.includes('Clinical')) return 'text-blue-600 bg-blue-50 border-blue-200';
     if (agent.includes('Patent')) return 'text-purple-600 bg-purple-50 border-purple-200';
     if (agent.includes('Financial')) return 'text-green-600 bg-green-50 border-green-200';
+    if (agent.includes('Regulatory')) return 'text-orange-600 bg-orange-50 border-orange-200';
+    if (agent.includes('Market')) return 'text-teal-600 bg-teal-50 border-teal-200';
     return 'text-gray-600 bg-gray-50 border-gray-200';
   };
 
