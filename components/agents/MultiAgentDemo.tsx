@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import MultiAgentCollaboration from './MultiAgentCollaboration';
 import { ExecutionMode } from '@/lib/multiAgentTypes';
-import { FiZap, FiClock, FiDollarSign, FiPlay } from 'react-icons/fi';
+import { ANALYSIS_TEMPLATES, fillTemplate, AnalysisTemplate } from '@/lib/analysisTemplates';
+import { FiZap, FiClock, FiDollarSign, FiPlay, FiFileText, FiLayers } from 'react-icons/fi';
 
 const DEMO_SCENARIOS = [
   {
@@ -58,11 +59,14 @@ const DEMO_SCENARIOS = [
 
 export default function MultiAgentDemo() {
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<AnalysisTemplate | null>(null);
+  const [templateVariables, setTemplateVariables] = useState<Record<string, string>>({});
   const [mode, setMode] = useState<ExecutionMode>('thorough');
   const [isDemo, setIsDemo] = useState(true);
   const [costEstimate, setCostEstimate] = useState<any>(null);
   const [isEstimating, setIsEstimating] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [viewMode, setViewMode] = useState<'demos' | 'templates'>('demos');
 
   const selectedScenarioData = DEMO_SCENARIOS.find(s => s.id === selectedScenario);
 
@@ -106,15 +110,46 @@ export default function MultiAgentDemo() {
   const handleReset = () => {
     setShowAnalysis(false);
     setSelectedScenario(null);
+    setSelectedTemplate(null);
+    setTemplateVariables({});
     setCostEstimate(null);
   };
 
-  if (showAnalysis && selectedScenarioData) {
+  const handleTemplateSelect = (template: AnalysisTemplate) => {
+    setSelectedTemplate(template);
+    setSelectedScenario(null);
+    setMode(template.recommendedMode);
+    // Extract variables from template
+    const matches = template.promptTemplate.match(/\{\{([^}]+)\}\}/g);
+    const vars: Record<string, string> = {};
+    if (matches) {
+      matches.forEach(match => {
+        const varName = match.replace(/\{\{|\}\}/g, '');
+        vars[varName] = '';
+      });
+    }
+    setTemplateVariables(vars);
+  };
+
+  const getTemplateQuery = () => {
+    if (!selectedTemplate) return '';
+    return fillTemplate(selectedTemplate, templateVariables);
+  };
+
+  const isTemplateReady = () => {
+    if (!selectedTemplate) return false;
+    return Object.values(templateVariables).every(v => v.trim() !== '');
+  };
+
+  if (showAnalysis && (selectedScenarioData || selectedTemplate)) {
+    const query = selectedScenarioData ? selectedScenarioData.query : getTemplateQuery();
+
     console.log('[MultiAgentDemo] Starting analysis:', {
       isDemo,
       scenarioId: selectedScenario,
+      templateId: selectedTemplate?.id,
       mode,
-      query: selectedScenarioData.query.substring(0, 50) + '...',
+      query: query.substring(0, 50) + '...',
     });
 
     return (
@@ -127,10 +162,10 @@ export default function MultiAgentDemo() {
             ← Back to scenarios
           </button>
           <MultiAgentCollaboration
-            query={selectedScenarioData.query}
+            query={query}
             documents={[]}
             mode={mode}
-            isDemo={isDemo}
+            isDemo={isDemo && !!selectedScenarioData}
             demoScenarioId={selectedScenario || undefined}
           />
         </div>
@@ -245,10 +280,53 @@ export default function MultiAgentDemo() {
           )}
         </div>
 
-        {/* Scenario Selection */}
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose a Scenario</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* View Mode Toggle */}
+        <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Get Started</h3>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                setViewMode('demos');
+                setSelectedTemplate(null);
+                setSelectedScenario(null);
+              }}
+              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
+                viewMode === 'demos'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <FiPlay className="w-4 h-4" />
+              Demo Scenarios
+            </button>
+            <button
+              onClick={() => {
+                setViewMode('templates');
+                setSelectedTemplate(null);
+                setSelectedScenario(null);
+              }}
+              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
+                viewMode === 'templates'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <FiFileText className="w-4 h-4" />
+              Analysis Templates
+            </button>
+          </div>
+          <p className="text-sm text-gray-600 mt-3">
+            {viewMode === 'demos'
+              ? 'Choose from pre-recorded demo scenarios with realistic AI responses'
+              : 'Use templated workflows for common biotech analysis tasks'}
+          </p>
+        </div>
+
+        {/* Demo Scenario Selection */}
+        {viewMode === 'demos' && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose a Demo Scenario</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {DEMO_SCENARIOS.map((scenario) => (
               <button
                 key={scenario.id}
@@ -282,9 +360,100 @@ export default function MultiAgentDemo() {
             ))}
           </div>
         </div>
+        )}
+
+        {/* Template Selection */}
+        {viewMode === 'templates' && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose an Analysis Template</h3>
+
+            {/* Group by category */}
+            {['due-diligence', 'strategy', 'regulatory', 'commercial'].map(category => {
+              const templates = ANALYSIS_TEMPLATES.filter(t => t.category === category);
+              if (templates.length === 0) return null;
+
+              const categoryNames: Record<string, string> = {
+                'due-diligence': 'Due Diligence',
+                'strategy': 'Strategic Analysis',
+                'regulatory': 'Regulatory & Compliance',
+                'commercial': 'Commercial & Market',
+              };
+
+              return (
+                <div key={category} className="mb-6">
+                  <h4 className="text-md font-medium text-gray-700 mb-3 flex items-center gap-2">
+                    <FiLayers className="w-4 h-4" />
+                    {categoryNames[category]}
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {templates.map(template => (
+                      <button
+                        key={template.id}
+                        onClick={() => handleTemplateSelect(template)}
+                        className={`p-4 rounded-lg border-2 transition-all text-left ${
+                          selectedTemplate?.id === template.id
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 hover:border-gray-300 bg-white'
+                        }`}
+                      >
+                        <div className="flex items-start gap-3 mb-2">
+                          <span className="text-2xl">{template.icon}</span>
+                          <div className="flex-1">
+                            <h5 className="font-semibold text-gray-900 mb-1">{template.title}</h5>
+                            <p className="text-sm text-gray-600">{template.description}</p>
+                          </div>
+                        </div>
+                        <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
+                          <span>{template.agents.length} agents</span>
+                          <span>•</span>
+                          <span>{template.estimatedTime}</span>
+                          <span>•</span>
+                          <span className="capitalize">{template.recommendedMode} mode</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Template Variable Input Form */}
+        {selectedTemplate && Object.keys(templateVariables).length > 0 && (
+          <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Fill in Analysis Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Object.keys(templateVariables).map(varName => (
+                <div key={varName}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {varName.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                  </label>
+                  <input
+                    type="text"
+                    value={templateVariables[varName]}
+                    onChange={(e) =>
+                      setTemplateVariables({ ...templateVariables, [varName]: e.target.value })
+                    }
+                    placeholder={`Enter ${varName.replace(/_/g, ' ')}`}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Preview generated query */}
+            {isTemplateReady() && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-md">
+                <p className="text-sm font-medium text-gray-700 mb-2">Generated Query:</p>
+                <p className="text-sm text-gray-600 italic">"{getTemplateQuery()}"</p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Cost Estimate and Start Button */}
-        {selectedScenario && (
+        {(selectedScenario || (selectedTemplate && isTemplateReady())) && (
           <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
@@ -317,8 +486,8 @@ export default function MultiAgentDemo() {
 
         {/* Info Section */}
         <div className="mt-12 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">How It Works</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Available AI Agents</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
               <div className="text-2xl mb-2">🔬</div>
               <h4 className="font-medium text-gray-900 mb-1">Clinical Analyst</h4>
@@ -340,12 +509,31 @@ export default function MultiAgentDemo() {
                 Assesses financials, valuations, deal structures, and provides DCF models
               </p>
             </div>
+            <div>
+              <div className="text-2xl mb-2">📋</div>
+              <h4 className="font-medium text-gray-900 mb-1">Regulatory Expert</h4>
+              <p className="text-sm text-gray-600">
+                Analyzes regulatory pathways, FDA/EMA requirements, approval timelines, and compliance
+              </p>
+            </div>
+            <div>
+              <div className="text-2xl mb-2">📊</div>
+              <h4 className="font-medium text-gray-900 mb-1">Market Research Analyst</h4>
+              <p className="text-sm text-gray-600">
+                Evaluates market size, pricing dynamics, competitive landscape, and revenue forecasts
+              </p>
+            </div>
           </div>
           <div className="mt-6 p-4 bg-white rounded-md">
             <p className="text-sm text-gray-700">
               <strong>In Thorough Mode:</strong> Agents work sequentially, building on each other's insights.
               The Clinical Analyst might ask the Patent Expert about IP protection for a specific mechanism,
               who then asks the Financial Analyst about valuation implications.
+            </p>
+            <p className="text-sm text-gray-700 mt-2">
+              <strong>Analysis Templates:</strong> Pre-configured workflows automatically select the optimal
+              agent team for each scenario. For example, M&A Due Diligence uses all 5 agents, while
+              Regulatory Strategy focuses on Clinical and Regulatory experts.
             </p>
           </div>
         </div>
