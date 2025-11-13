@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import LoginModal from '@/components/shared/LoginModal';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import { FINANCIAL_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
@@ -308,7 +310,11 @@ export default function FinancialAnalystAgent() {
                         : 'bg-gray-100 text-gray-900'
                     }`}
                   >
-                    <div className="whitespace-pre-wrap">{message.content}</div>
+                    <div className={`prose prose-sm max-w-none ${message.role === 'user' ? 'prose-invert' : ''}`}>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
                     <div
                       className={`text-xs mt-2 ${
                         message.role === 'user' ? 'text-green-200' : 'text-gray-500'

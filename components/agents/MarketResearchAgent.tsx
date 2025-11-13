@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import LoginModal from '@/components/shared/LoginModal';
 
@@ -463,8 +465,10 @@ export default function MarketResearchAgent() {
                       </span>
                     )}
                   </div>
-                  <div className="prose prose-sm max-w-none whitespace-pre-wrap">
-                    {message.content}
+                  <div className="prose prose-sm max-w-none">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
               </div>
