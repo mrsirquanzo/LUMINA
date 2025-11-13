@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import LoginModal from '@/components/shared/LoginModal';
@@ -48,22 +48,30 @@ export default function FinancialAnalystAgent() {
       const response = await fetch('/api/auth/check');
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
-      if (data.authenticated) {
-        setMode('live');
-        setMessages([]);
-      } else {
-        setShowLoginModal(true);
-      }
+      return data.authenticated;
     } catch (err) {
       console.error('Auth check failed:', err);
-      setShowLoginModal(true);
+      setIsAuthenticated(false);
+      return false;
     }
   };
 
-  const switchToLiveMode = () => {
+  const switchToLiveMode = async () => {
     // Check auth when switching to live mode
-    checkAuthStatus();
+    const authenticated = await checkAuthStatus();
+    if (authenticated) {
+      setMode('live');
+      setMessages([]);
+    } else {
+      // Stay in demo mode, user will see auth warning
+      setMode('demo');
+    }
   };
+
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
@@ -254,11 +262,28 @@ export default function FinancialAnalystAgent() {
           </div>
         )}
 
-        {mode === 'live' && (
+        {mode === 'live' && isAuthenticated && (
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg max-w-2xl mx-auto">
             <p className="text-sm text-green-800">
               <strong>Live Mode:</strong> Real-time AI responses powered by Claude API. Authenticated session active.
             </p>
+          </div>
+        )}
+
+        {mode === 'live' && !isAuthenticated && (
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg max-w-2xl mx-auto">
+            <p className="text-sm text-yellow-800 mb-2">
+              <strong>⚠️ Authentication Required</strong>
+            </p>
+            <p className="text-sm text-yellow-700 mb-3">
+              You need to log in to use Live Mode. Please authenticate to access real AI capabilities with full document analysis.
+            </p>
+            <a
+              href="/api/auth/login"
+              className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Log In to Continue
+            </a>
           </div>
         )}
       </div>

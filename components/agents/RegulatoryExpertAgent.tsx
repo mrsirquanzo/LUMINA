@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
@@ -143,6 +143,7 @@ export default function RegulatoryExpertAgent() {
   const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [demoIndex, setDemoIndex] = useState(0);
 
@@ -150,23 +151,34 @@ export default function RegulatoryExpertAgent() {
     try {
       const response = await fetch('/api/auth/check');
       const data = await response.json();
-      if (data.authenticated) {
-        setMode('live');
-        setMessages([]);
-      } else {
-        setShowLoginModal(true);
-      }
+      setIsAuthenticated(data.authenticated);
+      return data.authenticated;
     } catch (err) {
       console.error('Auth check failed:', err);
-      setShowLoginModal(true);
+      setIsAuthenticated(false);
+      return false;
     }
   };
 
-  const switchToLiveMode = () => {
-    checkAuthStatus();
+  const switchToLiveMode = async () => {
+    // Check auth when switching to live mode
+    const authenticated = await checkAuthStatus();
+    if (authenticated) {
+      setMode('live');
+      setMessages([]);
+    } else {
+      // Stay in demo mode, user will see auth warning
+      setMode('demo');
+    }
   };
 
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
   const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
     setMode('live');
     setMessages([]);
   };
@@ -310,6 +322,40 @@ export default function RegulatoryExpertAgent() {
           ⚡ Live Mode
         </button>
       </div>
+
+      {/* Mode Info Banner */}
+      {mode === 'demo' && (
+        <div className="mb-6 p-3 bg-orange-50 border border-orange-200 rounded-lg max-w-2xl mx-auto">
+          <p className="text-sm text-orange-800">
+            <strong>Demo Mode:</strong> Pre-recorded conversations. File uploads simulated.
+          </p>
+        </div>
+      )}
+
+      {mode === 'live' && isAuthenticated && (
+        <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg max-w-2xl mx-auto">
+          <p className="text-sm text-green-800">
+            <strong>Live Mode:</strong> Real-time AI with full document analysis (PDF, Excel, images, URLs).
+          </p>
+        </div>
+      )}
+
+      {mode === 'live' && !isAuthenticated && (
+        <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg max-w-2xl mx-auto">
+          <p className="text-sm text-yellow-800 mb-2">
+            <strong>⚠️ Authentication Required</strong>
+          </p>
+          <p className="text-sm text-yellow-700 mb-3">
+            You need to log in to use Live Mode. Please authenticate to access real AI capabilities with full document analysis.
+          </p>
+          <a
+            href="/api/auth/login"
+            className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Log In to Continue
+          </a>
+        </div>
+      )}
 
       {/* Demo Mode Instructions */}
       {mode === 'demo' && messages.length === 0 && (
