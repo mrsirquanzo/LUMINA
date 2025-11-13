@@ -62,8 +62,8 @@ export default function FinancialAnalystAgent() {
       setMode('live');
       setMessages([]);
     } else {
-      // Stay in demo mode if not authenticated
-      setMode('demo');
+      // Redirect to login page
+      window.location.href = '/api/auth/login';
     }
   };
 

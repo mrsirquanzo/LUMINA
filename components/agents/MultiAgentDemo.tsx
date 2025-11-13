@@ -151,8 +151,8 @@ export default function MultiAgentDemo() {
       // Check authentication before enabling live mode
       const authenticated = await checkAuthentication();
       if (!authenticated) {
-        // Stay in demo mode - user will see the auth warning in UI
-        setIsDemo(true);
+        // Redirect to login page
+        window.location.href = '/api/auth/login';
         return;
       }
       setIsDemo(false);
