@@ -220,6 +220,16 @@ export default function MultiAgentCollaboration({
     return 'text-gray-600 bg-gray-50 border-gray-200';
   };
 
+  const getProgressPercentage = () => {
+    if (synthesis) return 100;
+    if (synthesisStep) return 90;
+    if (agentActivities.size === 0) return 0;
+
+    const totalAgents = 3; // Clinical, Patent, Financial
+    const completedAgents = Array.from(agentActivities.values()).filter(a => a.status === 'complete').length;
+    return (completedAgents / totalAgents) * 80; // Reserve 80% for agents, 20% for synthesis
+  };
+
   return (
     <div className="w-full max-w-6xl mx-auto">
       {/* Header */}
@@ -261,6 +271,49 @@ export default function MultiAgentCollaboration({
           </div>
         </div>
 
+        {/* Progress Bar */}
+        {isRunning && !synthesis && (
+          <div className="mt-4">
+            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+              <span>Analysis Progress</span>
+              <span>{Math.round(getProgressPercentage())}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${getProgressPercentage()}%` }}
+              />
+            </div>
+
+            {/* Agent Status Indicators */}
+            <div className="flex items-center gap-4 text-sm">
+              {['Clinical Analyst', 'Patent Expert', 'Financial Analyst'].map((agentName) => {
+                const activity = agentActivities.get(agentName);
+                return (
+                  <div key={agentName} className="flex items-center gap-2">
+                    {activity?.status === 'complete' ? (
+                      <FiCheck className="w-4 h-4 text-green-600" />
+                    ) : activity?.status === 'thinking' ? (
+                      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <div className="w-4 h-4 border-2 border-gray-300 rounded-full" />
+                    )}
+                    <span className={activity ? 'text-gray-900' : 'text-gray-400'}>
+                      {agentName.split(' ')[0]}
+                    </span>
+                  </div>
+                );
+              })}
+              {synthesisStep && (
+                <div className="flex items-center gap-2 ml-4">
+                  <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                  <span className="text-gray-900">Synthesis</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Execution Plan */}
         {plan && (
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
@@ -287,7 +340,9 @@ export default function MultiAgentCollaboration({
           {Array.from(agentActivities.values()).map((activity) => (
             <div
               key={activity.agent}
-              className={`p-6 bg-white rounded-lg border shadow-sm ${getAgentColor(activity.agent)}`}
+              className={`p-6 bg-white rounded-lg border shadow-sm transition-all duration-500 ${getAgentColor(activity.agent)} ${
+                activity.status === 'complete' ? 'animate-in fade-in slide-in-from-left-2' : ''
+              }`}
             >
               <div className="flex items-start gap-3">
                 <div className="text-3xl">{getAgentIcon(activity.agent)}</div>

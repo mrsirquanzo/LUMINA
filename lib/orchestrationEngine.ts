@@ -278,7 +278,13 @@ Please provide your expert analysis.`;
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 4096,
-    system: AGENT_PROMPTS[agent],
+    system: [
+      {
+        type: 'text',
+        text: AGENT_PROMPTS[agent],
+        cache_control: { type: 'ephemeral' },
+      },
+    ],
     messages: [
       {
         role: 'user',
@@ -324,23 +330,66 @@ Your task:
 4. Provide a clear, actionable recommendation
 5. Structure as an executive summary suitable for decision-makers
 
-Format your synthesis as a comprehensive report with:
-- Executive Summary
-- Key Findings by Domain
-- Cross-Domain Insights
-- Risk Assessment
-- Final Recommendation
+IMPORTANT: Format your response EXACTLY as follows:
 
-Be specific, quantitative, and actionable.`;
+## Executive Summary
+[2-3 paragraph overview of the key recommendation and rationale]
+
+## Key Findings
+
+### Clinical Analysis
+• [Key finding 1]
+• [Key finding 2]
+• [Key finding 3]
+
+### Patent/IP Analysis
+• [Key finding 1]
+• [Key finding 2]
+• [Key finding 3]
+
+### Financial Analysis
+• [Key finding 1]
+• [Key finding 2]
+• [Key finding 3]
+
+## Cross-Domain Insights
+[2-3 paragraphs discussing how findings connect across domains]
+
+## Risk Assessment
+
+### High Priority Risks
+• [Risk 1 with mitigation]
+• [Risk 2 with mitigation]
+
+### Medium Priority Risks
+• [Risk 1 with mitigation]
+• [Risk 2 with mitigation]
+
+## Final Recommendation
+[Clear GO/NO-GO or specific action recommendation with supporting rationale]
+
+Be specific, quantitative, and actionable. Use actual numbers, dates, and technical details from the expert analyses.`;
 
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 4096,
-    system: 'You are a senior biotech strategist and executive advisor.',
+    system: [
+      {
+        type: 'text',
+        text: 'You are a senior biotech strategist and executive advisor.',
+        cache_control: { type: 'ephemeral' },
+      },
+    ],
     messages: [
       {
         role: 'user',
-        content: synthesisPrompt,
+        content: [
+          {
+            type: 'text',
+            text: synthesisPrompt,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
       },
     ],
   });
