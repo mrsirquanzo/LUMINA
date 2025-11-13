@@ -334,8 +334,37 @@ export default function PatentExpertAgent() {
                         : 'bg-gray-100 text-gray-900'
                     }`}
                   >
-                    <div className={`prose prose-sm max-w-none ${message.role === 'user' ? 'prose-invert' : ''}`}>
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <div className={`text-sm leading-relaxed max-w-none ${message.role === 'user' ? 'text-white' : 'text-gray-800'}`}
+                         style={{
+                           // Clean, minimal markdown styling
+                           '--heading-weight': '600',
+                           '--heading-color': message.role === 'user' ? '#ffffff' : '#374151',
+                         } as any}
+                    >
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          // Minimal heading styling - just slightly larger, no bold
+                          h1: ({node, ...props}) => <p className="text-base font-semibold mt-3 mb-2" {...props} />,
+                          h2: ({node, ...props}) => <p className="text-base font-semibold mt-3 mb-2" {...props} />,
+                          h3: ({node, ...props}) => <p className="text-sm font-medium mt-2 mb-1" {...props} />,
+                          // Subtle bold - just slightly heavier
+                          strong: ({node, ...props}) => <span className="font-medium" {...props} />,
+                          // Clean lists
+                          ul: ({node, ...props}) => <ul className="list-disc list-inside my-2 space-y-1" {...props} />,
+                          ol: ({node, ...props}) => <ol className="list-decimal list-inside my-2 space-y-1" {...props} />,
+                          li: ({node, ...props}) => <li className="ml-0" {...props} />,
+                          // Simple paragraphs
+                          p: ({node, ...props}) => <p className="my-2" {...props} />,
+                          // Subtle code
+                          code: ({node, inline, ...props}: any) =>
+                            inline ? (
+                              <code className="px-1 py-0.5 bg-gray-200 text-gray-800 rounded text-xs font-mono" {...props} />
+                            ) : (
+                              <code className="block p-2 bg-gray-200 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto" {...props} />
+                            ),
+                        }}
+                      >
                         {message.content}
                       </ReactMarkdown>
                     </div>
