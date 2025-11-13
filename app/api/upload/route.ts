@@ -36,10 +36,18 @@ export async function POST(req: NextRequest) {
     // Process based on file type
     if (fileType === 'application/pdf') {
       // PDF Processing
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      const data = await pdf(buffer);
-      extractedText = data.text;
+      console.log(`Processing PDF: ${fileName}, size: ${file.size} bytes`);
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        console.log('PDF buffer created, parsing...');
+        const data = await pdf(buffer);
+        extractedText = data.text;
+        console.log(`PDF parsed successfully, extracted ${extractedText.length} characters`);
+      } catch (pdfError: any) {
+        console.error('PDF parsing error:', pdfError);
+        throw new Error(`PDF parsing failed: ${pdfError.message || 'Unknown error'}`);
+      }
 
     } else if (
       fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
@@ -111,9 +119,19 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('File processing error:', error);
+    console.error('File processing error:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+
+    // Provide more specific error message
+    const errorMessage = error.message || 'Failed to process file';
     return NextResponse.json(
-      { error: error.message || 'Failed to process file' },
+      {
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
       { status: 500 }
     );
   }

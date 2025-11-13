@@ -317,9 +317,14 @@ export default function FileUpload({
                       <span className="text-xs text-green-600">✓ Processed</span>
                     )}
                     {file.status === 'error' && (
-                      <span className="text-xs text-red-600" title={file.error}>
-                        ✗ Error
-                      </span>
+                      <div className="text-xs text-red-600">
+                        <div className="font-semibold">✗ Error</div>
+                        {file.error && (
+                          <div className="text-red-500 mt-1 max-w-xs">
+                            {file.error}
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
