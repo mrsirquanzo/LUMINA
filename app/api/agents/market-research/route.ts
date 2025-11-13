@@ -64,7 +64,8 @@ export async function POST(req: NextRequest) {
     let documentContext = '';
     if (documents && documents.length > 0) {
       documentContext = '\n\nDocuments provided:\n' + documents.map((doc: any) => {
-        return `- ${doc.fileName}: ${doc.text?.substring(0, 500) || 'No text content'}...`;
+        const text = doc.extractedText || doc.text || '';
+        return `- ${doc.name}: ${text.substring(0, 1000) || 'No text content'}${text.length > 1000 ? '...' : ''}`;
       }).join('\n');
     }
 
