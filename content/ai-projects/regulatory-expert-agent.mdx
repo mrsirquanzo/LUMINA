@@ -1,0 +1,173 @@
+---
+slug: regulatory-expert-agent
+title: "Regulatory Strategy AI Agent"
+subtitle: "AI assistant for FDA/EMA regulatory pathways, approval strategies, and compliance analysis"
+description: "Get expert regulatory guidance on optimal pathways, accelerated programs, CMC requirements, and timeline forecasting for biotech products."
+category: "AI Agent"
+publishedDate: "2025-01-15"
+tags: ["AI Agent", "Regulatory Affairs", "FDA", "Drug Development"]
+featured: true
+thumbnail: "/images/regulatory-agent-thumbnail.jpg"
+projectType: "ai-agent"
+demoUrl: "/ai-projects/regulatory-expert-demo"
+githubUrl: ""
+techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Regulatory Database"]
+---
+
+## Overview
+
+The Regulatory Strategy Agent is an AI-powered assistant specializing in FDA and EMA regulatory pathways, accelerated approval programs, and compliance requirements. Get strategic regulatory guidance for IND submissions, BLA/NDA applications, and post-market obligations.
+
+**Built with Claude Sonnet 4** with deep knowledge of regulatory guidance documents and approval pathways.
+
+---
+
+## What It Can Do
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">🛤️</div>
+<h3 className="text-lg font-semibold mb-2">Regulatory Pathway Selection</h3>
+<p className="text-gray-700 text-sm">Determine the optimal regulatory pathway (IND, NDA, BLA) and evaluate eligibility for accelerated programs (BTD, Fast Track, RMAT).</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">⏱️</div>
+<h3 className="text-lg font-semibold mb-2">Timeline & Milestone Planning</h3>
+<p className="text-gray-700 text-sm">Forecast regulatory timelines, key milestones, and FDA interaction points from IND to approval.</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">🔬</div>
+<h3 className="text-lg font-semibold mb-2">CMC & Manufacturing Guidance</h3>
+<p className="text-gray-700 text-sm">Assess Chemistry, Manufacturing, and Controls requirements including process validation and comparability protocols.</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg">
+<div className="text-3xl mb-3">⚠️</div>
+<h3 className="text-lg font-semibold mb-2">Risk Assessment & Mitigation</h3>
+<p className="text-gray-700 text-sm">Identify regulatory risks, potential FDA concerns, and develop mitigation strategies for clinical holds or CRLs.</p>
+</div>
+
+</div>
+
+---
+
+## Example Questions
+
+Here are specific questions the agent can answer:
+
+### Regulatory Pathway Strategy
+- "What is the optimal regulatory pathway for a novel CAR-T therapy? Should we pursue Breakthrough Therapy designation?"
+- "Design a regulatory strategy for a Phase 2 Alzheimer's drug with accelerated approval potential"
+- "Compare the IND vs. NDA pathway for a 505(b)(2) application"
+- "What are the requirements for RMAT designation for our cell therapy product?"
+
+### Timeline & Planning
+- "Estimate the timeline from IND to BLA approval for a gene therapy"
+- "What are the key milestones and FDA interactions for orphan drug development?"
+- "Plan the regulatory meetings needed (Pre-IND, EOP2, Pre-BLA) and their timing"
+- "How long does Priority Review take and what triggers FDA to grant it?"
+
+### CMC & Manufacturing
+- "What CMC data is required for IND filing vs. BLA filing?"
+- "Assess manufacturing requirements for autologous vs. allogeneic CAR-T"
+- "What comparability protocols are needed if we change our manufacturing process?"
+- "Explain stability testing requirements for biologics under ICH guidelines"
+
+### Compliance & Risk
+- "What are common causes of clinical holds for cell therapies?"
+- "Identify potential FDA concerns for our combination product"
+- "Design a REMS program for a drug with serious safety risks"
+- "What post-approval commitments are required for accelerated approval?"
+
+---
+
+## How It Works
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+
+<div className="text-center">
+<div className="text-4xl mb-3">1️⃣</div>
+<h3 className="font-semibold mb-2">Describe Your Product</h3>
+<p className="text-sm text-gray-700">Provide details about your therapeutic modality, indication, and development stage</p>
+</div>
+
+<div className="text-center">
+<div className="text-4xl mb-3">2️⃣</div>
+<h3 className="font-semibold mb-2">Ask Regulatory Questions</h3>
+<p className="text-sm text-gray-700">Query about pathways, timelines, CMC requirements, or strategic regulatory planning</p>
+</div>
+
+<div className="text-center">
+<div className="text-4xl mb-3">3️⃣</div>
+<h3 className="font-semibold mb-2">Get Expert Guidance</h3>
+<p className="text-sm text-gray-700">Receive detailed regulatory strategy with specific citations to guidance documents</p>
+</div>
+
+</div>
+
+---
+
+## Key Features
+
+**Guidance Document Citations** ✅
+Every recommendation references specific FDA guidance documents, CFR sections, or ICH guidelines with proper citations.
+
+**Multi-Modality Expertise**
+Covers regulatory requirements across small molecules, biologics, cell therapies, gene therapies, and combination products.
+
+**Global Regulatory Knowledge**
+Understands FDA (US), EMA (EU), PMDA (Japan), and NMPA (China) regulatory frameworks and harmonization initiatives.
+
+**Accelerated Program Expertise**
+Expert guidance on Fast Track, Breakthrough Therapy, RMAT, Accelerated Approval, and Priority Review programs.
+
+---
+
+## Supported Product Types
+
+**Therapeutics**
+- Small molecule drugs (NCE, 505(b)(2))
+- Biologics (monoclonal antibodies, proteins)
+- Cell therapies (CAR-T, stem cells)
+- Gene therapies (AAV, lentiviral)
+- Combination products
+
+**Regulatory Submissions**
+- IND applications
+- NDA/BLA submissions
+- Amendments and supplements
+- Post-approval changes
+
+---
+
+## Technical Details
+
+<details>
+<summary><strong>Click to expand technical implementation details</strong></summary>
+
+**AI Model**
+- Claude Sonnet 4 (claude-sonnet-4-20250514)
+- Specialized regulatory affairs system prompt
+- 4K token context window per query
+- Prompt caching for cost optimization
+
+**Knowledge Base**
+- FDA guidance documents (2010-2025)
+- ICH guidelines (Q1-Q14, E-series, S-series)
+- CFR Title 21 regulations
+- EMA procedural advice
+
+**Architecture**
+- Next.js 14 with App Router
+- TypeScript for type safety
+- Server-side API routes
+- Session-based authentication
+
+</details>
+
+---
+
+**Ready to try it?** Click the "View Demo" button above to get expert regulatory strategy guidance.

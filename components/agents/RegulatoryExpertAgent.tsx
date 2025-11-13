@@ -1,0 +1,418 @@
+'use client';
+
+import { useState } from 'react';
+import FileUpload from '@/components/shared/FileUpload';
+import LoginModal from '@/components/shared/LoginModal';
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  cost?: number;
+}
+
+type AgentMode = 'demo' | 'live';
+
+const SAMPLE_QUERIES = [
+  "What is the optimal regulatory pathway for a novel CAR-T therapy targeting solid tumors? Should we pursue Breakthrough Therapy designation?",
+  "Design a regulatory strategy for a Phase 2 Alzheimer's drug. What endpoints should we prioritize for accelerated approval?",
+  "Analyze the CMC requirements for a gene therapy product. What are the key manufacturing challenges from a regulatory perspective?",
+  "What's the fastest pathway to FDA approval for an orphan drug treating a rare metabolic disorder?",
+];
+
+const DEMO_RESPONSES = [
+  {
+    query: SAMPLE_QUERIES[0],
+    response: `## Regulatory Pathway Analysis for CAR-T Therapy (Solid Tumors)
+
+### Recommended Primary Pathway
+**Biologics License Application (BLA)** under 21 CFR 601, with pursuit of **Breakthrough Therapy Designation (BTD)**.
+
+### Pathway Justification
+
+**1. Breakthrough Therapy Designation (BTD)**
+- **Eligibility**: Novel CAR-T for solid tumors represents significant advancement over existing therapies
+- **Requirements**: Preliminary clinical evidence showing substantial improvement over available therapy
+- **Benefits**:
+  - Intensive FDA guidance and collaboration
+  - Organizational commitment from senior FDA management
+  - Rolling review of BLA sections
+  - Potential for Accelerated Approval if appropriate endpoint identified
+
+**2. Alternative Designations to Consider**
+- **Fast Track**: Lower bar than BTD, easier to obtain early in development
+- **Regenerative Medicine Advanced Therapy (RMAT)**: Specifically for cell therapies, similar benefits to BTD
+- **Orphan Drug Designation**: If applicable for rare tumor types
+
+### Recommended Clinical Development Strategy
+
+**Phase 1/2 Trial Design**
+- Dose-escalation with expansion cohort
+- Primary endpoint: Overall Response Rate (ORR)
+- Secondary endpoints: Duration of Response (DOR), Progression-Free Survival (PFS)
+- Safety endpoints: Cytokine Release Syndrome (CRS) grading, neurotoxicity
+
+**Pivotal Trial Requirements**
+- **For Accelerated Approval**: Single-arm trial with ORR endpoint (if no adequate existing therapy)
+- **For Regular Approval**: Randomized controlled trial with survival endpoint (OS or PFS)
+- Minimum 100-150 patients for accelerated approval
+- Consider adaptive trial design for dose optimization
+
+### Key Regulatory Milestones & Timeline
+
+**Year 1: Pre-IND Phase**
+- Month 1-3: Pre-IND meeting request and briefing document
+- Month 4: Pre-IND meeting with FDA
+- Month 5-6: IND preparation incorporating FDA feedback
+- Month 6: IND submission
+
+**Year 1-2: Phase 1/2**
+- Month 7-8: IND goes into effect (30-day review)
+- Month 8: First patient dosed
+- Month 12-18: Dose escalation and safety data
+- Month 18-24: Expansion cohort enrollment
+- **BTD Application**: After preliminary efficacy data (Month 20)
+
+**Year 3: Pivotal Trial Initiation**
+- Month 24-30: End of Phase 2 meeting
+- Month 30-36: Pivotal trial design finalized
+- Month 36: Pivotal trial initiation
+
+**Year 4-5: Accelerated Approval Path**
+- Month 48: Interim analysis with ORR data
+- Month 54: Pre-BLA meeting
+- Month 60: BLA submission (Rolling Review if BTD granted)
+- Month 66: FDA action (6-month review with Priority Review)
+
+### CMC Considerations
+
+**Critical Quality Attributes**
+- T-cell viability and purity
+- CAR expression levels
+- Vector copy number
+- Residual lentivirus/retrovirus
+- Sterility and mycoplasma testing
+
+**Manufacturing Challenges**
+- Autologous vs allogeneic approach impacts CMC complexity
+- Process validation with limited lots
+- Comparability protocols if manufacturing changes
+- Supply chain for starting material (patient leukapheresis)
+
+**Regulatory Submissions**
+- IND: Process description, cell characterization, stability data
+- BLA: Full manufacturing process, in-process controls, specifications
+- Expect ~3-4 information requests from FDA during BLA review
+
+### Risk Mitigation Strategies
+
+**High-Priority Risks**
+1. **CRS Management**: Implement REMS if needed, clear mitigation protocols
+2. **Manufacturing Consistency**: Early manufacturing lock, robust process controls
+3. **Endpoint Selection**: Discuss ORR as surrogate with FDA early
+
+**Post-Approval Commitments**
+- Confirmatory trial with OS endpoint (if accelerated approval)
+- Long-term safety follow-up (15 years per FDA guidance)
+- REMS program for distribution and administration
+
+### Estimated Timeline to Approval
+- **Accelerated Approval**: 5.5-6 years from IND
+- **Regular Approval**: 7-8 years from IND
+
+### Recommendation
+**Pursue BTD** based on preliminary Phase 1 data showing >30% ORR in refractory solid tumor population. Target accelerated approval with ORR endpoint, commit to confirmatory trial. Budget for intensive FDA interactions and manufacturing development.`,
+  },
+];
+
+export default function RegulatoryExpertAgent() {
+  const [mode, setMode] = useState<AgentMode>('demo');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [demoIndex, setDemoIndex] = useState(0);
+
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('/api/auth/check');
+      const data = await response.json();
+      if (data.authenticated) {
+        setMode('live');
+        setMessages([]);
+      } else {
+        setShowLoginModal(true);
+      }
+    } catch (err) {
+      console.error('Auth check failed:', err);
+      setShowLoginModal(true);
+    }
+  };
+
+  const switchToLiveMode = () => {
+    checkAuthStatus();
+  };
+
+  const handleLoginSuccess = () => {
+    setMode('live');
+    setMessages([]);
+  };
+
+  const sendDemoMessage = () => {
+    if (isLoading) return;
+
+    const demo = DEMO_RESPONSES[demoIndex % DEMO_RESPONSES.length];
+    setDemoIndex(prev => prev + 1);
+
+    const userMessage: Message = {
+      role: 'user',
+      content: demo.query,
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    setTimeout(() => {
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: demo.response,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const sendLiveMessage = async (messageText?: string) => {
+    const textToSend = messageText || input;
+
+    if (!textToSend.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      role: 'user',
+      content: textToSend,
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/agents/regulatory-expert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: textToSend,
+          documents: uploadedFiles,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to get response from agent');
+      }
+
+      const data = await response.json();
+
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: data.response,
+        timestamp: new Date(),
+        cost: data.cost,
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+
+    } catch (err: any) {
+      console.error('Error sending message:', err);
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (mode === 'live') {
+        sendLiveMessage();
+      }
+    }
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto">
+      {/* Header */}
+      <div className="mb-8 text-center">
+        <div className="inline-block px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium mb-4">
+          📋 Regulatory Expert
+        </div>
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Regulatory Strategy Agent
+        </h1>
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          Get expert regulatory guidance on FDA/EMA pathways, accelerated approval programs,
+          CMC requirements, and strategic regulatory planning for biotech products.
+        </p>
+      </div>
+
+      {/* Mode Toggle */}
+      <div className="mb-6 flex items-center justify-center gap-4">
+        <button
+          onClick={() => { setMode('demo'); setMessages([]); }}
+          className={`px-6 py-3 rounded-lg font-medium transition-all ${
+            mode === 'demo'
+              ? 'bg-orange-600 text-white shadow-lg'
+              : 'bg-white text-gray-700 border border-gray-300 hover:border-gray-400'
+          }`}
+        >
+          🎭 Demo Mode
+        </button>
+        <button
+          onClick={switchToLiveMode}
+          className={`px-6 py-3 rounded-lg font-medium transition-all ${
+            mode === 'live'
+              ? 'bg-orange-600 text-white shadow-lg'
+              : 'bg-white text-gray-700 border border-gray-300 hover:border-gray-400'
+          }`}
+        >
+          ⚡ Live Mode
+        </button>
+      </div>
+
+      {/* Demo Mode Instructions */}
+      {mode === 'demo' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-orange-50 border border-orange-200 rounded-lg">
+          <h3 className="font-semibold text-gray-900 mb-2">Try Demo Mode</h3>
+          <p className="text-gray-700 mb-4">
+            Click the button below to see a pre-recorded regulatory analysis. No API costs.
+          </p>
+          <button
+            onClick={sendDemoMessage}
+            disabled={isLoading}
+            className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors disabled:opacity-50"
+          >
+            Run Demo Analysis
+          </button>
+        </div>
+      )}
+
+      {/* Sample Queries */}
+      {mode === 'live' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <h3 className="font-semibold text-gray-900 mb-3">Sample Queries</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {SAMPLE_QUERIES.map((query, index) => (
+              <button
+                key={index}
+                onClick={() => sendLiveMessage(query)}
+                className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+              >
+                {query}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* File Upload (Live Mode Only) */}
+      {mode === 'live' && (
+        <div className="mb-6">
+          <FileUpload onFilesProcessed={setUploadedFiles} />
+        </div>
+      )}
+
+      {/* Messages */}
+      {messages.length > 0 && (
+        <div className="mb-6 space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg ${
+                message.role === 'user'
+                  ? 'bg-orange-100 ml-auto max-w-3xl'
+                  : 'bg-white border border-gray-200 shadow-sm'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="text-2xl flex-shrink-0">
+                  {message.role === 'user' ? '👤' : '📋'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm text-gray-500 mb-1">
+                    {message.role === 'user' ? 'You' : 'Regulatory Expert'}
+                    {message.cost && (
+                      <span className="ml-2 text-xs">
+                        (${message.cost.toFixed(4)})
+                      </span>
+                    )}
+                  </div>
+                  <div className="prose prose-sm max-w-none whitespace-pre-wrap">
+                    {message.content}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-600"></div>
+            <span className="text-gray-600">Analyzing regulatory requirements...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
+      {/* Input Area (Live Mode) */}
+      {mode === 'live' && (
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Ask about regulatory pathways, approval strategies, CMC requirements..."
+            rows={4}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 mb-3 resize-none"
+          />
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">
+              {uploadedFiles.length > 0 && `${uploadedFiles.length} file(s) attached`}
+            </span>
+            <button
+              onClick={() => sendLiveMessage()}
+              disabled={isLoading || !input.trim()}
+              className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
+      />
+    </div>
+  );
+}
