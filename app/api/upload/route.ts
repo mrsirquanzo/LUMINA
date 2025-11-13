@@ -13,19 +13,11 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60; // 60 seconds for Vercel
 
-// Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
-}
-
 export async function POST(req: NextRequest) {
+  console.log('=== Upload API Called ===');
+  console.log('Method:', req.method);
+  console.log('URL:', req.url);
+
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
