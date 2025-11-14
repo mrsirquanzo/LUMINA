@@ -11,14 +11,14 @@ thumbnail: "/images/financial-agent-thumbnail.jpg"
 projectType: "ai-agent"
 demoUrl: "/ai-projects/financial-analyst-demo"
 githubUrl: ""
-techStack: ["Next.js 14", "TypeScript", "Gemini", "Vision API", "PDF-parse", "XLSX"]
+techStack: ["Next.js 14", "TypeScript", "Gemini Pro", "Vision API", "PDF-parse", "XLSX"]
 ---
 
 ## Overview
 
 The Financial Intelligence Agent is an AI-powered assistant that analyzes SEC filings, financial models, and biotech company financials. Upload 10-K/10-Q PDFs, Excel models, earnings presentations, or provide investor relations URLs to get instant analysis of burn rate, runway, valuations, and investment risks.
 
-**Built with Gemini** featuring vision capabilities for analyzing charts and financial visualizations.
+**Built with Google Gemini Pro** featuring large context windows and vision capabilities for analyzing charts and financial visualizations.
 
 ---
 
@@ -171,9 +171,10 @@ All valuation calculations show their work—assumptions, formulas, and sensitiv
 <summary><strong>Click to expand technical implementation details</strong></summary>
 
 **AI Model**
-- Gemini
+- Google Gemini Pro
+- Large context window for complex financial documents
 - Vision API for chart and graph analysis
-- 4K token context window per query
+- Cost-effective for high-volume analysis
 
 **Document Processing**
 - PDF parsing for SEC filings and presentations
