@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import MultiAgentCollaboration from './MultiAgentCollaboration';
 import { ExecutionMode } from '@/lib/multiAgentTypes';
-import { FiZap, FiClock, FiDollarSign, FiPlay, FiMessageSquare, FiClock as FiHistory, FiUsers } from 'react-icons/fi';
+import { FiZap, FiClock, FiPlay, FiMessageSquare, FiClock as FiHistory, FiUsers } from 'react-icons/fi';
 import AnalysisHistory from './AnalysisHistory';
 import CustomAgentTeamBuilder from './CustomAgentTeamBuilder';
 import { CustomAgentTeam } from '@/lib/customAgentTeams';
@@ -251,12 +251,8 @@ export default function MultiAgentDemo() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <div></div> {/* Spacer */}
-            <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-              🤖 Multi-Agent AI System
-            </div>
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-end mb-4">
             <button
               onClick={() => setShowHistory(true)}
               className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm"
@@ -265,118 +261,179 @@ export default function MultiAgentDemo() {
               View History
             </button>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 mb-6">
             Q · E
           </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Experience how 5 specialized AI agents powered by different models (Claude Sonnet 4, Gemini 2.0 Flash, Perplexity Sonar Pro) work together to analyze complex biotech scenarios.
-            Clinical, Patent, Financial, Market Research, and Regulatory experts collaborate to provide comprehensive insights.
-          </p>
-        </div>
 
-        {/* Mode Selection */}
-        <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Execution Mode</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button
-              onClick={() => setMode('fast')}
-              className={`p-4 rounded-lg border-2 transition-all ${
-                mode === 'fast'
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <FiZap className={`w-6 h-6 ${mode === 'fast' ? 'text-blue-600' : 'text-gray-400'}`} />
-                <div className="text-left">
-                  <h4 className="font-semibold text-gray-900">Fast Mode</h4>
-                  <p className="text-sm text-gray-600">Parallel execution</p>
-                </div>
+          {/* Available AI Agents - Moved from bottom */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">5 Specialized AI Agents</h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl mx-auto">
+              <div className="p-3 bg-white rounded-lg border border-gray-200">
+                <div className="text-2xl mb-1">🔬</div>
+                <h4 className="font-medium text-gray-900 text-sm mb-1">Clinical</h4>
+                <p className="text-xs text-gray-600">Trial data & efficacy</p>
               </div>
-              <p className="text-sm text-gray-600 text-left">
-                All agents analyze simultaneously for quick results. Best for initial assessments.
-              </p>
-              <div className="mt-3 flex items-center gap-2 text-sm text-gray-500">
-                <FiDollarSign className="w-4 h-4" />
-                <span>$0.10 - $0.30 per analysis</span>
+              <div className="p-3 bg-white rounded-lg border border-gray-200">
+                <div className="text-2xl mb-1">⚖️</div>
+                <h4 className="font-medium text-gray-900 text-sm mb-1">Patent</h4>
+                <p className="text-xs text-gray-600">IP & FTO analysis</p>
               </div>
-            </button>
-
-            <button
-              onClick={() => setMode('thorough')}
-              className={`p-4 rounded-lg border-2 transition-all ${
-                mode === 'thorough'
-                  ? 'border-purple-500 bg-purple-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <FiClock className={`w-6 h-6 ${mode === 'thorough' ? 'text-purple-600' : 'text-gray-400'}`} />
-                <div className="text-left">
-                  <h4 className="font-semibold text-gray-900">Thorough Mode</h4>
-                  <p className="text-sm text-gray-600">Sequential with collaboration</p>
-                </div>
+              <div className="p-3 bg-white rounded-lg border border-gray-200">
+                <div className="text-2xl mb-1">💰</div>
+                <h4 className="font-medium text-gray-900 text-sm mb-1">Financial</h4>
+                <p className="text-xs text-gray-600">Valuations & deals</p>
               </div>
-              <p className="text-sm text-gray-600 text-left">
-                Agents work sequentially, asking each other questions for deeper insights.
-              </p>
-              <div className="mt-3 flex items-center gap-2 text-sm text-gray-500">
-                <FiDollarSign className="w-4 h-4" />
-                <span>$0.30 - $0.80 per analysis</span>
+              <div className="p-3 bg-white rounded-lg border border-gray-200">
+                <div className="text-2xl mb-1">📊</div>
+                <h4 className="font-medium text-gray-900 text-sm mb-1">Market</h4>
+                <p className="text-xs text-gray-600">Size & forecasts</p>
               </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Demo vs Live Toggle */}
-        <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Type</h3>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => handleToggleLiveMode('demo')}
-              className={`px-4 py-2 rounded-md transition-all ${
-                isDemo
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Demo Mode (Free)
-            </button>
-            <button
-              onClick={() => handleToggleLiveMode('live')}
-              className={`px-4 py-2 rounded-md transition-all ${
-                !isDemo
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {isCheckingAuth ? 'Checking...' : 'Live Analysis (Uses API Credits)'}
-            </button>
-          </div>
-          {isDemo ? (
-            <p className="text-sm text-gray-600 mt-3">
-              Demo mode plays a pre-recorded analysis with realistic AI responses. No API costs.
-            </p>
-          ) : isAuthenticated ? (
-            <p className="text-sm text-gray-600 mt-3">
-              Live mode runs real AI agents with actual API calls. Authentication required.
-            </p>
-          ) : (
-            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-              <p className="text-sm text-yellow-800 mb-2">
-                <strong>⚠️ Authentication Required</strong>
-              </p>
-              <p className="text-sm text-yellow-700 mb-3">
-                You need to log in to use Live Analysis mode. Please authenticate to access real AI agent capabilities.
-              </p>
-              <a
-                href="/api/auth/login"
-                className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Log In to Continue
-              </a>
+              <div className="p-3 bg-white rounded-lg border border-gray-200">
+                <div className="text-2xl mb-1">📋</div>
+                <h4 className="font-medium text-gray-900 text-sm mb-1">Regulatory</h4>
+                <p className="text-xs text-gray-600">FDA/EMA pathways</p>
+              </div>
             </div>
-          )}
+            <p className="text-sm text-gray-600 mt-4 max-w-2xl mx-auto">
+              <strong>How it works:</strong> Agents analyze in parallel (Fast Mode) or sequentially with collaboration (Thorough Mode).
+              Powered by Claude Sonnet 4, Gemini 2.0 Flash, and Perplexity Sonar Pro.
+            </p>
+          </div>
+        </div>
+
+        {/* Combined Configuration Section */}
+        <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Configuration</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            {/* Analysis Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Mode</label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleToggleLiveMode('demo')}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm ${
+                    isDemo
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Demo
+                </button>
+                <button
+                  onClick={() => handleToggleLiveMode('live')}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm ${
+                    !isDemo
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {isCheckingAuth ? '...' : 'Live'}
+                </button>
+              </div>
+            </div>
+
+            {/* Execution Mode */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Execution</label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setMode('fast')}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm flex items-center justify-center gap-1 ${
+                    mode === 'fast'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <FiZap className="w-4 h-4" />
+                  Fast
+                </button>
+                <button
+                  onClick={() => setMode('thorough')}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm flex items-center justify-center gap-1 ${
+                    mode === 'thorough'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <FiClock className="w-4 h-4" />
+                  Thorough
+                </button>
+              </div>
+            </div>
+
+            {/* Team Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Team</label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setViewMode('chat');
+                    setSelectedCustomTeam(null);
+                  }}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm flex items-center justify-center gap-1 ${
+                    viewMode === 'chat'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <FiMessageSquare className="w-4 h-4" />
+                  Simple
+                </button>
+                <button
+                  onClick={() => setViewMode('custom')}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm flex items-center justify-center gap-1 ${
+                    viewMode === 'custom'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <FiUsers className="w-4 h-4" />
+                  Custom
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Info based on selections */}
+          <div className="pt-4 border-t border-gray-200">
+            {isDemo ? (
+              <p className="text-sm text-gray-600">
+                <strong>Demo mode:</strong> Pre-recorded analysis with realistic AI responses. No API costs.
+              </p>
+            ) : isAuthenticated ? (
+              <p className="text-sm text-gray-600">
+                <strong>Live mode:</strong> Real AI agents with actual API calls.
+                {mode === 'fast' ? ' Estimated: $0.10-$0.30' : ' Estimated: $0.30-$0.80'} per analysis.
+              </p>
+            ) : (
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p className="text-sm text-yellow-800 mb-2">
+                  <strong>⚠️ Authentication Required</strong>
+                </p>
+                <p className="text-sm text-yellow-700 mb-3">
+                  You need to log in to use Live Analysis mode.
+                </p>
+                <a
+                  href="/api/auth/login"
+                  className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Log In to Continue
+                </a>
+              </div>
+            )}
+            {mode === 'fast' && (
+              <p className="text-sm text-gray-600 mt-2">
+                <strong>Fast:</strong> All agents analyze simultaneously. Best for initial assessments.
+              </p>
+            )}
+            {mode === 'thorough' && (
+              <p className="text-sm text-gray-600 mt-2">
+                <strong>Thorough:</strong> Agents work sequentially, building on each other's insights.
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Main Query Input Section */}
@@ -396,8 +453,8 @@ export default function MultiAgentDemo() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
-                rows={5}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 mb-4"
+                rows={2}
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 mb-4 resize-y min-h-[60px]"
               />
 
               {/* Sample Queries */}
@@ -458,42 +515,13 @@ export default function MultiAgentDemo() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
-                    rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    rows={2}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 resize-y min-h-[60px]"
                   />
                 </div>
               )}
             </div>
           )}
-
-          {/* View Mode Toggle */}
-          <div className="flex items-center gap-3 mb-4">
-            <button
-              onClick={() => {
-                setViewMode('chat');
-                setSelectedCustomTeam(null);
-              }}
-              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 text-sm ${
-                viewMode === 'chat'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <FiMessageSquare className="w-4 h-4" />
-              Simple Chat
-            </button>
-            <button
-              onClick={() => setViewMode('custom')}
-              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 text-sm ${
-                viewMode === 'custom'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <FiUsers className="w-4 h-4" />
-              Custom Teams
-            </button>
-          </div>
 
           {/* Cost Estimate and Start Button */}
           {query.trim() && (
@@ -524,60 +552,6 @@ export default function MultiAgentDemo() {
               </button>
             </div>
           )}
-        </div>
-
-        {/* Info Section */}
-        <div className="mt-12 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Available AI Agents</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <div className="text-2xl mb-2">🔬</div>
-              <h4 className="font-medium text-gray-900 mb-1">Clinical Analyst</h4>
-              <p className="text-sm text-gray-600">
-                Analyzes trial data, efficacy endpoints, safety profiles, and competitive positioning
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl mb-2">⚖️</div>
-              <h4 className="font-medium text-gray-900 mb-1">Patent Expert</h4>
-              <p className="text-sm text-gray-600">
-                Evaluates IP strength, FTO analysis, competitive landscape, and patent valuation
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl mb-2">💰</div>
-              <h4 className="font-medium text-gray-900 mb-1">Financial Analyst</h4>
-              <p className="text-sm text-gray-600">
-                Assesses financials, valuations, deal structures, and provides DCF models
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl mb-2">📋</div>
-              <h4 className="font-medium text-gray-900 mb-1">Regulatory Expert</h4>
-              <p className="text-sm text-gray-600">
-                Analyzes regulatory pathways, FDA/EMA requirements, approval timelines, and compliance
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl mb-2">📊</div>
-              <h4 className="font-medium text-gray-900 mb-1">Market Research Analyst</h4>
-              <p className="text-sm text-gray-600">
-                Evaluates market size, pricing dynamics, competitive landscape, and revenue forecasts
-              </p>
-            </div>
-          </div>
-          <div className="mt-6 p-4 bg-white rounded-md">
-            <p className="text-sm text-gray-700">
-              <strong>How it works:</strong> In Fast Mode, all agents analyze your query in parallel for quick results.
-              In Thorough Mode, agents work sequentially, building on each other's insights. For example, the Clinical
-              Analyst might ask the Patent Expert about IP protection for a specific mechanism, who then asks the
-              Financial Analyst about valuation implications.
-            </p>
-            <p className="text-sm text-gray-700 mt-2">
-              <strong>Custom Teams:</strong> For advanced users, you can create custom agent teams with specific
-              combinations of agents tailored to your analysis needs. Simply switch to "Custom Teams" mode to get started.
-            </p>
-          </div>
         </div>
 
         {/* Login Modal */}
