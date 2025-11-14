@@ -110,7 +110,7 @@ export default async function AIProjectPage({ params }: Props) {
           </div>
 
           {/* Tech stack */}
-          <div className="border-t border-gray-200 pt-6 mb-4">
+          <div className="border-t border-gray-200 pt-6 mb-6">
             {techStack && techStack.length > 0 && (
               <div>
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">Tech Stack:</h3>
@@ -130,7 +130,7 @@ export default async function AIProjectPage({ params }: Props) {
 
           {/* Prominent Demo Button */}
           {demoUrl && (
-            <div className="text-center my-4">
+            <div className="text-center my-8">
               <a
                 href={demoUrl}
                 className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
@@ -144,7 +144,7 @@ export default async function AIProjectPage({ params }: Props) {
       </Section>
 
       {/* Main Content Section */}
-      <Section background="white" className="pt-6">
+      <Section background="white" className="pt-2">
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none">
             <MDXContent />
