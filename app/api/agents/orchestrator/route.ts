@@ -125,9 +125,9 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   return new Response(
     JSON.stringify({
-      name: 'Multi-Agent Orchestrator API',
+      name: 'Q · E Orchestrator API',
       status: 'active',
-      description: 'Coordinates Clinical, Patent, and Financial agents for comprehensive analysis',
+      description: 'Coordinates 5 specialized AI agents for comprehensive biotech analysis',
       modes: ['fast', 'thorough'],
     }),
     {

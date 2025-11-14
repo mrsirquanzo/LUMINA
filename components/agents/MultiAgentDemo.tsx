@@ -266,7 +266,7 @@ export default function MultiAgentDemo() {
             </button>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Multi-Agent Collaboration Demo
+            Q · E
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Experience how 5 specialized AI agents powered by different models (Claude Sonnet 4, Gemini 2.0 Flash, Perplexity Sonar Pro) work together to analyze complex biotech scenarios.
