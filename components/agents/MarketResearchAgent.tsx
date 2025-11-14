@@ -338,7 +338,7 @@ export default function MarketResearchAgent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: textToSend,
+          messages: [...messages, userMessage],
           documents: processedDocuments,
         }),
       });
@@ -352,7 +352,7 @@ export default function MarketResearchAgent() {
 
       const assistantMessage: Message = {
         role: 'assistant',
-        content: data.response,
+        content: data.message || data.response,
         timestamp: new Date(),
         cost: data.cost,
       };
