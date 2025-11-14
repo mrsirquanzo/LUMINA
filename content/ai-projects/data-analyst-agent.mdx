@@ -16,38 +16,52 @@ techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Vision API", "PDF-pa
 
 ## Overview
 
-The Clinical Data Analyst Agent is an AI-powered assistant that analyzes clinical trial reports, study data, and competitive intelligence documents. Upload PDFs, Excel files, images, or provide URLs to get instant analysis of efficacy endpoints, safety profiles, biomarker trends, and market intelligence.
+AI-powered analyst for clinical trials, efficacy data, and competitive intelligence. Upload PDFs, Excel files, images, or URLs to get instant analysis with automatic citations. Built with **Claude Sonnet 4** featuring vision capabilities for analyzing charts and figures.
 
-**Built with Claude Sonnet 4** featuring vision capabilities for analyzing charts, graphs, and figures from scientific publications.
+**Data Sources:** 🧬 Gosset.ai Pharmaceutical Intelligence • 🔬 ClinicalTrials.gov • 📚 PubMed E-utilities
+
+> **Gosset.ai Integration:** Access Phase Transition Rates (PTRs) and trial benchmarks across 100K+ drug assets via live MCP connection. Provides evidence-based success predictions with hybrid live/simulated mode.
 
 ---
 
-## What It Can Do
+## Key Features
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
 
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">📄</div>
-<h3 className="text-lg font-semibold mb-2">Analyze Clinical Trial Reports</h3>
-<p className="text-gray-700 text-sm">Upload Phase 1-3 trial PDFs and extract key endpoints, statistical significance, patient populations, and study design details.</p>
-</div>
-
-<div className="p-6 border border-gray-200 rounded-lg">
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
 <div className="text-3xl mb-3">📊</div>
-<h3 className="text-lg font-semibold mb-2">Extract Key Endpoints</h3>
-<p className="text-gray-700 text-sm">Identify ORR, PFS, OS, p-values, confidence intervals, subgroup analyses, and safety signals from dense statistical tables.</p>
+<h3 className="text-lg font-semibold mb-2">Clinical Trial Analysis</h3>
+<p className="text-gray-700 text-sm">Extract efficacy endpoints (ORR, PFS, OS), p-values, confidence intervals, and safety signals from Phase 1-3 trial reports. Vision AI reads charts and statistical tables automatically.</p>
 </div>
 
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">🔬</div>
-<h3 className="text-lg font-semibold mb-2">Process Multiple Data Formats</h3>
-<p className="text-gray-700 text-sm">Handle Excel spreadsheets, CSV files, and images of charts/graphs using AI vision to extract data from figures.</p>
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">🧬</div>
+<h3 className="text-lg font-semibold mb-2">Pharmaceutical Intelligence</h3>
+<p className="text-gray-700 text-sm">Gosset.ai integration provides Phase Transition Rates, trial success predictions, and design benchmarks (sample sizes, endpoints, durations) across indications and modalities.</p>
 </div>
 
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">🌐</div>
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">🔍</div>
 <h3 className="text-lg font-semibold mb-2">Competitive Intelligence</h3>
-<p className="text-gray-700 text-sm">Analyze competitor websites, ClinicalTrials.gov entries, press releases, and conference presentations for strategic insights.</p>
+<p className="text-gray-700 text-sm">Compare competitor trials, analyze ClinicalTrials.gov entries, extract insights from press releases and conference presentations. Multi-document synthesis across sources.</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">📄</div>
+<h3 className="text-lg font-semibold mb-2">Multi-Format Processing</h3>
+<p className="text-gray-700 text-sm">Handles PDFs, Excel/CSV, images (PNG/JPG), and URLs. Upload up to 5 files (10MB max) simultaneously. All insights include automatic source citations.</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">📚</div>
+<h3 className="text-lg font-semibold mb-2">Literature Search</h3>
+<p className="text-gray-700 text-sm">Direct PubMed access to 35M+ biomedical publications. Search by indication, drug, biomarker, or endpoint. Retrieve abstracts, citations, and study metadata in real-time.</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">🎯</div>
+<h3 className="text-lg font-semibold mb-2">Citation Tracking</h3>
+<p className="text-gray-700 text-sm">Every insight references its source document with inline citations `[Source: filename.pdf]`. Track document history with timestamps for audit trails and compliance.</p>
 </div>
 
 </div>
@@ -56,146 +70,53 @@ The Clinical Data Analyst Agent is an AI-powered assistant that analyzes clinica
 
 ## Example Questions
 
-Here are specific questions the agent can answer when you upload relevant documents:
+**Efficacy Analysis:**
+- "What's the Phase 2→3 success rate for Alzheimer's Disease? Use Gosset.ai to estimate trial probability."
+- "Compare CAR-T therapy PTRs by indication. What are melanoma vs lymphoma success rates?"
 
-### Efficacy Analysis
-- "What's the ORR and statistical significance in this Phase 2 trial?"
-- "Compare progression-free survival across these three studies"
-- "Analyze biomarker response trends in this dataset"
-- "How do these results compare to standard of care?"
+**Safety & Competitive Intelligence:**
+- "Identify all Grade 3+ adverse events and compare to competitor X's Phase 2 safety profile."
+- "Benchmark our Phase 2 trial design: What sample sizes and endpoints are typical for MS trials?"
 
-### Safety & Tolerability
-- "Identify all Grade 3+ adverse events in this study"
-- "Compare safety profiles between the treatment and control arms"
-- "What dose-limiting toxicities were observed?"
-- "Are there any concerning safety signals in the adverse event data?"
-
-### Competitive Intelligence
-- "How do these trial results compare to competitor X's Phase 2 data?"
-- "What are the key takeaways from this conference presentation?"
-- "Summarize the competitive landscape for CAR-T therapies in this indication"
-- "Extract key metrics from this press release and benchmark against our pipeline"
-
----
-
-## How It Works
-
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-
-<div className="text-center">
-<div className="text-4xl mb-3">1️⃣</div>
-<h3 className="font-semibold mb-2">Upload Documents</h3>
-<p className="text-sm text-gray-700">Drag and drop PDFs, Excel files, CSVs, images, or paste URLs</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">2️⃣</div>
-<h3 className="font-semibold mb-2">Ask Questions</h3>
-<p className="text-sm text-gray-700">Use plain English—no technical syntax or special commands needed</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">3️⃣</div>
-<h3 className="font-semibold mb-2">Get Expert Analysis</h3>
-<p className="text-sm text-gray-700">Receive detailed insights with citations linking back to source documents</p>
-</div>
-
-</div>
+*Ask the agent for a comprehensive list of analysis types, query templates, and advanced capabilities.*
 
 ---
 
 ## Supported Formats
 
-**Documents**
-- PDF (clinical trial reports, publications, regulatory documents)
-- Excel/CSV (study data, endpoint tables, patient demographics)
-- Plain text files
-
-**Images**
-- PNG, JPG, WebP (charts, graphs, Kaplan-Meier curves, waterfall plots)
-- AI vision automatically extracts data from figures
-
-**Web Content**
-- Any URL (ClinicalTrials.gov, company press releases, conference abstracts)
-- Automatic content extraction and analysis
-
-**Limits**: Up to 5 files per query, 10MB max file size
-
----
-
-## Key Features
-
-**Citation Tracking** ✅
-Every insight references its source document, so you know exactly where each finding came from. Citations appear inline as `[Source: filename.pdf]`.
-
-**Multi-Document Analysis**
-Upload multiple trials and compare them side-by-side. The agent synthesizes information across documents to provide comprehensive analysis.
-
-**Vision-Enabled**
-Claude's vision API analyzes charts, graphs, and figures directly from images or PDFs—no manual data entry required.
-
-**Document History**
-All uploaded files are tracked with timestamps. Easily re-analyze previous documents or compare with new data.
-
----
-
-## API Integrations & Data Sources
-
-This agent is powered by live connections to authoritative pharmaceutical and clinical research databases through the Model Context Protocol (MCP):
-
 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
 
-<div className="p-4 border border-blue-200 bg-blue-50 rounded-lg">
-<h4 className="font-semibold text-blue-900 mb-2">🧬 Gosset.ai Pharmaceutical Intelligence</h4>
-<p className="text-sm text-blue-800">
-Phase Transition Rates (PTRs), trial success predictions, and benchmarking data across 100K+ drug assets. Hybrid live/simulated integration via MCP.
-</p>
+<div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+<h4 className="font-semibold text-blue-900 mb-2">📄 Documents</h4>
+<p className="text-sm text-blue-800">PDF, Excel, CSV, TXT</p>
 </div>
 
-<div className="p-4 border border-green-200 bg-green-50 rounded-lg">
-<h4 className="font-semibold text-green-900 mb-2">🔬 ClinicalTrials.gov API</h4>
-<p className="text-sm text-green-800">
-Live access to 400K+ clinical trials worldwide. Search by indication, sponsor, phase, and endpoints with real-time data retrieval.
-</p>
+<div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+<h4 className="font-semibold text-green-900 mb-2">🖼️ Images</h4>
+<p className="text-sm text-green-800">PNG, JPG, WebP (charts, graphs)</p>
 </div>
 
-<div className="p-4 border border-purple-200 bg-purple-50 rounded-lg">
-<h4 className="font-semibold text-purple-900 mb-2">📚 PubMed E-utilities</h4>
-<p className="text-sm text-purple-800">
-Direct access to 35M+ biomedical publications from NCBI. Retrieve abstracts, citations, and full study metadata.
-</p>
+<div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+<h4 className="font-semibold text-purple-900 mb-2">🌐 Web Content</h4>
+<p className="text-sm text-purple-800">Any URL (auto-extraction)</p>
 </div>
 
 </div>
 
-### Gosset.ai Integration Highlights
-
-The Clinical Data Analyst features cutting-edge pharmaceutical intelligence through Gosset.ai:
-
-- **Phase Transition Rates (PTRs)**: Historical success rates by indication, modality, and phase
-- **Trial Success Predictions**: Evidence-based probability estimates from verified trial outcomes
-- **Trial Design Benchmarks**: Average sample sizes, endpoints, durations, and biomarker prevalence
-- **Integration Mode**: Hybrid live/simulated with automatic fallback (zero configuration required)
-
-When `GOSSET_OAUTH_TOKEN` is configured, real-time PTR data is fetched from Gosset's MCP server. Otherwise, it gracefully falls back to simulated pharmaceutical intelligence data for portfolio demonstrations.
+**Limits:** Up to 5 files per query • 10MB max file size
 
 ---
 
 ## Future Enhancements
 
-**In Development**
-- ✅ Citation Tracking (LIVE)
-
-**Coming Soon**
-- 📊 Data Visualization Export - Auto-generate charts from analysis
-- 📁 Batch Processing - Compare up to 4 trials simultaneously with structured comparison tables
-- 💾 Structured Data Export - Download findings as CSV/JSON for further analysis
-- 📈 Export to BI Tools - Direct integration with Tableau and Power BI
-
-**Roadmap**
-- 🔍 Historical Benchmarking - Compare results to database of approved therapies
-- 🤖 Multi-Agent Collaboration - Combine Data Analyst + Patent Expert + Financial Analyst
-- 🔐 Audit Trail - Complete logging of queries and responses for regulatory compliance
+**Planned Features:**
+- 📊 **Data Visualization Export** - Auto-generate charts and graphs from analysis results
+- 📁 **Batch Processing** - Compare up to 4 trials simultaneously with structured comparison tables
+- 💾 **Structured Data Export** - Download findings as CSV/JSON for further analysis in Excel or R
+- 📈 **BI Tool Integration** - Direct export to Tableau and Power BI for dashboard creation
+- 🔍 **Historical Benchmarking** - Compare results to database of approved therapies and real-world evidence
+- 🤖 **Multi-Agent Collaboration** - Combine Clinical + Patent + Financial + Regulatory agents for comprehensive due diligence
+- 🔐 **Audit Trail** - Complete logging of queries and responses for regulatory compliance and GxP validation
 
 ---
 
@@ -207,13 +128,18 @@ When `GOSSET_OAUTH_TOKEN` is configured, real-time PTR data is fetched from Goss
 **AI Model**
 - Claude Sonnet 4 (claude-sonnet-4-20250514)
 - Vision API for image and chart analysis
-- 4K token context window per query
+- 200K token context window
 
 **Document Processing**
 - PDF parsing via pdf-parse library
 - Excel/CSV processing with xlsx and papaparse
 - HTML extraction with cheerio for URLs
 - Base64 encoding for image analysis
+
+**API Integrations**
+- Gosset.ai MCP server (SSE transport)
+- ClinicalTrials.gov API v2
+- PubMed E-utilities (NCBI)
 
 **Architecture**
 - Next.js 14 with App Router
@@ -228,7 +154,3 @@ When `GOSSET_OAUTH_TOKEN` is configured, real-time PTR data is fetched from Goss
 - All processing happens in real-time
 
 </details>
-
----
-
-**Ready to try it?** Click the "View Demo" button above to start analyzing clinical data with AI.

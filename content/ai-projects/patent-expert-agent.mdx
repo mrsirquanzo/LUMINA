@@ -1,8 +1,8 @@
 ---
 slug: patent-expert-agent
 title: "Patent Expert"
-subtitle: "Analyze patent documents, IP landscapes, and freedom-to-operate assessments"
-description: "Analyze patent documents, IP landscapes, and freedom-to-operate. Review claims, prior art, competitive positioning, and white space."
+subtitle: "Analyze patent landscapes, FTO opinions, and IP strategy"
+description: "Analyze patent portfolios, conduct freedom-to-operate searches, and assess IP strategy for biotech innovations."
 category: "AI Agent"
 publishedDate: "2025-01-15"
 tags: ["Patents", "FTO", "IP Strategy"]
@@ -11,43 +11,55 @@ thumbnail: "/images/patent-agent-thumbnail.jpg"
 projectType: "ai-agent"
 demoUrl: "/ai-projects/patent-expert-demo"
 githubUrl: ""
-techStack: ["Next.js 14", "TypeScript", "Perplexity Sonar Pro", "Vision API", "PDF-parse"]
+techStack: ["Next.js 14", "TypeScript", "Perplexity Sonar Pro", "Real-time Search", "PDF-parse"]
 ---
 
 ## Overview
 
-The Patent Intelligence Agent is an AI-powered assistant that analyzes patent documents, competitive IP landscapes, and freedom-to-operate questions. Upload patent PDFs, provide Google Patents URLs, or paste patent text to get instant analysis of claims, prior art, competitive positioning, and strategic recommendations.
+AI-powered patent analyst for landscapes, freedom-to-operate (FTO) searches, and IP strategy. Upload patent PDFs or provide patent numbers to get instant analysis of claims, prior art, competitive portfolios, and patentability assessments. Built with **Perplexity Sonar Pro** featuring real-time USPTO/EPO database access.
 
-**Built with Perplexity Sonar Pro** featuring real-time search capabilities with deep retrieval and vision analysis for patent drawings and figures.
+**Data Sources:** 🇺🇸 USPTO • 🔍 Google Patents • 🇪🇺 EPO (European Patent Office)
 
 ---
 
-## What It Can Do
+## Key Features
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
 
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">📄</div>
-<h3 className="text-lg font-semibold mb-2">Analyze Patent Documents</h3>
-<p className="text-gray-700 text-sm">Upload granted patents or applications and extract key claims, scope, filing dates, inventors, and assignees.</p>
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">📋</div>
+<h3 className="text-lg font-semibold mb-2">Patent Landscape Analysis</h3>
+<p className="text-gray-700 text-sm">Map competitive patent portfolios by indication, technology, or assignee. Identify white space opportunities and track filing trends across USPTO, EPO, and global jurisdictions.</p>
 </div>
 
-<div className="p-6 border border-gray-200 rounded-lg">
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
 <div className="text-3xl mb-3">🔍</div>
-<h3 className="text-lg font-semibold mb-2">Freedom-to-Operate Assessment</h3>
-<p className="text-gray-700 text-sm">Identify potential blocking patents, assess claim overlap, and evaluate infringement risks for your technology.</p>
+<h3 className="text-lg font-semibold mb-2">Freedom-to-Operate (FTO)</h3>
+<p className="text-gray-700 text-sm">Conduct FTO searches for drug candidates or platform technologies. Identify blocking patents, analyze claim scope, and assess infringement risks with evidence-based recommendations.</p>
 </div>
 
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">🏢</div>
-<h3 className="text-lg font-semibold mb-2">Competitive IP Intelligence</h3>
-<p className="text-gray-700 text-sm">Analyze competitor patent portfolios, track filing trends, and identify strategic gaps in patent coverage.</p>
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">⚖️</div>
+<h3 className="text-lg font-semibold mb-2">Claim Analysis</h3>
+<p className="text-gray-700 text-sm">Analyze patent claims for scope, novelty, and potential invalidity grounds. Compare claims across patent families and identify dependencies between continuation applications.</p>
 </div>
 
-<div className="p-6 border border-gray-200 rounded-lg">
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">🌐</div>
+<h3 className="text-lg font-semibold mb-2">Prior Art Search</h3>
+<p className="text-gray-700 text-sm">Search 100M+ global patents for prior art using Google Patents integration. Identify relevant publications, analyze citation networks, and assess patentability before filing.</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="text-3xl mb-3">📊</div>
+<h3 className="text-lg font-semibold mb-2">Real-Time Database Access</h3>
+<p className="text-gray-700 text-sm">Live USPTO and EPO database queries for latest filings, prosecution status, oppositions, and litigation updates. No stale data—always current information.</p>
+</div>
+
+<div className="p-6 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
 <div className="text-3xl mb-3">🎯</div>
-<h3 className="text-lg font-semibold mb-2">White Space Identification</h3>
-<p className="text-gray-700 text-sm">Find unpatented technology areas, identify opportunities for new filings, and assess patent landscape density.</p>
+<h3 className="text-lg font-semibold mb-2">Citation Tracking</h3>
+<p className="text-gray-700 text-sm">Every analysis references specific patents, claim numbers, and sections `[Source: US1234567A, Claim 1]`. Vision AI analyzes patent drawings and chemical structures from figures.</p>
 </div>
 
 </div>
@@ -56,148 +68,53 @@ The Patent Intelligence Agent is an AI-powered assistant that analyzes patent do
 
 ## Example Questions
 
-Here are specific questions the agent can answer when you upload relevant patent documents:
+**Patent Landscape & FTO:**
+- "Map the CAR-T patent landscape—who are the major patent holders and what are the key claim areas?"
+- "Conduct FTO search for our CD19-targeting bispecific antibody. Identify any blocking patents."
 
-### Claims Analysis
-- "What are the key independent claims in this patent and how broad is their scope?"
-- "Identify the most commercially valuable claims in this patent family"
-- "What limitations are present in Claim 1 that could be designed around?"
-- "Compare the claim scope across US, EP, and CN patents in this family"
+**Claim Analysis & Strategy:**
+- "Analyze claims 1-10 of US12345678 and identify potential invalidity grounds based on prior art."
+- "Compare patent families for this drug across US, EU, and Japan. What are the geographic coverage gaps?"
 
-### Freedom-to-Operate
-- "Does this patent block our antibody-drug conjugate approach?"
-- "Identify potential blocking patents for CAR-T cell therapy with IL-15 costimulation"
-- "What are the infringement risks for our manufacturing process?"
-- "Assess freedom-to-operate for this combination therapy indication"
-
-### Competitive Intelligence
-- "What patents does Company X have in the gene therapy space?"
-- "Analyze Moderna's mRNA delivery platform patent strategy"
-- "Track filing trends for CRISPR base editing over the past 3 years"
-- "Which companies dominate the ADC linker technology landscape?"
-
-### Strategic Planning
-- "What white space exists in the bispecific antibody patent landscape?"
-- "Identify gaps in our patent coverage for this target"
-- "Recommend defensive publication topics to block competitor filings"
-- "Assess patent strength and validity risks for this portfolio"
-
----
-
-## How It Works
-
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-
-<div className="text-center">
-<div className="text-4xl mb-3">1️⃣</div>
-<h3 className="font-semibold mb-2">Upload Patents</h3>
-<p className="text-sm text-gray-700">Drag and drop PDF patents, paste Google Patents URLs, or enter patent numbers</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">2️⃣</div>
-<h3 className="font-semibold mb-2">Ask Questions</h3>
-<p className="text-sm text-gray-700">Ask about claims, prior art, FTO, or competitive positioning in plain English</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">3️⃣</div>
-<h3 className="font-semibold mb-2">Get IP Analysis</h3>
-<p className="text-sm text-gray-700">Receive strategic IP insights with citations to specific patent sections and claims</p>
-</div>
-
-</div>
+*Ask the agent for a comprehensive list of IP analysis types, patentability assessments, and strategic recommendations.*
 
 ---
 
 ## Supported Formats
 
-**Documents**
-- PDF (granted patents, patent applications, office actions)
-- Plain text (patent claims, abstract, description)
-
-**Images**
-- Patent drawings and figures (analyzed with AI vision)
-- Flowcharts and diagrams from patent specifications
-
-**Web Content**
-- Google Patents URLs
-- USPTO, EPO, WIPO patent database links
-- IP news and analysis articles
-
-**Limits**: Up to 5 patents per query, 10MB max file size
-
----
-
-## Key Features
-
-**Citation Tracking** ✅
-Every insight references the specific patent, claim number, or section it came from. Citations appear inline as `[Source: US1234567A, Claim 1]`.
-
-**Multi-Patent Comparison**
-Upload multiple patents from a family or competitive portfolio and compare claims, scope, and strategic positioning side-by-side.
-
-**Vision-Enabled**
-Claude's vision API analyzes patent drawings, flowcharts, and chemical structures directly from images or PDF figures.
-
-**Patent Family Awareness**
-The agent understands relationships between related patents (continuations, divisionals, foreign counterparts) when you provide multiple related documents.
-
----
-
-## API Integrations & Data Sources
-
-This agent is powered by live connections to patent databases through the Model Context Protocol (MCP):
-
 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
 
-<div className="p-4 border border-blue-200 bg-blue-50 rounded-lg">
-<h4 className="font-semibold text-blue-900 mb-2">🇺🇸 USPTO (U.S. Patent Office)</h4>
-<p className="text-sm text-blue-800">
-Real-time access to U.S. patent database with full-text search, assignee tracking, and classification browsing across 11M+ patents.
-</p>
+<div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+<h4 className="font-semibold text-blue-900 mb-2">📄 Documents</h4>
+<p className="text-sm text-blue-800">PDF patents, patent numbers</p>
 </div>
 
-<div className="p-4 border border-green-200 bg-green-50 rounded-lg">
-<h4 className="font-semibold text-green-900 mb-2">🔍 Google Patents</h4>
-<p className="text-sm text-green-800">
-Global patent search across 100M+ documents from USPTO, EPO, WIPO, and international jurisdictions with citation analysis.
-</p>
+<div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+<h4 className="font-semibold text-green-900 mb-2">🖼️ Images</h4>
+<p className="text-sm text-green-800">PNG, JPG (drawings, structures)</p>
 </div>
 
-<div className="p-4 border border-purple-200 bg-purple-50 rounded-lg">
-<h4 className="font-semibold text-purple-900 mb-2">🇪🇺 EPO (European Patent Office)</h4>
-<p className="text-sm text-purple-800">
-European patent database with opposition tracking, examination status, and harmonized classification across 38 member states.
-</p>
+<div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+<h4 className="font-semibold text-purple-900 mb-2">🌐 Web Content</h4>
+<p className="text-sm text-purple-800">USPTO/EPO URLs, patent links</p>
 </div>
 
 </div>
 
-**Integration Benefits:**
-- Real-time patent filing and status updates
-- Citation network mapping for prior art analysis
-- Multi-jurisdiction search (US, EU, PCT, CN, JP)
-- Free public API access with no rate limits for basic searches
+**Limits:** Up to 5 files per query • 10MB max file size
 
 ---
 
 ## Future Enhancements
 
-**In Development**
-- ✅ Citation Tracking (LIVE)
-
-**Coming Soon**
-- 📊 Patent Landscape Visualization - Generate charts showing filing trends and competitor activity
-- 📁 Batch Patent Analysis - Compare up to 10 patents simultaneously
-- 💾 Structured Export - Download claim charts and FTO analyses as Excel/Word
-- 🔗 Google Patents Integration - Auto-fetch related patents and prior art
-
-**Roadmap**
-- 🗄️ Prior Art Database Search - Integrate with patent databases for automated prior art searches
-- 🤖 Multi-Agent Collaboration - Combine Patent Expert + Data Analyst for target validation
-- 📝 Claim Drafting Assistance - AI-powered support for drafting patent claims
-- ⚖️ Litigation Risk Assessment - Analyze patent litigation history and risk factors
+**Planned Features:**
+- 📊 **Patent Landscape Visualization** - Generate charts showing filing trends, assignee networks, and competitive positioning
+- 📁 **Batch Patent Analysis** - Compare up to 10 patents simultaneously with claim chart overlays
+- 💾 **Structured Export** - Download FTO analyses and claim charts as Excel/Word for legal review
+- 🔗 **Enhanced Google Patents Integration** - Auto-fetch related patents, prior art, and citation networks
+- 🤖 **Multi-Agent Collaboration** - Combine Patent + Clinical + Regulatory insights for comprehensive IP due diligence
+- 📉 **Litigation Tracking** - Monitor PTAB proceedings, oppositions, and district court cases with automated alerts
+- 🔐 **Patent Prosecution Support** - Generate office action responses and amendment strategies with claim drafting assistance
 
 ---
 
@@ -207,31 +124,30 @@ European patent database with opposition tracking, examination status, and harmo
 <summary><strong>Click to expand technical implementation details</strong></summary>
 
 **AI Model**
-- Perplexity Sonar Pro
-- Deep retrieval with real-time search integration for live patent database access
-- Vision API for patent drawing analysis
-- Advanced reasoning capabilities
+- Perplexity Sonar Pro (llama-3.1-sonar-large-128k-online)
+- Real-time web search integration for live patent data
+- 128K token context window
 
 **Document Processing**
-- PDF parsing for patent documents
-- Text extraction from USPTO/EPO formats
-- HTML extraction for web-based patent databases
-- Base64 encoding for patent drawing analysis
+- PDF parsing via pdf-parse library
+- Vision API for patent drawings and chemical structures
+- HTML extraction for USPTO/EPO patent pages
+
+**API Integrations**
+- USPTO Public Search (11M+ US patents)
+- Google Patents (100M+ global documents)
+- EPO Register (European patent database)
 
 **Architecture**
 - Next.js 14 with App Router
 - TypeScript for type safety
 - Server-side API routes for document processing
-- Client-side React components for interactive UI
+- Real-time search capabilities via Perplexity
 
 **Security**
 - Session-based authentication
 - Environment variable configuration
-- No patent storage (confidentiality-preserving)
+- No document storage (privacy-preserving)
 - All processing happens in real-time
 
 </details>
-
----
-
-**Ready to try it?** Click the "View Demo" button above to start analyzing patent intelligence with AI.
