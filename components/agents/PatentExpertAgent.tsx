@@ -478,7 +478,7 @@ export default function PatentExpertAgent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
             <p className="font-medium text-gray-900 mb-1">AI Model</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Perplexity Sonar Large (Llama 3.1 128K Online)'}</p>
+            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Perplexity Sonar Pro'}</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Key Strengths</p>

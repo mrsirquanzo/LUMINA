@@ -18,10 +18,10 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     apiKey: process.env.ANTHROPIC_API_KEY,
   },
 
-  // Patent Expert - Perplexity Sonar Online (real-time patent database searches)
+  // Patent Expert - Perplexity Sonar Pro (real-time patent database searches with deeper retrieval)
   patent: {
     provider: 'perplexity',
-    model: 'llama-3.1-sonar-large-128k-online', // Online model with real-time search
+    model: 'sonar-pro', // Deep retrieval with real-time search
     maxTokens: 4096,
     temperature: 0.7,
     apiKey: process.env.PERPLEXITY_API_KEY,
@@ -37,10 +37,10 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     apiKey: process.env.GOOGLE_API_KEY,
   },
 
-  // Market Research - Perplexity Sonar Online (real-time market data and competitor intelligence)
+  // Market Research - Perplexity Sonar Pro (real-time market data and competitor intelligence with deeper retrieval)
   market_research: {
     provider: 'perplexity',
-    model: 'llama-3.1-sonar-large-128k-online', // Online model with real-time search
+    model: 'sonar-pro', // Deep retrieval with real-time search
     maxTokens: 4096,
     temperature: 0.7,
     apiKey: process.env.PERPLEXITY_API_KEY,
