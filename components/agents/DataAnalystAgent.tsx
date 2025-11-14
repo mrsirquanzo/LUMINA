@@ -26,8 +26,9 @@ interface ProcessedDocument {
 }
 
 const SAMPLE_QUERIES = [
-  "Analyze the efficacy endpoints from this Phase 2 trial data. What are the key biomarker trends?",
-  "Compare the top 3 CAR-T therapies by response rates, durability, and safety profile.",
+  "What's the Phase 2→3 success rate for Alzheimer's Disease trials? Use Gosset.ai to estimate our trial's probability.",
+  "Compare CAR-T therapy success rates by indication. What are the PTRs for melanoma vs lymphoma?",
+  "Benchmark our Phase 2 trial design: What sample size and endpoints are typical for MS trials?",
   "What are the approval trends for oncology drugs in 2023-2024? Which indications are hottest?",
 ];
 
@@ -213,10 +214,19 @@ export default function DataAnalystAgent() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Clinical Data Analyst Agent
         </h1>
-        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-6">
+        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-4">
           AI-powered analyst for biotech clinical trials, competitive intelligence, and market analysis.
           Upload documents, analyze websites, or chat directly.
         </p>
+
+        {/* Gosset.ai Integration Badge */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-full">
+            <span className="text-xl">🧬</span>
+            <span className="text-sm font-semibold text-blue-900">Powered by Gosset.ai</span>
+            <span className="text-xs text-blue-600">Pharmaceutical Intelligence</span>
+          </div>
+        </div>
 
         {/* Mode Switcher */}
         <div className="flex items-center justify-center gap-4">
@@ -496,6 +506,44 @@ export default function DataAnalystAgent() {
           <div>
             <p className="font-medium text-gray-900 mb-1">Cost</p>
             <p>{mode === 'demo' ? 'Free (No API calls)' : '$0.01-0.10 per query'}</p>
+          </div>
+        </div>
+
+        {/* Gosset.ai Integration Section */}
+        <div className="mt-6 pt-6 border-t border-gray-300">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-2xl">🧬</span>
+            <h4 className="text-base font-semibold text-gray-900">
+              Gosset.ai Pharmaceutical Intelligence Integration
+            </h4>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <p className="font-medium text-gray-900 mb-1">Phase Transition Rates (PTRs)</p>
+              <p>Historical clinical trial success rates across 100K+ drug assets by indication, modality, and phase</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 mb-1">Trial Success Predictions</p>
+              <p>Evidence-based probability estimates for trial outcomes using verified data from papers, posters, and regulatory filings</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 mb-1">Trial Design Benchmarks</p>
+              <p>Average sample sizes, common endpoints, trial durations, biomarker prevalence for competitive benchmarking</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 mb-1">Integration Status</p>
+              <p className="flex items-center gap-2">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Hybrid Live/Simulated • MCP Protocol • Auto-fallback enabled</span>
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-xs text-blue-800">
+              <strong>💡 How it works:</strong> This agent connects to Gosset.ai's MCP server for live pharmaceutical intelligence.
+              When GOSSET_OAUTH_TOKEN is configured, real-time PTR data is fetched. Otherwise, it gracefully falls back to
+              simulated data for portfolio demonstrations. Zero configuration required.
+            </p>
           </div>
         </div>
       </div>
