@@ -263,24 +263,134 @@ export class RegulatoryMCPServer implements IMCPServer {
     const approvalType = (args.approval_type as string) || 'all';
     const years = (args.years as number) || 5;
 
-    const mockApprovals = {
-      drugName,
-      indication,
-      approvalType,
-      timeframe: `Last ${years} years`,
-      approvals: [],
-      message: 'Configure FDA Drugs@FDA API integration for live approval data',
-      instructions: 'Use FDA openFDA API (no key required) - see https://open.fda.gov/apis/drug/',
-    };
+    try {
+      // Build search query for FDA Drugs@FDA API
+      const searchTerms: string[] = [];
 
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify(mockApprovals, null, 2),
+      if (drugName) {
+        searchTerms.push(`openfda.brand_name:"${drugName}" OR openfda.generic_name:"${drugName}"`);
+      }
+
+      if (indication) {
+        searchTerms.push(`products.marketing_status:"Prescription" AND openfda.pharm_class_epc:"${indication}"`);
+      }
+
+      // Date filter - submissions from last N years
+      const currentYear = new Date().getFullYear();
+      const startYear = currentYear - years;
+      searchTerms.push(`submissions.submission_status_date:[${startYear}0101 TO ${currentYear}1231]`);
+
+      const searchQuery = searchTerms.join(' AND ');
+      const limit = 10;
+
+      const url = `https://api.fda.gov/drug/drugsfda.json?search=${encodeURIComponent(searchQuery)}&limit=${limit}`;
+
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
         },
-      ],
-    };
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify({
+                  source: 'FDA openFDA API',
+                  query: { drugName, indication, approvalType, years },
+                  totalResults: 0,
+                  approvals: [],
+                  message: 'No FDA approvals found matching the search criteria',
+                }, null, 2),
+              },
+            ],
+          };
+        }
+        throw new Error(`FDA openFDA API returned ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const results = data.results || [];
+
+      // Parse drug approvals
+      const approvals = results.map((drug: any) => {
+        const application = drug.submissions?.[0] || {};
+        const product = drug.products?.[0] || {};
+        const openFDA = drug.openfda || {};
+
+        return {
+          applicationNumber: drug.application_number,
+          sponsorName: drug.sponsor_name,
+          brandName: openFDA.brand_name?.[0],
+          genericName: openFDA.generic_name?.[0],
+          manufacturerName: openFDA.manufacturer_name?.[0],
+          productType: openFDA.product_type?.[0],
+          route: openFDA.route?.[0],
+          substanceName: openFDA.substance_name?.[0],
+          pharmacologicClass: openFDA.pharm_class_epc?.[0],
+          submissionType: application.submission_type,
+          submissionStatus: application.submission_status,
+          submissionStatusDate: application.submission_status_date,
+          reviewPriority: application.review_priority,
+          marketingStatus: product.marketing_status,
+          dosageForm: product.dosage_form,
+          strength: product.active_ingredients?.map((ai: any) => ({
+            name: ai.name,
+            strength: ai.strength,
+          })),
+          fdaUrl: `https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&ApplNo=${drug.application_number}`,
+        };
+      });
+
+      // Filter by approval type if specified
+      let filteredApprovals = approvals;
+      if (approvalType !== 'all') {
+        const typeMap: Record<string, string> = {
+          'BLA': 'BLA',
+          'NDA': 'NDA',
+          '505(b)(2)': 'NDA',
+          'Accelerated': 'accelerated',
+          'Breakthrough': 'breakthrough',
+        };
+
+        const filterType = typeMap[approvalType];
+        if (filterType) {
+          filteredApprovals = approvals.filter((a: any) =>
+            a.applicationNumber?.startsWith(filterType) ||
+            a.reviewPriority?.toLowerCase().includes(filterType)
+          );
+        }
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              source: 'FDA openFDA API',
+              query: { drugName, indication, approvalType, years },
+              searchQuery,
+              totalResults: filteredApprovals.length,
+              approvals: filteredApprovals,
+              note: 'Data from FDA Drugs@FDA database. Visit fdaUrl for complete application details.',
+              apiUrl: url,
+            }, null, 2),
+          },
+        ],
+      };
+    } catch (error: any) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error searching FDA approvals: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
   }
 
   private async getRegulatoryPathway(args: Record<string, unknown>): Promise<MCPToolResult> {

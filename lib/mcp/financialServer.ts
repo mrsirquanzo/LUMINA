@@ -208,23 +208,111 @@ export class FinancialMCPServer implements IMCPServer {
     const filingType = (args.filing_type as string) || 'all';
     const limit = (args.limit as number) || 5;
 
-    const mockFilings = {
-      ticker,
-      filingType,
-      limit,
-      filings: [],
-      message: 'Configure SEC EDGAR API integration for live filings data',
-      instructions: 'Use SEC EDGAR REST API (no key required) - see https://www.sec.gov/edgar/sec-api-documentation',
-    };
+    try {
+      // First, we need to get the CIK (Central Index Key) for the ticker
+      // SEC uses CIK, not ticker symbols
+      const tickerUrl = 'https://www.sec.gov/files/company_tickers.json';
 
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify(mockFilings, null, 2),
+      const tickerResponse = await fetch(tickerUrl, {
+        headers: {
+          'User-Agent': 'Q-E Portfolio contact@quanho.dev',
+          'Accept': 'application/json',
         },
-      ],
-    };
+      });
+
+      if (!tickerResponse.ok) {
+        throw new Error(`Failed to fetch ticker data: ${tickerResponse.status}`);
+      }
+
+      const tickerData = await tickerResponse.json();
+
+      // Find the company by ticker
+      const company = Object.values(tickerData).find(
+        (c: any) => c.ticker.toUpperCase() === ticker.toUpperCase()
+      ) as any;
+
+      if (!company) {
+        throw new Error(`Ticker ${ticker} not found in SEC database`);
+      }
+
+      const cik = company.cik_str.toString().padStart(10, '0');
+
+      // Fetch company submissions data
+      const submissionsUrl = `https://data.sec.gov/submissions/CIK${cik}.json`;
+
+      const submissionsResponse = await fetch(submissionsUrl, {
+        headers: {
+          'User-Agent': 'Q-E Portfolio contact@quanho.dev',
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!submissionsResponse.ok) {
+        throw new Error(`SEC EDGAR API returned ${submissionsResponse.status}: ${submissionsResponse.statusText}`);
+      }
+
+      const data = await submissionsResponse.json();
+
+      // Extract recent filings
+      const recentFilings = data.filings?.recent || {};
+      const forms = recentFilings.form || [];
+      const filingDates = recentFilings.filingDate || [];
+      const accessionNumbers = recentFilings.accessionNumber || [];
+      const primaryDocuments = recentFilings.primaryDocument || [];
+      const descriptions = recentFilings.primaryDocDescription || [];
+
+      // Filter by filing type if specified
+      const filings = forms.map((form: string, index: number) => {
+        if (filingType !== 'all' && form !== filingType) {
+          return null;
+        }
+
+        const accession = accessionNumbers[index].replace(/-/g, '');
+
+        return {
+          form,
+          filingDate: filingDates[index],
+          accessionNumber: accessionNumbers[index],
+          description: descriptions[index],
+          documentUrl: `https://www.sec.gov/Archives/edgar/data/${parseInt(cik)}/${accession}/${primaryDocuments[index]}`,
+          filingUrl: `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${cik}&type=${form}&dateb=&owner=exclude&count=10`,
+        };
+      }).filter(Boolean).slice(0, limit);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              source: 'SEC EDGAR API',
+              company: {
+                name: data.name,
+                ticker: company.ticker,
+                cik,
+                sic: data.sic,
+                sicDescription: data.sicDescription,
+                category: data.category,
+                fiscalYearEnd: data.fiscalYearEnd,
+              },
+              query: { ticker, filingType, limit },
+              totalFilings: filings.length,
+              filings,
+              note: 'SEC filings are updated daily. Use documentUrl to access full filing text.',
+            }, null, 2),
+          },
+        ],
+      };
+    } catch (error: any) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error fetching SEC filings: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
   }
 
   private async analyzeFinancials(args: Record<string, unknown>): Promise<MCPToolResult> {
