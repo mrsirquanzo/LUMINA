@@ -33,6 +33,28 @@ export async function runOrchestration(
     }
   }
 
+  // Validate API keys before starting (for live mode)
+  if (!isDemo) {
+    const missingKeys: string[] = [];
+
+    if (!process.env.ANTHROPIC_API_KEY) {
+      missingKeys.push('ANTHROPIC_API_KEY');
+    }
+    if (!process.env.GOOGLE_API_KEY) {
+      missingKeys.push('GOOGLE_API_KEY');
+    }
+    if (!process.env.PERPLEXITY_API_KEY) {
+      missingKeys.push('PERPLEXITY_API_KEY');
+    }
+
+    if (missingKeys.length > 0) {
+      throw new Error(
+        `Missing required API keys: ${missingKeys.join(', ')}. ` +
+        `Please configure these environment variables in your Vercel project settings.`
+      );
+    }
+  }
+
   // Initialize conversation state
   const state: ConversationState = {
     query,

@@ -9,8 +9,17 @@ export class AnthropicClient implements ILLMClient {
 
   constructor(config: LLMClientConfig) {
     this.config = config;
+
+    const apiKey = config.apiKey || process.env.ANTHROPIC_API_KEY;
+
+    if (!apiKey) {
+      throw new Error(
+        'Anthropic API key is required. Please set ANTHROPIC_API_KEY environment variable.'
+      );
+    }
+
     this.client = new Anthropic({
-      apiKey: config.apiKey || process.env.ANTHROPIC_API_KEY || '',
+      apiKey: apiKey,
     });
   }
 
