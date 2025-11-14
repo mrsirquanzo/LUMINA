@@ -48,39 +48,40 @@ export default function AIProjectsPage() {
                   🚀 Solve Real Problems
                 </h3>
                 <p className="text-sm leading-relaxed">
-                  Each project addresses a specific inefficiency in biotech intelligence:
-                  manual data extraction, slow patent analysis, repetitive financial reviews.
-                  Building solutions demonstrates problem-solving through automation.
+                  I got tired of spending hours manually extracting data from 10-Ks,
+                  cross-referencing patent claims, and rebuilding the same financial models.
+                  Each tool here started as something I needed myself. If it saves me time,
+                  it probably helps others too.
                 </p>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  🔧 Technical Versatility
+                  🔧 Build Across the Stack
                 </h3>
                 <p className="text-sm leading-relaxed">
-                  From AI agent architectures (RAG, multi-agent systems) to design systems
-                  (component libraries, typography), I can work across the full stack. This
-                  adaptability is critical in fast-paced biotech environments.
+                  From RAG architectures and multi-agent orchestration to component libraries
+                  and typography systems, I work on whatever the problem needs. Backend, frontend,
+                  design. Being able to build end-to-end means shipping faster and iterating better.
                 </p>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  📊 Data-Driven Mindset
+                  📊 Track What Matters
                 </h3>
                 <p className="text-sm leading-relaxed">
-                  Every tool tracks metrics: time saved, accuracy rates, throughput improvements.
-                  This quantitative approach carries over to business intelligence—measuring
-                  impact, not just generating reports.
+                  Every tool tracks time saved, accuracy rates, and throughput. Not because
+                  metrics look good on a slide, but because you can't improve what you don't measure.
+                  I care about real results, not just polished outputs.
                 </p>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  🎯 Bias to Action
+                  🎯 Ship and Iterate
                 </h3>
                 <p className="text-sm leading-relaxed">
-                  These aren't academic exercises—they're production tools used for real analysis work.
-                  I ship products, iterate based on feedback, and continuously improve.
-                  The same mindset applies to any business intelligence challenge.
+                  These aren't portfolio pieces gathering dust. I use them for actual analysis work,
+                  find what breaks, fix it, and make it better. Shipping something that works beats
+                  planning something perfect every time.
                 </p>
               </div>
             </div>
