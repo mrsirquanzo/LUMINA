@@ -43,7 +43,7 @@ export class MCPClient {
     this.servers.set('patent_db', new PatentMCPServer(process.env.PATENT_API_KEY));
     this.servers.set('market_data', new MarketMCPServer(process.env.MARKET_DATA_API_KEY));
     this.servers.set('financial_db', new FinancialMCPServer(process.env.FINANCIAL_API_KEY));
-    this.servers.set('clinical_db', new ClinicalMCPServer());
+    this.servers.set('clinical_db', new ClinicalMCPServer(process.env.PUBMED_API_KEY));
     this.servers.set('regulatory_db', new RegulatoryMCPServer());
   }
 
