@@ -38,7 +38,7 @@ export default function AIProjectsClient({ projects }: AIProjectsClientProps) {
       ) : (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
-            No projects found in this category.
+            🧪 Brewing in the design lab
           </p>
         </div>
       )}
