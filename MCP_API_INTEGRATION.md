@@ -119,12 +119,24 @@ These APIs have free tiers but require registration.
 - **Success Predictions**: AI-powered probability estimates for trial outcomes
 
 **Current Implementation in Q·E Portfolio:**
-✅ **Simulated Integration** for demonstration purposes
+✅ **Hybrid Live/Simulated Integration** 🎯
+- **Live MCP Connection**: Direct SSE connection to `https://mcp.gosset.ai/sse` when OAuth token provided
+- **Automatic Fallback**: Uses simulated PTR data if `GOSSET_OAUTH_TOKEN` environment variable not set
+- **Smart Switching**: Application detects token presence and enables live connection automatically
+- **Portfolio-Ready**: Works out-of-the-box with simulated data, upgrades instantly with real token
+
+**Simulated Data (Fallback Mode):**
 - Mock PTR database with realistic data for 7 major indications
 - Trial benchmark data for Phase 2/3 across Alzheimer's, NSCLC, Melanoma
-- Two MCP tools: `estimate_trial_success_rate` and `get_trial_benchmarks`
+- Clinical agent tools: `estimate_trial_success_rate` and `get_trial_benchmarks`
 
-**Example Queries (Simulated Data):**
+**Live Data (With GOSSET_OAUTH_TOKEN):**
+- Direct access to 100,000+ verified drug assets
+- Real-time Phase Transition Rates from human-verified outcomes
+- AI-powered success probability predictions
+- Comprehensive trial benchmarks from actual pharmaceutical data
+
+**Example Queries:**
 ```typescript
 // Phase 2 → Phase 3 success rate for Alzheimer's Disease
 {
@@ -132,30 +144,50 @@ These APIs have free tiers but require registration.
   from_phase: "Phase 2",
   to_phase: "Phase 3"
 }
-// Returns: 23.4% success rate, 847 trials analyzed, 156 avg patients/arm
+// Simulated: 23.4% success rate, 847 trials analyzed, 156 avg patients/arm
+// Live API: Real verified data from Gosset.ai pharmaceutical database
 
 // Trial design benchmarks
 {
   indication: "Melanoma",
   phase: "Phase 2"
 }
-// Returns: 128 avg sample size, ORR/DOR/PFS endpoints, 15-month duration
+// Simulated: 128 avg sample size, ORR/DOR/PFS endpoints, 15-month duration
+// Live API: Actual benchmark data from verified melanoma trials
 ```
 
-**Why Simulated for Portfolio:**
-- Demonstrates awareness of cutting-edge pharmaceutical intelligence tools
-- Shows MCP integration capabilities without API costs
-- Data based on realistic biotech industry benchmarks
-- Can be upgraded to live API for production use
+**How to Enable Live Gosset Connection:**
 
-**To Enable Live Integration:**
-1. Contact Gosset.ai for API access
-2. Install Python SDK: `pip install gosset[agents]`
-3. Authenticate: `gosset get-token` (OAuth browser flow)
-4. Set environment variable: `GOSSET_OAUTH_TOKEN=your_token`
-5. Replace simulated methods in `lib/mcp/clinicalServer.ts`
+**Option 1: Python SDK (Recommended)**
+```bash
+# Install Gosset SDK
+pip install gosset[agents]
 
-**Disclaimer:** Current implementation uses simulated data for portfolio demonstration. Real Gosset.ai provides verified historical outcomes.
+# Authenticate (opens browser for OAuth)
+gosset get-token
+
+# Token automatically saved - add to .env.local
+echo "GOSSET_OAUTH_TOKEN=your_actual_token_here" >> .env.local
+```
+
+**Option 2: Contact Gosset.ai**
+1. Visit https://gosset.ai or GitHub: https://github.com/gosset-ai
+2. Contact sales for API access
+3. Receive OAuth token
+4. Add to `.env.local`: `GOSSET_OAUTH_TOKEN=your_token`
+
+**Implementation Details:**
+- File: `lib/mcp/gossetLiveServer.ts` - Live MCP SSE client
+- File: `lib/mcp/clinicalServer.ts` - Simulated fallback data
+- File: `lib/mcp/mcpClient.ts` - Automatic routing to live/simulated
+- Console logging shows connection status on startup
+
+**Deployment Note:**
+- Works on Vercel with `GOSSET_OAUTH_TOKEN` in environment variables
+- Falls back gracefully if token expires or API unavailable
+- No code changes needed to switch between live and simulated
+
+**Disclaimer:** Portfolio includes simulated data for demonstration. Add `GOSSET_OAUTH_TOKEN` for real pharmaceutical intelligence.
 
 ---
 

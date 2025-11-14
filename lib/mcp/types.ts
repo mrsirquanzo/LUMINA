@@ -6,7 +6,8 @@ export type MCPProvider =
   | 'market_data'    // Market intelligence, news
   | 'financial_db'   // SEC filings, financial data
   | 'clinical_db'    // ClinicalTrials.gov, PubMed
-  | 'regulatory_db'; // FDA, EMA databases
+  | 'regulatory_db'  // FDA, EMA databases
+  | 'gosset_db';     // Gosset.ai pharmaceutical intelligence (live MCP)
 
 export interface MCPResource {
   uri: string;

@@ -8,12 +8,13 @@ import { MarketMCPServer } from './marketServer';
 import { FinancialMCPServer } from './financialServer';
 import { ClinicalMCPServer } from './clinicalServer';
 import { RegulatoryMCPServer } from './regulatoryServer';
+import { GossetLiveMCPServer } from './gossetLiveServer';
 
 /**
  * Map agent types to their primary MCP providers
  */
 const AGENT_TO_MCP_PROVIDER: Record<AgentType, MCPProvider[]> = {
-  clinical: ['clinical_db'],
+  clinical: ['clinical_db', 'gosset_db'],  // Clinical agent has both ClinicalTrials.gov AND Gosset.ai
   patent: ['patent_db'],
   financial: ['financial_db'],
   market_research: ['market_data'],
@@ -45,6 +46,17 @@ export class MCPClient {
     this.servers.set('financial_db', new FinancialMCPServer(process.env.FINANCIAL_API_KEY));
     this.servers.set('clinical_db', new ClinicalMCPServer(process.env.PUBMED_API_KEY));
     this.servers.set('regulatory_db', new RegulatoryMCPServer());
+
+    // Initialize Gosset.ai live MCP server (falls back to simulated data if no token)
+    const gossetServer = new GossetLiveMCPServer(process.env.GOSSET_OAUTH_TOKEN);
+    this.servers.set('gosset_db', gossetServer);
+
+    // Log Gosset connection status
+    if (gossetServer.isLiveEnabled()) {
+      console.log('✅ Gosset.ai live MCP connection enabled');
+    } else {
+      console.log('⚠️  Gosset.ai using simulated data (set GOSSET_OAUTH_TOKEN for live connection)');
+    }
   }
 
   /**
