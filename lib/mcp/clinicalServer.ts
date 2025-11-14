@@ -152,6 +152,53 @@ export class ClinicalMCPServer implements IMCPServer {
           required: ['indication', 'phase'],
         },
       },
+      {
+        name: 'estimate_trial_success_rate',
+        description: 'Estimate clinical trial success rates using Gosset.ai-style pharmaceutical intelligence (simulated data for demonstration)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            indication: {
+              type: 'string',
+              description: 'Disease or condition (e.g., "Alzheimer\'s Disease", "Non-Small Cell Lung Cancer")',
+            },
+            modality: {
+              type: 'string',
+              description: 'Drug modality (e.g., "CAR-T", "ADC", "Small Molecule", "mAb")',
+            },
+            from_phase: {
+              type: 'string',
+              description: 'Starting phase',
+              enum: ['Phase 1', 'Phase 2', 'Phase 3'],
+            },
+            to_phase: {
+              type: 'string',
+              description: 'Target phase',
+              enum: ['Phase 2', 'Phase 3', 'Approval'],
+            },
+          },
+          required: ['indication'],
+        },
+      },
+      {
+        name: 'get_trial_benchmarks',
+        description: 'Get comprehensive trial benchmarks including PTRs, sample sizes, and endpoints from pharmaceutical database (simulated Gosset.ai data)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            indication: {
+              type: 'string',
+              description: 'Disease or condition',
+            },
+            phase: {
+              type: 'string',
+              description: 'Clinical phase to benchmark',
+              enum: ['Phase 1', 'Phase 2', 'Phase 3'],
+            },
+          },
+          required: ['indication', 'phase'],
+        },
+      },
     ];
   }
 
@@ -187,6 +234,17 @@ export class ClinicalMCPServer implements IMCPServer {
           updateFrequency: 'continuous',
         },
       },
+      {
+        uri: 'clinical://databases/gosset-pharmaceutical-intelligence',
+        name: 'Gosset.ai Pharmaceutical Intelligence',
+        description: 'Comprehensive drug development database with trial outcomes and success rates (simulated for demonstration)',
+        mimeType: 'application/json',
+        metadata: {
+          coverage: '100,000+ drug assets with verified efficacy/safety data (simulated)',
+          updateFrequency: 'weekly',
+          features: 'Phase Transition Rates (PTRs), trial benchmarks, success probability predictions',
+        },
+      },
     ];
   }
 
@@ -202,6 +260,10 @@ export class ClinicalMCPServer implements IMCPServer {
         return await this.analyzeEfficacyData(args);
       case 'benchmark_trial_design':
         return await this.benchmarkTrialDesign(args);
+      case 'estimate_trial_success_rate':
+        return await this.estimateTrialSuccessRate(args);
+      case 'get_trial_benchmarks':
+        return await this.getTrialBenchmarks(args);
       default:
         return {
           content: [{ type: 'text', text: `Unknown tool: ${name}` }],
@@ -634,5 +696,236 @@ export class ClinicalMCPServer implements IMCPServer {
         },
       ],
     };
+  }
+
+  // Gosset.ai-style Pharmaceutical Intelligence Tools (Simulated Data)
+  private async estimateTrialSuccessRate(args: Record<string, unknown>): Promise<MCPToolResult> {
+    const indication = args.indication as string;
+    const modality = args.modality as string | undefined;
+    const fromPhase = args.from_phase as string | undefined;
+    const toPhase = args.to_phase as string | undefined;
+
+    // Mock Gosset-style PTR (Phase Transition Rate) database
+    const ptrDatabase: Record<string, any> = {
+      "alzheimer's disease": {
+        'Phase 1-Phase 2': { rate: 0.71, trials: 234, avgArmSize: 45 },
+        'Phase 2-Phase 3': { rate: 0.234, trials: 847, avgArmSize: 156 },
+        'Phase 3-Approval': { rate: 0.58, trials: 156, avgArmSize: 890 },
+      },
+      'non-small cell lung cancer': {
+        'Phase 1-Phase 2': { rate: 0.64, trials: 456, avgArmSize: 38 },
+        'Phase 2-Phase 3': { rate: 0.28, trials: 1203, avgArmSize: 142 },
+        'Phase 3-Approval': { rate: 0.52, trials: 387, avgArmSize: 654 },
+      },
+      'melanoma': {
+        'Phase 1-Phase 2': { rate: 0.68, trials: 189, avgArmSize: 42 },
+        'Phase 2-Phase 3': { rate: 0.31, trials: 423, avgArmSize: 128 },
+        'Phase 3-Approval': { rate: 0.61, trials: 134, avgArmSize: 512 },
+      },
+      'car-t': {
+        'Phase 1-Phase 2': { rate: 0.73, trials: 142, avgArmSize: 28 },
+        'Phase 2-Phase 3': { rate: 0.183, trials: 234, avgArmSize: 87 },
+        'Phase 3-Approval': { rate: 0.65, trials: 43, avgArmSize: 215 },
+      },
+      'multiple myeloma': {
+        'Phase 1-Phase 2': { rate: 0.69, trials: 312, avgArmSize: 51 },
+        'Phase 2-Phase 3': { rate: 0.295, trials: 687, avgArmSize: 168 },
+        'Phase 3-Approval': { rate: 0.57, trials: 201, avgArmSize: 723 },
+      },
+      'breast cancer': {
+        'Phase 1-Phase 2': { rate: 0.66, trials: 542, avgArmSize: 44 },
+        'Phase 2-Phase 3': { rate: 0.267, trials: 1456, avgArmSize: 178 },
+        'Phase 3-Approval': { rate: 0.54, trials: 412, avgArmSize: 812 },
+      },
+      'parkinson disease': {
+        'Phase 1-Phase 2': { rate: 0.62, trials: 178, avgArmSize: 48 },
+        'Phase 2-Phase 3': { rate: 0.189, trials: 423, avgArmSize: 142 },
+        'Phase 3-Approval': { rate: 0.43, trials: 89, avgArmSize: 567 },
+      },
+    };
+
+    // Find matching data (case-insensitive)
+    const key = (modality || indication).toLowerCase();
+    const data = ptrDatabase[key] || ptrDatabase[indication.toLowerCase()];
+
+    if (!data) {
+      // Generic fallback
+      const transitionKey = `${fromPhase || 'Phase 2'}-${toPhase || 'Phase 3'}`;
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              source: 'Gosset.ai Pharmaceutical Intelligence (simulated)',
+              indication,
+              modality,
+              transition: transitionKey,
+              successRate: 0.25,
+              trialsAnalyzed: 150,
+              avgArmSize: 120,
+              note: 'Generic estimate - specific indication data not available in simulation',
+              disclaimer: 'Simulated data for portfolio demonstration. Real Gosset.ai provides verified historical outcomes.',
+            }, null, 2),
+          },
+        ],
+      };
+    }
+
+    const transitionKey = `${fromPhase || 'Phase 2'}-${toPhase || 'Phase 3'}`;
+    const transitionData = data[transitionKey] || data['Phase 2-Phase 3'];
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify({
+            source: 'Gosset.ai Pharmaceutical Intelligence (simulated)',
+            indication,
+            modality,
+            transition: transitionKey,
+            successRate: transitionData.rate,
+            successRatePercent: `${(transitionData.rate * 100).toFixed(1)}%`,
+            trialsAnalyzed: transitionData.trials,
+            avgArmSize: transitionData.avgArmSize,
+            interpretation: this.interpretPTR(transitionData.rate),
+            disclaimer: 'Simulated data for portfolio demonstration. Real Gosset.ai provides verified historical outcomes from 100,000+ drug assets.',
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  private async getTrialBenchmarks(args: Record<string, unknown>): Promise<MCPToolResult> {
+    const indication = args.indication as string;
+    const phase = args.phase as string;
+
+    // Mock comprehensive trial benchmarks
+    const benchmarks: Record<string, any> = {
+      "alzheimer's disease": {
+        'Phase 2': {
+          avgSampleSize: 156,
+          medianDuration: 18,
+          commonEndpoints: ['ADAS-Cog', 'CDR-SB', 'MMSE', 'ADCS-ADL'],
+          biomarkerPrevalence: 0.67,
+          multiArmTrialRate: 0.34,
+          placeboResponseRate: 0.28,
+          dropoutRate: 0.22,
+        },
+        'Phase 3': {
+          avgSampleSize: 890,
+          medianDuration: 24,
+          commonEndpoints: ['CDR-SB', 'ADAS-Cog14', 'ADCS-ADL', 'NPI'],
+          biomarkerPrevalence: 0.78,
+          multiArmTrialRate: 0.21,
+          placeboResponseRate: 0.31,
+          dropoutRate: 0.19,
+        },
+      },
+      'non-small cell lung cancer': {
+        'Phase 2': {
+          avgSampleSize: 142,
+          medianDuration: 12,
+          commonEndpoints: ['ORR', 'PFS', 'OS', 'DCR'],
+          biomarkerPrevalence: 0.82,
+          multiArmTrialRate: 0.45,
+          placeboResponseRate: 0.15,
+          dropoutRate: 0.28,
+        },
+        'Phase 3': {
+          avgSampleSize: 654,
+          medianDuration: 18,
+          commonEndpoints: ['OS', 'PFS', 'ORR', 'QoL'],
+          biomarkerPrevalence: 0.89,
+          multiArmTrialRate: 0.32,
+          placeboResponseRate: 0.18,
+          dropoutRate: 0.24,
+        },
+      },
+      'melanoma': {
+        'Phase 2': {
+          avgSampleSize: 128,
+          medianDuration: 15,
+          commonEndpoints: ['ORR', 'DOR', 'PFS', 'OS'],
+          biomarkerPrevalence: 0.71,
+          multiArmTrialRate: 0.38,
+          placeboResponseRate: 0.12,
+          dropoutRate: 0.19,
+        },
+        'Phase 3': {
+          avgSampleSize: 512,
+          medianDuration: 21,
+          commonEndpoints: ['OS', 'PFS', 'ORR', 'DOR'],
+          biomarkerPrevalence: 0.84,
+          multiArmTrialRate: 0.29,
+          placeboResponseRate: 0.14,
+          dropoutRate: 0.17,
+        },
+      },
+    };
+
+    const data = benchmarks[indication.toLowerCase()];
+
+    if (!data || !data[phase]) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              source: 'Gosset.ai Trial Benchmarks (simulated)',
+              indication,
+              phase,
+              message: 'Benchmark data not available for this indication/phase combination in simulation',
+              disclaimer: 'Simulated data. Real Gosset.ai covers 100,000+ drug assets.',
+            }, null, 2),
+          },
+        ],
+      };
+    }
+
+    const phaseData = data[phase];
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify({
+            source: 'Gosset.ai Trial Benchmarks (simulated)',
+            indication,
+            phase,
+            benchmarks: {
+              sampleSize: {
+                average: phaseData.avgSampleSize,
+                recommendation: `Target ${Math.round(phaseData.avgSampleSize * 0.9)}-${Math.round(phaseData.avgSampleSize * 1.1)} patients per arm`,
+              },
+              trialDuration: {
+                median: `${phaseData.medianDuration} months`,
+                typical: `${phaseData.medianDuration - 3}-${phaseData.medianDuration + 3} months`,
+              },
+              endpoints: {
+                mostCommon: phaseData.commonEndpoints,
+                primary: phaseData.commonEndpoints[0],
+                keySecondary: phaseData.commonEndpoints.slice(1, 3),
+              },
+              designFeatures: {
+                biomarkerEnrichment: `${(phaseData.biomarkerPrevalence * 100).toFixed(0)}% of trials`,
+                multiArmDesign: `${(phaseData.multiArmTrialRate * 100).toFixed(0)}% of trials`,
+              },
+              expectedOutcomes: {
+                placeboResponse: `${(phaseData.placeboResponseRate * 100).toFixed(0)}%`,
+                dropoutRate: `${(phaseData.dropoutRate * 100).toFixed(0)}%`,
+              },
+            },
+            disclaimer: 'Simulated data for portfolio demonstration. Real Gosset.ai provides verified trial design benchmarks.',
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  private interpretPTR(rate: number): string {
+    if (rate >= 0.50) return 'Above average success rate - indication/modality shows strong clinical validation';
+    if (rate >= 0.30) return 'Moderate success rate - typical for this phase transition';
+    if (rate >= 0.20) return 'Below average success rate - high clinical risk';
+    return 'Very low success rate - significant clinical development challenges';
   }
 }

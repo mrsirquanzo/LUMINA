@@ -102,7 +102,64 @@ curl "https://api.fda.gov/drug/label.json?search=openfda.brand_name:keytruda&lim
 
 These APIs have free tiers but require registration.
 
-#### 5. **Alpha Vantage** (Stock & Financial Data)
+#### 5. **Gosset.ai Pharmaceutical Intelligence** (Trial Success Rates & Benchmarks) 🆕
+
+**Gosset.ai** provides programmatic access to comprehensive clinical trial outcome data, Phase Transition Rates (PTRs), and pharmaceutical intelligence across 100,000+ drug assets.
+
+- **Website**: https://gosset.ai
+- **GitHub**: https://github.com/gosset-ai
+- **Documentation**: https://docs.gosset.ai
+- **MCP Server**: `https://mcp.gosset.ai/sse`
+- **Pricing**: Contact sales (enterprise pricing)
+
+**What Makes Gosset Unique:**
+- **Verified Trial Outcomes**: Human-verified efficacy/safety data from papers, posters, decks, press releases (not just CT.gov registry)
+- **Phase Transition Rates (PTRs)**: Historical success rates by indication, modality, and phase
+- **Trial Benchmarks**: Sample sizes, endpoints, durations across therapeutic areas
+- **Success Predictions**: AI-powered probability estimates for trial outcomes
+
+**Current Implementation in Q·E Portfolio:**
+✅ **Simulated Integration** for demonstration purposes
+- Mock PTR database with realistic data for 7 major indications
+- Trial benchmark data for Phase 2/3 across Alzheimer's, NSCLC, Melanoma
+- Two MCP tools: `estimate_trial_success_rate` and `get_trial_benchmarks`
+
+**Example Queries (Simulated Data):**
+```typescript
+// Phase 2 → Phase 3 success rate for Alzheimer's Disease
+{
+  indication: "Alzheimer's Disease",
+  from_phase: "Phase 2",
+  to_phase: "Phase 3"
+}
+// Returns: 23.4% success rate, 847 trials analyzed, 156 avg patients/arm
+
+// Trial design benchmarks
+{
+  indication: "Melanoma",
+  phase: "Phase 2"
+}
+// Returns: 128 avg sample size, ORR/DOR/PFS endpoints, 15-month duration
+```
+
+**Why Simulated for Portfolio:**
+- Demonstrates awareness of cutting-edge pharmaceutical intelligence tools
+- Shows MCP integration capabilities without API costs
+- Data based on realistic biotech industry benchmarks
+- Can be upgraded to live API for production use
+
+**To Enable Live Integration:**
+1. Contact Gosset.ai for API access
+2. Install Python SDK: `pip install gosset[agents]`
+3. Authenticate: `gosset get-token` (OAuth browser flow)
+4. Set environment variable: `GOSSET_OAUTH_TOKEN=your_token`
+5. Replace simulated methods in `lib/mcp/clinicalServer.ts`
+
+**Disclaimer:** Current implementation uses simulated data for portfolio demonstration. Real Gosset.ai provides verified historical outcomes.
+
+---
+
+#### 6. **Alpha Vantage** (Stock & Financial Data)
 - **Base URL**: `https://www.alphavantage.co/query`
 - **Documentation**: https://www.alphavantage.co/documentation/
 - **Free Tier**: 25 requests/day, 5 requests/minute
