@@ -11,6 +11,7 @@ import { getDemoScenario, playDemoScenario } from './demoMultiAgentScenarios';
 import { createLLMClient } from './llm/clientFactory';
 import { AGENT_MODEL_CONFIG, SYNTHESIS_MODEL_CONFIG, getAgentName as getAgentDisplayName } from './llm/agentConfig';
 import { AGENT_PROMPTS, SYNTHESIS_PROMPT } from './agentPrompts';
+import { getMCPClient } from './mcp';
 
 /**
  * Main orchestration function
@@ -191,6 +192,10 @@ async function answerAgentQuestion(
   query: string,
   documents: ProcessedDocument[]
 ): Promise<string> {
+  // Get MCP client and context
+  const mcpClient = getMCPClient();
+  const mcpContext = await mcpClient.getContextForAgent(targetAgent);
+
   const userMessage = `You are being consulted by the ${getAgentName(fromAgent)} with a specific question.
 
 Original Analysis Query: ${query}
@@ -205,11 +210,16 @@ ${documents.length > 0 ? `\nDocuments available:\n${documents.map(d => `- ${d.fi
 
 Provide a focused, expert answer to their specific question. Be concise but thorough.`;
 
+  // Inject MCP context into system prompt if MCP is enabled
+  const systemPrompt = mcpClient.isEnabled()
+    ? AGENT_PROMPTS[targetAgent] + mcpContext
+    : AGENT_PROMPTS[targetAgent];
+
   // Create client for the target agent
   const client = createLLMClient(AGENT_MODEL_CONFIG[targetAgent]);
 
   const response = await client.sendMessage(
-    AGENT_PROMPTS[targetAgent],
+    systemPrompt,
     userMessage,
     { maxTokens: 2048 }
   );
@@ -413,7 +423,11 @@ async function callAgent(
   messages: AgentMessage[],
   additionalContext?: string
 ): Promise<{ response: string; usage?: { inputTokens: number; outputTokens: number } }> {
-  // Build user message
+  // Get MCP client and context
+  const mcpClient = getMCPClient();
+  const mcpContext = await mcpClient.getContextForAgent(agent);
+
+  // Build user message with MCP context
   const userMessage = `${query}
 
 ${additionalContext || ''}
@@ -422,12 +436,17 @@ ${documents.length > 0 ? `\nDocuments provided:\n${documents.map(d => `- ${d.fil
 
 Please provide your expert analysis.`;
 
+  // Inject MCP context into system prompt if MCP is enabled
+  const systemPrompt = mcpClient.isEnabled()
+    ? AGENT_PROMPTS[agent] + mcpContext
+    : AGENT_PROMPTS[agent];
+
   // Create client for this agent using its configured model
   const client = createLLMClient(AGENT_MODEL_CONFIG[agent]);
 
   // Send message using the appropriate LLM
   const llmResponse = await client.sendMessage(
-    AGENT_PROMPTS[agent],
+    systemPrompt,
     userMessage,
     { maxTokens: 4096 }
   );
