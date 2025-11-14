@@ -8,6 +8,7 @@ import AnalysisHistory from './AnalysisHistory';
 import CustomAgentTeamBuilder from './CustomAgentTeamBuilder';
 import { CustomAgentTeam } from '@/lib/customAgentTeams';
 import LoginModal from '@/components/shared/LoginModal';
+import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 
 const DEMO_SCENARIOS = [
   {
@@ -60,10 +61,22 @@ const DEMO_SCENARIOS = [
   },
 ];
 
+interface ProcessedDocument {
+  name: string;
+  fileName: string;
+  fileType: string;
+  extractedText?: string;
+  text?: string;
+  isImage: boolean;
+  base64?: string;
+  mimeType?: string;
+}
+
 export default function MultiAgentDemo() {
   const [mode, setMode] = useState<ExecutionMode>('thorough');
   const [isDemo, setIsDemo] = useState(true);
   const [query, setQuery] = useState('');
+  const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
   const [costEstimate, setCostEstimate] = useState<any>(null);
   const [isEstimating, setIsEstimating] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
@@ -84,7 +97,7 @@ export default function MultiAgentDemo() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query,
-          documents: [],
+          documents: processedDocuments,
           mode,
         }),
       });
@@ -98,7 +111,7 @@ export default function MultiAgentDemo() {
     } finally {
       setIsEstimating(false);
     }
-  }, [query, mode]);
+  }, [query, mode, processedDocuments]);
 
   // Get cost estimate when mode or query changes
   useEffect(() => {
@@ -168,6 +181,21 @@ export default function MultiAgentDemo() {
     setIsDemo(false);
   };
 
+  const handleFilesProcessed = (files: UploadedFile[]) => {
+    const newDocs: ProcessedDocument[] = files
+      .filter(f => f.status === 'processed')
+      .map(f => ({
+        name: f.name,
+        fileName: f.name,
+        fileType: f.type,
+        extractedText: f.extractedText,
+        text: f.extractedText,
+        isImage: false,
+      }));
+
+    setProcessedDocuments(prev => [...prev, ...newDocs]);
+  };
+
   // Check authentication on mount
   useEffect(() => {
     checkAuthentication();
@@ -209,7 +237,7 @@ export default function MultiAgentDemo() {
           </button>
           <MultiAgentCollaboration
             query={query}
-            documents={[]}
+            documents={processedDocuments}
             mode={mode}
             isDemo={isDemo}
             customAgents={selectedCustomTeam?.agents}
@@ -393,6 +421,19 @@ export default function MultiAgentDemo() {
                   ))}
                 </div>
               </div>
+
+              {/* File Upload - Live Mode Only */}
+              {!isDemo && (
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-700 mb-3">Upload Documents (Optional):</p>
+                  <FileUpload onFilesProcessed={handleFilesProcessed} />
+                  {processedDocuments.length > 0 && (
+                    <p className="text-sm text-gray-600 mt-2">
+                      {processedDocuments.length} document{processedDocuments.length !== 1 ? 's' : ''} uploaded
+                    </p>
+                  )}
+                </div>
+              )}
             </>
           )}
 
