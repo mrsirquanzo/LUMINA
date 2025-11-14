@@ -523,6 +523,10 @@ export default function RegulatoryExpertAgent() {
             <p>Complex regulatory reasoning, nuanced policy interpretation, strategic planning</p>
           </div>
           <div>
+            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
+            <p>FDA openFDA • EMA (European Medicines Agency) • Regulatory Databases</p>
+          </div>
+          <div>
             <p className="font-medium text-gray-900 mb-1">Specialization</p>
             <p>FDA/EMA pathways, IND/BLA strategy, CMC requirements, clinical endpoints</p>
           </div>

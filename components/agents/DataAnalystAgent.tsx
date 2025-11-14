@@ -492,6 +492,10 @@ export default function DataAnalystAgent() {
             <p>Advanced reasoning, complex data analysis, nuanced interpretation</p>
           </div>
           <div>
+            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
+            <p>ClinicalTrials.gov • PubMed • Gosset.ai Pharmaceutical Intelligence</p>
+          </div>
+          <div>
             <p className="font-medium text-gray-900 mb-1">Capabilities</p>
             <p>PDF, Excel, CSV analysis • Vision API • Clinical trial data</p>
           </div>

@@ -479,6 +479,10 @@ export default function FinancialAnalystAgent() {
             <p>Massive context window, multi-document analysis, quantitative reasoning</p>
           </div>
           <div>
+            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
+            <p>SEC EDGAR • Alpha Vantage • Financial Data APIs</p>
+          </div>
+          <div>
             <p className="font-medium text-gray-900 mb-1">Specialization</p>
             <p>Biotech valuation, financial modeling, M&A analysis, DCF models</p>
           </div>

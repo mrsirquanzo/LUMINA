@@ -616,6 +616,10 @@ export default function MarketResearchAgent() {
             <p>Real-time market data, live competitive intelligence, current trends</p>
           </div>
           <div>
+            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
+            <p>Market Data APIs • Industry News Sources • Business Intelligence</p>
+          </div>
+          <div>
             <p className="font-medium text-gray-900 mb-1">Specialization</p>
             <p>Market sizing, competitive analysis, pricing strategy, revenue forecasting</p>
           </div>

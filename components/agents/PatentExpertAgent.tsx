@@ -479,6 +479,10 @@ export default function PatentExpertAgent() {
             <p>Real-time web search, current patent data, live USPTO/EPO access</p>
           </div>
           <div>
+            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
+            <p>USPTO • Google Patents • EPO (European Patent Office)</p>
+          </div>
+          <div>
             <p className="font-medium text-gray-900 mb-1">Specialization</p>
             <p>Patent landscape analysis, FTO opinions, IP strategy, prior art search</p>
           </div>
