@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { ProcessedDocument, ExecutionMode, SSEEvent, AgentType } from '@/lib/multiAgentTypes';
 import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { saveAnalysisToHistory } from '@/lib/analysisHistory';
+import ExportButton from '@/components/shared/ExportButton';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -754,6 +755,13 @@ ${synthesis}
 
           {/* Export Actions */}
           <div className="mb-4 flex items-center gap-2 flex-wrap">
+            <ExportButton
+              messages={[
+                { role: 'user', content: query, timestamp: new Date() },
+                { role: 'assistant', content: synthesis, timestamp: new Date(), cost }
+              ]}
+              agentName="Multi-Agent Analysis"
+            />
             <button
               onClick={handleCopyToClipboard}
               className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
