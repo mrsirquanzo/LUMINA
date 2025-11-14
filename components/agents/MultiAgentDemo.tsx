@@ -269,8 +269,8 @@ export default function MultiAgentDemo() {
             Multi-Agent Collaboration Demo
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Experience how specialized AI agents work together to analyze complex biotech scenarios.
-            Clinical, Patent, and Financial analysts collaborate to provide comprehensive insights.
+            Experience how 5 specialized AI agents powered by different models (Claude Sonnet 4, Gemini Pro, Perplexity) work together to analyze complex biotech scenarios.
+            Clinical, Patent, Financial, Market Research, and Regulatory experts collaborate to provide comprehensive insights.
           </p>
         </div>
 
