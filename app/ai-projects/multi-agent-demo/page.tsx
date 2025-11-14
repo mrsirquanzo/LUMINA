@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import MultiAgentDemo from '@/components/agents/MultiAgentDemo';
+import MultiAgentDemoWrapper from '@/components/agents/MultiAgentDemoWrapper';
 
 export const metadata: Metadata = {
   title: 'Multi-Agent Collaboration Demo | Quan Ho',
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function MultiAgentDemoPage() {
-  return <MultiAgentDemo />;
+  return <MultiAgentDemoWrapper />;
 }
