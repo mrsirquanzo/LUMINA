@@ -1,39 +1,8 @@
-import Anthropic from '@anthropic-ai/sdk';
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
-
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
-// System prompt for the Patent Expert Agent
-const SYSTEM_PROMPT = `You are an expert patent analyst specializing in biotechnology and pharmaceutical intellectual property with deep experience in:
-
-- Patent landscape analysis and freedom-to-operate assessments
-- Claims construction and patent validity analysis
-- Competitive IP intelligence and litigation risk assessment
-- Patent family analysis across jurisdictions
-- Technology trends and white space identification
-- Due diligence for M&A and licensing deals
-
-Your role is to:
-1. Analyze patent documents for strategic insights
-2. Identify key claims, scope, and potential blocking patents
-3. Assess patent strength, validity risks, and prior art
-4. Compare competitive patent portfolios
-5. Identify trends in patent filings and technology evolution
-6. Provide actionable IP strategy recommendations
-
-Guidelines:
-- Be precise with patent numbers, filing dates, and jurisdictions
-- **IMPORTANT: When documents are provided, cite them inline using [Source: filename] format**
-- When making claims from uploaded documents, reference which document the information came from
-- Explain complex patent concepts in accessible language
-- Highlight both IP opportunities and risks
-- Note important patent family relationships
-- Consider both technical and business implications
-- Ask clarifying questions when patent details are unclear`;
+import { createLLMClient } from '@/lib/llm/clientFactory';
+import { AGENT_MODEL_CONFIG } from '@/lib/llm/agentConfig';
+import { AGENT_PROMPTS } from '@/lib/agentPrompts';
 
 export async function POST(req: NextRequest) {
   try {
@@ -52,80 +21,53 @@ export async function POST(req: NextRequest) {
     // Validate messages
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json(
-        { error: 'Messages array is required and must not be empty' },
+        { error: 'Messages array is required' },
         { status: 400 }
       );
     }
 
-    // If documents are provided, add them to the first user message
-    const processedMessages = [...messages];
+    // Get the last user message
+    const lastUserMessage = messages.filter((m: any) => m.role === 'user').pop();
+    if (!lastUserMessage) {
+      return NextResponse.json(
+        { error: 'No user message found' },
+        { status: 400 }
+      );
+    }
+
+    // Build context with documents if provided
+    let userMessage = typeof lastUserMessage.content === 'string'
+      ? lastUserMessage.content
+      : lastUserMessage.content.find((c: any) => c.type === 'text')?.text || '';
+
     if (documents && documents.length > 0) {
-      // Find the last user message or create one
-      const lastUserMsgIndex = processedMessages.map(m => m.role).lastIndexOf('user');
-
-      if (lastUserMsgIndex !== -1) {
-        const lastUserMsg = processedMessages[lastUserMsgIndex];
-
-        // Convert message content to array format if it's a string
-        const content = typeof lastUserMsg.content === 'string'
-          ? [{ type: 'text', text: lastUserMsg.content }]
-          : [...lastUserMsg.content];
-
-        // Add document content blocks
-        for (const doc of documents) {
-          if (doc.isImage && doc.base64) {
-            // Add image content block
-            content.push({
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: doc.mimeType,
-                data: doc.base64,
-              },
-            });
-          } else {
-            const text = doc.extractedText || doc.text || '';
-            if (text) {
-              // Add document text as a content block
-              const fileName = doc.fileName || doc.name || 'Unknown';
-              content.push({
-                type: 'text',
-                text: `\n\n--- Document: ${fileName} ---\n${text}`,
-              });
-            }
-          }
+      const docContext = documents.map((doc: any) => {
+        if (doc.text) {
+          return `\n\n--- Document: ${doc.fileName} ---\n${doc.text}`;
         }
-
-        processedMessages[lastUserMsgIndex] = {
-          ...lastUserMsg,
-          content,
-        };
-      }
+        return `- ${doc.fileName}`;
+      }).join('\n');
+      userMessage += `\n\nDocuments provided:${docContext}`;
     }
 
     // Validate API key
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.error('ANTHROPIC_API_KEY is not set');
+    if (!process.env.PERPLEXITY_API_KEY) {
+      console.error('PERPLEXITY_API_KEY is not set');
       return NextResponse.json(
         { error: 'API configuration error. Please contact support.' },
         { status: 500 }
       );
     }
 
-    // Call Claude API
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4096,
-      system: SYSTEM_PROMPT,
-      messages: processedMessages,
-    });
+    // Create LLM client for patent expert agent (Perplexity)
+    const client = createLLMClient(AGENT_MODEL_CONFIG.patent);
 
-    // Extract the assistant's message
-    const assistantMessage = response.content[0];
-
-    if (assistantMessage.type !== 'text') {
-      throw new Error('Unexpected response type from Claude API');
-    }
+    // Call LLM
+    const response = await client.sendMessage(
+      AGENT_PROMPTS.patent,
+      userMessage,
+      { maxTokens: 4096 }
+    );
 
     // Build citations list from documents
     const citations = documents && documents.length > 0
@@ -133,19 +75,20 @@ export async function POST(req: NextRequest) {
       : [];
 
     return NextResponse.json({
-      message: assistantMessage.text,
+      message: response.content,
       citations,
-      usage: {
-        input_tokens: response.usage.input_tokens,
-        output_tokens: response.usage.output_tokens,
-      },
+      usage: response.usage ? {
+        input_tokens: response.usage.inputTokens,
+        output_tokens: response.usage.outputTokens,
+      } : undefined,
+      model: AGENT_MODEL_CONFIG.patent.model,
+      provider: AGENT_MODEL_CONFIG.patent.provider,
     });
-
   } catch (error: any) {
-    console.error('Error in Patent Expert API:', error);
+    console.error('Patent Expert Agent Error:', error);
 
-    // Handle Anthropic API specific errors
-    if (error?.status === 401) {
+    // Handle API-specific errors
+    if (error?.status === 401 || error?.message?.includes('API key')) {
       return NextResponse.json(
         { error: 'Invalid API key. Please check your configuration.' },
         { status: 401 }
@@ -159,11 +102,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generic error response
     return NextResponse.json(
       {
-        error: 'An error occurred while processing your request. Please try again.',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        error: error.message || 'Failed to process request',
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
       { status: 500 }
     );
@@ -175,7 +117,8 @@ export async function GET() {
   return NextResponse.json({
     name: 'Patent Expert Agent API',
     status: 'active',
-    model: 'claude-sonnet-4-20250514',
-    description: 'AI agent for analyzing biotech patents and IP strategy',
+    model: AGENT_MODEL_CONFIG.patent.model,
+    provider: AGENT_MODEL_CONFIG.patent.provider,
+    description: 'AI agent for analyzing biotech patents and IP strategy with real-time search',
   });
 }

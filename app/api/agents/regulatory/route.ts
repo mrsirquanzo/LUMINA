@@ -41,23 +41,23 @@ export async function POST(req: NextRequest) {
       userMessage += `\n\nDocuments provided:\n${documents.map((d: any) => `- ${d.fileName}`).join('\n')}`;
     }
 
-    // Create LLM client for market research agent (Perplexity)
-    const client = createLLMClient(AGENT_MODEL_CONFIG.market_research);
+    // Create LLM client for regulatory agent (Claude Sonnet 4)
+    const client = createLLMClient(AGENT_MODEL_CONFIG.regulatory);
 
     // Call LLM
     const response = await client.sendMessage(
-      AGENT_PROMPTS.market_research,
+      AGENT_PROMPTS.regulatory,
       userMessage,
       { maxTokens: 4096 }
     );
 
     return NextResponse.json({
       response: response.content,
-      model: AGENT_MODEL_CONFIG.market_research.model,
-      provider: AGENT_MODEL_CONFIG.market_research.provider,
+      model: AGENT_MODEL_CONFIG.regulatory.model,
+      provider: AGENT_MODEL_CONFIG.regulatory.provider,
     });
   } catch (error: any) {
-    console.error('Market Research Agent Error:', error);
+    console.error('Regulatory Agent Error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to process request' },
       { status: 500 }

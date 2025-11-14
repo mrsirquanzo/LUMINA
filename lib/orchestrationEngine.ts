@@ -1,4 +1,3 @@
-import Anthropic from '@anthropic-ai/sdk';
 import {
   ProcessedDocument,
   ExecutionMode,
@@ -9,24 +8,9 @@ import {
   ExecutionPlan,
 } from './multiAgentTypes';
 import { getDemoScenario, playDemoScenario } from './demoMultiAgentScenarios';
-
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
-
-// Agent system prompts (imported from existing agents)
-const AGENT_PROMPTS = {
-  clinical: `You are an expert biotech and pharmaceutical data analyst. Analyze clinical trial data, efficacy, and safety with scientific rigor. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_PATENT: "question"] or [ASK_FINANCIAL: "question"] or [ASK_REGULATORY: "question"] or [ASK_MARKET: "question"].`,
-
-  patent: `You are an expert patent analyst specializing in biotechnology IP. Analyze patents, FTO, and competitive landscapes. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_CLINICAL: "question"] or [ASK_FINANCIAL: "question"] or [ASK_REGULATORY: "question"] or [ASK_MARKET: "question"].`,
-
-  financial: `You are an expert biotech financial analyst. Analyze financials, valuations, and deal structures. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_CLINICAL: "question"] or [ASK_PATENT: "question"] or [ASK_REGULATORY: "question"] or [ASK_MARKET: "question"].`,
-
-  regulatory: `You are an expert regulatory affairs specialist for biotech and pharmaceutical products. Analyze regulatory pathways, compliance requirements, FDA/EMA guidance, and approval timelines. Assess regulatory risk, CMC requirements, and post-market obligations. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_CLINICAL: "question"] or [ASK_PATENT: "question"] or [ASK_FINANCIAL: "question"] or [ASK_MARKET: "question"].`,
-
-  market_research: `You are an expert market research analyst specializing in biotech and pharmaceutical markets. Analyze market size, competitive landscape, pricing dynamics, payer dynamics, and commercial potential. Assess market access, reimbursement, and revenue forecasts. When documents are provided, cite them inline using [Source: filename] format. If you need information from other experts, use [ASK_CLINICAL: "question"] or [ASK_PATENT: "question"] or [ASK_FINANCIAL: "question"] or [ASK_REGULATORY: "question"].`,
-};
+import { createLLMClient } from './llm/clientFactory';
+import { AGENT_MODEL_CONFIG, SYNTHESIS_MODEL_CONFIG, getAgentName as getAgentDisplayName } from './llm/agentConfig';
+import { AGENT_PROMPTS, SYNTHESIS_PROMPT } from './agentPrompts';
 
 /**
  * Main orchestration function
@@ -42,15 +26,10 @@ export async function runOrchestration(
 ): Promise<void> {
   // If demo mode, play pre-recorded scenario
   if (isDemo && demoScenarioId) {
-    console.log('[Orchestration] Demo mode detected, loading scenario:', demoScenarioId);
     const scenario = getDemoScenario(demoScenarioId);
     if (scenario) {
-      console.log('[Orchestration] Playing demo scenario with', scenario.events.length, 'events');
       await playDemoScenario(scenario, sendEvent, 1.0); // Real-time playback
-      console.log('[Orchestration] Demo scenario playback complete');
       return;
-    } else {
-      console.error('[Orchestration] Demo scenario not found:', demoScenarioId);
     }
   }
 
@@ -98,7 +77,7 @@ export async function runOrchestration(
  * Create initial execution plan
  */
 function createInitialPlan(mode: ExecutionMode, customAgents?: AgentType[]): ExecutionPlan {
-  const agents: AgentType[] = customAgents || ['clinical', 'patent', 'financial'];
+  const agents: AgentType[] = customAgents || ['clinical', 'patent', 'financial', 'market_research', 'regulatory'];
 
   if (mode === 'fast') {
     // Parallel execution
@@ -142,6 +121,81 @@ function getPlanDescription(plan: ExecutionPlan): string {
 }
 
 /**
+ * Parse agent questions from response text
+ */
+interface ParsedQuestion {
+  targetAgent: AgentType;
+  question: string;
+  raw: string;
+}
+
+function parseAgentQuestions(response: string, fromAgent: AgentType): ParsedQuestion[] {
+  const questions: ParsedQuestion[] = [];
+
+  // Pattern: [ASK_CLINICAL: "question"], [ASK_PATENT: "question"], etc.
+  const patterns = [
+    { pattern: /\[ASK_CLINICAL:\s*"([^"]+)"\]/g, target: 'clinical' as AgentType },
+    { pattern: /\[ASK_PATENT:\s*"([^"]+)"\]/g, target: 'patent' as AgentType },
+    { pattern: /\[ASK_FINANCIAL:\s*"([^"]+)"\]/g, target: 'financial' as AgentType },
+    { pattern: /\[ASK_MARKET:\s*"([^"]+)"\]/g, target: 'market' as AgentType },
+    { pattern: /\[ASK_REGULATORY:\s*"([^"]+)"\]/g, target: 'regulatory' as AgentType },
+  ];
+
+  for (const { pattern, target } of patterns) {
+    // Skip if asking self
+    if (target === fromAgent) continue;
+
+    let match;
+    while ((match = pattern.exec(response)) !== null) {
+      questions.push({
+        targetAgent: target,
+        question: match[1],
+        raw: match[0],
+      });
+    }
+  }
+
+  return questions;
+}
+
+/**
+ * Answer a question from another agent
+ */
+async function answerAgentQuestion(
+  targetAgent: AgentType,
+  question: string,
+  fromAgent: AgentType,
+  context: string,
+  query: string,
+  documents: ProcessedDocument[]
+): Promise<string> {
+  const userMessage = `You are being consulted by the ${getAgentName(fromAgent)} with a specific question.
+
+Original Analysis Query: ${query}
+
+${getAgentName(fromAgent)}'s Context:
+${context}
+
+Their Question to You:
+${question}
+
+${documents.length > 0 ? `\nDocuments available:\n${documents.map(d => `- ${d.fileName}`).join('\n')}` : ''}
+
+Provide a focused, expert answer to their specific question. Be concise but thorough.`;
+
+  // Create client for the target agent
+  const client = createLLMClient(AGENT_MODEL_CONFIG[targetAgent]);
+
+  const response = await client.sendMessage(
+    AGENT_PROMPTS[targetAgent],
+    userMessage,
+    { maxTokens: 2048 }
+  );
+
+  return response.content;
+}
+
+/**
  * Execute fast mode (parallel)
  */
 async function executeFastMode(
@@ -158,7 +212,7 @@ async function executeFastMode(
       },
     });
 
-    const response = await callAgent(
+    const { response } = await callAgent(
       step.agent,
       state.query,
       state.documents,
@@ -196,6 +250,7 @@ async function executeThoroughMode(
   sendEvent: (event: SSEEvent) => void
 ): Promise<void> {
   const agentResponses: Map<AgentType, string> = new Map();
+  const agentQAs: Map<AgentType, Array<{ question: string; answer: string; from: AgentType }>> = new Map();
 
   // Execute agents sequentially
   for (const step of state.plan.steps) {
@@ -213,7 +268,17 @@ async function executeThoroughMode(
       context.push(`\n--- ${getAgentName(agent)} Analysis ---\n${response}`);
     }
 
-    const response = await callAgent(
+    // Add any Q&As involving this agent
+    const qas = agentQAs.get(step.agent) || [];
+    if (qas.length > 0) {
+      context.push('\n--- Questions You Answered ---');
+      qas.forEach(qa => {
+        context.push(`Q from ${getAgentName(qa.from)}: ${qa.question}`);
+        context.push(`Your Answer: ${qa.answer}\n`);
+      });
+    }
+
+    const { response } = await callAgent(
       step.agent,
       state.query,
       state.documents,
@@ -231,8 +296,67 @@ async function executeThoroughMode(
       },
     });
 
-    // Check for inter-agent questions (Phase 2 feature)
-    // For now, just continue to next agent
+    // Parse for inter-agent questions
+    const questions = parseAgentQuestions(response, step.agent);
+
+    if (questions.length > 0) {
+      // Process each question
+      for (const { targetAgent, question, raw } of questions) {
+        // Send question event
+        sendEvent({
+          type: 'agent_question',
+          data: {
+            from: getAgentName(step.agent),
+            to: getAgentName(targetAgent),
+            question,
+          },
+        });
+
+        // Get answer from target agent
+        sendEvent({
+          type: 'agent_thinking',
+          data: {
+            agent: getAgentName(targetAgent),
+            progress: `Answering question from ${getAgentName(step.agent)}...`,
+          },
+        });
+
+        const answer = await answerAgentQuestion(
+          targetAgent,
+          question,
+          step.agent,
+          agentResponses.get(step.agent) || '',
+          state.query,
+          state.documents
+        );
+
+        // Store the Q&A for the target agent to see later
+        if (!agentQAs.has(targetAgent)) {
+          agentQAs.set(targetAgent, []);
+        }
+        agentQAs.get(targetAgent)!.push({
+          question,
+          answer,
+          from: step.agent,
+        });
+
+        // Update the asking agent's response with the answer (replace placeholder)
+        const updatedResponse = agentResponses.get(step.agent)!.replace(
+          raw,
+          `\n**Question to ${getAgentName(targetAgent)}:** ${question}\n\n**${getAgentName(targetAgent)}'s Answer:** ${answer}\n`
+        );
+        agentResponses.set(step.agent, updatedResponse);
+
+        // Send updated response event
+        sendEvent({
+          type: 'agent_response',
+          data: {
+            agent: getAgentName(step.agent),
+            response: updatedResponse,
+          },
+        });
+      }
+    }
   }
 
   // Synthesize results
@@ -258,7 +382,7 @@ async function executeThoroughMode(
 }
 
 /**
- * Call a specific agent
+ * Call a specific agent using its configured LLM
  */
 async function callAgent(
   agent: AgentType,
@@ -266,12 +390,8 @@ async function callAgent(
   documents: ProcessedDocument[],
   messages: AgentMessage[],
   additionalContext?: string
-): Promise<string> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
-  }
-
-  // Build messages for Claude
+): Promise<{ response: string; usage?: { inputTokens: number; outputTokens: number } }> {
+  // Build user message
   const userMessage = `${query}
 
 ${additionalContext || ''}
@@ -280,30 +400,20 @@ ${documents.length > 0 ? `\nDocuments provided:\n${documents.map(d => `- ${d.fil
 
 Please provide your expert analysis.`;
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
-    system: [
-      {
-        type: 'text',
-        text: AGENT_PROMPTS[agent],
-        cache_control: { type: 'ephemeral' },
-      },
-    ],
-    messages: [
-      {
-        role: 'user',
-        content: userMessage,
-      },
-    ],
-  });
+  // Create client for this agent using its configured model
+  const client = createLLMClient(AGENT_MODEL_CONFIG[agent]);
 
-  const message = response.content[0];
-  if (message.type !== 'text') {
-    throw new Error('Unexpected response type');
-  }
+  // Send message using the appropriate LLM
+  const llmResponse = await client.sendMessage(
+    AGENT_PROMPTS[agent],
+    userMessage,
+    { maxTokens: 4096 }
+  );
 
-  return message.text;
+  return {
+    response: llmResponse.content,
+    usage: llmResponse.usage,
+  };
 }
 
 /**
@@ -313,110 +423,30 @@ async function synthesizeResults(
   query: string,
   results: Array<{ agent: AgentType; response: string }>
 ): Promise<string> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
-  }
-
   const combinedAnalysis = results
     .map(r => `\n# ${getAgentName(r.agent)} Analysis\n\n${r.response}`)
     .join('\n\n---\n');
 
-  const synthesisPrompt = `You are a senior biotech strategist synthesizing input from multiple expert analysts.
-
-Original Query: ${query}
+  const userMessage = `Original Query: ${query}
 
 Expert Analyses:
-${combinedAnalysis}
+${combinedAnalysis}`;
 
-Your task:
-1. Integrate findings across clinical, patent, and financial domains
-2. Identify key insights and cross-domain connections
-3. Highlight agreements and contradictions
-4. Provide a clear, actionable recommendation
-5. Structure as an executive summary suitable for decision-makers
+  // Use synthesis model configuration (Claude Sonnet 4)
+  const client = createLLMClient(SYNTHESIS_MODEL_CONFIG);
 
-IMPORTANT: Format your response EXACTLY as follows:
+  const response = await client.sendMessage(
+    SYNTHESIS_PROMPT,
+    userMessage,
+    { maxTokens: 4096 }
+  );
 
-## Executive Summary
-[2-3 paragraph overview of the key recommendation and rationale]
-
-## Key Findings
-
-### Clinical Analysis
-• [Key finding 1]
-• [Key finding 2]
-• [Key finding 3]
-
-### Patent/IP Analysis
-• [Key finding 1]
-• [Key finding 2]
-• [Key finding 3]
-
-### Financial Analysis
-• [Key finding 1]
-• [Key finding 2]
-• [Key finding 3]
-
-## Cross-Domain Insights
-[2-3 paragraphs discussing how findings connect across domains]
-
-## Risk Assessment
-
-### High Priority Risks
-• [Risk 1 with mitigation]
-• [Risk 2 with mitigation]
-
-### Medium Priority Risks
-• [Risk 1 with mitigation]
-• [Risk 2 with mitigation]
-
-## Final Recommendation
-[Clear GO/NO-GO or specific action recommendation with supporting rationale]
-
-Be specific, quantitative, and actionable. Use actual numbers, dates, and technical details from the expert analyses.`;
-
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
-    system: [
-      {
-        type: 'text',
-        text: 'You are a senior biotech strategist and executive advisor.',
-        cache_control: { type: 'ephemeral' },
-      },
-    ],
-    messages: [
-      {
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: synthesisPrompt,
-            cache_control: { type: 'ephemeral' },
-          },
-        ],
-      },
-    ],
-  });
-
-  const message = response.content[0];
-  if (message.type !== 'text') {
-    throw new Error('Unexpected response type');
-  }
-
-  return message.text;
+  return response.content;
 }
 
 /**
- * Get human-readable agent name
+ * Get human-readable agent name (re-export from agentConfig)
  */
 function getAgentName(agent: AgentType): string {
-  const names = {
-    clinical: 'Clinical Analyst',
-    patent: 'Patent Expert',
-    financial: 'Financial Analyst',
-    regulatory: 'Regulatory Expert',
-    market_research: 'Market Research Analyst',
-  };
-  return names[agent];
+  return getAgentDisplayName(agent);
 }
