@@ -131,8 +131,8 @@ After deployment, verify each agent is using the correct model:
 |-------|-------|----------|
 | Clinical Data Analyst | claude-sonnet-4-20250514 | anthropic |
 | Regulatory Expert | claude-sonnet-4-20250514 | anthropic |
-| Patent Expert | llama-3.1-sonar-large-128k-online | perplexity |
-| Market Research | llama-3.1-sonar-large-128k-online | perplexity |
+| Patent Expert | sonar-pro | perplexity |
+| Market Research | sonar-pro | perplexity |
 | Financial Analyst | gemini-pro | google |
 
 ---

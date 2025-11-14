@@ -36,7 +36,7 @@ You need **three API keys** to use all agents:
 - Patent Expert
 - Market Research Agent
 
-**Why:** Perplexity Sonar Large provides real-time web search capabilities, essential for accessing live patent databases and current market intelligence.
+**Why:** Perplexity Sonar Pro provides real-time web search capabilities with deep retrieval, essential for accessing live patent databases and current market intelligence.
 
 **Get your key:**
 1. Visit https://www.perplexity.ai/settings/api
