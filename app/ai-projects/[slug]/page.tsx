@@ -130,7 +130,7 @@ export default async function AIProjectPage({ params }: Props) {
 
           {/* Prominent Demo Button */}
           {demoUrl && (
-            <div className="text-center my-8">
+            <div className="text-center my-4">
               <a
                 href={demoUrl}
                 className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
@@ -144,7 +144,7 @@ export default async function AIProjectPage({ params }: Props) {
       </Section>
 
       {/* Main Content Section */}
-      <Section background="white" className="pt-8">
+      <Section background="white" className="pt-6">
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none">
             <MDXContent />
