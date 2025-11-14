@@ -23,7 +23,7 @@ You need **three API keys** to use all agents:
 **Used by:**
 - Financial Analyst
 
-**Why:** Gemini Pro offers large context windows ideal for analyzing lengthy financial documents and SEC filings, while being cost-effective for high-volume analysis.
+**Why:** Gemini 2.0 Flash offers large context windows ideal for analyzing lengthy financial documents and SEC filings, with fast processing and cost-effective pricing for high-volume analysis.
 
 **Get your key:**
 1. Visit https://aistudio.google.com/app/apikey
@@ -100,8 +100,8 @@ Once configured, you can test each agent:
 Each API has different pricing:
 
 - **Anthropic (Claude Sonnet 4):** $3/M input tokens, $15/M output tokens
-- **Google (Gemini Pro):** Free tier available, then $0.50/M input tokens
-- **Perplexity (Sonar Large):** $1/M tokens with online search included
+- **Google (Gemini 2.0 Flash):** Free tier available, then $0.075/M input tokens, $0.30/M output tokens
+- **Perplexity (Sonar Pro):** $3/M tokens with online search included
 
 For development and demo purposes, the free tiers should be sufficient. Set usage limits in each platform's console to control costs.
 
@@ -144,9 +144,9 @@ This portfolio demonstrates a **multi-model approach** where each agent uses the
 |-------|-------|--------------|
 | Clinical Data Analyst | Claude Sonnet 4 | Complex reasoning |
 | Regulatory Expert | Claude Sonnet 4 | Regulatory knowledge |
-| Patent Expert | Perplexity Sonar | Real-time patent search |
-| Market Research | Perplexity Sonar | Live market data |
-| Financial Analyst | Gemini Pro | Large context + cost-effective |
+| Patent Expert | Perplexity Sonar Pro | Real-time patent search |
+| Market Research | Perplexity Sonar Pro | Live market data |
+| Financial Analyst | Gemini 2.0 Flash | Large context + fast + cost-effective |
 
 This architecture optimizes for **performance**, **cost**, and **specialized capabilities** rather than using a single model for everything.
 

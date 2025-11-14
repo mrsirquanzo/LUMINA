@@ -27,11 +27,10 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     apiKey: process.env.PERPLEXITY_API_KEY,
   },
 
-  // Financial Analyst - Gemini Pro (large context + cost-effective)
-  // Note: Use 'gemini-pro' for wider availability, or 'gemini-1.5-pro' if available in your region
+  // Financial Analyst - Gemini 2.0 Flash (large context + cost-effective + fast)
   financial: {
     provider: 'google',
-    model: 'gemini-pro',
+    model: 'gemini-2.0-flash-exp',
     maxTokens: 4096,
     temperature: 1.0,
     apiKey: process.env.GOOGLE_API_KEY,

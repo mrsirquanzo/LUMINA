@@ -478,7 +478,7 @@ export default function FinancialAnalystAgent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
             <p className="font-medium text-gray-900 mb-1">AI Model</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Gemini Pro (Google)'}</p>
+            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Gemini 2.0 Flash (Google)'}</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Key Strengths</p>

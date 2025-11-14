@@ -133,7 +133,7 @@ After deployment, verify each agent is using the correct model:
 | Regulatory Expert | claude-sonnet-4-20250514 | anthropic |
 | Patent Expert | sonar-pro | perplexity |
 | Market Research | sonar-pro | perplexity |
-| Financial Analyst | gemini-pro | google |
+| Financial Analyst | gemini-2.0-flash-exp | google |
 
 ---
 
