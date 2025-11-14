@@ -15,6 +15,7 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     model: 'claude-sonnet-4-20250514',
     maxTokens: 4096,
     temperature: 1.0,
+    apiKey: process.env.ANTHROPIC_API_KEY,
   },
 
   // Patent Expert - Perplexity Sonar Online (real-time patent database searches)
@@ -23,6 +24,7 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     model: 'llama-3.1-sonar-large-128k-online', // Online model with real-time search
     maxTokens: 4096,
     temperature: 0.7,
+    apiKey: process.env.PERPLEXITY_API_KEY,
   },
 
   // Financial Analyst - Gemini Pro (large context + cost-effective)
@@ -32,6 +34,7 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     model: 'gemini-pro',
     maxTokens: 4096,
     temperature: 1.0,
+    apiKey: process.env.GOOGLE_API_KEY,
   },
 
   // Market Research - Perplexity Sonar Online (real-time market data and competitor intelligence)
@@ -40,6 +43,7 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     model: 'llama-3.1-sonar-large-128k-online', // Online model with real-time search
     maxTokens: 4096,
     temperature: 0.7,
+    apiKey: process.env.PERPLEXITY_API_KEY,
   },
 
   // Regulatory Agent - Claude Sonnet 4 (superior reasoning for complex regulatory pathways)
@@ -48,6 +52,7 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     model: 'claude-sonnet-4-20250514',
     maxTokens: 4096,
     temperature: 1.0,
+    apiKey: process.env.ANTHROPIC_API_KEY,
   },
 };
 
@@ -59,6 +64,7 @@ export const SYNTHESIS_MODEL_CONFIG: LLMClientConfig = {
   model: 'claude-sonnet-4-20250514',
   maxTokens: 4096,
   temperature: 1.0,
+  apiKey: process.env.ANTHROPIC_API_KEY,
 };
 
 /**
