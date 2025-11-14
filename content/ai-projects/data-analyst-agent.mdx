@@ -139,6 +139,48 @@ All uploaded files are tracked with timestamps. Easily re-analyze previous docum
 
 ---
 
+## API Integrations & Data Sources
+
+This agent is powered by live connections to authoritative pharmaceutical and clinical research databases through the Model Context Protocol (MCP):
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+
+<div className="p-4 border border-blue-200 bg-blue-50 rounded-lg">
+<h4 className="font-semibold text-blue-900 mb-2">🧬 Gosset.ai Pharmaceutical Intelligence</h4>
+<p className="text-sm text-blue-800">
+Phase Transition Rates (PTRs), trial success predictions, and benchmarking data across 100K+ drug assets. Hybrid live/simulated integration via MCP.
+</p>
+</div>
+
+<div className="p-4 border border-green-200 bg-green-50 rounded-lg">
+<h4 className="font-semibold text-green-900 mb-2">🔬 ClinicalTrials.gov API</h4>
+<p className="text-sm text-green-800">
+Live access to 400K+ clinical trials worldwide. Search by indication, sponsor, phase, and endpoints with real-time data retrieval.
+</p>
+</div>
+
+<div className="p-4 border border-purple-200 bg-purple-50 rounded-lg">
+<h4 className="font-semibold text-purple-900 mb-2">📚 PubMed E-utilities</h4>
+<p className="text-sm text-purple-800">
+Direct access to 35M+ biomedical publications from NCBI. Retrieve abstracts, citations, and full study metadata.
+</p>
+</div>
+
+</div>
+
+### Gosset.ai Integration Highlights
+
+The Clinical Data Analyst features cutting-edge pharmaceutical intelligence through Gosset.ai:
+
+- **Phase Transition Rates (PTRs)**: Historical success rates by indication, modality, and phase
+- **Trial Success Predictions**: Evidence-based probability estimates from verified trial outcomes
+- **Trial Design Benchmarks**: Average sample sizes, endpoints, durations, and biomarker prevalence
+- **Integration Mode**: Hybrid live/simulated with automatic fallback (zero configuration required)
+
+When `GOSSET_OAUTH_TOKEN` is configured, real-time PTR data is fetched from Gosset's MCP server. Otherwise, it gracefully falls back to simulated pharmaceutical intelligence data for portfolio demonstrations.
+
+---
+
 ## Future Enhancements
 
 **In Development**
