@@ -142,7 +142,12 @@ export default function FeaturedProjects() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {individualAgents.map((agent) => {
-              const colorClasses = {
+              const colorMap: Record<string, {
+                icon: string;
+                title: string;
+                border: string;
+                cta: string;
+              }> = {
                 blue: {
                   icon: 'text-blue-600 group-hover:text-blue-700',
                   title: 'group-hover:text-blue-700',
@@ -173,7 +178,9 @@ export default function FeaturedProjects() {
                   border: 'hover:border-orange-200',
                   cta: 'text-orange-600 group-hover:text-orange-700',
                 },
-              }[agent.color];
+              };
+
+              const colorClasses = colorMap[agent.color] || colorMap.blue;
 
               return (
                 <Link
