@@ -36,9 +36,27 @@ export async function POST(req: NextRequest) {
     }
 
     // Build context with documents if provided
-    let userMessage = lastUserMessage.content;
+    let userMessage = typeof lastUserMessage.content === 'string'
+      ? lastUserMessage.content
+      : lastUserMessage.content.find((c: any) => c.type === 'text')?.text || '';
+
     if (documents && documents.length > 0) {
-      userMessage += `\n\nDocuments provided:\n${documents.map((d: any) => `- ${d.fileName}`).join('\n')}`;
+      const docContext = documents.map((doc: any) => {
+        if (doc.text) {
+          return `\n\n--- Document: ${doc.fileName} ---\n${doc.text}`;
+        }
+        return `- ${doc.fileName}`;
+      }).join('\n');
+      userMessage += `\n\nDocuments provided:${docContext}`;
+    }
+
+    // Validate API key
+    if (!process.env.PERPLEXITY_API_KEY) {
+      console.error('PERPLEXITY_API_KEY is not set');
+      return NextResponse.json(
+        { error: 'API configuration error. Please contact support.' },
+        { status: 500 }
+      );
     }
 
     // Create LLM client for market research agent (Perplexity)
@@ -51,16 +69,56 @@ export async function POST(req: NextRequest) {
       { maxTokens: 4096 }
     );
 
+    // Build citations list from documents
+    const citations = documents && documents.length > 0
+      ? documents.map((doc: any) => doc.fileName)
+      : [];
+
     return NextResponse.json({
-      response: response.content,
+      message: response.content,
+      citations,
+      usage: response.usage ? {
+        input_tokens: response.usage.inputTokens,
+        output_tokens: response.usage.outputTokens,
+      } : undefined,
       model: AGENT_MODEL_CONFIG.market_research.model,
       provider: AGENT_MODEL_CONFIG.market_research.provider,
     });
   } catch (error: any) {
     console.error('Market Research Agent Error:', error);
+
+    // Handle API-specific errors
+    if (error?.status === 401 || error?.message?.includes('API key')) {
+      return NextResponse.json(
+        { error: 'Invalid API key. Please check your configuration.' },
+        { status: 401 }
+      );
+    }
+
+    if (error?.status === 429) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. Please try again in a moment.' },
+        { status: 429 }
+      );
+    }
+
     return NextResponse.json(
-      { error: error.message || 'Failed to process request' },
+      {
+        error: error.message || 'Failed to process request',
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
       { status: 500 }
     );
   }
+}
+
+// Optional: Add a GET handler to test the endpoint
+export async function GET() {
+  return NextResponse.json({
+    name: 'Market Research Agent API',
+    status: 'active',
+    model: AGENT_MODEL_CONFIG.market_research.model,
+    provider: AGENT_MODEL_CONFIG.market_research.provider,
+    description: 'AI agent for market intelligence and competitive analysis',
+  });
 }
