@@ -653,16 +653,16 @@ ${synthesis}
                         {activity.chatMessages.map((msg, idx) => (
                           <div
                             key={idx}
-                            className={`p-3 rounded-lg ${
+                            className={`p-3 rounded-lg shadow-sm ${
                               msg.role === 'user'
-                                ? 'bg-blue-100 ml-8'
-                                : 'bg-white/80 mr-8'
+                                ? 'bg-white border-l-4 border-blue-500 ml-8'
+                                : 'bg-gray-50 border border-gray-200 mr-8'
                             }`}
                           >
-                            <div className="text-xs font-medium text-gray-600 mb-1">
+                            <div className={`text-xs mb-1 ${msg.role === 'user' ? 'text-blue-600 font-medium' : 'text-gray-600 font-medium'}`}>
                               {msg.role === 'user' ? 'You' : activity.agent}
                             </div>
-                            <div className="prose prose-sm max-w-none">
+                            <div className="prose prose-sm max-w-none text-gray-800">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {msg.content}
                               </ReactMarkdown>

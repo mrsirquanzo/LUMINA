@@ -329,28 +329,22 @@ export default function FinancialAnalystAgent() {
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg px-4 py-3 ${
+                    className={`max-w-[80%] rounded-lg px-4 py-3 shadow-sm ${
                       message.role === 'user'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 text-gray-900'
+                        ? 'bg-white border-l-4 border-green-500'
+                        : 'bg-gray-50 border border-gray-200'
                     }`}
                   >
-                    <div className={`text-sm leading-relaxed max-w-none ${message.role === 'user' ? 'text-white' : 'text-gray-800'}`}
-                         style={{
-                           // Clean, minimal markdown styling
-                           '--heading-weight': '600',
-                           '--heading-color': message.role === 'user' ? '#ffffff' : '#374151',
-                         } as any}
-                    >
+                    <div className="text-sm leading-relaxed max-w-none text-gray-800">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
                           // Minimal heading styling - just slightly larger, no bold
-                          h1: (props) => <p className="text-base font-semibold mt-3 mb-2" {...props} />,
-                          h2: (props) => <p className="text-base font-semibold mt-3 mb-2" {...props} />,
-                          h3: (props) => <p className="text-sm font-medium mt-2 mb-1" {...props} />,
+                          h1: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
+                          h2: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
+                          h3: (props) => <p className="text-sm font-medium mt-2 mb-1 text-gray-900" {...props} />,
                           // Subtle bold - just slightly heavier
-                          strong: (props) => <span className="font-medium" {...props} />,
+                          strong: (props) => <span className="font-semibold text-gray-900" {...props} />,
                           // Clean lists
                           ul: (props) => <ul className="list-disc list-inside my-2 space-y-1" {...props} />,
                           ol: (props) => <ol className="list-decimal list-inside my-2 space-y-1" {...props} />,
@@ -360,9 +354,9 @@ export default function FinancialAnalystAgent() {
                           // Subtle code
                           code: ({inline, ...props}: any) =>
                             inline ? (
-                              <code className="px-1 py-0.5 bg-gray-200 text-gray-800 rounded text-xs font-mono" {...props} />
+                              <code className="px-1 py-0.5 bg-green-50 text-green-900 rounded text-xs font-mono border border-green-200" {...props} />
                             ) : (
-                              <code className="block p-2 bg-gray-200 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto" {...props} />
+                              <code className="block p-2 bg-gray-100 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto border border-gray-300" {...props} />
                             ),
                         }}
                       >
@@ -371,7 +365,7 @@ export default function FinancialAnalystAgent() {
                     </div>
                     <div
                       className={`text-xs mt-2 ${
-                        message.role === 'user' ? 'text-green-200' : 'text-gray-500'
+                        message.role === 'user' ? 'text-green-600 font-medium' : 'text-gray-500'
                       }`}
                     >
                       {message.timestamp.toLocaleTimeString()}

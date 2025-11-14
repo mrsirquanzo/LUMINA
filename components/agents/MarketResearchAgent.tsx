@@ -492,10 +492,10 @@ export default function MarketResearchAgent() {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`p-4 rounded-lg ${
+              className={`p-4 rounded-lg shadow-sm ${
                 message.role === 'user'
-                  ? 'bg-teal-100 ml-auto max-w-3xl'
-                  : 'bg-white border border-gray-200 shadow-sm'
+                  ? 'bg-white border-l-4 border-teal-500 ml-auto max-w-3xl'
+                  : 'bg-gray-50 border border-gray-200'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -503,7 +503,7 @@ export default function MarketResearchAgent() {
                   {message.role === 'user' ? '👤' : '📊'}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm text-gray-500 mb-1">
+                  <div className={`text-sm mb-1 ${message.role === 'user' ? 'text-teal-600 font-medium' : 'text-gray-500'}`}>
                     {message.role === 'user' ? 'You' : 'Market Research Analyst'}
                     {message.cost && (
                       <span className="ml-2 text-xs">
@@ -511,22 +511,16 @@ export default function MarketResearchAgent() {
                       </span>
                     )}
                   </div>
-                  <div className={`text-sm leading-relaxed max-w-none ${message.role === 'user' ? 'text-white' : 'text-gray-800'}`}
-                       style={{
-                         // Clean, minimal markdown styling
-                         '--heading-weight': '600',
-                         '--heading-color': message.role === 'user' ? '#ffffff' : '#374151',
-                       } as any}
-                  >
+                  <div className="text-sm leading-relaxed max-w-none text-gray-800">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
                         // Minimal heading styling - just slightly larger, no bold
-                        h1: (props) => <p className="text-base font-semibold mt-3 mb-2" {...props} />,
-                        h2: (props) => <p className="text-base font-semibold mt-3 mb-2" {...props} />,
-                        h3: (props) => <p className="text-sm font-medium mt-2 mb-1" {...props} />,
+                        h1: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
+                        h2: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
+                        h3: (props) => <p className="text-sm font-medium mt-2 mb-1 text-gray-900" {...props} />,
                         // Subtle bold - just slightly heavier
-                        strong: (props) => <span className="font-medium" {...props} />,
+                        strong: (props) => <span className="font-semibold text-gray-900" {...props} />,
                         // Clean lists
                         ul: (props) => <ul className="list-disc list-inside my-2 space-y-1" {...props} />,
                         ol: (props) => <ol className="list-decimal list-inside my-2 space-y-1" {...props} />,
@@ -536,9 +530,9 @@ export default function MarketResearchAgent() {
                         // Subtle code
                         code: ({inline, ...props}: any) =>
                           inline ? (
-                            <code className="px-1 py-0.5 bg-gray-200 text-gray-800 rounded text-xs font-mono" {...props} />
+                            <code className="px-1 py-0.5 bg-teal-50 text-teal-900 rounded text-xs font-mono border border-teal-200" {...props} />
                           ) : (
-                            <code className="block p-2 bg-gray-200 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto" {...props} />
+                            <code className="block p-2 bg-gray-100 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto border border-gray-300" {...props} />
                           ),
                       }}
                     >
