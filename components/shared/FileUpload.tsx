@@ -78,16 +78,6 @@ export default function FileUpload({
         error: error || undefined,
       };
 
-      // Generate preview for images
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          uploadedFile.preview = e.target?.result as string;
-          setFiles(prev => [...prev]);
-        };
-        reader.readAsDataURL(file);
-      }
-
       newFiles.push(uploadedFile);
     }
 
@@ -291,16 +281,38 @@ export default function FileUpload({
                 className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg"
               >
                 <div className="flex items-center flex-1 min-w-0">
-                  {/* File Icon or Preview */}
+                  {/* Status Icon */}
                   <div className="flex-shrink-0 w-10 h-10 mr-3">
-                    {file.preview ? (
-                      <img
-                        src={file.preview}
-                        alt={file.name}
-                        className="w-10 h-10 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
+                      {file.status === 'processed' ? (
+                        <svg
+                          className="w-6 h-6 text-green-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      ) : file.status === 'error' ? (
+                        <svg
+                          className="w-6 h-6 text-red-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      ) : (
                         <svg
                           className="w-6 h-6 text-gray-400"
                           fill="none"
@@ -314,8 +326,8 @@ export default function FileUpload({
                             d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                           />
                         </svg>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
 
                   {/* File Info */}
@@ -351,19 +363,6 @@ export default function FileUpload({
                     )}
                   </div>
                 </div>
-
-                {/* Extracted Text Preview */}
-                {file.status === 'processed' && file.extractedText && (
-                  <div className="mt-2 p-3 bg-gray-50 rounded border border-gray-200">
-                    <p className="text-xs font-semibold text-gray-700 mb-1">
-                      Extracted Text Preview ({file.extractedText.length} characters):
-                    </p>
-                    <p className="text-xs text-gray-600 whitespace-pre-wrap break-words">
-                      {file.extractedText.substring(0, 300)}
-                      {file.extractedText.length > 300 && '...'}
-                    </p>
-                  </div>
-                )}
 
                 {/* Remove Button */}
                 <button
