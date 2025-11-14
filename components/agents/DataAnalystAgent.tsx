@@ -480,16 +480,24 @@ export default function DataAnalystAgent() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
-            <p className="font-medium text-gray-900 mb-1">Mode</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Live (Claude Sonnet 4)'}</p>
+            <p className="font-medium text-gray-900 mb-1">AI Model</p>
+            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Claude Sonnet 4 (Anthropic)'}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Key Strengths</p>
+            <p>Advanced reasoning, complex data analysis, nuanced interpretation</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Capabilities</p>
-            <p>PDF, Excel, CSV, Images, URLs, Clinical data analysis</p>
+            <p>PDF, Excel, CSV analysis • Vision API • Clinical trial data</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Context Window</p>
+            <p>200K tokens - Handles multiple large documents simultaneously</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Vision Support</p>
-            <p>Yes - Charts, graphs, study figures</p>
+            <p>Yes - Charts, graphs, study figures, biomarker data visualizations</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Cost</p>

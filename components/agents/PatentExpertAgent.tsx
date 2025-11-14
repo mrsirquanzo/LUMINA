@@ -477,16 +477,24 @@ export default function PatentExpertAgent() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
-            <p className="font-medium text-gray-900 mb-1">Mode</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Live (Claude Sonnet 4)'}</p>
+            <p className="font-medium text-gray-900 mb-1">AI Model</p>
+            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Perplexity Sonar Large (Llama 3.1 128K Online)'}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Key Strengths</p>
+            <p>Real-time web search, current patent data, live USPTO/EPO access</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Specialization</p>
-            <p>Patent analysis, IP strategy, competitive intelligence</p>
+            <p>Patent landscape analysis, FTO opinions, IP strategy, prior art search</p>
           </div>
           <div>
-            <p className="font-medium text-gray-900 mb-1">Capabilities</p>
-            <p>Data analysis, statistical interpretation, market trends</p>
+            <p className="font-medium text-gray-900 mb-1">Online Capabilities</p>
+            <p>Live patent database search • Recent filings • Litigation updates</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Data Freshness</p>
+            <p>Real-time - Accesses latest patent filings and legal developments</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Cost</p>

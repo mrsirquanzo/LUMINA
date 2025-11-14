@@ -513,6 +513,39 @@ export default function RegulatoryExpertAgent() {
         </div>
       )}
 
+      {/* Behind the Scenes */}
+      <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">
+          🔧 Behind the Scenes
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+          <div>
+            <p className="font-medium text-gray-900 mb-1">AI Model</p>
+            <p>Claude Sonnet 4 (Anthropic)</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Key Strengths</p>
+            <p>Complex regulatory reasoning, nuanced policy interpretation, strategic planning</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Specialization</p>
+            <p>FDA/EMA pathways, IND/BLA strategy, CMC requirements, clinical endpoints</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Context Window</p>
+            <p>200K tokens - Analyzes full regulatory guidance documents and ICH guidelines</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Capabilities</p>
+            <p>Pathway optimization • Accelerated approval strategies • Risk mitigation</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Cost</p>
+            <p>$0.01-0.10 per query</p>
+          </div>
+        </div>
+      </div>
+
       {/* Login Modal */}
       <LoginModal
         isOpen={showLoginModal}

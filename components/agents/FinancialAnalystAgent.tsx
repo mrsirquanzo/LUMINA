@@ -477,16 +477,24 @@ export default function FinancialAnalystAgent() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
-            <p className="font-medium text-gray-900 mb-1">Mode</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Live (Claude Sonnet 4)'}</p>
+            <p className="font-medium text-gray-900 mb-1">AI Model</p>
+            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Gemini Pro (Google)'}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Key Strengths</p>
+            <p>Massive context window, multi-document analysis, quantitative reasoning</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Specialization</p>
-            <p>Biotech valuation, financial analysis, MClinical trials, biomarkers, competitive intelligenceA</p>
+            <p>Biotech valuation, financial modeling, M&A analysis, DCF models</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-900 mb-1">Context Window</p>
+            <p>1M+ tokens - Processes entire 10-K filings and financial statements</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Capabilities</p>
-            <p>Data analysis, statistical interpretation, market trends</p>
+            <p>Excel/PDF analysis • Vision API • Complex calculations • Multi-file synthesis</p>
           </div>
           <div>
             <p className="font-medium text-gray-900 mb-1">Cost</p>
