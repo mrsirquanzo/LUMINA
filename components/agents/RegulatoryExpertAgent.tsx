@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import LoginModal from '@/components/shared/LoginModal';
+import ExportButton from '@/components/shared/ExportButton';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -504,6 +505,11 @@ export default function RegulatoryExpertAgent() {
               Send
             </button>
           </div>
+          {messages.length > 0 && (
+            <div className="mt-3 flex items-center gap-3">
+              <ExportButton messages={messages} agentName="Regulatory Expert" />
+            </div>
+          )}
         </div>
       )}
 

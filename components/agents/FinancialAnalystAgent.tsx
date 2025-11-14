@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import LoginModal from '@/components/shared/LoginModal';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
+import ExportButton from '@/components/shared/ExportButton';
 import { FINANCIAL_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
 
 interface Message {
@@ -436,12 +437,15 @@ export default function FinancialAnalystAgent() {
             </div>
 
             {messages.length > 0 && (
-              <button
-                onClick={clearConversation}
-                className="mt-3 text-sm text-gray-600 hover:text-gray-900"
-              >
-                Clear conversation
-              </button>
+              <div className="mt-3 flex items-center gap-3">
+                <ExportButton messages={messages} agentName="Financial Analyst" />
+                <button
+                  onClick={clearConversation}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  Clear conversation
+                </button>
+              </div>
             )}
           </div>
         )}
