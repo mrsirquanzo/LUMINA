@@ -191,11 +191,6 @@ export default function PatentExpertAgent() {
     }
   };
 
-  const clearConversation = () => {
-    setMessages([]);
-    setError(null);
-  };
-
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });

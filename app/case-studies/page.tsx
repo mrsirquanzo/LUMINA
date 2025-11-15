@@ -1,8 +1,9 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import Section from "@/components/shared/Section";
-import { getAllCaseStudies } from "@/lib/mdx";
 import { generateSEO } from "@/components/layout/SEO";
+// Temporarily hidden - imports for future use
+// import Link from "next/link";
+// import { getAllCaseStudies } from "@/lib/mdx";
 
 export const metadata: Metadata = generateSEO({
   title: "Case Studies",
@@ -11,7 +12,8 @@ export const metadata: Metadata = generateSEO({
 });
 
 export default function CaseStudiesPage() {
-  const caseStudies = getAllCaseStudies();
+  // Temporarily hidden - content coming soon
+  // const caseStudies = getAllCaseStudies();
 
   return (
     <>
@@ -28,8 +30,20 @@ export default function CaseStudiesPage() {
 
       <Section background="white">
         <div className="max-w-5xl mx-auto">
-          {/* Project Grid */}
-          <div className="grid grid-cols-1 gap-8">
+          {/* Placeholder with Thinking Animation */}
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="mb-6 flex gap-2">
+              <div className="w-3 h-3 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-3 h-3 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-3 h-3 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+            <p className="text-2xl font-semibold text-gray-800">
+              More to come. Worth the wait.
+            </p>
+          </div>
+
+          {/* Temporarily hidden - content coming soon */}
+          {/* <div className="grid grid-cols-1 gap-8">
             {caseStudies.map((study, index) => (
               <Link
                 key={study.frontmatter.slug}
@@ -37,16 +51,13 @@ export default function CaseStudiesPage() {
                 className="card group hover:border-primary-200 border-2 border-transparent transition-all"
               >
                 <div className="flex flex-col md:flex-row gap-6">
-                  {/* Thumbnail */}
                   <div className="md:w-64 h-48 flex-shrink-0 bg-gradient-to-br from-primary-100 to-accent-100 rounded-lg flex items-center justify-center">
                     <span className="text-primary-600 text-5xl font-bold">
                       {index + 1}
                     </span>
                   </div>
 
-                  {/* Content */}
                   <div className="flex-1">
-                    {/* Category & Meta */}
                     <div className="flex flex-wrap items-center gap-3 mb-3">
                       <span className="text-sm font-semibold text-primary-600 uppercase tracking-wide">
                         {study.frontmatter.category}
@@ -61,24 +72,20 @@ export default function CaseStudiesPage() {
                       </span>
                     </div>
 
-                    {/* Title */}
                     <h2 className="text-2xl font-semibold text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">
                       {study.frontmatter.title.split(":")[0]}
                     </h2>
 
-                    {/* Subtitle */}
                     {study.frontmatter.subtitle && (
                       <p className="text-lg text-gray-600 mb-3 italic">
                         {study.frontmatter.subtitle}
                       </p>
                     )}
 
-                    {/* Description */}
                     <p className="text-gray-700 mb-4">
                       {study.frontmatter.description}
                     </p>
 
-                    {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       {study.frontmatter.tags.map((tag, tagIndex) => (
                         <span
@@ -90,7 +97,6 @@ export default function CaseStudiesPage() {
                       ))}
                     </div>
 
-                    {/* Read More Arrow */}
                     <div className="flex items-center text-primary-600 font-medium group-hover:text-primary-700">
                       Read Case Study
                       <svg
@@ -111,7 +117,7 @@ export default function CaseStudiesPage() {
                 </div>
               </Link>
             ))}
-          </div>
+          </div> */}
         </div>
       </Section>
     </>

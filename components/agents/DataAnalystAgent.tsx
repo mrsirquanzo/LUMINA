@@ -190,12 +190,6 @@ export default function DataAnalystAgent() {
     }
   };
 
-  const clearConversation = () => {
-    setMessages([]);
-    setError(null);
-    setCurrentDocuments([]);
-  };
-
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
