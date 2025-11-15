@@ -117,6 +117,17 @@ function sanitizeForPDF(text: string): string {
   // Preserve newlines (\n), tabs (\t), and carriage returns (\r)
   sanitized = sanitized.replace(/[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u2000-\u200F\u2028-\u202F\u205F-\u206F]/g, '');
 
+  // Step 4: AGGRESSIVE - Keep only printable ASCII + newlines/tabs
+  // This removes any extended Unicode characters that might cause rendering issues
+  // Allows: 32-126 (printable ASCII), 9 (tab), 10 (newline), 13 (carriage return)
+  sanitized = sanitized.split('').filter(char => {
+    const code = char.charCodeAt(0);
+    return (code >= 32 && code <= 126) || code === 9 || code === 10 || code === 13;
+  }).join('');
+
+  // Step 5: Clean up multiple spaces that might have been introduced
+  sanitized = sanitized.replace(/  +/g, ' '); // Replace multiple spaces with single space
+
   return sanitized;
 }
 
