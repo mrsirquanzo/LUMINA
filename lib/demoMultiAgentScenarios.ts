@@ -1463,22 +1463,22 @@ This is an **exceptional opportunity** to acquire a validated, best-in-class ade
 export const DEMO_INVESTMENT_DECISION: DemoScenario = {
   id: 'investment-decision',
   title: 'Oral GLP-1 Series B Investment',
-  description: 'Should we invest $40M in ObesityRx\'s Series B? Evaluate their oral GLP-1 Phase 2a data, competitive positioning, and path to market.',
+  description: 'Should we invest $40M in ObesityRx\'s Series B? Comprehensive analysis across clinical data, IP landscape, financial terms, and market dynamics.',
   query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, IP portfolio relative to Novo/Lilly, and financial runway to Phase 3.',
   documents: [
     'ObesityRx_Phase2a_Results.pdf (2.2 MB)',
     'Oral_GLP1_Competitive_Landscape.pdf (3.1 MB)',
     'Series_B_Term_Sheet.pdf (0.6 MB)',
   ],
-  estimatedDuration: 15000,
+  estimatedDuration: 19000,
   events: [
     {
       type: 'plan_created',
       timestamp: 0,
       data: {
-        plan: 'Investment evaluation: Phase 2a Analysis → Competitive Positioning → IP Review → Financial Model → Investment Decision',
+        plan: 'Investment evaluation: Phase 2a Analysis → IP Review → Financial Model → Market Dynamics → Investment Decision',
         mode: 'thorough',
-        estimatedCost: '$0.32',
+        estimatedCost: '$0.38',
       },
     },
     {
@@ -1793,31 +1793,272 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 ⚠ **Market saturation** (Wegovy already $20B+ established)
 ⚠ **Pricing pressure** (payers may cap reimbursement)
 
-**Financial Recommendation:** **INVEST $40M** - Compelling risk/reward (794% expected ROI) in massive, validated market. Novo Holdings co-investment de-risks.`,
+**Financial Recommendation:** **INVEST $40M** - Compelling risk/reward (794% expected ROI) in massive, validated market. Novo Holdings co-investment de-risks.
+
+**Question for Market Research:** What's the realistic market penetration and competitive positioning for an oral GLP-1 entering in 2029-2030?`,
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 9700,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Market Research Analyst',
+        question: 'What\'s the realistic market penetration and competitive positioning for an oral GLP-1 entering in 2029-2030?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 10200,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing obesity market dynamics, competitive timeline, and market share projections',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 10900,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Mapping competitive landscape and patient preferences...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 12700,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Obesity Market Dynamics & Competitive Analysis (2025-2035)
+
+**Total Obesity Drug Market:**
+
+**Current State (2024-2025):**
+- Total market size: $24B (2024)
+- Growth rate: 35% CAGR (2024-2030)
+- **Projected 2030 market: $100-130B**
+- US represents 60% of global sales
+
+**Market Drivers:**
+✓ 42% US adults have obesity (BMI >30)
+✓ 70%+ commercial payers now covering GLP-1s for obesity
+✓ Medicare coverage expansion (2024 CMS proposal)
+✓ Chronic lifetime therapy = recurring revenue
+✓ DTC advertising effective ($2B+ spent by Novo/Lilly)
+
+**Injectable GLP-1 Market Leaders (2024-2025):**
+
+**Wegovy (Novo Nordisk - semaglutide):**
+- 2024 sales: $13.5B
+- Market share: 56% of GLP-1 obesity market
+- Peak sales forecast: $28-32B (2028-2030)
+- Advantages: First-mover, proven efficacy (-15%), strong brand
+- Weaknesses: Weekly injection, supply constraints (2024), patent expiry 2032
+
+**Zepbound (Eli Lilly - tirzepatide):**
+- 2024 sales: $7.2B (launched late 2023)
+- Market share: 30%
+- Peak sales forecast: $22-25B (2028-2030)
+- Advantages: Superior efficacy (-21%), dual mechanism (GLP-1/GIP)
+- Weaknesses: Weekly injection, manufacturing scale-up, later patent (2042)
+
+**Market Share Evolution (Injectable):**
+| Year | Wegovy | Zepbound | Other |
+|------|--------|----------|-------|
+| 2024 | 56% | 30% | 14% |
+| 2027 | 45% | 42% | 13% |
+| 2030 | 38% | 48% | 14% |
+
+**Oral GLP-1 Competitive Landscape:**
+
+**Current Oral Options:**
+1. **Rybelsus (Novo - oral semaglutide):**
+   - Approved for diabetes only (no obesity indication)
+   - Weight loss: -5% (modest)
+   - Limitations: Fasting requirement, SNAC enhancer (GI issues)
+   - Not competitive in obesity space
+
+**Emerging Oral Competitors (2025-2030):**
+
+2. **Novo Nordisk - Oral Amycretin (dual GLP-1/amylin):**
+   - Status: Phase 2 ongoing (data expected Q2 2026)
+   - Advantage: Novo brand + dual mechanism
+   - Timeline: Launch 2029-2030 (head-to-head with ObesityRx)
+   - **KEY COMPETITIVE THREAT**
+
+3. **Eli Lilly - Orforglipron:**
+   - Status: **DISCONTINUED Q3 2024** due to 47% nausea rate
+   - Leaves Lilly without oral GLP-1 program
+   - **ACQUISITION OPPORTUNITY**
+
+4. **Structure Therapeutics - GSBR-1290:**
+   - Status: Phase 2 (52-week data Q1 2026)
+   - Advantage: Clean Phase 1 data, experienced team
+   - Timeline: Launch 2029-2030
+   - **DIRECT COMPETITOR**
+
+5. **Pfizer - Danuglipron:**
+   - Status: **DISCONTINUED 2024** due to 71% nausea rate
+   - Pfizer exited oral GLP-1 space
+   - **MARKET CONSOLIDATION**
+
+**Oral GLP-1 Addressable Market:**
+
+**Patient Segmentation:**
+- **Total obesity patients (US):** 100M adults
+- **Injectable-eligible:** 70M (70%)
+- **Oral-preferring (needle-phobic):** 30M (30%)
+- **Addressable oral market: $50-60B** at peak (2032-2035)
+
+**Patient Preference Data (2024 surveys):**
+✓ 68% patients prefer oral over injection (if efficacy equal)
+✓ 42% would switch from Wegovy to oral if weight loss similar
+✓ 30% refuse injectable treatment (needle phobia/stigma)
+✓ Oral compliance higher: 78% vs 64% for weekly injection
+
+**ObesityRx Competitive Positioning (2029-2030 Launch):**
+
+**Market Entry Scenario:**
+- Launch year: 2029-2030
+- Competitors at launch:
+  - Wegovy (injectable): Mature, losing share to Zepbound
+  - Zepbound (injectable): Market leader
+  - Novo oral amycretin: Launching simultaneously (major risk)
+  - Structure GSBR-1290: Launching 2029-2030
+  - Rybelsus: Not competitive in obesity
+
+**ObesityRx Differentiation:**
+✓ **Best-in-class tolerability** (32% nausea vs 47-58% other orals)
+✓ **Projected efficacy** (-18-22% at 52 weeks, competitive with Wegovy)
+✓ **Daily dosing with food** (better compliance than fasting)
+✓ **Proprietary absorption enhancer** (NOT SNAC)
+✓ **Price potential:** $8-10K/year vs $13-16K for injectables
+
+**Market Share Projections:**
+
+**Year 1 (2029-2030):**
+- Total oral GLP-1 market: $12-15B
+- ObesityRx penetration: 6-8% of oral segment
+- Revenue: **$720M-$1.2B**
+- Rationale: Tolerability messaging, early KOL adoption
+
+**Year 3 (2032):**
+- Total oral GLP-1 market: $35-40B
+- ObesityRx penetration: 12-15% of oral segment
+- Revenue: **$4.2-6.0B**
+- Rationale: Real-world evidence, payer coverage secured
+
+**Peak Sales (2034-2036):**
+- Total oral GLP-1 market: $50-60B
+- ObesityRx penetration: 15-18% of oral segment
+- **Peak revenue: $7.5-10.8B**
+- Rationale: Steady-state based on tolerability advantage
+
+**Market Share Allocation (Oral Segment, 2034):**
+| Product | Market Share | Peak Sales |
+|---------|--------------|------------|
+| Novo Amycretin | 35-40% | $17.5-24B |
+| ObesityRx | 15-18% | **$7.5-11B** |
+| Structure GSBR-1290 | 12-15% | $6-9B |
+| Rybelsus | 8-10% | $4-6B |
+| Others | 20% | $10-12B |
+
+**Competitive Risks:**
+
+⚠ **Novo Amycretin (HIGHEST RISK):**
+- Launching same timeframe (2029-2030)
+- Novo brand dominance + dual mechanism advantage
+- Could capture 35-40% oral market
+- **Mitigation:** ObesityRx tolerability differentiation
+
+⚠ **Injectable Price Wars:**
+- Wegovy patent expiry 2032 → biosimilars
+- Price compression could cascade to orals
+- **Mitigation:** Oral convenience premium defensible
+
+⚠ **Next-Gen Therapies (2030+):**
+- Monthly injectables (Novo Phase 2)
+- GLP-1/GIP/Glucagon triple agonists
+- Oral peptides (new delivery tech)
+- **Mitigation:** 5-7 year exclusivity window before disruption
+
+**Commercial Opportunity Assessment:**
+
+**Scenario A: Lead Oral Position (20% probability)**
+- Beat Novo amycretin on tolerability + efficacy
+- Capture 25-30% oral market share
+- Peak sales: $12-18B
+- Acquisition value: $18-25B (1.5x peak sales)
+
+**Scenario B: Strong #2 Position (50% probability) ← BASE CASE**
+- Novo amycretin leads, but ObesityRx strong #2
+- Capture 15-18% oral market share
+- Peak sales: $7.5-11B
+- Acquisition value: $10-15B
+
+**Scenario C: Crowded Market (25% probability)**
+- Multiple oral GLP-1s dilute share
+- Capture 8-12% oral market share
+- Peak sales: $4-6B
+- Acquisition value: $5-8B
+
+**Scenario D: Failure (5% probability)**
+- Phase 2b data disappoints or Novo dominates
+- Minimal commercial traction
+- Exit: Platform sale or wind down
+
+**Investment Implications:**
+
+**Expected Commercial Value:**
+- Scenario A (20%): $21.5B × 0.20 = $4.3B
+- Scenario B (50%): $12.5B × 0.50 = $6.25B
+- Scenario C (25%): $6.5B × 0.25 = $1.625B
+- Scenario D (5%): $0 × 0.05 = $0
+- **Expected exit value: $12.175B**
+
+**Risk-Adjusted for Development:**
+- Phase 2b success: 85%
+- Phase 3 success (conditional): 70%
+- Approval probability: 60%
+- **Risk-adjusted value: $7.3B**
+
+**Series B Investment Return:**
+- Our stake: 6.67% → 4.8% diluted
+- Expected value at exit: $7.3B × 4.8% = **$350M**
+- Investment: $40M
+- **Expected ROI: 775%** ✓✓✓
+
+**Market Recommendation:**
+
+✅ **ATTRACTIVE MARKET OPPORTUNITY**
+- $50-60B oral GLP-1 TAM is real and validated
+- ObesityRx differentiation (tolerability) is defensible
+- Novo amycretin risk is manageable (not fatal)
+- Multiple exit scenarios all profitable (except failure)
+- **Expected ROI: 775%** justifies $40M investment`,
       },
     },
     {
       type: 'synthesis_start',
-      timestamp: 9700,
+      timestamp: 13200,
       data: {},
     },
     {
       type: 'synthesis_progress',
-      timestamp: 10600,
+      timestamp: 14100,
       data: {
-        step: 'Integrating clinical, IP, and financial risk assessment...',
+        step: 'Integrating clinical, IP, financial, and market analyses...',
       },
     },
     {
       type: 'synthesis_progress',
-      timestamp: 11500,
+      timestamp: 15200,
       data: {
         step: 'Building investment decision framework...',
       },
     },
     {
       type: 'complete',
-      timestamp: 14000,
+      timestamp: 17500,
       data: {
         synthesis: `# Investment Recommendation: INVEST $40M in ObesityRx Series B
 
@@ -2082,8 +2323,8 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 
 ---
 
-**Analysis completed at $0.32 estimated cost**`,
-        cost: 0.32,
+**Analysis completed at $0.38 estimated cost**`,
+        cost: 0.38,
       },
     },
   ],
