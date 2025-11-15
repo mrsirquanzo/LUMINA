@@ -369,6 +369,7 @@ export default function MultiAgentCollaboration({
   };
 
   const getAgentIcon = (agent: string) => {
+    if (!agent) return '🤖';
     if (agent.includes('Clinical') || agent.includes('Data')) return '🔬';
     if (agent.includes('Patent')) return '⚖️';
     if (agent.includes('Financial')) return '💰';
@@ -378,6 +379,7 @@ export default function MultiAgentCollaboration({
   };
 
   const getAgentColor = (agent: string) => {
+    if (!agent) return 'from-gray-50 to-gray-100 border-gray-300';
     if (agent.includes('Clinical') || agent.includes('Data')) return 'from-blue-50 to-blue-100 border-blue-300';
     if (agent.includes('Patent')) return 'from-purple-50 to-purple-100 border-purple-300';
     if (agent.includes('Financial')) return 'from-green-50 to-green-100 border-green-300';
@@ -387,6 +389,7 @@ export default function MultiAgentCollaboration({
   };
 
   const getAgentTextColor = (agent: string) => {
+    if (!agent) return 'text-gray-900';
     if (agent.includes('Clinical') || agent.includes('Data')) return 'text-blue-900';
     if (agent.includes('Patent')) return 'text-purple-900';
     if (agent.includes('Financial')) return 'text-green-900';
