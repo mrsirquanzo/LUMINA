@@ -711,7 +711,7 @@ class PDFGenerator {
 // Main export function
 export function exportToPDF(messages: ChatMessage[], agentName: string): void {
   // Version check - log to verify latest code is running
-  console.log('[PDF Export] Version 2024-11-15-v3 - Aggressive ASCII sanitization active');
+  console.log('[PDF Export] Version 2024-11-15-v4 - LATEST CODE DEPLOYED');
 
   const generator = new PDFGenerator();
   generator.generateChatPDF(messages, agentName);
