@@ -98,6 +98,30 @@ const SYMBOL_MAP: { [key: string]: string } = {
   '\u2019': "'",     // Smart apostrophe right (') -> '
 };
 
+// Strip inline markdown formatting (bold, italic, code, links, etc.)
+function stripInlineMarkdown(text: string): string {
+  let stripped = text;
+
+  // Remove bold: **text** or __text__
+  stripped = stripped.replace(/\*\*(.+?)\*\*/g, '$1');
+  stripped = stripped.replace(/__(.+?)__/g, '$1');
+
+  // Remove italic: *text* or _text_ (but not already removed **)
+  stripped = stripped.replace(/\*(.+?)\*/g, '$1');
+  stripped = stripped.replace(/_(.+?)_/g, '$1');
+
+  // Remove inline code: `text`
+  stripped = stripped.replace(/`(.+?)`/g, '$1');
+
+  // Remove links: [text](url) -> text
+  stripped = stripped.replace(/\[(.+?)\]\(.+?\)/g, '$1');
+
+  // Remove strikethrough: ~~text~~
+  stripped = stripped.replace(/~~(.+?)~~/g, '$1');
+
+  return stripped;
+}
+
 // Replace problematic Unicode characters with jsPDF-safe alternatives
 function sanitizeForPDF(text: string): string {
   let sanitized = text;
@@ -127,6 +151,14 @@ function sanitizeForPDF(text: string): string {
 
   // Step 5: Clean up multiple spaces that might have been introduced
   sanitized = sanitized.replace(/  +/g, ' '); // Replace multiple spaces with single space
+
+  // Step 6: Collapse consecutive identical symbol replacements like [OK][OK] -> [OK]
+  sanitized = sanitized.replace(/(\[OK\])\1+/g, '$1'); // [OK][OK]... -> [OK]
+  sanitized = sanitized.replace(/(\[X\])\1+/g, '$1');   // [X][X]... -> [X]
+  sanitized = sanitized.replace(/(\[!\])\1+/g, '$1');   // [!][!]... -> [!]
+
+  // Step 7: Strip markdown inline formatting (bold, italic, etc.)
+  sanitized = stripInlineMarkdown(sanitized);
 
   return sanitized;
 }
@@ -398,9 +430,15 @@ class PDFGenerator {
     this.doc.setFont(PDF_STYLES.fonts.primary, level === 3 ? 'bold' : 'bold');
 
     const sanitizedText = sanitizeForPDF(text);
-    this.doc.text(sanitizedText, PDF_STYLES.margins.left, this.currentY);
 
-    this.currentY += size * 1.2 + spacingAfter[level];
+    // Wrap long headers across multiple lines
+    const wrappedLines = this.doc.splitTextToSize(sanitizedText, this.contentWidth);
+    this.doc.text(wrappedLines, PDF_STYLES.margins.left, this.currentY);
+
+    // Account for multiple lines in spacing calculation
+    const lineHeight = size * 1.2;
+    const totalHeight = Array.isArray(wrappedLines) ? wrappedLines.length * lineHeight : lineHeight;
+    this.currentY += totalHeight + spacingAfter[level];
 
     // Reset to body font
     this.doc.setFontSize(PDF_STYLES.sizes.body);
@@ -711,7 +749,7 @@ class PDFGenerator {
 // Main export function
 export function exportToPDF(messages: ChatMessage[], agentName: string): void {
   // Version check - log to verify latest code is running
-  console.log('[PDF Export] Version 2024-11-15-v4 - LATEST CODE DEPLOYED');
+  console.log('[PDF Export] Version 2024-11-15-v5 - FIXED: Header wrapping, markdown stripping, symbol dedup');
 
   const generator = new PDFGenerator();
   generator.generateChatPDF(messages, agentName);
