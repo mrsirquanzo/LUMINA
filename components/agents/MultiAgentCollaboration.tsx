@@ -7,6 +7,7 @@ import { ProcessedDocument, ExecutionMode, SSEEvent, AgentType } from '@/lib/mul
 import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { saveAnalysisToHistory } from '@/lib/analysisHistory';
 import ExportButton from '@/components/shared/ExportButton';
+import { ChatMessage } from '@/lib/pdfExport';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -762,7 +763,7 @@ ${synthesis}
               messages={[
                 { role: 'user', content: query, timestamp: new Date() },
                 { role: 'assistant', content: synthesis, timestamp: new Date(), cost }
-              ]}
+              ] as ChatMessage[]}
               agentName="Multi-Agent Analysis"
             />
             <button

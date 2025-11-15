@@ -1,112 +1,113 @@
 'use client';
 
 import { useState } from 'react';
-import { exportChat, ChatMessage, ExportOptions } from '@/lib/chatExport';
 import { FiDownload, FiChevronDown } from 'react-icons/fi';
+import { ChatMessage, exportToPDF, exportToCSV, exportToText } from '@/lib/pdfExport';
 
 interface ExportButtonProps {
   messages: ChatMessage[];
   agentName: string;
-  disabled?: boolean;
+  className?: string;
 }
 
-export default function ExportButton({ messages, agentName, disabled }: ExportButtonProps) {
-  const [showMenu, setShowMenu] = useState(false);
+export default function ExportButton({ messages, agentName, className = '' }: ExportButtonProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExport = async (format: 'pdf' | 'csv' | 'text') => {
-    if (messages.length === 0) {
-      alert('No messages to export');
-      return;
-    }
-
     setIsExporting(true);
-    setShowMenu(false);
+    setIsOpen(false);
 
     try {
-      const options: ExportOptions = {
-        format,
-        agentName,
-        includeMeta: true,
-        includeTimestamps: true,
-      };
-
-      exportChat(messages, options);
+      switch (format) {
+        case 'pdf':
+          exportToPDF(messages, agentName);
+          break;
+        case 'csv':
+          exportToCSV(messages, agentName);
+          break;
+        case 'text':
+          exportToText(messages, agentName);
+          break;
+      }
     } catch (error) {
       console.error('Export failed:', error);
-      alert(`Failed to export as ${format.toUpperCase()}. Please try again.`);
+      alert('Export failed. Please try again.');
     } finally {
-      setIsExporting(false);
+      setTimeout(() => setIsExporting(false), 1000);
     }
   };
 
-  const isEmpty = messages.length === 0;
-
   return (
-    <div className="relative">
+    <div className={`relative ${className}`}>
       <button
-        onClick={() => setShowMenu(!showMenu)}
-        disabled={disabled || isEmpty || isExporting}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-          disabled || isEmpty || isExporting
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 text-white hover:bg-blue-700'
-        }`}
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={isExporting || messages.length === 0}
+        className={`
+          px-3 py-2 bg-white border border-gray-300 rounded-md
+          hover:bg-gray-50 transition-colors
+          flex items-center gap-2 text-sm font-medium shadow-sm
+          disabled:opacity-50 disabled:cursor-not-allowed
+          ${isOpen ? 'bg-gray-50' : ''}
+        `}
       >
         <FiDownload className="w-4 h-4" />
-        <span className="text-sm font-medium">
-          {isExporting ? 'Exporting...' : 'Export Chat'}
-        </span>
-        <FiChevronDown className="w-4 h-4" />
+        <span>{isExporting ? 'Exporting...' : 'Export'}</span>
+        {messages.length > 0 && (
+          <span className="text-gray-500">({messages.length})</span>
+        )}
+        <FiChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {showMenu && !disabled && !isEmpty && (
+      {/* Dropdown Menu */}
+      {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop to close dropdown */}
           <div
             className="fixed inset-0 z-10"
-            onClick={() => setShowMenu(false)}
+            onClick={() => setIsOpen(false)}
           />
 
-          {/* Menu */}
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-20">
-            <div className="py-1">
-              <button
-                onClick={() => handleExport('pdf')}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                Export as PDF
-              </button>
+          {/* Dropdown content */}
+          <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20 overflow-hidden">
+            <button
+              onClick={() => handleExport('pdf')}
+              className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 transition-colors flex items-start gap-3 border-b border-gray-100"
+            >
+              <div className="mt-0.5">📄</div>
+              <div>
+                <div className="font-medium text-gray-900">Export as PDF</div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  Professional report format
+                </div>
+              </div>
+            </button>
 
-              <button
-                onClick={() => handleExport('csv')}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Export as CSV
-              </button>
+            <button
+              onClick={() => handleExport('csv')}
+              className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 transition-colors flex items-start gap-3 border-b border-gray-100"
+            >
+              <div className="mt-0.5">📊</div>
+              <div>
+                <div className="font-medium text-gray-900">Export as CSV</div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  Spreadsheet compatible
+                </div>
+              </div>
+            </button>
 
-              <button
-                onClick={() => handleExport('text')}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-                Export as Text
-              </button>
-            </div>
-
-            <div className="border-t border-gray-200 px-4 py-2">
-              <p className="text-xs text-gray-500">
-                {messages.length} message{messages.length !== 1 ? 's' : ''} will be exported
-              </p>
-            </div>
+            <button
+              onClick={() => handleExport('text')}
+              className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 transition-colors flex items-start gap-3"
+            >
+              <div className="mt-0.5">📝</div>
+              <div>
+                <div className="font-medium text-gray-900">Export as Text</div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  Markdown format
+                </div>
+              </div>
+            </button>
           </div>
         </>
       )}
