@@ -43,6 +43,7 @@ export default function FinancialAnalystAgent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [demoIndex, setDemoIndex] = useState(0);
+  const [showUploadPanel, setShowUploadPanel] = useState(false);
 
   const checkAuthStatus = async () => {
     try {
@@ -92,6 +93,11 @@ export default function FinancialAnalystAgent() {
       }));
 
     setProcessedDocuments(prev => [...prev, ...newDocs]);
+    setShowUploadPanel(false);
+  };
+
+  const removeDocument = (index: number) => {
+    setProcessedDocuments(prev => prev.filter((_, i) => i !== index));
   };
 
   const sendDemoMessage = () => {
@@ -283,41 +289,6 @@ export default function FinancialAnalystAgent() {
         )}
       </div>
 
-      {/* Demo Mode Instructions */}
-      {mode === 'demo' && messages.length === 0 && (
-        <div className="mb-6 p-6 bg-green-50 border border-green-200 rounded-lg">
-          <h3 className="font-semibold text-gray-900 mb-2">Try Demo Mode</h3>
-          <p className="text-gray-700 mb-4">
-            Click the button below to see a pre-recorded financial analysis. No API costs.
-          </p>
-          <button
-            onClick={sendDemoMessage}
-            disabled={isLoading}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
-          >
-            Run Demo Analysis
-          </button>
-        </div>
-      )}
-
-      {/* Sample Queries */}
-      {mode === 'live' && messages.length === 0 && (
-        <div className="mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-          <h3 className="font-semibold text-gray-900 mb-3">Sample Queries</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {SAMPLE_QUERIES.map((query, index) => (
-              <button
-                key={index}
-                onClick={() => sendLiveMessage(query)}
-                className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
-              >
-                {query}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Messages */}
       {messages.length > 0 && (
         <div className="mb-6 space-y-4">
@@ -390,41 +361,133 @@ export default function FinancialAnalystAgent() {
         </div>
       )}
 
-      {/* File Upload - Live Mode Only */}
-      {mode === 'live' && (
-        <div className="mb-6">
-          <FileUpload onFilesProcessed={handleFilesProcessed} />
+      {/* Sample Queries - Live Mode Only when No Messages */}
+      {mode === 'live' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <h3 className="font-semibold text-gray-900 mb-3">Sample Queries</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {SAMPLE_QUERIES.map((query, index) => (
+              <button
+                key={index}
+                onClick={() => sendLiveMessage(query)}
+                className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+              >
+                {query}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Input Area (Live Mode) */}
+      {/* Demo Mode Instructions */}
+      {mode === 'demo' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-green-50 border border-green-200 rounded-lg">
+          <h3 className="font-semibold text-gray-900 mb-2">Try Demo Mode</h3>
+          <p className="text-gray-700 mb-4">
+            Click the button below to see a pre-recorded financial analysis. No API costs.
+          </p>
+          <button
+            onClick={sendDemoMessage}
+            disabled={isLoading}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
+          >
+            Run Demo Analysis
+          </button>
+        </div>
+      )}
+
+      {/* Input Area (Live Mode) with Integrated Upload */}
       {mode === 'live' && (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask about valuations, financials, or M&A analysis..."
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 mb-3 resize-none"
-          />
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">
-              {processedDocuments.length > 0 && `${processedDocuments.length} file(s) attached`}
-            </span>
-            <button
-              onClick={() => sendLiveMessage()}
-              disabled={isLoading || !input.trim()}
-              className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Send
-            </button>
-          </div>
-          {messages.length > 0 && (
-            <div className="mt-3 flex items-center gap-3">
-              <ExportButton messages={messages} agentName="Financial Analyst" />
+        <div className="sticky bottom-0 bg-white border border-gray-200 rounded-lg shadow-lg">
+          {/* Upload Panel */}
+          {showUploadPanel && (
+            <div className="border-b border-gray-200 p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-sm font-semibold text-gray-900">Upload Files</h4>
+                <button
+                  onClick={() => setShowUploadPanel(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <FileUpload onFilesProcessed={handleFilesProcessed} />
             </div>
           )}
+
+          {/* File Chips */}
+          {processedDocuments.length > 0 && (
+            <div className="flex flex-wrap gap-2 p-3 border-b border-gray-200 bg-gray-50">
+              {processedDocuments.map((doc, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                >
+                  <span className="truncate max-w-[150px]">{doc.fileName}</span>
+                  <button
+                    onClick={() => removeDocument(index)}
+                    className="hover:text-green-900"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Input Row */}
+          <div className="p-4">
+            <div className="flex items-end gap-2">
+              {/* Upload Button */}
+              <button
+                onClick={() => setShowUploadPanel(!showUploadPanel)}
+                className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors relative"
+                title="Upload files"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                {processedDocuments.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-600 text-white text-xs rounded-full flex items-center justify-center">
+                    {processedDocuments.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Textarea */}
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ask about valuations, financials, or M&A analysis..."
+                rows={3}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+              />
+
+              {/* Send Button */}
+              <button
+                onClick={() => sendLiveMessage()}
+                disabled={isLoading || !input.trim()}
+                className="flex-shrink-0 p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Send message"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Export Button */}
+            {messages.length > 0 && (
+              <div className="mt-3">
+                <ExportButton messages={messages} agentName="Financial Analyst" />
+              </div>
+            )}
+          </div>
         </div>
       )}
 
