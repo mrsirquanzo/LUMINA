@@ -73,10 +73,10 @@ const SYMBOL_MAP: { [key: string]: string } = {
   '•': '\u2022',
   '–': '\u2013',
   '—': '\u2014',
-  '"': '\u201C',
-  '"': '\u201D',
-  ''': '\u2018',
-  ''': '\u2019'
+  '\u201C': '\u201C', // "
+  '\u201D': '\u201D', // "
+  '\u2018': '\u2018', // '
+  '\u2019': '\u2019'  // '
 };
 
 // Ensure proper UTF-8 encoding for special characters
