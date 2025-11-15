@@ -53,7 +53,7 @@ export function estimateMultiAgentCost(
     // Expected output: ~2000 tokens per agent
     // Plus synthesis: ~1500 tokens
 
-    const agents: AgentType[] = ['clinical', 'patent', 'financial'];
+    const agents: AgentType[] = ['clinical', 'patent', 'financial', 'regulatory', 'market-research'];
     const breakdown = agents.map(agent => ({
       agent,
       inputTokens: baseInputTokens,
@@ -62,7 +62,7 @@ export function estimateMultiAgentCost(
     }));
 
     // Add synthesis step
-    const synthesisInputTokens = baseInputTokens + (2000 * 3); // Include all agent responses
+    const synthesisInputTokens = baseInputTokens + (2000 * agents.length); // Include all agent responses
     const synthesisOutputTokens = 1500;
     breakdown.push({
       agent: 'clinical', // Placeholder, synthesis is separate
@@ -85,7 +85,7 @@ export function estimateMultiAgentCost(
     // More iterations, agents can ask each other questions
     // Expected: 5-7 API calls
 
-    const agents: AgentType[] = ['clinical', 'patent', 'financial'];
+    const agents: AgentType[] = ['clinical', 'patent', 'financial', 'regulatory', 'market-research'];
 
     // Estimate iterative calls
     const iterations = 2; // Average 2 rounds of questions
