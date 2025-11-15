@@ -7,7 +7,7 @@ export default function Hero() {
       <div className="max-w-4xl mx-auto text-center">
         {/* Main Heading */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-          Biology. Business. Build.
+          Biology. Intelligence. Build.
         </h1>
 
         {/* Subheading */}

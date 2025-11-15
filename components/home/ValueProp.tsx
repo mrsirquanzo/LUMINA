@@ -34,7 +34,7 @@ export default function ValueProp() {
       title: "Build AI Agents",
       description:
         "Create intelligent systems that automate due diligence, accelerate analysis, and scale expertise.",
-      hover: "Examples: data analyst agent, patent expert agent, financial analyst agent",
+      hover: "Examples: clinical data analyst, financial analyst, patent expert, market research analyst, regulatory expert",
     },
     {
       icon: (
