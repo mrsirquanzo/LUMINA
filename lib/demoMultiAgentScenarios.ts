@@ -1000,22 +1000,22 @@ Based on approved indications + pipeline:
 export const DEMO_LICENSING_DEAL: DemoScenario = {
   id: 'licensing-deal',
   title: 'CRISPR Base Editing Platform License',
-  description: 'Evaluate BaseGenomics\' adenine base editor platform for $125M upfront + double-digit royalties',
+  description: 'Comprehensive evaluation of BaseGenomics\' adenine base editor platform across technology validation, IP landscape, deal economics, and market potential.',
   query: 'Should we license BaseGenomics\' adenine base editing platform for $125M upfront + double-digit royalties? Analyze the technology validation, IP landscape, and deal economics.',
   documents: [
     'BaseGenomics_Technology_Package.pdf (2.1 MB)',
     'Base_Editing_Patent_Analysis.pdf (3.2 MB)',
     'License_Term_Sheet.pdf (0.8 MB)',
   ],
-  estimatedDuration: 15500,
+  estimatedDuration: 19500,
   events: [
     {
       type: 'plan_created',
       timestamp: 0,
       data: {
-        plan: 'Technology evaluation: Clinical Validation → IP Assessment → Deal Economics → Decision',
+        plan: 'Technology evaluation: Clinical Validation → IP Assessment → Deal Economics → Market Analysis → Decision',
         mode: 'thorough',
-        estimatedCost: '$0.35',
+        estimatedCost: '$0.42',
       },
     },
     {
@@ -1257,31 +1257,249 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 ✓ Clear FTO eliminates sublicense risk
 ✓ Platform optionality provides significant upside
 
-**Recommendation:** **PROCEED** - This is a compelling risk/reward profile with 1,100%+ expected ROI.`,
+**Recommendation:** **PROCEED** - This is a compelling risk/reward profile with 1,100%+ expected ROI.
+
+**Question for Market Research:** What's the total addressable market for base editing therapies across genetic diseases, and how does this platform position against Beam and Verve?`,
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 10100,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Market Research Analyst',
+        question: 'What\'s the total addressable market for base editing therapies across genetic diseases, and how does this platform position against Beam and Verve?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 10600,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing gene therapy market, base editing competitive landscape, and commercial potential',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 11300,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Sizing genetic disease markets and mapping competitive positioning...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 13100,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Gene Therapy & Base Editing Market Analysis (2025-2040)
+
+**Total Gene Therapy Market:**
+
+**Current Market (2024-2025):**
+- Total gene therapy market: $8.5B (2024)
+- Growth rate: 28% CAGR (2024-2030)
+- **Projected 2030 market: $35-40B**
+- **Projected 2040 market: $85-100B**
+
+**Market Segments:**
+- Ex vivo cell therapies: 42% ($3.6B) - CAR-T, HSC gene therapy
+- In vivo gene therapies: 38% ($3.2B) - AAV, LNP delivery
+- **Base editing therapies: 8% ($680M)** - Emerging segment
+- Other (RNA, etc.): 12%
+
+**Base Editing Competitive Landscape:**
+
+**Market Leaders (2024-2025):**
+
+1. **Beam Therapeutics (Public, $2.8B market cap):**
+   - Platform: ABE8e + CBE4max (adenine & cytosine base editors)
+   - Lead programs:
+     - BEAM-101: Sickle cell disease (Phase 1/2)
+     - BEAM-302: Glycogen storage disease (Phase 1/2)
+     - BEAM-201: T-ALL (preclinical)
+   - Partnerships: Pfizer ($300M), Verve ($600M)
+   - **Market position:** Broadest base editing pipeline
+
+2. **Verve Therapeutics (Public, $1.1B market cap):**
+   - Platform: In vivo liver base editing (licensed from Beam)
+   - Lead programs:
+     - VERVE-101: PCSK9 (heart disease) - **APPROVED New Zealand 2024!**
+     - VERVE-102: ANGPTL3 (heart disease, Phase 1)
+   - **Market position:** First approved base editing therapy
+
+3. **Prime Medicine (Private, $1.6B valuation):**
+   - Platform: Prime editing (broader than base editing but less efficient)
+   - Lead: Chronic granulomatous disease (Phase 1/2)
+   - Backed by: F-Prime, Arch Ventures
+   - **Market position:** Next-gen editing, but 30-40% efficiency vs 75-92% base editors
+
+**BaseGenomics Competitive Positioning:**
+
+**vs Beam Therapeutics:**
+✓ **Differentiation:** ABE9.1 evolved variant (not ABE8e) with better specificity
+✓ **Advantage:** 75-92% efficiency vs Beam's 60-75%
+✓ **Advantage:** Proprietary absorption enhancer (reduced off-target)
+⚠ **Disadvantage:** Beam has 3-year head start, established partnerships
+✓ **Opportunity:** Different evolved variant = non-competitive, complementary
+
+**vs Verve Therapeutics:**
+✓ **Differentiation:** Ex vivo HSC editing vs Verve's in vivo liver editing
+✓ **Advantage:** Broader applicability (blood disorders, not just liver)
+⚠ **Disadvantage:** Verve has first approval (VERVE-101 in New Zealand)
+✓ **Opportunity:** Different delivery (ex vivo vs in vivo) = non-overlapping indications
+
+**vs Prime Medicine:**
+✓ **Advantage:** Higher editing efficiency (75-92% vs 30-40%)
+✓ **Advantage:** Clinical-stage vs Prime's earlier development
+✓ **Advantage:** Proven safety profile (Phase 1/2 complete)
+✓ **Opportunity:** Base editing simpler than prime editing = faster path to approval
+
+**Total Addressable Market by Indication:**
+
+**Lead Indications (BaseGenomics Platform):**
+
+1. **Sickle Cell Disease:**
+   - Addressable patients: 100,000 (US) + 50,000 (EU)
+   - Treatment price: $2.8M (Casgevy precedent)
+   - Market penetration: 20-25% at peak
+   - **Market size: $14.7-21B** (annual at peak)
+   - Peak: 2032-2036
+
+2. **Hemophilia A & B:**
+   - Addressable patients: 40,000 (US+EU)
+   - Treatment price: $3.2M (one-time cure)
+   - Market penetration: 30% (gene therapy accepted)
+   - **Market size: $8-10B**
+   - Peak: 2033-2037
+
+3. **Familial Hypercholesterolemia (PCSK9):**
+   - Addressable patients: 1.3M (homozygous + severe heterozygous)
+   - Treatment price: $500K (in vivo, one-time)
+   - Market penetration: 8-12% (conservative, in vivo risk)
+   - **Market size: $6-8B**
+   - Peak: 2034-2038
+
+4. **Ornithine Transcarbamylase Deficiency:**
+   - Addressable patients: 15,000 (US+EU)
+   - Treatment price: $2.5M
+   - Market penetration: 40% (severe unmet need)
+   - **Market size: $2-3B**
+   - Peak: 2035-2038
+
+5. **Beta-Thalassemia:**
+   - Addressable patients: 60,000 (US+EU)
+   - Treatment price: $2.8M
+   - Market penetration: 18-22%
+   - **Market size: $4-5B**
+   - Peak: 2033-2037
+
+**Total Platform TAM: $35-47B** (across 5 indications)
+
+**Market Share Projections:**
+
+**Scenario A: Lead Position (30% probability)**
+- Capture 25-30% of base editing market
+- Peak revenue across platform: $10-14B
+- License value: $15-20B (1.5x peak sales)
+
+**Scenario B: Strong #2 Position (50% probability) ← BASE CASE**
+- Capture 18-22% of base editing market
+- Peak revenue across platform: $7-10B
+- License value: $10-15B
+
+**Scenario C: Niche Player (15% probability)**
+- Capture 10-15% of base editing market
+- Peak revenue: $4-7B
+- License value: $5-8B
+
+**Scenario D: Failure (5% probability)**
+- Platform fails clinically or Beam/Verve dominate
+- Minimal commercial traction
+- Write-off scenario
+
+**Expected Commercial Value:**
+- Scenario A (30%): $17.5B × 0.30 = $5.25B
+- Scenario B (50%): $12.5B × 0.50 = $6.25B
+- Scenario C (15%): $6B × 0.15 = $0.9B
+- Scenario D (5%): $0 × 0.05 = $0
+- **Expected value: $12.4B**
+
+**Risk-Adjusted for Development:**
+- Phase 2 success: 85%
+- Phase 3 success (conditional): 75%
+- Approval probability: 64%
+- **Risk-adjusted value: $7.9B**
+
+**Licensing ROI Calculation:**
+- Investment: $125M upfront + $750M development = $875M total
+- Expected value: $7.9B (risk-adjusted)
+- **Expected ROI: 803%** ✓✓✓
+
+**Competitive Dynamics:**
+
+**Key Market Trends (2024-2025):**
+✓ **Regulatory acceptance:** Casgevy approval (2023) validated CRISPR gene therapy
+✓ **Payer coverage:** 75% commercial plans now cover one-time curative therapies
+✓ **Manufacturing scale:** CDMOs investing in LNP + ex vivo capabilities
+✓ **Pricing precedent:** $2-3M per patient accepted for curative therapies
+
+**Barriers to Entry:**
+⚠ **High development costs:** $500-800M per indication to approval
+⚠ **Manufacturing complexity:** Ex vivo HSC editing requires specialized facilities
+⚠ **Regulatory uncertainty:** FDA still defining base editing guidelines
+⚠ **Beam partnerships:** Beam has locked up Pfizer, Verve (limits competition)
+
+**Commercial Opportunities:**
+✓ **Multiple shots on goal:** Platform applicable to 4,000+ genetic diseases
+✓ **First-mover in ABE9.1:** Evolved variant differentiation vs Beam
+✓ **Partnership potential:** Pharma seeking base editing platforms (Roche, Novo, GSK)
+✓ **Regional sublicensing:** China/Japan markets underserved ($8-12B additional TAM)
+
+**Market Timing:**
+✓ **Window open:** Base editing still early (only 1 approval globally)
+✓ **Validation increasing:** Beam Phase 2 data expected 2025-2026 (de-risks category)
+✓ **M&A active:** Pharma acquiring gene therapy platforms ($1-5B deals)
+
+**Market Recommendation:**
+
+✅ **ATTRACTIVE MARKET OPPORTUNITY**
+- $35-47B total platform TAM across 5+ indications
+- Base editing market growing 45% CAGR (2024-2035)
+- Competitive positioning strong (ABE9.1 differentiation)
+- Multiple exit scenarios all profitable
+- **Expected ROI: 803%** supports $125M upfront investment
+
+**Key Success Factors:**
+1. Lead program (sickle cell) approval by 2028-2029
+2. Expand to 2-3 additional indications by 2032
+3. Maintain 18-22% market share vs Beam/Verve
+4. Execute regional sublicenses (China/Japan)
+5. Consider pharma acquisition exit at Phase 3 data (2027-2028)`,
       },
     },
     {
       type: 'synthesis_start',
-      timestamp: 10300,
+      timestamp: 13600,
       data: {},
     },
     {
       type: 'synthesis_progress',
-      timestamp: 11300,
+      timestamp: 14500,
       data: {
-        step: 'Integrating technology, IP, and financial assessments...',
+        step: 'Integrating technology, IP, financial, and market analyses...',
       },
     },
     {
       type: 'synthesis_progress',
-      timestamp: 12300,
+      timestamp: 15600,
       data: {
         step: 'Generating deal structure alternatives...',
       },
     },
     {
       type: 'complete',
-      timestamp: 14500,
+      timestamp: 18000,
       data: {
         synthesis: `# Licensing Recommendation: PROCEED WITH DEAL
 
@@ -1450,8 +1668,8 @@ This is an **exceptional opportunity** to acquire a validated, best-in-class ade
 
 ---
 
-**Analysis completed at $0.35 estimated cost**`,
-        cost: 0.35,
+**Analysis completed at $0.42 estimated cost**`,
+        cost: 0.42,
       },
     },
   ],
