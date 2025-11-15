@@ -309,7 +309,7 @@ export default function RegulatoryExpertAgent() {
               : 'bg-white text-gray-700 border border-gray-300 hover:border-gray-400'
           }`}
         >
-          🎭 Demo Mode
+          📺 Demo Mode (Free)
         </button>
         <button
           onClick={switchToLiveMode}
@@ -319,7 +319,7 @@ export default function RegulatoryExpertAgent() {
               : 'bg-white text-gray-700 border border-gray-300 hover:border-gray-400'
           }`}
         >
-          ⚡ Live Mode
+          🚀 Live AI Agent
         </button>
       </div>
 
@@ -509,38 +509,91 @@ export default function RegulatoryExpertAgent() {
       )}
 
       {/* Behind the Scenes */}
-      <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">
-          🔧 Behind the Scenes
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          Behind the Scenes
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <div>
-            <p className="font-medium text-gray-900 mb-1">AI Model</p>
-            <p>Claude Sonnet 4 (Anthropic)</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Mode Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">⚙️</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Mode</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Demo' : 'Live AI'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-orange-50 border-2 border-orange-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Demo Mode' : 'Live Mode'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Pre-recorded regulatory pathway analyses demonstrating capabilities without API costs'
+                    : 'Real-time regulatory intelligence powered by Claude Sonnet 4 via Anthropic API'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Key Strengths</p>
-            <p>Complex regulatory reasoning, nuanced policy interpretation, strategic planning</p>
+
+          {/* Specialization Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">⚖️</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Specialization</h4>
+              <p className="text-sm text-gray-600">Regulatory Strategy</p>
+            </div>
+            <div className="absolute inset-0 bg-orange-50 border-2 border-orange-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Regulatory Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  FDA/EMA pathways, IND/BLA strategy, CMC requirements, accelerated approval, breakthrough therapy designation, and clinical endpoint selection
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
-            <p>FDA openFDA • EMA (European Medicines Agency) • Regulatory Databases</p>
+
+          {/* Capabilities Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">📋</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Capabilities</h4>
+              <p className="text-sm text-gray-600">Strategic Planning</p>
+            </div>
+            <div className="absolute inset-0 bg-orange-50 border-2 border-orange-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Pathway Optimization</p>
+                <p className="text-xs text-gray-700">
+                  Complex regulatory reasoning, policy interpretation, risk mitigation, accelerated approval strategies, and full guidance document analysis
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Specialization</p>
-            <p>FDA/EMA pathways, IND/BLA strategy, CMC requirements, clinical endpoints</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Context Window</p>
-            <p>200K tokens - Analyzes full regulatory guidance documents and ICH guidelines</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Capabilities</p>
-            <p>Pathway optimization • Accelerated approval strategies • Risk mitigation</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Cost</p>
-            <p>$0.01-0.10 per query</p>
+
+          {/* Cost Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">💰</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Cost</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Free' : '$0.01-0.10'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-orange-50 border-2 border-orange-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Zero Cost' : 'Pay-per-Query'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Demo mode is completely free with pre-recorded regulatory analyses'
+                    : 'Live mode charges $0.01-0.10 per query based on complexity and response length'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
