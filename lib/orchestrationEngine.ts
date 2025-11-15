@@ -100,7 +100,17 @@ export async function runOrchestration(
  * Create initial execution plan
  */
 function createInitialPlan(mode: ExecutionMode, customAgents?: AgentType[]): ExecutionPlan {
-  const agents: AgentType[] = customAgents || ['clinical', 'patent', 'financial', 'market_research', 'regulatory'];
+  const validAgents: AgentType[] = ['clinical', 'patent', 'financial', 'market_research', 'regulatory'];
+
+  // Validate custom agents if provided
+  if (customAgents) {
+    const invalidAgents = customAgents.filter(a => !validAgents.includes(a));
+    if (invalidAgents.length > 0) {
+      throw new Error(`Invalid agent types in customAgents: ${invalidAgents.join(', ')}. Valid types: ${validAgents.join(', ')}`);
+    }
+  }
+
+  const agents: AgentType[] = customAgents || validAgents;
 
   if (mode === 'fast') {
     // Parallel execution
@@ -192,6 +202,14 @@ async function answerAgentQuestion(
   query: string,
   documents: ProcessedDocument[]
 ): Promise<string> {
+  // Validate agent types
+  if (!AGENT_MODEL_CONFIG[targetAgent]) {
+    throw new Error(`Invalid target agent type: "${targetAgent}". Valid types: clinical, patent, financial, regulatory, market_research`);
+  }
+  if (!AGENT_PROMPTS[targetAgent]) {
+    throw new Error(`Missing prompt for agent: "${targetAgent}"`);
+  }
+
   // Get MCP client and context
   const mcpClient = getMCPClient();
   const mcpContext = await mcpClient.getContextForAgent(targetAgent);
@@ -423,6 +441,14 @@ async function callAgent(
   messages: AgentMessage[],
   additionalContext?: string
 ): Promise<{ response: string; usage?: { inputTokens: number; outputTokens: number } }> {
+  // Validate agent type
+  if (!AGENT_MODEL_CONFIG[agent]) {
+    throw new Error(`Invalid agent type: "${agent}". Valid types: clinical, patent, financial, regulatory, market_research`);
+  }
+  if (!AGENT_PROMPTS[agent]) {
+    throw new Error(`Missing prompt for agent: "${agent}"`);
+  }
+
   // Get MCP client and context
   const mcpClient = getMCPClient();
   const mcpContext = await mcpClient.getContextForAgent(agent);
