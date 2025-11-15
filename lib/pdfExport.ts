@@ -160,6 +160,10 @@ function sanitizeForPDF(text: string): string {
   // Step 7: Strip markdown inline formatting (bold, italic, etc.)
   sanitized = stripInlineMarkdown(sanitized);
 
+  // Step 8: Remove leading [OK], [X], [!] at the start of lines (they'll be handled as bullet points)
+  sanitized = sanitized.replace(/^(\[(OK|X|!)\]\s*)/gm, '');
+  sanitized = sanitized.replace(/\n(\[(OK|X|!)\]\s*)/g, '\n');
+
   return sanitized;
 }
 
@@ -262,9 +266,11 @@ function parseMarkdown(text: string): ContentElement[] {
       flushTable();
     }
 
-    // Handle lists
-    if (trimmed.match(/^[-*•]\s/) || trimmed.match(/^\d+\.\s/)) {
-      const content = trimmed.replace(/^[-*•]\s/, '').replace(/^\d+\.\s/, '');
+    // Handle lists (including lines starting with [OK], [X], [!] as bullet points)
+    if (trimmed.match(/^[-*•]\s/) || trimmed.match(/^\d+\.\s/) || trimmed.match(/^\[(OK|X|!)\]\s/)) {
+      let content = trimmed.replace(/^[-*•]\s/, '').replace(/^\d+\.\s/, '');
+      // Also strip leading [OK], [X], [!] symbols if they appear as list markers
+      content = content.replace(/^\[(OK|X|!)\]\s*/, '');
       currentList.push(content);
       continue;
     } else {
@@ -749,7 +755,7 @@ class PDFGenerator {
 // Main export function
 export function exportToPDF(messages: ChatMessage[], agentName: string): void {
   // Version check - log to verify latest code is running
-  console.log('[PDF Export] Version 2024-11-15-v5 - FIXED: Header wrapping, markdown stripping, symbol dedup');
+  console.log('[PDF Export] Version 2024-11-15-v6 - FIXED: Removed leading symbols from lines');
 
   const generator = new PDFGenerator();
   generator.generateChatPDF(messages, agentName);
