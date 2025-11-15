@@ -241,7 +241,7 @@ export default function FeaturedProjects() {
         {/* View All CTA */}
         <div className="text-center">
           <Button href="/ai-projects" variant="secondary">
-            Explore All AI Projects
+            View All Projects
           </Button>
         </div>
       </div>

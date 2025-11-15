@@ -4,7 +4,7 @@ import AIProjectsClient from './AIProjectsClient';
 import { getAllAIProjects } from '@/lib/mdx';
 
 export const metadata: Metadata = {
-  title: 'AI Projects | Quan Ho',
+  title: 'Build | Quan Ho',
   description: 'AI agents and design systems that automate biotech intelligence workflows.',
   keywords: ['AI agents', 'design systems', 'biotech tools', 'business intelligence', 'automation'],
 };
@@ -22,7 +22,7 @@ export default function AIProjectsPage() {
             Building & Designing
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            AI Projects
+            Build
           </h1>
           <p className="text-xl text-gray-700 leading-relaxed">
             I build AI agents and design systems that automate biotech intelligence workflows.
