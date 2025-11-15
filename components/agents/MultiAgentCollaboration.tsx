@@ -615,7 +615,7 @@ ${synthesis}
 
                       {activity.response && (
                         <div className={`mt-3 ${activity.isExpanded ? '' : 'max-h-32 overflow-hidden relative'}`}>
-                          <div className="prose prose-sm max-w-none bg-white/60 p-4 rounded-lg">
+                          <div className="agent-output bg-white/80 p-5 rounded-lg shadow-sm border border-gray-100">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                               {activity.response}
                             </ReactMarkdown>
@@ -665,7 +665,7 @@ ${synthesis}
                             <div className={`text-xs mb-1 ${msg.role === 'user' ? 'text-blue-600 font-medium' : 'text-gray-600 font-medium'}`}>
                               {msg.role === 'user' ? 'You' : activity.agent}
                             </div>
-                            <div className="prose prose-sm max-w-none text-gray-800">
+                            <div className="agent-output text-gray-800">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {msg.content}
                               </ReactMarkdown>
@@ -790,7 +790,7 @@ ${synthesis}
             </button>
           </div>
 
-          <div className="prose prose-sm max-w-none bg-white p-5 rounded-lg">
+          <div className="agent-output bg-white p-8 rounded-xl shadow-md border border-gray-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {synthesis}
             </ReactMarkdown>

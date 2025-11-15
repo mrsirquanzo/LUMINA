@@ -85,4 +85,118 @@
     @apply text-primary-600 hover:text-primary-700 underline-offset-4
            hover:underline transition-all duration-200;
   }
+
+  /* Enhanced Agent Output Styling - Claude.ai inspired */
+  .agent-output {
+    @apply prose prose-slate max-w-none;
+  }
+
+  .agent-output h1 {
+    @apply text-2xl font-bold text-gray-900 mb-4 mt-8 pb-3 border-b-2 border-gray-200;
+  }
+
+  .agent-output h2 {
+    @apply text-xl font-semibold text-gray-900 mb-3 mt-7 pb-2 border-b border-gray-200;
+  }
+
+  .agent-output h3 {
+    @apply text-lg font-semibold text-gray-800 mb-2 mt-6;
+  }
+
+  .agent-output h4 {
+    @apply text-base font-semibold text-gray-800 mb-2 mt-5;
+  }
+
+  .agent-output p {
+    @apply text-base text-gray-700 leading-7 mb-4;
+  }
+
+  .agent-output strong {
+    @apply font-semibold text-gray-900;
+  }
+
+  .agent-output em {
+    @apply italic text-gray-800;
+  }
+
+  .agent-output ul {
+    @apply list-disc list-outside ml-6 mb-4 space-y-2;
+  }
+
+  .agent-output ol {
+    @apply list-decimal list-outside ml-6 mb-4 space-y-2;
+  }
+
+  .agent-output li {
+    @apply text-base text-gray-700 leading-7 pl-2;
+  }
+
+  .agent-output li p {
+    @apply mb-2;
+  }
+
+  .agent-output table {
+    @apply w-full border-collapse mb-6 mt-4 bg-white rounded-lg overflow-hidden shadow-sm;
+  }
+
+  .agent-output thead {
+    @apply bg-gradient-to-r from-blue-50 to-blue-100;
+  }
+
+  .agent-output thead th {
+    @apply text-left text-sm font-semibold text-gray-800 px-4 py-3 border-b-2 border-blue-200;
+  }
+
+  .agent-output tbody tr {
+    @apply border-b border-gray-200 hover:bg-gray-50 transition-colors;
+  }
+
+  .agent-output tbody tr:nth-child(even) {
+    @apply bg-gray-50/50;
+  }
+
+  .agent-output tbody td {
+    @apply text-sm text-gray-700 px-4 py-3;
+  }
+
+  .agent-output code {
+    @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+
+  .agent-output pre {
+    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4 mt-4;
+  }
+
+  .agent-output pre code {
+    @apply bg-transparent text-gray-100 p-0;
+  }
+
+  .agent-output blockquote {
+    @apply border-l-4 border-blue-500 bg-blue-50 pl-4 pr-4 py-3 my-4 italic text-gray-700;
+  }
+
+  .agent-output hr {
+    @apply my-8 border-t-2 border-gray-200;
+  }
+
+  .agent-output a {
+    @apply text-blue-600 hover:text-blue-700 underline underline-offset-2 transition-colors;
+  }
+
+  /* Section containers for major sections */
+  .agent-section {
+    @apply bg-white border border-gray-200 rounded-lg p-6 mb-6 shadow-sm;
+  }
+
+  .agent-section-highlight {
+    @apply bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-6 shadow-sm;
+  }
+
+  .agent-section-warning {
+    @apply bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-6 mb-6 shadow-sm;
+  }
+
+  .agent-section-success {
+    @apply bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-200 rounded-lg p-6 mb-6 shadow-sm;
+  }
 }

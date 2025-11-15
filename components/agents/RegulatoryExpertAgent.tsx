@@ -388,32 +388,8 @@ export default function RegulatoryExpertAgent() {
                       </span>
                     )}
                   </div>
-                  <div className="text-sm leading-relaxed max-w-none text-gray-800">
-
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        // Minimal heading styling - just slightly larger, no bold
-                        h1: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
-                        h2: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
-                        h3: (props) => <p className="text-sm font-medium mt-2 mb-1 text-gray-900" {...props} />,
-                        // Subtle bold - just slightly heavier
-                        strong: (props) => <span className="font-semibold text-gray-900" {...props} />,
-                        // Clean lists
-                        ul: (props) => <ul className="list-disc list-inside my-2 space-y-1" {...props} />,
-                        ol: (props) => <ol className="list-decimal list-inside my-2 space-y-1" {...props} />,
-                        li: (props) => <li className="ml-0" {...props} />,
-                        // Simple paragraphs
-                        p: (props) => <p className="my-2" {...props} />,
-                        // Subtle code
-                        code: ({inline, ...props}: any) =>
-                          inline ? (
-                            <code className="px-1 py-0.5 bg-orange-50 text-orange-900 rounded text-xs font-mono border border-orange-200" {...props} />
-                          ) : (
-                            <code className="block p-2 bg-gray-100 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto border border-gray-300" {...props} />
-                          ),
-                      }}
-                    >
+                  <div className="agent-output text-gray-800">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {message.content}
                     </ReactMarkdown>
                   </div>
