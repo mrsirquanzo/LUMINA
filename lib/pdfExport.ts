@@ -66,19 +66,19 @@ const PDF_STYLES = {
 // Symbol mapping for jsPDF-safe rendering
 // Replace Unicode symbols with ASCII equivalents that render correctly
 const SYMBOL_MAP: { [key: string]: string } = {
-  '✓': '[✓]',  // Checkmark
-  '✗': '[X]',  // X mark
-  '→': '->',   // Arrow
-  '⚠': '[!]',  // Warning
-  '★': '*',    // Star
-  '•': '•',    // Bullet (this one usually works)
-  '–': '-',    // En dash
-  '—': '--',   // Em dash
-  '"': '"',    // Smart quote left
-  '"': '"',    // Smart quote right
-  ''': "'",    // Smart apostrophe left
-  ''': "'",    // Smart apostrophe right
-  '➜': '->',   // Another arrow variant
+  '\u2713': '[✓]',  // Checkmark (✓)
+  '\u2717': '[X]',  // X mark (✗)
+  '\u2192': '->',   // Arrow (→)
+  '\u26A0': '[!]',  // Warning (⚠)
+  '\u2605': '*',    // Star (★)
+  '\u2022': '•',    // Bullet (•)
+  '\u2013': '-',    // En dash (–)
+  '\u2014': '--',   // Em dash (—)
+  '\u201C': '"',    // Smart quote left (")
+  '\u201D': '"',    // Smart quote right (")
+  '\u2018': "'",    // Smart apostrophe left (')
+  '\u2019': "'",    // Smart apostrophe right (')
+  '\u279C': '->',   // Another arrow variant (➜)
 };
 
 // Replace problematic Unicode characters with jsPDF-safe alternatives
