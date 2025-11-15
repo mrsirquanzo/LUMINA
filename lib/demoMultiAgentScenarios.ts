@@ -6,14 +6,14 @@ import { DemoScenario } from './multiAgentTypes';
 export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
   id: 'ma-due-diligence',
   title: 'Biotech M&A Due Diligence',
-  description: 'Comprehensive analysis of a bispecific antibody acquisition target across clinical, patent, and financial dimensions',
+  description: 'Comprehensive analysis of a bispecific antibody acquisition across all 5 dimensions: clinical, patent, financial, regulatory, and market',
   query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
   documents: [
     'BioSpectra_Phase2_Results.pdf (2.8 MB)',
     'BioSpectra_Patent_Portfolio.pdf (2.1 MB)',
     'BioSpectra_10K_2024.pdf (4.3 MB)',
   ],
-  estimatedDuration: 18000, // 18 seconds
+  estimatedDuration: 24000, // 24 seconds - all 5 agents
   events: [
     {
       type: 'plan_created',
@@ -259,38 +259,240 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 - TCE market growing 45% annually (2024-2030)
 
 **Recommended Deal Structure:**
-See synthesis for recommended approach.`,
+See synthesis for recommended approach.
+
+**Question for Regulatory Expert:** What regulatory pathway and timeline should we expect for Phase 3 and approval?`,
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 13000,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Regulatory Expert',
+        question: 'What regulatory pathway and timeline should we expect for Phase 3 and approval?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 13500,
+      data: {
+        agent: 'Regulatory Expert',
+        task: 'Assessing regulatory pathway and approval timeline',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 14200,
+      data: {
+        agent: 'Regulatory Expert',
+        progress: 'Reviewing FDA guidance for bispecific antibodies...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 15800,
+      data: {
+        agent: 'Regulatory Expert',
+        response: `## Regulatory Pathway & Approval Strategy
+
+**Recommended Regulatory Strategy:**
+
+**FDA Breakthrough Therapy Designation (BTD):**
+✓ **Eligible** - Substantial improvement over Tecvayli (3% vs 15% ICANS)
+✓ Apply at end of Phase 2 (should receive within 60 days)
+✓ **Benefits:** Rolling review, more frequent FDA meetings, priority review
+
+**Phase 3 Trial Design (2025-2027):**
+- **Design:** Randomized, controlled, open-label
+- **Comparator:** Tecvayli (current SOC for relapsed/refractory MM)
+- **Primary endpoint:** Progression-free survival (PFS)
+- **Secondary endpoints:** Overall survival (OS), ORR, safety (ICANS/CRS rates)
+- **Sample size:** ~450 patients (adequately powered for PFS superiority)
+- **Duration:** 18-24 months to primary endpoint
+- **Enrollment:** 12-15 months (competitive R/R multiple myeloma space)
+
+**FDA Filing Strategy:**
+✓ **BLA submission:** Q3 2027 (assuming positive Phase 3 data)
+✓ **Priority Review:** 6-month review (vs standard 10 months)
+✓ **Accelerated Approval path NOT recommended** - Phase 2 data strong but not curative
+
+**Approval Timeline:**
+- Phase 3 initiation: Q1 2025
+- Primary data readout: Q3 2026 (18 months)
+- BLA submission: Q3 2027
+- **FDA approval: Q1 2028** (priority review, 6 months)
+
+**EMA Parallel Filing:**
+✓ Conditional approval possible based on same Phase 3 data
+✓ EMA approval: Q2 2028 (2-3 months after FDA)
+
+**Manufacturing & CMC:**
+✓ **No novel manufacturing concerns** - bispecific TCE platform established
+✓ Process validation required for commercial scale (already underway)
+✓ Post-approval commitments: Pediatric study (deferred to 2030)
+
+**Risk Mitigation Strategy (REMS):**
+✓ **REMS likely required** for CRS/ICANS management
+✓ Similar to Tecvayli/Talvey REMS programs
+✓ Requirements: Certified treatment centers, mandatory training, patient monitoring
+
+**Regulatory Risk Assessment:**
+- **Approvability:** 75% probability (strong Phase 2 + head-to-head superiority expected)
+- **Timeline risk:** Low (~10% chance of delay beyond Q1 2028)
+- **Key risk factors:**
+  - Manufacturing inspection delays (FDA capacity constraints 2026-2027)
+  - OS data maturity requirements (may need 24-month follow-up)
+
+**Question for Market Research:** Given Q1 2028 FDA approval target, what is the market landscape and peak sales potential?`,
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 16200,
+      data: {
+        from: 'Regulatory Expert',
+        to: 'Market Research Analyst',
+        question: 'Given Q1 2028 FDA approval target, what is the market landscape and peak sales potential?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 16700,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing market size, competitive landscape, and peak sales forecast',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 17400,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Sizing addressable patient population and pricing dynamics...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 19200,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Market Opportunity & Commercial Forecast (2028-2035)
+
+**Addressable Market (Multiple Myeloma Bispecific TCE):**
+
+**Total Market Size (2028):**
+- R/R multiple myeloma patients (3L+): ~35,000 (US) + ~28,000 (EU5)
+- Bispecific TCE-eligible: ~22,000 patients/year (US+EU5)
+- **Total addressable market: $8.2B by 2030** (growing 18% CAGR)
+
+**Competitive Landscape (2028 launch scenario):**
+
+**Market Leaders:**
+1. **Tecvayli (J&J)** - $2.8B (2027), market leader but safety concerns
+2. **Talvey (Pfizer)** - $1.6B (2027), strong efficacy but complex dosing
+3. **Elrexfio (Pfizer)** - $980M (2027), BCMA-targeting (different MOA)
+
+**BioSpectra Competitive Position:**
+✓ **Best-in-class safety profile** (3% ICANS vs 12-15% competition)
+✓ **Efficacy non-inferior to superior** (63% ORR competitive)
+✓ **Late-to-market headwind** (Tecvayli launched 2022, 6-year head start)
+✓ **Differentiation:** Safety enables outpatient treatment expansion
+
+**Pricing Strategy:**
+- **WAC:** $285,000 per treatment course (competitive with Tecvayli $295K)
+- **Net price:** $228,000 (20% discount for payer access)
+- **Justification:** Safety profile = fewer hospitalizations = lower total cost of care
+
+**Market Share Projections:**
+
+**Year 1 (2028):**
+- Penetration: 8% of eligible patients (~1,760 patients)
+- Revenue: **$400M**
+- Rationale: Safety messaging drives early adopter physicians
+
+**Year 3 (2030):**
+- Penetration: 22% of eligible patients (~4,840 patients)
+- Revenue: **$1.1B**
+- Rationale: Real-world safety data + KOL advocacy
+
+**Peak Sales (2033-2035):**
+- Penetration: 35-38% of eligible patients (~8,400 patients)
+- **Peak revenue: $1.9-2.1B**
+- Rationale: Steady-state share based on safety differentiation
+
+**Market Share Allocation (2033 peak):**
+| Product | Market Share | Peak Sales |
+|---------|--------------|------------|
+| Tecvayli | 32% | $2.6B |
+| BioSpectra | 35% | **$2.1B** |
+| Talvey | 18% | $1.5B |
+| Elrexfio | 15% | $1.2B |
+
+**Key Value Drivers:**
+1. **Safety differentiation** → Enables outpatient administration → 40% cost savings vs inpatient
+2. **Medicare/payer preference** → Safety profile reduces hospitalization risk
+3. **Community oncology adoption** → Simpler REMS compliance vs Tecvayli
+
+**Commercial Risks:**
+⚠ **Late-market entry** (2028 vs Tecvayli 2022) → 6-year head start = entrenched market share
+⚠ **Next-gen CAR-T** (allogeneic) may disrupt TCE category by 2030-2032
+⚠ **Price compression** if 4+ bispecific TCEs approved (payer pushback)
+
+**Geographic Expansion:**
+- **US (60% of sales):** Launch 2028 (Q1)
+- **EU5 (28% of sales):** Launch 2028 (Q3) - conditional EMA approval
+- **Japan (8% of sales):** Launch 2029 (local trial requirement)
+- **China (4% of sales):** Launch 2030+ (NMPA path uncertain)
+
+**NPV Analysis (2028-2042):**
+- Peak sales: $2.1B (2033-2036)
+- Duration: 9 years at peak (patent expiry 2043)
+- Discount rate: 10%
+- **Commercial NPV: $12.4B**
+
+**Recommended Acquisition Value:**
+- Commercial NPV: $12.4B
+- Risk-adjusted (75% approval probability): $9.3B
+- Risk-adjusted (development costs -$310M): **$9.0B**
+- Acquisition at $2.2B = **24% of risk-adjusted NPV** ✓✓ Attractive
+
+**Go-to-Market Strategy:**
+1. **Pre-launch (6 months):** KOL engagement, REMS site certification
+2. **Launch (2028):** Safety-first messaging, target high-volume academic centers
+3. **Expansion (2029-2030):** Community oncology rollout, real-world evidence studies
+4. **Lifecycle (2031+):** Line expansion (frontline MM trials), combination strategies`,
       },
     },
     {
       type: 'synthesis_start',
-      timestamp: 13000,
+      timestamp: 19700,
       data: {},
     },
     {
       type: 'synthesis_progress',
-      timestamp: 13500,
+      timestamp: 20200,
       data: {
-        step: 'Integrating clinical, patent, and financial findings...',
+        step: 'Integrating clinical, patent, financial, regulatory, and market analyses...',
       },
     },
     {
       type: 'synthesis_progress',
-      timestamp: 14500,
+      timestamp: 21200,
       data: {
-        step: 'Cross-referencing risk factors and opportunities...',
+        step: 'Cross-referencing risk factors and market opportunities...',
       },
     },
     {
       type: 'synthesis_progress',
-      timestamp: 15500,
+      timestamp: 22200,
       data: {
-        step: 'Generating deal structure recommendations...',
+        step: 'Generating acquisition recommendation and deal structure...',
       },
     },
     {
       type: 'complete',
-      timestamp: 17000,
+      timestamp: 23500,
       data: {
         synthesis: `# M&A Recommendation: PROCEED WITH ACQUISITION
 
