@@ -404,9 +404,13 @@ export default function MultiAgentCollaboration({
     if (synthesisStep) return 90;
     if (agentActivities.size === 0) return 0;
 
-    const totalAgents = customAgents?.length || 3;
+    // Default is 5 agents: Clinical, Patent, Financial, Market, Regulatory
+    const totalAgents = customAgents?.length || 5;
     const completedAgents = Array.from(agentActivities.values()).filter(a => a.status === 'complete').length;
-    return (completedAgents / totalAgents) * 80;
+    const progressPercent = (completedAgents / totalAgents) * 80;
+
+    // Cap at 80% during agent phase (synthesis adds final 10-20%)
+    return Math.min(progressPercent, 80);
   };
 
   const generateExportContent = () => {
@@ -509,12 +513,12 @@ ${synthesis}
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
               <span className="font-medium">Analysis Progress</span>
-              <span className="font-semibold">{Math.round(getProgressPercentage())}%</span>
+              <span className="font-semibold">{Math.min(Math.round(getProgressPercentage()), 100)}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
               <div
                 className="bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${getProgressPercentage()}%` }}
+                style={{ width: `${Math.min(getProgressPercentage(), 100)}%`, maxWidth: '100%' }}
               />
             </div>
 
