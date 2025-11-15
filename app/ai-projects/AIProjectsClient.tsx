@@ -15,6 +15,11 @@ export default function AIProjectsClient({ projects }: AIProjectsClientProps) {
   // Filter projects based on active category
   const filteredProjects = activeCategory === 'all'
     ? projects
+    : activeCategory === 'ai-agent'
+    ? projects.filter(project =>
+        project.frontmatter.projectType === 'ai-agent' ||
+        project.frontmatter.projectType === 'multi-agent'
+      )
     : projects.filter(project => project.frontmatter.projectType === activeCategory);
 
   return (

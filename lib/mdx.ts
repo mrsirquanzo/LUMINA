@@ -17,7 +17,7 @@ export interface MDXFrontmatter {
   thumbnail?: string;
   readingTime?: string;
   // Technical projects specific
-  projectType?: 'ai-agent' | 'design';
+  projectType?: 'ai-agent' | 'design' | 'multi-agent';
   demoUrl?: string;
   githubUrl?: string;
   figmaUrl?: string;
