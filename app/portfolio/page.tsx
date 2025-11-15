@@ -13,7 +13,7 @@ export const metadata: Metadata = generateSEO({
 export default function PortfolioPage() {
   return (
     <>
-      <Section className="bg-gradient-to-br from-primary-50 via-white to-accent-50">
+      <Section className="bg-gradient-to-br from-teal-50 via-white to-cyan-50">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Investment Analysis Portfolio

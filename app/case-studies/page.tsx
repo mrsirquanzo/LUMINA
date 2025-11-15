@@ -17,13 +17,13 @@ export default function CaseStudiesPage() {
 
   return (
     <>
-      <Section className="bg-gradient-to-br from-primary-50 via-white to-accent-50">
+      <Section className="bg-gradient-to-br from-purple-50 via-white to-indigo-50">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Case Studies
           </h1>
           <p className="text-xl text-gray-700">
-            Translating biotech complexity into clear insights
+            Deep dives into biotech strategy and innovation
           </p>
         </div>
       </Section>

@@ -16,7 +16,7 @@ export default function AIProjectsPage() {
   return (
     <>
       {/* Hero Section */}
-      <Section className="bg-gradient-to-br from-primary-50 via-white to-accent-50">
+      <Section className="bg-gradient-to-br from-emerald-50 via-white to-green-50">
         <div className="max-w-4xl mx-auto text-center">
           <span className="text-sm font-semibold text-primary-600 uppercase tracking-wide mb-3 block">
             Building & Designing
@@ -37,51 +37,46 @@ export default function AIProjectsPage() {
           {/* Client-side filtering component */}
           <AIProjectsClient projects={allProjects} />
 
-          {/* Why These Projects Matter */}
-          <div className="mt-16 bg-primary-50 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Why Build These Tools?
+          {/* Why Build These */}
+          <div className="mt-16 card bg-gradient-to-br from-gray-50 to-blue-50">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Why Build These?
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg p-5 border border-gray-100">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  🚀 Solve Real Problems
+                  Automate what's repetitive
                 </h3>
-                <p className="text-sm leading-relaxed">
-                  I got tired of spending hours manually extracting data from 10-Ks,
-                  cross-referencing patent claims, and rebuilding the same financial models.
-                  Each tool here started as something I needed myself. If it saves me time,
-                  it probably helps others too.
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Hours spent pulling 10-K data, checking patent claims, rebuilding models.
+                  Built tools to handle the tedious parts. Ship faster, iterate more.
                 </p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-5 border border-gray-100">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  🔧 Build Across the Stack
+                  Build what's needed
                 </h3>
-                <p className="text-sm leading-relaxed">
-                  From RAG architectures and multi-agent orchestration to component libraries
-                  and typography systems, I work on whatever the problem needs. Backend, frontend,
-                  design. Being able to build end-to-end means shipping faster and iterating better.
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  RAG systems, multi-agent orchestration, component libraries.
+                  Full-stack means solving the problem end-to-end without handoffs.
                 </p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-5 border border-gray-100">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  📊 Track What Matters
+                  Measure what works
                 </h3>
-                <p className="text-sm leading-relaxed">
-                  Every tool tracks time saved, accuracy rates, and throughput. Not because
-                  metrics look good on a slide, but because you can't improve what you don't measure.
-                  I care about real results, not just polished outputs.
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Every tool tracks time saved and accuracy rates.
+                  Can't improve what you don't measure. Results over polish.
                 </p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-5 border border-gray-100">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  🎯 Ship and Iterate
+                  Use what I build
                 </h3>
-                <p className="text-sm leading-relaxed">
-                  These aren't portfolio pieces gathering dust. I use them for actual analysis work,
-                  find what breaks, fix it, and make it better. Shipping something that works beats
-                  planning something perfect every time.
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  These run real analysis work. Find what breaks, fix it, ship updates.
+                  Working tools, not portfolio pieces.
                 </p>
               </div>
             </div>

@@ -22,7 +22,7 @@ export default function BlogPage() {
   };
 
   return (
-    <Section>
+    <Section className="bg-gradient-to-br from-rose-50 via-white to-pink-50">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">

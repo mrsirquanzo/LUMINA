@@ -260,7 +260,7 @@ export default function AboutPage() {
 
           <div className="card text-center">
             <p className="text-body text-gray-700 mb-4">
-              <strong>Boston-based</strong> · <strong>Balancing curiosity & chaos</strong>
+              <strong>Boston-based</strong> · <strong>Always learning, always building</strong>
             </p>
             <p className="text-sm text-gray-600">
               Outside of work, I play soccer and squash, dive into new research, explore AI and emerging tech, or watch Manchester United test my loyalty. Parenthood has sharpened my patience and adaptability, skills that translate surprisingly well to navigating biotech.
@@ -276,66 +276,46 @@ export default function AboutPage() {
             Get in Touch
           </h2>
 
-          <div className="card">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* LinkedIn */}
-              <div className="flex items-start">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                  </svg>
-                </div>
-                <div className="ml-4 flex items-center">
-                  <Button
-                    href="https://www.linkedin.com/in/quan-ho"
-                    external
-                    variant="primary"
-                    className="text-sm"
-                  >
-                    Connect on LinkedIn
-                  </Button>
-                </div>
-              </div>
+          <div className="card text-center">
+            {/* Contact Methods */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+              <Button
+                href="https://www.linkedin.com/in/quan-ho"
+                external
+                variant="primary"
+              >
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+                Connect on LinkedIn
+              </Button>
 
-              {/* Email */}
-              <div className="flex items-start">
-                <div className="flex-shrink-0 w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center text-accent-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="ml-4 flex items-center">
-                  <Button
-                    href="mailto:hoquan12@gmail.com"
-                    variant="secondary"
-                    className="text-sm"
-                  >
-                    hoquan12@gmail.com
-                  </Button>
-                </div>
-              </div>
+              <Button
+                href="mailto:hoquan12@gmail.com"
+                variant="secondary"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                hoquan12@gmail.com
+              </Button>
             </div>
 
-            {/* Location & Status */}
-            <div className="border-t border-gray-200 pt-6 mt-6">
-              <div className="flex flex-wrap items-center justify-center gap-6 text-gray-700">
+            {/* Location & Availability */}
+            <div className="pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-center gap-4 text-gray-700">
                 <div className="flex items-center">
                   <svg className="w-5 h-5 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                   </svg>
                   <span className="text-sm">Boston, MA</span>
                 </div>
+                <span className="text-gray-400">·</span>
                 <div className="flex items-center">
-                  <svg className="w-5 h-5 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-accent-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                   </svg>
                   <span className="text-sm font-semibold text-accent-700">Available now</span>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm">Open to relocation</span>
                 </div>
               </div>
             </div>
