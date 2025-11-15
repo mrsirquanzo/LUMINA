@@ -14,48 +14,48 @@ const DEMO_SCENARIOS = [
   {
     id: 'ma-due-diligence',
     title: 'M&A Due Diligence',
-    description: 'Comprehensive analysis of a gene therapy acquisition target',
-    query: 'Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials.',
+    description: 'Comprehensive analysis of a bispecific antibody acquisition target',
+    query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
     documents: [
-      { fileName: 'GeneTech_Phase2_Results.pdf', size: '2.3 MB' },
-      { fileName: 'GeneTech_Patent_Portfolio.pdf', size: '1.8 MB' },
-      { fileName: 'GeneTech_10K_2024.pdf', size: '4.1 MB' },
+      { fileName: 'BioSpectra_Phase2_Results.pdf', size: '2.8 MB' },
+      { fileName: 'BioSpectra_Patent_Portfolio.pdf', size: '2.1 MB' },
+      { fileName: 'BioSpectra_10K_2024.pdf', size: '4.3 MB' },
     ],
     icon: '🤝',
   },
   {
     id: 'competitive-analysis',
     title: 'Competitive Landscape Analysis',
-    description: 'Compare multiple CAR-T therapies across clinical, IP, and commercial dimensions',
-    query: 'Compare the competitive positioning of Kymriah, Yescarta, and Breyanzi. Which has the strongest patent protection and commercial potential?',
+    description: 'Compare antibody-drug conjugates across clinical efficacy, IP, and market positioning',
+    query: 'Compare the competitive positioning of Enhertu, Trodelvy, and Padcev. Which antibody-drug conjugate has the strongest patent protection and commercial potential in 2024-2025?',
     documents: [
-      { fileName: 'Kymriah_Clinical_Summary.pdf', size: '1.5 MB' },
-      { fileName: 'Yescarta_Patent_Analysis.pdf', size: '2.1 MB' },
-      { fileName: 'CAR-T_Market_Report_2024.pdf', size: '3.2 MB' },
+      { fileName: 'Enhertu_Clinical_Portfolio.pdf', size: '3.2 MB' },
+      { fileName: 'Trodelvy_IP_Analysis.pdf', size: '2.4 MB' },
+      { fileName: 'ADC_Market_Report_2024.pdf', size: '3.8 MB' },
     ],
     icon: '📊',
   },
   {
     id: 'licensing-deal',
     title: 'Technology Licensing Deal',
-    description: 'Evaluate a platform technology for potential licensing',
-    query: 'Should we license BioX\'s mRNA delivery platform for $50M upfront + royalties? Analyze the technology, IP strength, and financial terms.',
+    description: 'Evaluate a CRISPR base editing platform for potential licensing',
+    query: 'Should we license BaseGenomics\' adenine base editing platform for $125M upfront + double-digit royalties? Analyze the technology, IP strength, competitive landscape, and financial terms.',
     documents: [
-      { fileName: 'BioX_Technology_Overview.pdf', size: '1.2 MB' },
-      { fileName: 'mRNA_Patent_Landscape.pdf', size: '2.8 MB' },
-      { fileName: 'Licensing_Term_Sheet.pdf', size: '0.5 MB' },
+      { fileName: 'BaseGenomics_Technology_Package.pdf', size: '2.1 MB' },
+      { fileName: 'CRISPR_BaseEditing_Patent_Landscape.pdf', size: '3.4 MB' },
+      { fileName: 'Licensing_Term_Sheet.pdf', size: '0.6 MB' },
     ],
     icon: '🔬',
   },
   {
     id: 'investment-decision',
     title: 'Series B Investment Decision',
-    description: 'Due diligence for a Series B investment in an early-stage biotech',
-    query: 'Should we invest $25M in NeuroCure\'s Series B? Evaluate their Alzheimer\'s Phase 1 data, patent portfolio, and burn rate.',
+    description: 'Due diligence for a Series B investment in an oral GLP-1 biotech',
+    query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, patent portfolio, competitive landscape, and burn rate.',
     documents: [
-      { fileName: 'NeuroCure_Phase1_Data.pdf', size: '1.9 MB' },
-      { fileName: 'NeuroCure_IP_Portfolio.pdf', size: '1.4 MB' },
-      { fileName: 'NeuroCure_Financial_Model.xlsx', size: '0.3 MB' },
+      { fileName: 'ObesityRx_Phase2a_Data.pdf', size: '2.2 MB' },
+      { fileName: 'ObesityRx_IP_Portfolio.pdf', size: '1.7 MB' },
+      { fileName: 'ObesityRx_Financial_Model.xlsx', size: '0.4 MB' },
     ],
     icon: '💼',
   },
@@ -550,7 +550,7 @@ export default function MultiAgentDemo() {
                     <textarea
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
+                      placeholder="e.g., Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials."
                       rows={3}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                     />
@@ -580,7 +580,7 @@ export default function MultiAgentDemo() {
                   <textarea
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
+                    placeholder="e.g., Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials."
                     rows={2}
                     className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 resize-y min-h-[60px]"
                   />
