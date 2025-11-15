@@ -644,8 +644,7 @@ class PDFGenerator {
       title: `${agentName} - Conversation Export`,
       subject: `AI Agent Conversation`,
       author: agentName,
-      creator: 'Multi-Agent Analysis System',
-      creationDate: new Date()
+      creator: 'Multi-Agent Analysis System'
     });
   }
 
