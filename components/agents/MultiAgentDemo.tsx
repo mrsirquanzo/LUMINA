@@ -86,6 +86,7 @@ export default function MultiAgentDemo() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(false);
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [showUploadPanel, setShowUploadPanel] = useState(false);
 
   const estimateCost = useCallback(async () => {
     if (!query.trim()) return;
@@ -194,6 +195,11 @@ export default function MultiAgentDemo() {
       }));
 
     setProcessedDocuments(prev => [...prev, ...newDocs]);
+    setShowUploadPanel(false); // Close upload panel after files are added
+  };
+
+  const removeDocument = (index: number) => {
+    setProcessedDocuments(prev => prev.filter((_, i) => i !== index));
   };
 
   // Check authentication on mount
@@ -448,49 +454,104 @@ export default function MultiAgentDemo() {
                 Enter your question and let our specialized AI agents collaborate to provide comprehensive insights.
               </p>
 
-              {/* Query Textarea */}
-              <textarea
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
-                rows={2}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 mb-4 resize-y min-h-[60px]"
-              />
-
-              {/* Sample Queries */}
-              <div className="mb-4">
-                <p className="text-sm font-medium text-gray-700 mb-3">Try these example queries:</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {DEMO_SCENARIOS.map((scenario) => (
-                    <button
-                      key={scenario.id}
-                      onClick={() => handleSampleQueryClick(scenario.query)}
-                      className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-md transition-colors border border-gray-200"
-                    >
-                      <div className="flex items-start gap-2">
-                        <span className="text-lg">{scenario.icon}</span>
-                        <div>
-                          <div className="font-medium text-gray-900 text-xs mb-1">{scenario.title}</div>
-                          <div className="text-gray-600 text-xs line-clamp-2">{scenario.query}</div>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* File Upload - Live Mode Only */}
-              {!isDemo && (
+              {/* Sample Queries - Show when no query */}
+              {!query.trim() && (
                 <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-700 mb-3">Upload Documents (Optional):</p>
-                  <FileUpload onFilesProcessed={handleFilesProcessed} />
-                  {processedDocuments.length > 0 && (
-                    <p className="text-sm text-gray-600 mt-2">
-                      {processedDocuments.length} document{processedDocuments.length !== 1 ? 's' : ''} uploaded
-                    </p>
-                  )}
+                  <p className="text-sm font-medium text-gray-700 mb-3">Try these example queries:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {DEMO_SCENARIOS.map((scenario) => (
+                      <button
+                        key={scenario.id}
+                        onClick={() => handleSampleQueryClick(scenario.query)}
+                        className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-md transition-colors border border-gray-200"
+                      >
+                        <div className="flex items-start gap-2">
+                          <span className="text-lg">{scenario.icon}</span>
+                          <div>
+                            <div className="font-medium text-gray-900 text-xs mb-1">{scenario.title}</div>
+                            <div className="text-gray-600 text-xs line-clamp-2">{scenario.query}</div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
+
+              {/* Modern Input Area with Integrated Upload */}
+              <div className="border border-gray-200 rounded-lg">
+                {/* Upload Panel */}
+                {showUploadPanel && !isDemo && (
+                  <div className="border-b border-gray-200 p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="text-sm font-semibold text-gray-900">Upload Documents</h4>
+                      <button
+                        onClick={() => setShowUploadPanel(false)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                    <FileUpload onFilesProcessed={handleFilesProcessed} />
+                  </div>
+                )}
+
+                {/* File Chips */}
+                {processedDocuments.length > 0 && (
+                  <div className="flex flex-wrap gap-2 p-3 border-b border-gray-200 bg-gray-50">
+                    {processedDocuments.map((doc, index) => (
+                      <div
+                        key={index}
+                        className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                      >
+                        <span className="truncate max-w-[150px]">{doc.fileName}</span>
+                        <button
+                          onClick={() => removeDocument(index)}
+                          className="hover:text-blue-900"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Input Row */}
+                <div className="p-4">
+                  <div className="flex items-end gap-2">
+                    {/* Upload Button - Only in Live Mode */}
+                    {!isDemo && (
+                      <button
+                        onClick={() => setShowUploadPanel(!showUploadPanel)}
+                        className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors relative"
+                        title="Upload files"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        {processedDocuments.length > 0 && (
+                          <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center">
+                            {processedDocuments.length}
+                          </span>
+                        )}
+                      </button>
+                    )}
+
+                    {/* Textarea */}
+                    <textarea
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="e.g., Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials."
+                      rows={3}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
             </>
           )}
 
