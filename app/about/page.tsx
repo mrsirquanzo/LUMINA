@@ -31,8 +31,8 @@ export default function AboutPage() {
             What I Do
           </h2>
           <div className="prose prose-lg max-w-none">
-            <p className="text-body text-gray-700 mb-8">
-              Now I focus on bridging biology, data, and design to drive smarter biotech decisions.
+            <p className="text-body text-gray-700 mb-8 text-center">
+              Bridging biology, data, and design for smarter biotech decisions.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -42,7 +42,7 @@ export default function AboutPage() {
                   Translate Scientific Data
                 </h3>
                 <p className="text-sm text-gray-700">
-                  Turn clinical data, patent landscapes, and competitive intelligence into business insight
+                  Transform scientific data, patents, and competitive intelligence into business insight
                 </p>
               </div>
 
@@ -52,7 +52,7 @@ export default function AboutPage() {
                   Build AI Agents
                 </h3>
                 <p className="text-sm text-gray-700">
-                  Automate research and diligence workflows with intelligent systems
+                  Automate research and diligence with AI-powered systems
                 </p>
               </div>
 
@@ -62,7 +62,7 @@ export default function AboutPage() {
                   Design Data Systems
                 </h3>
                 <p className="text-sm text-gray-700">
-                  Create clean dashboards, memo frameworks, and visual systems
+                  Build clean dashboards, memo frameworks, and visual systems
                 </p>
               </div>
             </div>
