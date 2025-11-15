@@ -233,7 +233,7 @@ class PDFGenerator {
   }
 
   // Check if we need a page break
-  private checkPageBreak(requiredSpace: number, keepWithNext: boolean = false): void {
+  private checkPageBreak(requiredSpace: number): void {
     const availableSpace = this.pageHeight - PDF_STYLES.margins.bottom - this.currentY;
 
     if (availableSpace < requiredSpace) {
@@ -341,7 +341,7 @@ class PDFGenerator {
     const minSpaceNeeded = size * 1.2 + spacingAfter[level] + PDF_STYLES.sizes.body * 2;
 
     // Ensure heading stays with at least 2 lines of content
-    this.checkPageBreak(minSpaceNeeded, true);
+    this.checkPageBreak(minSpaceNeeded);
 
     this.currentY += spacingBefore[level];
 
