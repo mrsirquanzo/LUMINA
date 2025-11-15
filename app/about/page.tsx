@@ -184,27 +184,18 @@ export default function AboutPage() {
                 AI, Data & Systems Engineering
               </h3>
 
-              <ul className="space-y-3 text-gray-700">
+              <ul className="space-y-2.5 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Computational analysis & data visualization</span>
-                    <span className="text-sm text-gray-700"> — Python, R, SQL, Qiagen Omicsoft, Tableau, Spotfire</span>
-                  </div>
+                  <span className="text-sm">Computational analysis & visualization (Python, R, SQL, Tableau)</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">AI agent prototyping</span>
-                    <span className="text-sm text-gray-700"> — Developing portfolio-ready agents for patent analysis, business intelligence, and data-driven decision support</span>
-                  </div>
+                  <span className="text-sm">AI agent development for patent analysis & business intelligence</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Prompt engineering & automation</span>
-                    <span className="text-sm text-gray-700"> — Building LLM-based agents that convert technical or IP documents into strategic insights</span>
-                  </div>
+                  <span className="text-sm">LLM-based automation for strategic insights</span>
                 </li>
               </ul>
             </div>
@@ -222,19 +213,15 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">IP strategy and technology assessment</span>
+                  <span className="text-sm">Clinical data interpretation & biomarker strategy</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">Clinical and biomarker data interpretation</span>
+                  <span className="text-sm">Market opportunity evaluation</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">Market opportunity and portfolio evaluation</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">Vendor coordination, requirements definition, and platform adoption leadership</span>
+                  <span className="text-sm">IP strategy & technology assessment</span>
                 </li>
               </ul>
             </div>
@@ -248,31 +235,15 @@ export default function AboutPage() {
               <ul className="space-y-2.5 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Therapeutic areas:</span>
-                    <span className="text-sm text-gray-700"> Immunology & oncology, cell & gene therapy</span>
-                  </div>
+                  <span className="text-sm">Immunology, oncology, cell & gene therapy</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Modalities:</span>
-                    <span className="text-sm text-gray-700"> ADCs, TCEs, bispecifics, CRISPR, CAR-T, organ-on-chip</span>
-                  </div>
+                  <span className="text-sm">ADCs, TCEs, bispecifics, CRISPR, CAR-T</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Analytical skills:</span>
-                    <span className="text-sm text-gray-700"> Transcriptomics, multi-omics, flow cytometry, immunogenicity assays</span>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Computational tools:</span>
-                    <span className="text-sm text-gray-700"> RNA-seq pipelines, data visualization, AI model validation</span>
-                  </div>
+                  <span className="text-sm">Transcriptomics, flow cytometry, immunogenicity assays</span>
                 </li>
               </ul>
             </div>
@@ -280,54 +251,94 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* Philosophy */}
-      <Section background="white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
-            Philosophy
-          </h2>
-
-          <div className="prose prose-lg max-w-none">
-            <p className="text-body text-gray-700 mb-6">
-              I see innovation as the intersection of science, strategy, and systems thinking. My approach combines the curiosity of a scientist, the analytical mindset of a strategist, and the pragmatism of a builder.
-            </p>
-
-            <p className="text-body text-gray-700 mb-6">
-              I'm drawn to problems where biology meets computation—where data can sharpen intuition and translate discovery into real decisions. Whether it's advancing therapeutic programs, refining AI tools, or evaluating emerging technologies, I focus on turning complex information into clear, actionable insight.
-            </p>
-
-            <p className="text-body text-gray-700 text-center font-semibold text-xl mt-8">
-              Scientist × Strategist × Builder
-            </p>
-          </div>
-        </div>
-      </Section>
-
       {/* Beyond Work */}
-      <Section background="gray">
+      <Section background="white">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
             Beyond Work
           </h2>
 
           <div className="card text-center">
-            <p className="text-body text-gray-700 mb-6">
+            <p className="text-body text-gray-700 mb-4">
               <strong>Boston-based</strong> · <strong>Balancing curiosity & chaos</strong>
             </p>
-            <p className="text-sm text-gray-600 mb-6">
-              Outside of work, I'm learning as much from parenthood as I do from building AI systems—both push you to stay patient, flexible, and quick on your feet. When I'm not debugging models or baby sleep cycles, I'm playing soccer or squash, diving into new research, or watching Manchester United test my resilience.
+            <p className="text-sm text-gray-600">
+              Outside of work, I'm learning as much from parenthood as I do from building AI systems. When I'm not debugging models or baby sleep cycles, I'm playing soccer or squash, diving into new research, or watching Manchester United test my resilience.
             </p>
+          </div>
+        </div>
+      </Section>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button href="/case-studies" variant="primary">
-                View Case Studies
-              </Button>
-              <Button href="/ai-projects" variant="secondary">
-                Explore AI Projects
-              </Button>
-              <Button href="/contact" variant="secondary">
-                Get in Touch
-              </Button>
+      {/* Contact */}
+      <Section background="gray">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+            Get in Touch
+          </h2>
+
+          <div className="card">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* LinkedIn */}
+              <div className="flex items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">LinkedIn</h3>
+                  <Button
+                    href="https://www.linkedin.com/in/quan-ho"
+                    external
+                    variant="primary"
+                    className="text-sm"
+                  >
+                    Connect on LinkedIn
+                  </Button>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center text-accent-600">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Email</h3>
+                  <a
+                    href="mailto:hoquan12@gmail.com"
+                    className="text-primary-600 hover:text-primary-700 font-medium"
+                  >
+                    hoquan12@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Location & Status */}
+            <div className="border-t border-gray-200 pt-6 mt-6">
+              <div className="flex flex-wrap items-center justify-center gap-6 text-gray-700">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm">Boston, MA</span>
+                </div>
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-semibold text-accent-700">Available now</span>
+                </div>
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm">Open to relocation</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
