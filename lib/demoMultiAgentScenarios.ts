@@ -6,12 +6,12 @@ import { DemoScenario } from './multiAgentTypes';
 export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
   id: 'ma-due-diligence',
   title: 'Biotech M&A Due Diligence',
-  description: 'Comprehensive analysis of a gene therapy acquisition target across clinical, patent, and financial dimensions',
-  query: 'Should we acquire GeneTech for $800M? Analyze their Phase 2 CAR-T data, patent portfolio, and financials.',
+  description: 'Comprehensive analysis of a bispecific antibody acquisition target across clinical, patent, and financial dimensions',
+  query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
   documents: [
-    'GeneTech_Phase2_Results.pdf (2.3 MB)',
-    'GeneTech_Patent_Portfolio.pdf (1.8 MB)',
-    'GeneTech_10K_2024.pdf (4.1 MB)',
+    'BioSpectra_Phase2_Results.pdf (2.8 MB)',
+    'BioSpectra_Patent_Portfolio.pdf (2.1 MB)',
+    'BioSpectra_10K_2024.pdf (4.3 MB)',
   ],
   estimatedDuration: 18000, // 18 seconds
   events: [
@@ -29,7 +29,7 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
       timestamp: 800,
       data: {
         agent: 'Clinical Analyst',
-        task: 'Analyzing Phase 2 CAR-T trial results and safety data',
+        task: 'Analyzing Phase 2 bispecific T-cell engager trial results and safety data',
       },
     },
     {
@@ -53,26 +53,34 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
       timestamp: 3500,
       data: {
         agent: 'Clinical Analyst',
-        response: `## Phase 2 CAR-T Trial Analysis
+        response: `## Phase 2 Bispecific T-Cell Engager Trial Analysis
 
 **Efficacy Results:**
-- Primary endpoint (ORR): 35% (95% CI: 28-42%) vs 18% control
-- Statistical significance: p=0.002 (highly significant)
-- PFS: 8.2 months vs 5.1 months (HR=0.64, p=0.008)
-- Duration of response: Median 11.3 months
+- Primary endpoint (ORR): 63% (95% CI: 54-71%) vs 28% standard of care
+- Complete response: 42% (unprecedented for relapsed/refractory)
+- Median PFS: 12.4 months vs 5.1 months SoC (HR=0.48, p<0.001)
+- Duration of response: 18.2 months (highly durable)
 
 **Safety Profile:**
-- Grade 3+ adverse events: 42% (manageable)
-- CRS (Cytokine Release Syndrome): Grade 1-2 in 68%, Grade 3 in 12%
-- No Grade 4-5 CRS events
-- Neurotoxicity: 15% (all Grade 1-2)
+- Grade 3+ adverse events: 48% (in line with class)
+- CRS (Cytokine Release Syndrome): Grade 1-2 in 52%, Grade 3 in 8%
+- No Grade 4-5 CRS - improved vs earlier TCEs
+- Neurotoxicity: 12% (all Grade 1-2, minimal CNS involvement)
+- ICANS (Immune Cell-Associated Neurotoxicity): 3% (best in class)
+
+**Competitive Context (2024-2025):**
+- Tecvayli (J&J): 63% ORR but higher neurotoxicity (15%)
+- Talvey (Pfizer/J&J): 73% ORR but complex dosing
+- BioSpectra shows best safety/efficacy balance
+- Off-the-shelf advantage vs CAR-T (no manufacturing delay)
 
 **Assessment:**
-✓ Strong efficacy signal - competitive with approved CAR-T therapies
-✓ Safety profile appears manageable and in line with class effects
-⚠ Need to verify IP protection for IL-15 costimulation mechanism
+✓ Superior efficacy - 63% ORR competitive with leading TCEs
+✓ Best-in-class safety profile for CRS and neurotoxicity
+✓ Novel epitope targeting reduces target escape risk
+⚠ Need to verify IP protection for proprietary linker technology
 
-**Question for Patent Expert:** Are there blocking patents for IL-15 costimulation in CAR-T therapies? What's the FTO status?`,
+**Question for Patent Expert:** Are there blocking patents for the proprietary Fc-silenced linker technology? What's the FTO status for this novel epitope?`,
       },
     },
     {
@@ -81,7 +89,7 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
       data: {
         from: 'Clinical Analyst',
         to: 'Patent Expert',
-        question: 'Are there blocking patents for IL-15 costimulation in CAR-T therapies? What\'s the FTO status?',
+        question: 'Are there blocking patents for the proprietary Fc-silenced linker technology? What\'s the FTO status for this novel epitope?',
       },
     },
     {
@@ -187,55 +195,59 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
         response: `## Financial Analysis & Valuation
 
 **Current Financial Position (FY2024 10-K):**
-- Cash & equivalents: $120M
-- Quarterly cash burn: $18M
-- **Estimated runway: 6.7 quarters (~18 months)**
+- Cash & equivalents: $185M
+- Quarterly cash burn: $28M
+- **Estimated runway: 6.6 quarters (~18 months)**
 - Revenue: $0 (pre-commercial)
-- Total assets: $145M
+- Total assets: $215M
 - Long-term debt: $0
 
 **Burn Rate Analysis:**
-- Q1 2024: $16M
-- Q2 2024: $17M
-- Q3 2024: $18M
-- Q4 2024: $21M (Phase 3 startup costs)
-- **Trend:** Increasing as Phase 3 ramps up
+- Q1 2024: $22M
+- Q2 2024: $25M
+- Q3 2024: $28M
+- Q4 2024: $32M (Phase 3 startup costs + manufacturing)
+- **Trend:** Accelerating as Phase 3 and CMC scale-up
 
 **Capital Requirements:**
-- Phase 3 trial cost estimate: $80-100M
-- Regulatory/commercial prep: $30-40M
-- **Total capital needed before approval: $110-140M**
-- ⚠ Will need additional financing by Q2 2026
+- Phase 3 trial cost estimate: $150-180M (global, 400+ patients)
+- Manufacturing scale-up: $60-80M (needed for commercial launch)
+- Regulatory/commercial prep: $40-50M
+- **Total capital needed before approval: $250-310M**
+- ⚠ Will need $150M+ financing by Q3 2025
 
 **Valuation Analysis:**
 
 *DCF Model (12% discount rate):*
-- Approval scenario (2027): 65% probability
-- Peak sales estimate: $550M (2032)
-- Operating margin: 75% (post-launch)
-- **DCF Value: $680M**
+- Approval scenario (2028): 70% probability
+- Peak sales estimate: $2.8B (2033) - larger TAM for bispecifics
+- Operating margin: 78% (off-the-shelf, no CAR-T manufacturing)
+- **DCF Value: $1.95B**
 
 *Comparable Company Analysis:*
-- Similar Phase 2 CAR-T companies: $600-900M range
-- Trading at 1.2-1.5x estimated peak sales
-- GeneTech at 1.45x peak sales → **Comp Value: $750M**
+- Similar Phase 2 bispecific/TCE companies: $1.8-2.6B range
+- Sanofi/Inhibrx (2024): $2.2B for Phase 2 bispecific
+- J&J/Ambrx (2024): $2.0B for ADC platform
+- BioSpectra at 0.78x peak sales → **Comp Value: $2.18B**
 
 *Precedent Transactions:*
-- Recent CAR-T acquisitions (Phase 2): $650M-$1.1B
-- Average: $825M
-- Median: $750M
+- Recent TCE/bispecific acquisitions (Phase 2): $1.6B-$2.6B
+- Sanofi/Inhibrx: $2.2B (May 2024)
+- Average: $2.13B
+- Median: $2.1B
 
 **Valuation Conclusion:**
-- DCF: $680M
-- Comps: $750M
-- Precedent: $750M
-- **Fair Value Range: $680-750M**
+- DCF: $1.95B
+- Comps: $2.18B
+- Precedent: $2.1B
+- **Fair Value Range: $1.95-2.18B**
 
-**Assessment of $800M Ask:**
-⚠ **OVERVALUED by 7-15%** given:
-- Need for $110-140M additional capital
-- Phase 3 execution risk (~35% failure rate)
-- 18-month runway creates financing pressure
+**Assessment of $2.2B Ask:**
+✓ **FAIRLY VALUED** given:
+- At median of recent transactions
+- Strong Phase 2 data de-risks Phase 3
+- $150M+ financing need offset by milestone structure
+- TCE market growing 45% annually (2024-2030)
 
 **Recommended Deal Structure:**
 See synthesis for recommended approach.`,
@@ -271,37 +283,37 @@ See synthesis for recommended approach.`,
       type: 'complete',
       timestamp: 17000,
       data: {
-        synthesis: `# M&A Recommendation: PROCEED WITH MODIFIED TERMS
+        synthesis: `# M&A Recommendation: PROCEED WITH ACQUISITION
 
 ## Executive Summary
 
-GeneTech represents a **compelling acquisition target** with strong Phase 2 clinical data (35% ORR, p=0.002) and robust IP protection (clear FTO, 20-year exclusivity). However, the **$800M asking price is 7-15% above fair value** given capital needs and clinical risk. Recommend proceeding with milestone-based structure to align risk/reward.
+BioSpectra represents an **exceptional acquisition target** with best-in-class Phase 2 bispecific T-cell engager data (63% ORR, 3% ICANS), robust IP protection (clear FTO, 18-year exclusivity), and strong strategic fit. The **$2.2B asking price is at fair value** (median of 2024 transactions). Recommend proceeding with milestone-heavy structure to align incentives and manage $150M+ capital need.
 
 ---
 
 ## Integrated Analysis
 
-### Clinical Assessment: STRONG ✓
-- **Efficacy:** 35% ORR significantly better than 18% control (p=0.002)
-- **PFS:** 8.2 vs 5.1 months - clinically meaningful improvement
-- **Safety:** Manageable profile, consistent with CAR-T class effects
-- **Competitive:** Efficacy comparable to approved therapies (Yescarta: 52%, Kymriah: 40-50%)
-- **Risk:** ~35% Phase 3 failure rate for CAR-T therapies
+### Clinical Assessment: BEST-IN-CLASS ✓✓
+- **Efficacy:** 63% ORR vs 28% SoC (p<0.001), 42% CR rate unprecedented
+- **PFS:** 12.4 vs 5.1 months (HR=0.48) - superior to current TCEs
+- **Safety:** 3% ICANS (best-in-class vs Tecvayli 15%, Talvey 12%)
+- **Competitive:** Best safety/efficacy balance among 2024-2025 TCEs
+- **Risk:** ~25% Phase 3 failure rate for bispecific class (lower than CAR-T)
 
 ### Patent Assessment: STRONG ✓
-- **IP Protection:** 3 key patents covering IL-15 costim mechanism
+- **IP Protection:** 5 key patents covering bispecific binding mechanism
 - **FTO Status:** CLEAR - no blocking patents identified
-- **Competitive Moat:** Strong novelty, no similar approaches patented
-- **Exclusivity:** 20 years remaining (expires 2042)
-- **Value:** Patent portfolio alone worth $150-200M
-- **Risk:** Low (~15% likelihood of patent challenge)
+- **Competitive Moat:** Novel linker technology, strong novelty
+- **Exclusivity:** 18 years remaining (expires 2042)
+- **Value:** Patent portfolio alone worth $350-450M
+- **Risk:** Low (~10% likelihood of patent challenge)
 
-### Financial Assessment: OVERVALUED ⚠
-- **Fair Value:** $680-750M (DCF + Comps + Precedents)
-- **Asking Price:** $800M (**7-15% premium**)
-- **Capital Need:** $110-140M required before approval
-- **Runway:** Only 18 months - financing pressure by Q2 2026
-- **Risk:** Phase 3 capital + clinical execution risk
+### Financial Assessment: FAIRLY VALUED ✓
+- **Fair Value:** $1.95-2.18B (DCF + Comps + Precedents)
+- **Asking Price:** $2.2B (**at median of 2024 transactions**)
+- **Capital Need:** $250-310M required before approval
+- **Runway:** Only 18 months - financing pressure by Q3 2025
+- **Risk:** Phase 3 capital + scaling risk offset by milestone structure
 
 ---
 
@@ -309,9 +321,9 @@ GeneTech represents a **compelling acquisition target** with strong Phase 2 clin
 
 | Scenario | Probability | Value | Weighted Value |
 |----------|-------------|-------|----------------|
-| Phase 3 Success → Approval | 65% | $1,050M | $683M |
-| Phase 3 Failure | 35% | $150M* | $53M |
-| **Expected Value** | | | **$736M** |
+| Phase 3 Success → Approval | 75% | $2,800M | $2,100M |
+| Phase 3 Failure | 25% | $400M* | $100M |
+| **Expected Value** | | | **$2,200M** |
 
 *Residual value from IP and platform technology
 
@@ -319,31 +331,31 @@ GeneTech represents a **compelling acquisition target** with strong Phase 2 clin
 
 ## Recommended Deal Structure
 
-### Option A: Straight Discount ❌
-- **Total:** $700M cash at close
+### Option A: All Cash ❌
+- **Total:** $2.2B cash at close
 - **Pros:** Simple, immediate ownership
-- **Cons:** Seller may resist 12% discount
+- **Cons:** No downside protection, full capital risk
 
 ### Option B: Milestone-Based Structure ✅ **RECOMMENDED**
 
-**Upfront Payment:** $500M
-- Provides immediate capital for Phase 3
+**Upfront Payment:** $1.2B
+- Provides immediate capital for Phase 3 + manufacturing scale-up
 - Addresses 18-month runway concern
-- 38% discount to ask (acceptable given capital need)
+- Covers $250-310M capital needs with buffer
 
-**Phase 3 Milestones:** $150M
-- First patient dosed: $50M (de-risks trial start)
-- 50% enrollment: $50M (demonstrates recruitment feasibility)
-- Data readout: $50M (assumes positive trend)
+**Phase 3 Milestones:** $600M
+- First patient dosed: $200M (de-risks trial start)
+- 50% enrollment: $200M (demonstrates recruitment feasibility)
+- Positive data readout: $200M (key value inflection)
 
-**Regulatory Milestones:** $150M
-- FDA approval: $150M (final payment upon commercial success)
+**Regulatory Milestones:** $400M
+- FDA approval: $400M (final payment upon commercial success)
 
-**Total Potential Value:** $800M
+**Total Potential Value:** $2.2B
 - **Meets seller's ask price if successful**
 - Aligns incentives with clinical execution
-- Protects buyer from Phase 3 failure
-- Addresses capital gap without additional financing round
+- Protects buyer from Phase 3 failure (~25% risk)
+- Addresses capital gap without dilutive financing round
 
 ---
 
@@ -363,16 +375,16 @@ GeneTech represents a **compelling acquisition target** with strong Phase 2 clin
 
 **Financing:**
 - Buyer provides operational capital (in addition to milestones)
-- Total commitment: $500M upfront + $140M Phase 3 costs + $300M milestones = **$940M all-in**
+- Total commitment: $1.2B upfront + $310M Phase 3 costs + $1.0B milestones = **$2.51B all-in**
 
 ---
 
 ## Risk Mitigation
 
-✓ **Clinical Risk:** Milestone structure limits exposure if Phase 3 fails
-✓ **Capital Risk:** Upfront $500M addresses 18-month runway
-✓ **Valuation Risk:** Total $800M only paid upon success
-✓ **IP Risk:** Strong FTO and 20-year exclusivity de-risk commercialization
+✓ **Clinical Risk:** Milestone structure limits exposure if Phase 3 fails (75% → 55% probability)
+✓ **Capital Risk:** Upfront $1.2B addresses 18-month runway + manufacturing scale-up
+✓ **Valuation Risk:** Total $2.2B at fair value (median of 2024 transactions)
+✓ **IP Risk:** Strong FTO and 18-year exclusivity de-risk commercialization
 
 ---
 
@@ -381,16 +393,16 @@ GeneTech represents a **compelling acquisition target** with strong Phase 2 clin
 ### ✅ PROCEED WITH ACQUISITION
 
 **Proposed Terms:**
-- $500M upfront
-- $300M milestone payments (Phase 3 + approval)
-- Total: $800M upon successful FDA approval
+- $1.2B upfront
+- $1.0B milestone payments (Phase 3 + approval)
+- Total: $2.2B upon successful FDA approval
 
 **Rationale:**
-1. Strong clinical data de-risks Phase 3 execution
-2. Clear IP position protects $500M+ peak sales potential
+1. Best-in-class clinical data (63% ORR, 3% ICANS) de-risks Phase 3
+2. Clear IP position protects $2.8B+ peak sales potential
 3. Milestone structure aligns incentives and protects downside
 4. Strategic fit with existing oncology portfolio
-5. Fills gap in CAR-T competitive positioning
+5. Fills critical gap in bispecific TCE market (fastest-growing oncology segment)
 
 **Next Steps:**
 1. LOI with proposed milestone structure
@@ -412,13 +424,13 @@ GeneTech represents a **compelling acquisition target** with strong Phase 2 clin
  */
 export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
   id: 'competitive-analysis',
-  title: 'CAR-T Competitive Landscape',
-  description: 'Compare Kymriah, Yescarta, and Breyanzi across clinical, IP, and commercial dimensions',
-  query: 'Compare the competitive positioning of Kymriah, Yescarta, and Breyanzi. Which has the strongest patent protection and commercial potential?',
+  title: 'ADC Competitive Landscape Analysis',
+  description: 'Compare Enhertu, Trodelvy, and Padcev across clinical efficacy, IP protection, and market positioning',
+  query: 'Compare the competitive positioning of Enhertu, Trodelvy, and Padcev. Which antibody-drug conjugate has the strongest patent protection and commercial potential in 2024-2025?',
   documents: [
-    'Kymriah_Clinical_Summary.pdf (1.5 MB)',
-    'Yescarta_Patent_Analysis.pdf (2.1 MB)',
-    'CAR-T_Market_Report_2024.pdf (3.2 MB)',
+    'ADC_Clinical_Data_2024.pdf (2.3 MB)',
+    'ADC_Patent_Landscape.pdf (1.8 MB)',
+    'ADC_Market_Analysis_2025.pdf (3.5 MB)',
   ],
   estimatedDuration: 16000,
   events: [
@@ -436,7 +448,7 @@ export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
       timestamp: 700,
       data: {
         agent: 'Clinical Analyst',
-        task: 'Comparing efficacy and safety profiles across three CAR-T therapies',
+        task: 'Comparing efficacy and safety profiles across three leading ADCs',
       },
     },
     {
@@ -444,7 +456,7 @@ export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
       timestamp: 1300,
       data: {
         agent: 'Clinical Analyst',
-        progress: 'Analyzing ORR and durability data...',
+        progress: 'Analyzing response rates and survival data across indications...',
       },
     },
     {
@@ -452,32 +464,38 @@ export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
       timestamp: 3000,
       data: {
         agent: 'Clinical Analyst',
-        response: `## CAR-T Comparative Clinical Analysis
+        response: `## ADC Comparative Clinical Analysis (2024-2025)
 
-**Kymriah (Novartis - tisagenlecleucel):**
-- ORR: 40-52% in DLBCL, 81-90% in ALL
-- Median PFS: 2.9 months (DLBCL), NR (ALL)
-- Safety: Grade 3+ CRS 13%, neurotoxicity 12%
-- Target: CD19
-- Costimulation: 4-1BB
+**Enhertu (Daiichi Sankyo/AstraZeneca - trastuzumab deruxtecan):**
+- Primary indication: HER2+ breast cancer
+- ORR: 79.7% in HER2+ mBC (DESTINY-Breast03)
+- Median PFS: 28.8 months vs 6.8 months (T-DM1)
+- OS benefit: 23.4 months (hazard ratio 0.55)
+- Payload: Topoisomerase I inhibitor (DXd)
+- Key differentiator: Works in HER2-low tumors (expanding TAM)
+- Safety: ILD (interstitial lung disease) 15%, Grade 3+ in 3%
 
-**Yescarta (Gilead/Kite - axicabtagene ciloleucel):**
-- ORR: 52-54% in DLBCL, 82% in MCL
-- Median PFS: 5.9 months (better than Kymriah)
-- Safety: Grade 3+ CRS 11%, neurotoxicity 28% (higher)
-- Target: CD19
-- Costimulation: CD28
+**Trodelvy (Gilead - sacituzumab govitecan):**
+- Primary indication: Triple-negative breast cancer (TNBC)
+- ORR: 35% in pre-treated TNBC
+- Median PFS: 5.6 months vs 1.7 months (chemo)
+- OS benefit: 12.1 months vs 6.7 months
+- Payload: SN-38 (topoisomerase I inhibitor)
+- Target: Trop-2 (broadly expressed)
+- Safety: Neutropenia 51% (Grade 3+), diarrhea 10%
 
-**Breyanzi (BMS - lisocabtagene maraleucel):**
-- ORR: 73% in DLBCL (highest)
-- Median PFS: 6.8 months (best in class)
-- Safety: Grade 3+ CRS 2% (lowest), neurotoxicity 10%
-- Target: CD19
-- Costimulation: 4-1BB (controlled ratio)
+**Padcev (Astellas/Seagen - enfortumab vedotin):**
+- Primary indication: Urothelial carcinoma
+- ORR: 51% in platinum-refractory patients
+- Median PFS: 12.9 months (EV-302 combo trial)
+- OS benefit: 31.5 months (combination, unprecedented)
+- Payload: MMAE (microtubule inhibitor)
+- Target: Nectin-4
+- Safety: Skin reactions 68% (mostly Grade 1-2), peripheral neuropathy 56%
 
-**Clinical Winner: Breyanzi** - Superior efficacy + best safety profile
+**Clinical Winner: Enhertu** - Unprecedented PFS (28.8 mo), expanding to HER2-low, multiple indications approved in 2024
 
-Question for Patent Expert: Does Breyanzi's superior clinical profile translate to stronger IP protection?`,
+Question for Patent Expert: Does Enhertu's superior clinical data translate to stronger IP protection for the DXd payload technology?`,
       },
     },
     {
@@ -486,7 +504,7 @@ Question for Patent Expert: Does Breyanzi's superior clinical profile translate 
       data: {
         from: 'Clinical Analyst',
         to: 'Patent Expert',
-        question: 'Does Breyanzi\'s superior clinical profile translate to stronger IP protection?',
+        question: 'Does Enhertu\'s superior clinical data translate to stronger IP protection for the DXd payload technology?',
       },
     },
     {
@@ -510,33 +528,36 @@ Question for Patent Expert: Does Breyanzi's superior clinical profile translate 
       timestamp: 6500,
       data: {
         agent: 'Patent Expert',
-        response: `## Patent Landscape Analysis
+        response: `## ADC Patent Landscape Analysis (2024-2025)
 
-**Kymriah (Novartis):**
-- Core patent: US9,855,298 (4-1BB CAR constructs)
-- Expiry: 2030
-- Breadth: Moderate - 4-1BB specific
-- Strength: Strong foundation but narrower claims
-- FTO: Some workarounds possible
+**Enhertu (Daiichi Sankyo/AstraZeneca):**
+- Core patents: US10,808,039 (DXd linker-payload), US11,052,148 (HER2 ADC compositions)
+- Expiry: 2038-2040 (DXd payload composition of matter)
+- Breadth: Very broad - covers entire DXd payload class + multiple linkers
+- Strength: Exceptionally strong - 400+ patent family members globally
+- FTO: Dominant position in topoisomerase I ADC space
+- Platform value: DXd applicable to multiple targets (HER2, HER3, TROP2, B7-H3)
+- Additional: 85 continuations filed (2024-2041 protection)
 
-**Yescarta (Gilead/Kite):**
-- Core patent: US9,102,760 (CD28 CAR-T)
-- Expiry: 2027 (earliest expiration!)
-- Breadth: Broad CD19 claims
-- Strength: First-mover advantage but vulnerable
-- FTO: Clean but limited remaining exclusivity
+**Trodelvy (Gilead - acquired from Immunomedics $21B, 2020):**
+- Core patent: US9,556,244 (SN-38 ADC)
+- Expiry: 2033-2035
+- Breadth: Moderate - Trop-2 specific, some payload claims
+- Strength: Solid but facing biosimilar threats post-2033
+- FTO: Good position but CPI-613 linker not novel
+- Competition: Multiple Trop-2 ADCs in development (Dato-DXd)
 
-**Breyanzi (BMS):**
-- Core patent: US10,501,516 (Controlled CD4:CD8 ratio)
-- Expiry: 2037 (latest!)
-- Breadth: Unique claims on defined cell composition
-- Strength: Novel approach, hard to design around
-- FTO: Very strong position
-- Additional: 12 continuations filed (2024-2037)
+**Padcev (Astellas/Seagen - part of $43B Pfizer acquisition):**
+- Core patent: US9,931,414 (Nectin-4 ADC with MMAE)
+- Expiry: 2034-2036
+- Breadth: Narrow - highly target-specific (Nectin-4)
+- Strength: Strong in urothelial space but limited to single indication
+- FTO: Clean but MMAE payload widely used (not proprietary)
+- Platform: Part of Seagen's broader ADC platform (now Pfizer)
 
-**Patent Winner: Breyanzi** - 10 years longer exclusivity + unique composition claims
+**Patent Winner: Enhertu** - Broadest IP estate (400+ patents), longest exclusivity (2041), platform technology applicable across multiple targets
 
-Question for Financial Analyst: Given Breyanzi's superior clinical AND IP position, what's the market share outlook?`,
+Question for Financial Analyst: Given Enhertu's clinical dominance AND strongest IP position, what's the peak sales potential and market share outlook?`,
       },
     },
     {
@@ -545,7 +566,7 @@ Question for Financial Analyst: Given Breyanzi's superior clinical AND IP positi
       data: {
         from: 'Patent Expert',
         to: 'Financial Analyst',
-        question: 'Given Breyanzi\'s superior clinical AND IP position, what\'s the market share outlook?',
+        question: 'Given Enhertu\'s clinical dominance AND strongest IP position, what\'s the peak sales potential and market share outlook?',
       },
     },
     {
@@ -569,30 +590,35 @@ Question for Financial Analyst: Given Breyanzi's superior clinical AND IP positi
       timestamp: 10500,
       data: {
         agent: 'Financial Analyst',
-        response: `## Commercial & Market Analysis
+        response: `## ADC Commercial & Market Analysis (2024-2025)
 
-**Current Market Share (2024):**
-- Kymriah: $584M (26% share)
-- Yescarta: $985M (44% share) - Market leader
-- Breyanzi: $672M (30% share) - Fastest growing
+**Current Sales Performance (2024):**
+- Enhertu: $3.2B (47% market share) - Clear leader
+- Trodelvy: $1.1B (16% market share)
+- Padcev: $1.4B (21% market share)
+- Other ADCs: $1.1B (16% - Kadcyla, Adcetris, etc.)
 
-**Growth Trajectories:**
-- Kymriah: +5% YoY (plateauing)
-- Yescarta: +12% YoY (steady)
-- Breyanzi: +48% YoY (rapid growth!)
+**Growth Trajectories (2024 vs 2023):**
+- Enhertu: +88% YoY (explosive growth!)
+- Trodelvy: +35% YoY (steady expansion)
+- Padcev: +125% YoY (rapid uptake in combo setting)
 
 **Pricing:**
-- Kymriah: $475K
-- Yescarta: $373K (lowest)
-- Breyanzi: $410K
+- Enhertu: ~$165K per treatment course (breast cancer)
+- Trodelvy: ~$180K per treatment course
+- Padcev: ~$200K per treatment course (higher due to combo use)
 
-**Market Share Forecast (2027):**
-Based on clinical superiority + IP longevity:
-- Breyanzi: 45% ($1.8B) - **Future leader**
-- Yescarta: 35% ($1.4B) - Declining due to 2027 patent cliff
-- Kymriah: 20% ($800M) - Niche position
+**Peak Sales Forecasts (2030):**
+Based on approved indications + pipeline:
+- Enhertu: **$15-18B** - Multiple indications (breast, lung, gastric, expanding to HER2-low)
+- Trodelvy: $4-5B - TNBC, HR+ breast, bladder
+- Padcev: $6-7B - Bladder combo dominance
 
-**Commercial Winner: Breyanzi** - Best long-term positioning`,
+**Total ADC Market:** $45-50B by 2030 (CAGR 22%)
+
+**Commercial Winner: Enhertu** - Dominant position with 3x larger peak sales potential than competitors
+
+**Key Driver:** DXd payload platform enables expansion across 10+ tumor types vs single-target competitors`,
       },
     },
     {
@@ -618,29 +644,29 @@ Based on clinical superiority + IP longevity:
       type: 'complete',
       timestamp: 15000,
       data: {
-        synthesis: `# Competitive Analysis: Breyanzi Emerges as Clear Leader
+        synthesis: `# ADC Competitive Analysis: Enhertu Dominates on All Fronts
 
 ## Executive Summary
 
-**Breyanzi (BMS) has the strongest overall competitive position** combining superior clinical performance (73% ORR, lowest CRS), longest patent protection (expires 2037 vs 2027-2030), and fastest commercial growth (+48% YoY). Projected to become market leader by 2027 with 45% market share.
+**Enhertu (Daiichi Sankyo/AstraZeneca) has established dominant market leadership** with superior clinical efficacy (79.7% ORR, 28.8 mo PFS), the strongest IP position (400+ patents, expires 2041), and explosive commercial growth (+88% YoY). Platform potential across 10+ targets positions Enhertu for $15-18B peak sales—3x larger than nearest competitor.
 
 ---
 
 ## Comparative Scorecard
 
-| Dimension | Kymriah | Yescarta | Breyanzi |
-|-----------|---------|----------|----------|
-| **ORR (DLBCL)** | 40-52% | 52-54% | 73% ✓ |
-| **PFS** | 2.9 mo | 5.9 mo | 6.8 mo ✓ |
-| **Grade 3+ CRS** | 13% | 11% | 2% ✓ |
-| **Neurotoxicity** | 12% | 28% | 10% ✓ |
-| **Patent Expiry** | 2030 | 2027 | 2037 ✓ |
-| **IP Strength** | Moderate | Moderate | Strong ✓ |
-| **2024 Sales** | $584M | $985M ✓ | $672M |
-| **Growth Rate** | +5% | +12% | +48% ✓ |
-| **Market Share** | 26% | 44% | 30% |
+| Dimension | Enhertu | Trodelvy | Padcev |
+|-----------|---------|----------|--------|
+| **ORR** | 79.7% ✓ | 35% | 51% |
+| **Median PFS** | 28.8 mo ✓ | 5.6 mo | 12.9 mo |
+| **OS Benefit** | 23.4 mo ✓ | 12.1 mo | 31.5 mo ✓ |
+| **Patent Expiry** | 2041 ✓ | 2035 | 2036 |
+| **Patent Family Size** | 400+ ✓ | 45 | 120 |
+| **Platform Breadth** | 10+ targets ✓ | Trop-2 focused | Nectin-4 only |
+| **2024 Sales** | $3.2B ✓ | $1.1B | $1.4B |
+| **Growth Rate YoY** | +88% ✓ | +35% | +125% |
+| **Peak Sales (2030)** | $15-18B ✓ | $4-5B | $6-7B |
 
-**Overall Winner: BREYANZI** (6/9 categories)
+**Overall Winner: ENHERTU** (8/9 categories)
 
 ---
 
@@ -648,34 +674,50 @@ Based on clinical superiority + IP longevity:
 
 ### Clinical Performance
 
-**Winner: Breyanzi**
-- Highest ORR: 73% (vs 52% Yescarta, 40-52% Kymriah)
-- Best PFS: 6.8 months
-- Lowest toxicity: 2% Grade 3+ CRS (vs 11-13% competitors)
-- Unique advantage: Controlled CD4:CD8 ratio improves efficacy + safety
+**Winner: Enhertu (by wide margin)**
+- Highest ORR: 79.7% in HER2+ breast cancer
+- Best PFS: 28.8 months (4.2x better than prior standard)
+- Expanding indications: HER2-low breast (2024), lung, gastric approved
+- Platform flexibility: DXd payload works across multiple targets
+- Safety: Manageable ILD (3% Grade 3+), lower than expected
 
-**Key Insight:** Breyanzi's clinical superiority is driving real-world adoption and physician preference.
+**Key Insight:** Enhertu is redefining treatment standards across oncology. HER2-low expansion alone added 60% more patients to addressable market.
+
+**Padcev Note:** Remarkable OS (31.5 mo) in combination setting, but limited to bladder cancer only.
 
 ### Patent Protection
 
-**Winner: Breyanzi**
-- Latest expiry: 2037 (10 years longer than Yescarta!)
-- Unique claims: Defined cell composition hard to design around
-- Patent family: 12+ continuations providing layered protection
-- FTO: Very strong - competitors must license or significantly modify
+**Winner: Enhertu (overwhelmingly)**
+- Latest expiry: 2041 (5+ years beyond competitors)
+- Patent family size: 400+ patents globally (10x larger than Trodelvy)
+- DXd payload coverage: Composition of matter on entire linker-payload class
+- Platform protection: Blocks competitors from using topoisomerase I ADCs with similar linkers
+- Continuations: 85 filed through 2024, extending protection
+- FTO: Dominant—competitors must use inferior payloads or license DXd
 
-**Key Risk for Yescarta:** 2027 patent expiry creates cliff risk in 3 years
+**Risk for Trodelvy:** Daiichi developing Dato-DXd (Trop-2 + DXd payload) which could cannibalize Trodelvy's core indication with superior payload.
 
 ### Commercial Positioning
 
-**Current Leader: Yescarta** ($985M, 44% share)
-**Future Leader: Breyanzi** (48% growth, best trajectory)
+**Current Leader: Enhertu** ($3.2B, 47% ADC market share)
+**Future Dominance: Enhertu** (projected $15-18B peak sales)
 
 **Market Dynamics:**
-- Total CAR-T market growing 18% annually → $6B by 2028
-- Breyanzi gaining share due to superior safety profile
-- Yescarta faces headwinds: patent expiry 2027 + higher neurotoxicity
-- Kymriah limited to specialized centers (manufacturing challenges)
+- Total ADC market: $45-50B by 2030 (22% CAGR)
+- Enhertu capturing 33-36% of total market at peak
+- Platform approach: DXd payload being tested in 15 different ADCs
+- Partnership model: AstraZeneca co-development accelerating global reach
+- Indication expansion: 8 ongoing Phase 3 trials (HER3, B7-H3, TROP2)
+
+**Trodelvy Headwinds:**
+- Dato-DXd threat in core TNBC indication (better payload)
+- Limited to topoisomerase I ADCs (overlaps with Enhertu mechanism)
+- Biosimilar risk post-2033
+
+**Padcev Strengths:**
+- EV-302 combo data unprecedented in bladder cancer
+- Now Pfizer asset (acquired Seagen for $43B)—strong commercial support
+- Limited competition in Nectin-4 space
 
 ---
 
@@ -683,43 +725,54 @@ Based on clinical superiority + IP longevity:
 
 ### For Investors:
 
-**BUY: Breyanzi (BMS)**
-- Best risk/reward profile
-- 10 years patent protection
-- Clinical data supports market leadership
-- Currently underpriced vs future potential
+**STRONG BUY: Enhertu (Daiichi Sankyo/AstraZeneca)**
+- Best-in-class clinical + IP + commercial trajectory
+- Platform value: DXd payload applicable to 10+ targets
+- $15-18B peak sales (blockbuster x3)
+- Patent protection through 2041
+- Risk: Already priced at premium multiples
 
-**HOLD: Yescarta (Gilead)**
-- Strong current position but facing patent cliff
-- Need to develop next-gen to maintain share
+**BUY: Padcev (Pfizer)**
+- Dominant in bladder cancer niche
+- Combination data outstanding (31.5 mo OS)
+- Pfizer commercial muscle post-Seagen acquisition
+- Upside from expanded indications
+- Risk: Single indication concentration
 
-**AVOID: Kymriah (Novartis)**
-- Weakest clinical profile
-- Manufacturing challenges limit scale
-- Losing share steadily
+**HOLD: Trodelvy (Gilead)**
+- Solid TNBC position but facing headwinds
+- Dato-DXd competitive threat in core market
+- Limited platform potential vs Enhertu
+- Patent expiry 2033-2035 creates biosimilar risk
+- Risk: Market share erosion to superior DXd-based ADCs
 
 ### For Strategic Acquirers:
 
-**Target: Breyanzi-related assets**
-- Next-gen controlled ratio technologies
-- Earlier-line expansion opportunities
-- Global manufacturing capabilities
+**Target: DXd payload platform assets**
+- Any Daiichi Sankyo partnership opportunities
+- Novel linker technologies compatible with DXd
+- Manufacturing capabilities for next-gen payloads
+
+**Avoid: Trop-2 ADCs (crowded, inferior to Enhertu)**
 
 ### For Competitors:
 
-**Design Around Required:**
-- Cannot use simple CD4:CD8 ratio approach (Breyanzi patent)
-- Must differentiate on target (beyond CD19) or costim domain
-- Consider autologous manufacturing innovations
+**Design Strategy:**
+- Cannot compete with DXd in topoisomerase I space (patent blocking)
+- Focus on differentiated payloads: MMAE, MMAF, PBD dimers
+- Target novel antigens: Nectin-4, B7-H4, PTK7
+- Pursue tumor-activated prodrug ADCs to improve therapeutic index
+- Consider licensing DXd from Daiichi if developing promising antibody
 
 ---
 
 ## Key Takeaways
 
-1. **Clinical excellence matters** - Breyanzi's superior safety driving adoption
-2. **Patent longevity critical** - 2037 vs 2027 expiry = massive competitive moat
-3. **First-mover ≠ long-term winner** - Yescarta losing ground despite early lead
-4. **Market consolidation ahead** - Expect Breyanzi 45%+ share by 2027
+1. **Platform >> Single Product** - Enhertu's DXd payload creates durable competitive moat across multiple indications
+2. **Patent breadth matters more than single patents** - 400 patents > narrow claims
+3. **Clinical excellence drives adoption** - 28.8 mo PFS changing treatment paradigms
+4. **ADC market consolidation** - Expect Enhertu + 2-3 niche players (Padcev in bladder, others in specific indications)
+5. **2024-2025 trend: Payload quality > Target selection** - DXd payload superiority outweighing target differences
 
 ---
 
@@ -735,13 +788,13 @@ Based on clinical superiority + IP longevity:
  */
 export const DEMO_LICENSING_DEAL: DemoScenario = {
   id: 'licensing-deal',
-  title: 'mRNA Platform Licensing',
-  description: 'Evaluate BioX\'s mRNA delivery platform for $50M upfront + royalties',
-  query: 'Should we license BioX\'s mRNA delivery platform for $50M upfront + royalties? Analyze the technology, IP strength, and financial terms.',
+  title: 'CRISPR Base Editing Platform License',
+  description: 'Evaluate BaseGenomics\' adenine base editor platform for $125M upfront + double-digit royalties',
+  query: 'Should we license BaseGenomics\' adenine base editing platform for $125M upfront + double-digit royalties? Analyze the technology validation, IP landscape, and deal economics.',
   documents: [
-    'BioX_Technology_Overview.pdf (1.2 MB)',
-    'mRNA_Patent_Landscape.pdf (2.8 MB)',
-    'Licensing_Term_Sheet.pdf (0.5 MB)',
+    'BaseGenomics_Technology_Package.pdf (2.1 MB)',
+    'Base_Editing_Patent_Analysis.pdf (3.2 MB)',
+    'License_Term_Sheet.pdf (0.8 MB)',
   ],
   estimatedDuration: 15500,
   events: [
@@ -759,7 +812,7 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       timestamp: 650,
       data: {
         agent: 'Clinical Analyst',
-        task: 'Evaluating mRNA delivery technology and clinical validation',
+        task: 'Evaluating adenine base editing technology and clinical validation',
       },
     },
     {
@@ -767,7 +820,7 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       timestamp: 1200,
       data: {
         agent: 'Clinical Analyst',
-        progress: 'Reviewing delivery mechanism and preclinical data...',
+        progress: 'Reviewing editing mechanism, efficiency, and off-target data...',
       },
     },
     {
@@ -775,28 +828,38 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       timestamp: 2800,
       data: {
         agent: 'Clinical Analyst',
-        response: `## mRNA Platform Technology Assessment
+        response: `## Adenine Base Editing Technology Assessment (2024-2025)
 
-**Delivery Mechanism:**
-- Ionizable lipid nanoparticle (LNP) formulation
-- pH-responsive cationic lipids for endosomal escape
-- PEGylated lipids for stability + prolonged circulation
+**Mechanism:**
+- Evolved TadA deaminase fused to Cas9 nickase (ABE9.1 variant)
+- Converts A•T → G•C base pairs without double-strand breaks
+- PAM requirement: NGG (broad targeting range)
+- Editing window: 4-8 nucleotides
 
-**Technical Advantages:**
-- 3-5x higher transfection efficiency vs standard LNPs
-- Reduced immunogenicity (70% less IL-6 in mouse models)
-- Organ targeting capability (liver, lung, tumor)
+**Technical Performance:**
+- On-target editing: 75-92% efficiency (ex vivo HSCs)
+- Off-target deamination: <0.5% (RNA-seq validated)
+- Bystander editing: Minimal (<2% unwanted A-to-G edits in window)
+- Delivery: Lipid nanoparticle (LNP) mRNA format
 
 **Preclinical Validation:**
-✓ Mouse models: 85% protein expression in target cells
-✓ NHP studies: Good safety profile, no inflammatory response
-✓ Proof-of-concept in 3 therapeutic areas
+✓ Mouse models: Corrected hemophilia B, sickle cell (>60% editing in vivo)
+✓ NHP studies: Liver PCSK9 editing 45% (durable >6 months), no toxicity
+✓ Human HSCs ex vivo: 82% editing (BCL11A enhancer for sickle cell)
 
-**Clinical Readiness:**
-⚠ No human data yet - Phase 1 starting Q3 2025
-⚠ Manufacturing scale-up ongoing (only 1kg batches to date)
+**Clinical Progress (2024-2025):**
+✓ Phase 1/2: Sickle cell disease (n=12 patients, 8-month follow-up)
+  - Mean HbF: 42% (functional cure threshold >20%)
+  - Zero VOC (vaso-occlusive crises) events in 9/12 patients
+  - Safety: No CRISPR-related AEs, transient cytopenias only
+✓ Phase 1: Familial hypercholesterolemia (liver PCSK9) - enrolling
 
-**Assessment:** Promising technology but early-stage. Need IP analysis to determine exclusivity.`,
+**Competitive Context:**
+- Beam Therapeutics: Adenine BE (BEAM-101 sickle cell Phase 1/2)
+- Verve Therapeutics: In vivo liver editing (PCSK9) - approved New Zealand 2024
+- Prime Medicine: Prime editing (broader, but less efficient ~30-40%)
+
+**Assessment:** Technology validated in humans with strong efficacy + safety data. Clinical-stage de-risks platform vs preclinical competitors.`,
       },
     },
     {
@@ -805,7 +868,7 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       data: {
         from: 'Clinical Analyst',
         to: 'Patent Expert',
-        question: 'What\'s the IP coverage on this delivery platform? Are we protected from competitors?',
+        question: 'What\'s the IP coverage on this base editing platform? Do we have freedom-to-operate given Broad/Harvard foundational CRISPR patents?',
       },
     },
     {
@@ -829,33 +892,56 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       timestamp: 6300,
       data: {
         agent: 'Patent Expert',
-        response: `## IP & Patent Analysis
+        response: `## Base Editing IP & Patent Analysis (2024-2025)
 
-**BioX Patent Portfolio:**
-- **US11,234,567**: "pH-Responsive Ionizable Lipids for mRNA Delivery"
+**BaseGenomics Patent Portfolio:**
+- **US11,891,634**: "Evolved Adenine Deaminases for Base Editing" (ABE9.1)
+  - Filed: 2022, Granted: 2024
+  - Claims: Evolved TadA variants with improved specificity
+  - Composition of matter on ABE9.1 protein sequence
+  - Expires: 2042
+- **US11,756,432**: "Methods for In Vivo Adenine Base Editing"
   - Filed: 2021, Granted: 2023
-  - Claim 1: Broad coverage of pH-responsive delivery
+  - Method claims: LNP delivery + dosing regimens
   - Expires: 2041
-- **WO2022/123456**: PCT application (24 countries pending)
-- 6 additional continuations filed 2023-2024
+- **WO2023/234567**: PCT application (35 countries including EU, China, Japan)
+- 14 continuations filed 2023-2024 (editing window optimization, disease-specific guides)
 
 **Patent Strength:**
-✓ Novel chemical structure - good novelty
-✓ Clean prosecution - no rejections
-⚠ Moderna has broader LNP patent (US9,872,905) that may overlap
-⚠ BioNTech/Pfizer have extensive LNP patent estate
+✓ Strong novelty - ABE9.1 is evolved variant (not obvious from ABE8e)
+✓ Clean prosecution - granted without significant rejections
+✓ Composition of matter on protein = strong protection
+✓ Multiple independent claims provide layered coverage
+
+**Foundational IP Dependencies:**
+✓ **Broad Institute sublicense secured** - Cas9 base editor use (cost included in deal)
+✓ Harvard sublicense - TadA deaminase IP (already negotiated)
+⚠ **No Editas/Caribou blocking patents identified** - FTO clear
+
+**Competitive IP Landscape:**
+- **Beam Therapeutics**: ABE8e variant (slightly different, expires 2037)
+- **Prime Medicine**: Prime editing IP (orthogonal mechanism, not competitive)
+- **Verve Therapeutics**: Licensed Beam's ABE8e for cardiovascular (different field)
 
 **Freedom-to-Operate:**
-⚠ **POTENTIAL OVERLAP** with Moderna's ionizable lipid claims
-⚠ May need sublicense from Moderna (~$20-30M)
-⚠ BioNTech patents cover similar pH-responsive mechanisms
+✓ **CLEAR FTO** - foundational licenses secured
+✓ No blocking third-party patents in adenine BE space
+✓ Broad/Harvard sublicense costs: ~$15M upfront (already paid by BaseGenomics)
+✓ Geographic coverage: US, EU, China, Japan (80% global market)
 
 **IP Risk Assessment:**
-- Medium-High risk of infringement claim
-- 40-50% probability need Moderna sublicense
-- Legal costs: $5-10M for FTO clearance
+- **LOW risk** of infringement (FTO validated by independent counsel)
+- Foundational licenses secured and transferable
+- Legal due diligence completed: $0 additional clearance costs
+- Strong defensive position vs Beam (different evolved variants)
 
-**Question for Financial:** Given potential $20-30M sublicense need, is the $50M upfront still reasonable?`,
+**IP Value Drivers:**
+- 18 years remaining exclusivity (2042 composition of matter)
+- Multiple disease indications covered under single license
+- Platform applicable to >4,000 genetic diseases caused by A•T mutations
+- Sublicense rights included (can sublicense to regional partners)
+
+**Question for Financial:** Given strong IP position, low legal risk, and broad platform applicability, is $125M upfront justified by revenue potential?`,
       },
     },
     {
@@ -864,7 +950,7 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       data: {
         from: 'Patent Expert',
         to: 'Financial Analyst',
-        question: 'Given potential $20-30M sublicense need, is the $50M upfront still reasonable?',
+        question: 'Given strong IP position, low legal risk, and broad platform applicability, is $125M upfront justified by revenue potential?',
       },
     },
     {
@@ -888,48 +974,79 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       timestamp: 9800,
       data: {
         agent: 'Financial Analyst',
-        response: `## Deal Economics Analysis
+        response: `## Base Editing License Deal Economics (2024-2025)
 
 **Proposed Terms:**
-- Upfront: $50M
-- Milestone payments: $120M (dev + regulatory)
-- Royalties: 5% net sales
-- Field: Oncology (exclusive)
+- Upfront: $125M
+- Development milestones: $275M (IND, Phase 2, Phase 3 start)
+- Regulatory milestones: $300M (approval per indication, up to 3)
+- Royalties: 12% net sales (double-digit, tiered 10-15% by volume)
+- Sublicense rights: 50% profit share on regional sublicenses
+- Field: Genetic diseases (exclusive, all indications)
 - Territory: Worldwide
 
 **Cost-Benefit Analysis:**
 
-*Total Investment:*
-- Upfront: $50M
-- Potential Moderna sublicense: $25M (midpoint)
-- Development costs: $200M (Phase 1-3)
-- **Total at-risk: $275M**
+*Total Investment (Lead Program - Sickle Cell):*
+- Upfront: $125M
+- Development costs Phase 2-3: $350M (ex vivo HSC editing)
+- Milestone payments: $275M (paid as we progress)
+- **Total at-risk before approval: $750M**
 
-*Revenue Potential:*
-- Peak sales estimate: $800M (2032)
-- 5% royalty = $40M/year at peak
-- NPV of royalties (10% discount): $280M
-- **ROI: Marginal** (~2% return)
+*Revenue Potential (Base Case - Sickle Cell Only):*
+- Addressable patients (US+EU): ~35,000 diagnosed
+- Treatment price: $2.8M per patient (similar to Casgevy)
+- Market penetration: 15% at peak (2032) = 5,250 patients/year
+- Peak sales: **$14.7B annually**
+- 12% royalty = **$1.76B/year** at peak
+- NPV of royalties (10% discount, 2032-2042): **$10.8B**
+- **ROI: 1,340%** ✓✓✓
 
-**Alternative Scenarios:**
+*Platform Upside (Multiple Indications):*
+- Sickle cell disease: $14.7B peak sales
+- Hemophilia A/B: $8-10B combined
+- Familial hypercholesterolemia (PCSK9): $6-8B
+- Ornithine transcarbamylase deficiency: $2-3B
+- **Total addressable platform: $30-35B** across 5+ indications
 
-*Scenario A: No Moderna sublicense needed*
-- Total investment: $250M
-- NPV royalties: $280M
-- **ROI: 12%** ✓
+*Scenario Analysis:*
 
-*Scenario B: Moderna sublicense + lower peak sales*
-- Total investment: $275M
-- Peak sales: $600M → Royalties $30M
-- NPV: $210M
-- **ROI: -24%** ❌ (Loss)
+**Scenario A: Lead program success only (Sickle Cell)**
+- Peak royalties: $1.76B/year
+- NPV (10 years): $10.8B
+- ROI: **1,340%** ✓✓✓
+
+**Scenario B: Lead + 1 additional indication**
+- Combined peak royalties: $2.96B/year
+- NPV: $18.2B
+- ROI: **2,330%** ✓✓✓
+
+**Scenario C: Platform failure (all indications fail Phase 3)**
+- Total loss: $750M
+- Probability: ~15% (low given Phase 1/2 clinical data)
+- Expected loss: -$112M
+
+**Risk-Adjusted Expected Value:**
+- Success (85% probability): $10.8B × 0.85 = $9.18B
+- Failure (15% probability): -$750M × 0.15 = -$112M
+- **Expected NPV: $9.07B**
+- **Risk-adjusted ROI: 1,109%** ✓✓✓
+
+**Comparable Licensing Deals (2023-2024):**
+- Beam Therapeutics + Pfizer: $300M upfront (base editing, cardiovascular)
+- Verve + Lilly: $60M upfront + $1.8B milestones (in vivo base editing)
+- Prime Medicine + BMS: $85M upfront + $1.7B milestones (prime editing)
+- **Median upfront: $85-125M** → Our deal at market
+- **This deal: COMPETITIVE** on upfront, favorable on royalty %
 
 **Deal Assessment:**
-⚠ **UNFAVORABLE RISK/REWARD** given IP uncertainty
-⚠ $50M upfront too high for early-stage technology
-⚠ 5% royalty insufficient to justify development costs
+✓ **HIGHLY ATTRACTIVE** - Strong technology with Phase 1/2 validation
+✓ $125M upfront reasonable given clinical-stage de-risking
+✓ 12% royalty generous (vs typical 5-8% for platform tech)
+✓ Clear FTO eliminates sublicense risk
+✓ Platform optionality provides significant upside
 
-**Recommendation:** See synthesis for renegotiation strategy.`,
+**Recommendation:** **PROCEED** - This is a compelling risk/reward profile with 1,100%+ expected ROI.`,
       },
     },
     {
@@ -955,146 +1072,170 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
       type: 'complete',
       timestamp: 14500,
       data: {
-        synthesis: `# Licensing Recommendation: PASS or RENEGOTIATE
+        synthesis: `# Licensing Recommendation: PROCEED WITH DEAL
 
 ## Executive Summary
 
-BioX's mRNA delivery platform shows **technical promise** but the current deal terms are **financially unfavorable** given significant IP risk (40-50% chance of $20-30M Moderna sublicense) and early development stage. **Recommend PASSING** on current terms or **RENEGOTIATING** with reduced upfront and increased royalties.
+BaseGenomics' adenine base editing platform represents an **exceptional licensing opportunity** with Phase 1/2 validated technology (42% HbF in sickle cell), clean IP (clear FTO, Broad/Harvard licenses secured), and extraordinary economics (1,100%+ risk-adjusted ROI). **Strongly recommend PROCEEDING** with $125M upfront deal—this is a transformative platform technology at fair market terms.
 
 ---
 
 ## Integrated Risk Assessment
 
-### Technology Risk: MEDIUM
+### Technology Risk: LOW ✓
 
 **Strengths:**
-✓ 3-5x higher transfection efficiency
-✓ Reduced immunogenicity validated in NHP
-✓ Organ targeting capability
+✓ **Human clinical validation:** 42% HbF in Phase 1/2 sickle cell (n=12 patients)
+✓ **Best-in-class editing:** 75-92% on-target efficiency, <0.5% off-target
+✓ **Proven delivery:** LNP mRNA format validated in humans
+✓ **Multiple indications:** Sickle cell + hemophilia + FH in clinic
+✓ **Safety demonstrated:** Zero CRISPR-related AEs in 12 patients
 
-**Weaknesses:**
-⚠ No human clinical data yet
-⚠ Manufacturing only at 1kg scale
-⚠ Phase 1 not starting until Q3 2025
+**Minimal Weaknesses:**
+- Manufacturing scale-up required (standard for clinical-stage biotech)
+- Long development timeline to approval (typical 5-7 years)
 
-### IP Risk: HIGH ⚠
+**Assessment:** Technology substantially de-risked by Phase 1/2 success
 
-**Critical Issues:**
-- Overlap with Moderna's ionizable lipid patents
-- 40-50% probability requires $20-30M sublicense
-- BioNTech also has pH-responsive LNP patents
-- FTO clearance costs: $5-10M
+### IP Risk: LOW ✓
 
-**IP Position:**
-- Only 1 granted US patent (2041 expiry)
-- PCT pending (not yet granted globally)
-- Narrow claims vs broad competitor patents
+**Exceptional IP Position:**
+✓ **Compostion of matter:** ABE9.1 protein patent (strongest protection)
+✓ **FTO clean:** Broad/Harvard licenses secured and transferable
+✓ **No hidden costs:** All foundational sublicenses included in deal
+✓ **18-year exclusivity:** 2042 expiry provides long commercial runway
+✓ **Defensive:** Strong position vs Beam Therapeutics (different variants)
 
-### Financial Risk: HIGH ⚠
+**IP Validation:**
+✓ Independent FTO opinion obtained (clean)
+✓ No blocking third-party patents identified
+✓ Global coverage (US, EU, China, Japan = 80% market)
 
-**Deal Structure Problems:**
-- $50M upfront too high for Phase 0 technology
-- $275M total at-risk (incl. sublicense + development)
-- 5% royalty generates only $280M NPV
-- **Marginal ROI: 2%** (unacceptable for risk)
+**Assessment:** Clean, broad, durable IP with minimal infringement risk
 
-**Comparable Deals:**
-- mRNA platform licenses (no human data): $10-25M upfront
-- BioX asking 2-5x market rate
+### Financial Risk: LOW ✓
 
----
+**Strong Deal Economics:**
+✓ **$125M upfront at market rate** (vs Beam+Pfizer $300M, Verve+Lilly $60M)
+✓ **1,100%+ risk-adjusted ROI** (exceptional for biotech)
+✓ **12% royalty** (generous vs typical 5-8%)
+✓ **Platform optionality:** $30-35B addressable across 5+ indications
+✓ **Milestone structure:** Only pay $575M more if successful
 
-## Risk-Adjusted Valuation
+**Conservative Assumptions:**
+- 15% market penetration (sickle cell) → $14.7B peak sales
+- 85% success probability (Phase 1/2 de-risks)
+- $750M total at-risk → $9.07B expected NPV
 
-| Scenario | Probability | Outcome | Value |
-|----------|-------------|---------|-------|
-| Success + No sublicense | 30% | $280M NPV | $84M |
-| Success + Sublicense | 20% | $210M NPV | $42M |
-| Clinical failure | 50% | -$50M | -$25M |
-| **Expected Value** | | | **$101M** |
-
-**Current ask: $50M**
-**Expected value: $101M**
-**Risk-adjusted fair value: $70-80M total deal (not $170M)**
+**Assessment:** Compelling risk/reward with platform upside
 
 ---
 
-## Recommended Approach
+## Value Creation Analysis
 
-### Option 1: PASS ✓ **PREFERRED**
+### Base Case (Sickle Cell Only)
+- Development cost: $750M
+- Peak sales: $14.7B
+- Royalty (12%): $1.76B/year
+- NPV (10 years): **$10.8B**
+- **ROI: 1,340%** ✓✓✓
 
-**Rationale:**
-- Too early-stage for $50M commitment
-- IP uncertainty creates hidden costs
-- Better opportunities exist in market
-- Wait for Phase 1 data (18 months)
+### Platform Upside (5 Indications)
+- Combined peak sales: $30-35B
+- Royalty stream: $3.6-4.2B/year
+- NPV: **$22-26B**
+- **ROI: 2,800-3,350%** ✓✓✓
 
-**Alternative Strategy:**
-- Monitor BioX's Phase 1 results
-- Revisit if data strong + IP cleared
-- Entry point likely better post-clinical data
-
-### Option 2: RENEGOTIATE
-
-**Counter-Proposal:**
-
-**Upfront: $15M** (70% reduction)
-- More appropriate for pre-clinical technology
-- Reduces at-risk capital
-
-**Milestones: $80M**
-- Phase 1 complete: $20M
-- Phase 2 complete: $30M
-- FDA approval: $30M
-
-**Royalties: 8% net sales** (vs 5%)
-- Increases upside participation
-- Aligns with higher development risk
-
-**IP Indemnification:**
-- BioX covers Moderna sublicense costs
-- Or reduce upfront by $25M if sublicense required
-
-**Total Potential: $95M + 8% royalties**
-- Better risk/reward balance
-- Protects against IP surprise costs
+### Risk-Adjusted Expected Value
+- Expected NPV: **$9.07B** (85% probability of success)
+- Risk-adjusted ROI: **1,109%**
+- IRR: ~45% (extraordinary for platform tech)
 
 ---
 
-## Deal Breakers
+## Deal Structure Assessment
 
-**Must-Haves for Any Deal:**
-1. ✓ Phase 1 human data (safety + efficacy signal)
-2. ✓ FTO opinion from independent counsel
-3. ✓ Manufacturing scale-up to 100kg batches
-4. ✓ IP indemnification for Moderna sublicense
-5. ✓ Right of first refusal on adjacent fields
+**Proposed Terms Analysis:**
 
-**If BioX Refuses:**
-→ Walk away. Deal economics don't support current risk.
+✓ **Upfront ($125M):** Fair market value for Phase 1/2 asset
+✓ **Milestones ($575M):** Performance-based, protects downside
+✓ **Royalties (12%):** Above-market, reflects platform value
+✓ **Field (genetic diseases):** Broad enough for platform expansion
+✓ **Territory (worldwide):** Full commercial rights
+✓ **Sublicense rights:** 50% profit share (standard)
+
+**Comparable Deal Benchmarking:**
+- Beam + Pfizer: $300M upfront (but cardiovascular only, narrower)
+- Verve + Lilly: $60M + $1.8B milestones (in vivo, single indication)
+- Prime + BMS: $85M + $1.7B milestones (prime editing, earlier stage)
+
+**This Deal:** COMPETITIVE to FAVORABLE across all dimensions
+
+---
+
+## Strategic Rationale
+
+### Why This Deal Makes Sense:
+
+1. **Clinical de-risking:** Phase 1/2 data substantially reduces failure risk
+2. **Platform technology:** Applicable to >4,000 genetic diseases
+3. **Market timing:** First-mover advantage in adenine base editing
+4. **IP position:** Clean FTO eliminates hidden costs
+5. **Financial returns:** 1,100%+ ROI at conservative assumptions
+6. **Competitive advantage:** Blocks competitors from best ABE platform
+
+### Key Success Factors:
+
+✓ Lead program (sickle cell) has functional cure data
+✓ $2.8M pricing validated by Casgevy approval (2023)
+✓ No competing ABEs in late-stage development
+✓ Platform expandable to 5+ blockbuster indications
+✓ Sublicense opportunity to regional partners
+
+---
+
+## Recommended Next Steps
+
+### ✅ PROCEED WITH LICENSE
+
+**Immediate Actions:**
+1. **Execute term sheet** - Lock in deal before competing bids
+2. **Form integration team** - Clinical, CMC, regulatory
+3. **Advance lead program** - Initiate Phase 2/3 sickle cell (registrational)
+4. **Secure manufacturing** - Partner with CDMO for commercial scale
+5. **IND expansion** - File INDs for hemophilia + FH within 18 months
+
+**Deal Terms to Finalize:**
+- Confirm Broad/Harvard sublicense transferability
+- Define sublicense profit share mechanics
+- Establish joint steering committee
+- Negotiate regional sublicense rights (China/Japan)
+
+**Investment Approval:**
+- **Upfront: $125M** (upon execution)
+- **Year 1 development: $80-100M** (Phase 2/3 startup)
+- **Total 5-year commitment: ~$450M** (before approval milestones)
 
 ---
 
 ## Final Recommendation
 
-### ❌ PASS ON CURRENT TERMS
+### ✅ STRONGLY RECOMMEND PROCEEDING
 
-**Reasons:**
-1. $50M upfront = 5x market rate for pre-clinical tech
-2. IP risk adds hidden $20-30M cost (not in term sheet)
-3. ROI only 2% in best case - below hurdle rate
-4. 50% clinical failure risk too high at this valuation
+**Bottom Line:**
+This is an **exceptional opportunity** to acquire a validated, best-in-class adenine base editing platform at fair market terms. The combination of strong Phase 1/2 clinical data, clean IP, and extraordinary financial returns (1,100%+ ROI) makes this a compelling strategic investment.
 
-**Next Steps:**
-1. Decline current offer
-2. Monitor BioX Phase 1 progress
-3. Revisit in 18-24 months with clinical data
-4. If urgent strategic need, counter at $15M upfront + 8% royalties
+**Key Decision Factors:**
+1. ✓ Technology validated in humans (42% HbF, zero AEs)
+2. ✓ Clean IP with clear FTO (no hidden costs)
+3. ✓ Platform potential: $30-35B addressable market
+4. ✓ Competitive terms: $125M at median of 2023-2024 deals
+5. ✓ Risk-adjusted ROI: 1,109% (far above hurdle rate)
 
-**Alternative Strategy:**
-- License competing platform from Translate Bio (Sanofi) or Arcturus
-- Both have human clinical data + clearer IP
-- Similar pricing, lower risk
+**Timing is Critical:**
+- Beam Therapeutics advancing competing ABE platform
+- Multiple pharma companies evaluating base editing licenses
+- **Act now to secure exclusive rights before bidding war**
 
 ---
 
@@ -1110,13 +1251,13 @@ BioX's mRNA delivery platform shows **technical promise** but the current deal t
  */
 export const DEMO_INVESTMENT_DECISION: DemoScenario = {
   id: 'investment-decision',
-  title: 'Series B Due Diligence',
-  description: 'Should we invest $25M in NeuroCure\'s Series B? Evaluate Phase 1 data, IP, and burn rate.',
-  query: 'Should we invest $25M in NeuroCure\'s Series B? Evaluate their Alzheimer\'s Phase 1 data, patent portfolio, and burn rate.',
+  title: 'Oral GLP-1 Series B Investment',
+  description: 'Should we invest $40M in ObesityRx\'s Series B? Evaluate their oral GLP-1 Phase 2a data, competitive positioning, and path to market.',
+  query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, IP portfolio relative to Novo/Lilly, and financial runway to Phase 3.',
   documents: [
-    'NeuroCure_Phase1_Data.pdf (1.9 MB)',
-    'NeuroCure_IP_Portfolio.pdf (1.4 MB)',
-    'NeuroCure_Financial_Model.xlsx (0.3 MB)',
+    'ObesityRx_Phase2a_Results.pdf (2.2 MB)',
+    'Oral_GLP1_Competitive_Landscape.pdf (3.1 MB)',
+    'Series_B_Term_Sheet.pdf (0.6 MB)',
   ],
   estimatedDuration: 15000,
   events: [
@@ -1124,7 +1265,7 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       type: 'plan_created',
       timestamp: 0,
       data: {
-        plan: 'Investment evaluation: Phase 1 Analysis → IP Review → Financial Model → Investment Decision',
+        plan: 'Investment evaluation: Phase 2a Analysis → Competitive Positioning → IP Review → Financial Model → Investment Decision',
         mode: 'thorough',
         estimatedCost: '$0.32',
       },
@@ -1134,7 +1275,7 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       timestamp: 600,
       data: {
         agent: 'Clinical Analyst',
-        task: 'Analyzing Phase 1 Alzheimer\'s data and development risk',
+        task: 'Analyzing Phase 2a oral GLP-1 efficacy and safety vs injectable competitors',
       },
     },
     {
@@ -1142,7 +1283,7 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       timestamp: 1100,
       data: {
         agent: 'Clinical Analyst',
-        progress: 'Reviewing safety and biomarker data...',
+        progress: 'Reviewing weight loss efficacy and GI tolerability data...',
       },
     },
     {
@@ -1150,36 +1291,65 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       timestamp: 2600,
       data: {
         agent: 'Clinical Analyst',
-        response: `## Phase 1 Alzheimer's Drug Analysis
+        response: `## Phase 2a Oral GLP-1 Analysis (2024-2025)
 
 **Trial Design:**
-- N=48 mild-moderate Alzheimer's patients
-- Dose escalation: 10mg, 25mg, 50mg monthly
-- 6-month treatment duration
-- Primary: Safety
-- Secondary: ADAS-Cog, plasma biomarkers
+- N=182 adults with obesity (BMI 30-45)
+- Randomized, placebo-controlled, 4 arms
+- Doses: 5mg, 10mg, 20mg QD vs placebo
+- Duration: 16 weeks
+- Primary: % weight loss from baseline
+- Secondary: Glycemic control, GI tolerability
 
-**Safety Results:**
-✓ No serious adverse events
-✓ No dose-limiting toxicities
-✓ Discontinuation rate: 4% (very low)
-✓ Well-tolerated across all doses
+**Efficacy Results (16 weeks):**
+✓ **5mg:** -5.2% weight loss (vs -1.8% placebo)
+✓ **10mg:** -8.7% weight loss (p<0.001)
+✓ **20mg:** -12.3% weight loss (exceptional for oral!)
+✓ Dose-dependent response (strong signal for higher doses)
+✓ HbA1c reduction: -1.1% at 20mg dose (glycemic benefit)
 
-**Efficacy Signals (exploratory):**
-- ADAS-Cog: -2.1 points at 50mg (vs +1.8 placebo) - Promising!
-- Plasma p-tau217: -42% reduction (strong biomarker signal)
-- Plasma Aβ42/40: Improved ratio (+18%)
+**Safety & Tolerability:**
+✓ **Nausea:** 32% at 20mg (vs 58% for oral semaglutide) - BETTER tolerability!
+✓ **Vomiting:** 8% at 20mg (vs 24% semaglutide)
+✓ **Discontinuations due to AEs:** 6% (vs 12% semaglutide)
+✓ No pancreatitis, no medullary thyroid events
+✓ **Key differentiator:** Proprietary absorption enhancer reduces GI side effects
 
-**Competitive Context:**
-- Lecanemab (approved): -1.4 ADAS-Cog at 6 months
-- NeuroCure showing BETTER signal at same timepoint
+**Competitive Benchmarking (2024-2025):**
 
-**Development Risk:**
-- Phase 2 success probability: 40% (Alzheimer's)
-- Differentiation: Oral drug vs IV infusion (lecanemab)
-- Timeline: Phase 2 complete by 2027
+*Injectable GLP-1s (market leaders):*
+- Wegovy (semaglutide): -15% weight loss at 68 weeks (gold standard)
+- Zepbound (tirzepatide): -21% at 72 weeks (dual GLP-1/GIP)
+- Mounjaro: -22% at 72 weeks (diabetes)
 
-**Question:** Given strong biomarkers, what's the IP protection strategy?`,
+*Oral Competitors:*
+- Rybelsus (oral semaglutide): -5% weight loss (limited obesity data)
+- Novo's oral amycretin: Phase 2, no public data yet
+- Lilly's orforglipron: -15% at 36 weeks (but 47% nausea rate!)
+
+**ObesityRx Positioning:**
+✓ **Best-in-class tolerability** for oral GLP-1 (32% vs 47% nausea)
+✓ **Strong efficacy** (-12.3% at 16 weeks projects to -18-20% at 52 weeks)
+✓ **Oral convenience** (daily pill vs weekly injection)
+✓ **Price advantage potential** (oral manufacturing cheaper)
+
+**Development Path:**
+- Phase 2b: 400 patients, 52 weeks, higher doses (30mg, 40mg) - starting Q1 2025
+- Expected peak efficacy: -18 to -22% at 52 weeks (competitive with Wegovy)
+- Phase 3 timeline: 2026-2028
+- Approval: 2029-2030 (5-6 years to market)
+
+**Key Risks:**
+⚠ Novo/Lilly already dominating market ($50B+ by 2030)
+⚠ Phase 2b may not replicate strong tolerability signal
+⚠ Oral semaglutide already approved (first-mover in oral GLP-1)
+
+**Competitive Advantages:**
+✓ Superior tolerability enables higher dosing → better weight loss
+✓ Oral convenience for needle-phobic patients (~30% of addressable market)
+✓ Patent runway: 2042 expiry vs Wegovy 2032
+
+**Question for Patent Expert:** How differentiated is our molecule vs Novo's oral semaglutide and Lilly's orforglipron?`,
       },
     },
     {
@@ -1188,7 +1358,7 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       data: {
         from: 'Clinical Analyst',
         to: 'Patent Expert',
-        question: 'What\'s the IP protection strategy for this oral Alzheimer\'s drug?',
+        question: 'How differentiated is our oral GLP-1 molecule vs Novo\'s oral semaglutide and Lilly\'s orforglipron? What\'s our FTO position?',
       },
     },
     {
@@ -1212,42 +1382,79 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       timestamp: 5800,
       data: {
         agent: 'Patent Expert',
-        response: `## IP Portfolio Assessment
+        response: `## Oral GLP-1 IP Portfolio Assessment (2024-2025)
 
 **Core Patents:**
-- **US11,456,789**: "Small Molecule Tau Aggregation Inhibitors"
-  - Filed: 2020, Granted: 2023
-  - Composition claims: 15 compounds including lead
-  - Method claims: Treatment of tauopathies
-  - Expires: 2040
+- **US11,892,456**: "Non-Peptide GLP-1 Receptor Agonists"
+  - Filed: 2021, Granted: 2024
+  - Composition claims: Novel small molecule GLP-1R agonist (differentiated from semaglutide)
+  - 22 compound claims including lead ORX-104
+  - Expires: 2042
+
+- **US11,734,201**: "Oral Absorption Enhancer Formulations"
+  - Filed: 2022, Granted: 2024
+  - Method claims: Proprietary permeation enhancer (NOT SNAC like Rybelsus)
+  - Reduces GI side effects vs standard formulations
+  - Expires: 2043
 
 **Additional IP:**
-- Formulation patent (oral delivery): Expires 2038
-- Biomarker use patent (p-tau217): Expires 2039
-- 4 provisional applications filed in 2024
+- Dosing regimen patent (QD with food): Expires 2041
+- Crystal form patent (enhanced stability): Expires 2042
+- 8 continuations filed 2023-2024
+
+**Competitive IP Landscape:**
+
+*Novo Nordisk (Oral Semaglutide/Rybelsus):*
+- Molecule: Modified GLP-1 peptide (not novel small molecule)
+- Formulation: SNAC absorption enhancer (expired in 2039)
+- **Differentiation:** ORX-104 is non-peptide small molecule with different structure
+
+*Lilly (Orforglipron):*
+- Molecule: Small molecule GLP-1R agonist (similar class to ours)
+- IP: US11,234,890 (expires 2041)
+- **Concern:** Structural similarity possible - FTO analysis required
+
+*Pfizer (Danuglipron - discontinued 2024):*
+- Molecule: Small molecule GLP-1R agonist
+- Program terminated due to nausea (71% incidence)
+- IP available for licensing/acquisition
+
+**Freedom-to-Operate Analysis:**
+
+✓ **vs Novo (Rybelsus):** CLEAR - completely different molecular structure
+⚠ **vs Lilly (Orforglipron):** MODERATE RISK - both non-peptide small molecules
+  - Independent FTO counsel opinion: 65% confidence no infringement
+  - Key differentiator: Our absorption enhancer (not SNAC)
+  - Structural claims differ in core scaffold
+
+**FTO Risk Mitigation:**
+- Design-around options available if Lilly asserts (2 backup compounds)
+- Cross-license opportunity possible (both need manufacturing scale)
+- Prior art exists for small molecule GLP-1R agonists (academic publications 2018-2020)
 
 **Patent Strength:**
-✓ Broad composition coverage (15 compounds)
-✓ Strong novelty - no prior tau inhibitors with this mechanism
-✓ Clean prosecution - granted on first action
-✓ Global protection: US, EU, JP, CN
+✓ Composition of matter on ORX-104 (strongest protection)
+✓ Novel absorption enhancer (NOT SNAC) = key differentiator
+✓ Clean prosecution - minimal amendments
+✓ Global coverage: US, EU5, China, Japan (90% market)
+✓ 19 years remaining exclusivity (2042-2043)
 
-**Competitive Landscape:**
-- Biogen/Eisai: Anti-amyloid antibodies (different MOA)
-- Eli Lilly: Anti-tau antibody (IV, not oral)
-- No direct small molecule oral tau inhibitors
+**Competitive Advantages:**
+✓ **Absorption enhancer IP:** Enables better tolerability → key commercial differentiator
+✓ **Later expiry than Wegovy:** 2042 vs Wegovy 2032 (10-year advantage)
+✓ **First non-peptide oral with clinical data:** Strong novelty
 
-**Freedom-to-Operate:**
-✓ **CLEAR FTO** - no blocking patents
-✓ First oral tau inhibitor with clinical data
-✓ Strong defensive position
+**IP Valuation (assuming Phase 3 success):**
+- Patent estate value: $800M-$1.2B
+- vs Lilly orforglipron (discontinued): $0
+- vs Wegovy (injectable, earlier expiry): Lower long-term value
 
-**IP Valuation:**
-- 17 years remaining exclusivity
-- First-in-class oral mechanism
-- Estimated value: $200-300M if Phase 2 successful
+**Key Risk:**
+⚠ Lilly could file continuation claims to block our molecule (35% probability)
+⚠ Litigation costs: $15-25M if Lilly asserts
+⚠ Settlement/license: Possible 5-8% royalty to Lilly in worst case
 
-**Question:** What's the financial runway and valuation in this Series B?`,
+**Question for Financial:** Given 35% IP risk from Lilly and strong Phase 2a data, what's the Series B valuation and our expected return?`,
       },
     },
     {
@@ -1256,7 +1463,7 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       data: {
         from: 'Patent Expert',
         to: 'Financial Analyst',
-        question: 'What\'s the financial runway and valuation in this Series B?',
+        question: 'Given 35% IP risk from Lilly and strong Phase 2a data, what\'s the Series B valuation and our expected return?',
       },
     },
     {
@@ -1280,57 +1487,102 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       timestamp: 9200,
       data: {
         agent: 'Financial Analyst',
-        response: `## Financial Analysis & Investment Terms
+        response: `## Financial Analysis & Series B Investment Terms (2024-2025)
 
-**Current Financial Position:**
-- Cash: $18M (as of Q1 2025)
-- Monthly burn: $2.5M
-- **Runway: 7 months** (urgent!)
-- Headcount: 32 employees
+**Current Financial Position (Q4 2024):**
+- Cash: $22M
+- Monthly burn: $4.2M (ramping Phase 2b)
+- **Runway: 5.2 months** (urgent need for capital!)
+- Headcount: 58 employees (clinical + CMC heavy)
+- Previous funding: Seed $8M (2021), Series A $35M (2023)
 
 **Series B Terms:**
-- Round size: $45M total
-- Pre-money valuation: $120M
-- Our allocation: $25M for 14.2% ownership
-- Post-money: $165M
-- Lead: Our firm (+ 2 co-investors)
+- Round size: **$150M total**
+- Pre-money valuation: **$450M**
+- Our allocation: **$40M for 6.67% ownership**
+- Post-money: **$600M**
+- Syndicate: Our firm (lead), Novo Holdings (strategic), RA Capital, Versant
 
-**Use of Proceeds:**
-- Phase 2 trial: $28M (70% enrolled by end of raise)
-- Operations: $12M (18 months runway)
-- Manufacturing scale-up: $5M
+**Use of Proceeds (18-month plan):**
+- Phase 2b trial (400 pts, 52 weeks): $85M
+  - Patient recruitment + site costs: $52M
+  - Drug manufacturing (GMP): $22M
+  - CRO + data management: $11M
+- Phase 3 planning + regulatory: $18M
+- Operations + G&A: $32M
+- IP defense fund (Lilly risk mitigation): $15M
 
 **Runway Post-Series B:**
-- 18 months (through Phase 2 interim data)
-- Sufficient for Series C fundraise at Phase 2 readout
+- **21 months** (through Phase 2b 52-week readout + 3-month analysis)
+- Sufficient for Series C/IPO at Phase 2b data (Q3 2026)
+- Phase 3-ready if data supports registration path
 
 **Valuation Analysis:**
 
-*Comparable Series B Deals (CNS Phase 1):*
-- Avg pre-money: $100-140M
-- Avg post-money: $150-180M
-- NeuroCure at $165M = market rate ✓
+*Comparable Obesity Series B Deals (2023-2024):*
+- Structure Therapeutics (oral GLP-1): $690M Series C at Phase 2
+- Altimmune (GLP-1/Glucagon): $105M Series B at Phase 1
+- Carmot Therapeutics (acquired by Roche $2.7B at Phase 1!)
+- **Median pre-money Phase 2a:** $400-500M
+- ObesityRx at $450M: **FAIR MARKET** ✓
 
-*Risk-Adjusted Valuation:*
-- Phase 2 success (40%): $800M value
-- Phase 2 failure (60%): $20M (IP value)
-- Expected value: $320M + $12M = $332M
-- Current ask: $165M
-- **Upside/downside: 2.0x** (acceptable)
+*Risk-Adjusted NPV Analysis:*
 
-**Deal Assessment:**
-✓ Fair valuation vs comparables
-✓ Sufficient runway to Phase 2 data
-✓ Strong syndicate (tier 1 investors)
-⚠ High burn rate ($2.5M/month)
-✓ Clear path to exit (Phase 2 data → acquisition)
+**Success Case (Phase 3 → Approval, 45% probability):**
+- Peak sales: $8B (15% share of $50B oral GLP-1 market by 2032)
+- Exit valuation (2029): $12-15B (1.5-2x peak sales, typical for obesity)
+- Our 4.8% stake (post-Series C dilution): **$576M-$720M**
+- **ROI: 14-18x** ✓✓
 
-**Ownership Trajectory:**
-- Current: 14.2% (post-Series B)
-- Estimated Series C: 10.5% (dilution)
-- At exit: 9-10% fully diluted
+**Partnership Case (Phase 2b → Pharma deal, 30% probability):**
+- Comparable: Carmot/Roche $2.7B at Phase 1
+- Expected deal value at Phase 2b: $3.5-4.5B
+- Our 5.5% stake: **$192M-$247M**
+- **ROI: 4.8-6.2x** ✓
 
-**Financial Recommendation:** See synthesis for final decision.`,
+**Failure Case (Phase 2b fails, 25% probability):**
+- IP + platform value: $80-120M
+- Liquidation proceeds: $20-40M
+- Our recovery: **$1.3-$2.7M**
+- **Loss: -93% to -97%** ❌
+
+**Expected Value Calculation:**
+- Success (45%): $648M × 0.45 = $291M
+- Partnership (30%): $220M × 0.30 = $66M
+- Failure (25%): $2M × 0.25 = $0.5M
+- **Expected value: $357.5M**
+- **Investment: $40M**
+- **Risk-adjusted ROI: 794%** ✓✓✓
+
+**Market Opportunity (2024-2025):**
+- Total obesity market: $100B+ by 2030
+- Oral GLP-1 addressable: $50-60B (30% needle-phobic prefer oral)
+- ObesityRx target share: 15-20% of oral segment
+- Peak sales potential: **$8-12B**
+
+**Competitive Timeline:**
+- Wegovy/Ozempic: Already $20B+ run-rate
+- Lilly orforglipron: Discontinued (nausea)
+- Novo oral amycretin: Phase 2, data 2026 (head-to-head risk)
+- Structure Therapeutics: Phase 2, similar timeline
+- **Window: 2-3 years before oral market consolidates**
+
+**Investment Thesis:**
+✓ **Market timing:** Oral GLP-1 wave just starting, $50B+ TAM
+✓ **Clinical validation:** -12.3% at 16 weeks projects to Wegovy-competitive efficacy
+✓ **Tolerability advantage:** 32% nausea vs 47-58% competitors = commercial differentiation
+✓ **Valuation:** $450M pre-money fair vs $2.7B Carmot (earlier stage)
+✓ **Exit path:** Pharma acquisitions (Novo/Lilly/Roche active buyers)
+✓ **Syndicate quality:** Novo Holdings (strategic validation)
+
+**Key Risks:**
+⚠ **Lilly IP risk** (35% probability, $15-25M litigation)
+⚠ **Phase 2b efficacy risk** (may not hit -18% target)
+⚠ **Novo oral amycretin** (could dominate if superior)
+⚠ **Market saturation** (Wegovy already $20B+ established)
+⚠ **Pricing pressure** (payers may cap reimbursement)
+
+**Financial Recommendation:** **INVEST $40M** - Compelling risk/reward (794% expected ROI) in massive, validated market. Novo Holdings co-investment de-risks.`,
       },
     },
     {
@@ -1356,11 +1608,11 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       type: 'complete',
       timestamp: 14000,
       data: {
-        synthesis: `# Investment Recommendation: INVEST $25M in Series B
+        synthesis: `# Investment Recommendation: INVEST $40M in ObesityRx Series B
 
 ## Executive Summary
 
-**RECOMMEND INVESTING** $25M in NeuroCure's Series B at $165M post-money valuation. Strong Phase 1 data (superior to approved drugs), clear IP position (17 years exclusivity), and fair valuation (14.2% ownership) justify investment despite typical Alzheimer's development risk.
+**STRONGLY RECOMMEND INVESTING** $40M in ObesityRx's $150M Series B at $600M post-money valuation. Exceptional Phase 2a oral GLP-1 data (-12.3% weight loss, 32% nausea vs 47-58% competitors), massive validated market ($50B+ oral segment), fair valuation vs comps, and Novo Holdings strategic co-investment. **Expected ROI: 794%** (risk-adjusted) with multiple exit paths.
 
 ---
 
@@ -1368,177 +1620,254 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 
 | Factor | Assessment | Score |
 |--------|------------|-------|
-| **Clinical Data** | Superior to lecanemab at same timepoint | 9/10 ✓ |
-| **IP Protection** | Clear FTO, 17 years exclusivity | 9/10 ✓ |
-| **Valuation** | $165M post (market rate) | 8/10 ✓ |
-| **Runway** | 18 months to Phase 2 data | 7/10 ✓ |
-| **Team** | Strong CNS expertise | 8/10 ✓ |
-| **Syndicate** | Tier 1 co-investors | 9/10 ✓ |
-| **Exit Path** | Clear acquisition targets | 8/10 ✓ |
+| **Clinical Data** | -12.3% wt loss, best tolerability (32% nausea) | 10/10 ✓✓ |
+| **Market Size** | $50B+ oral GLP-1 TAM | 10/10 ✓✓ |
+| **Competitive Position** | Superior tolerability vs all oral competitors | 9/10 ✓ |
+| **IP Protection** | Moderate risk (35% Lilly overlap) | 6/10 ⚠ |
+| **Valuation** | $450M pre (fair vs $2.7B Carmot) | 8/10 ✓ |
+| **Syndicate** | Novo Holdings strategic + RA Capital | 10/10 ✓✓ |
+| **Exit Path** | Multiple pharma acquirers, $3.5-15B range | 9/10 ✓ |
+| **Runway** | 21 months to Phase 2b data | 8/10 ✓ |
 
-**Overall Score: 8.3/10** - Strong Investment
+**Overall Score: 8.8/10** - Exceptional Investment
 
 ---
 
 ## Key Investment Drivers
 
-### 1. Clinical Differentiation ✓
+### 1. Massive Validated Market ✓✓
 
-**Superior Phase 1 Data:**
-- ADAS-Cog: -2.1 vs lecanemab -1.4 (at 6 months)
-- Biomarkers: -42% p-tau217 reduction
-- Safety: No serious AEs, 4% discontinuation
+**Obesity Market (2024-2025):**
+- Total market: $100B+ by 2030
+- Injectable GLP-1s: $50B (Wegovy/Zepbound)
+- **Oral GLP-1 addressable: $50-60B** (30% needle-phobic patients)
+- ObesityRx target share: 15-20% oral segment
+- Peak sales potential: **$8-12B**
 
-**Competitive Advantage:**
-- **Oral drug** vs IV infusion (huge compliance advantage)
-- First small molecule tau inhibitor in clinic
-- Differentiated mechanism vs approved anti-amyloid drugs
+**Market Validation:**
+✓ Wegovy: $20B+ run-rate (proven demand)
+✓ Payers covering obesity drugs (70%+ commercial plans)
+✓ Direct-to-consumer advertising effective ($1B+ spent by Novo/Lilly)
+✓ Chronic use (lifetime therapy) = recurring revenue
 
-**Market Opportunity:**
-- Alzheimer's market: $6B (2024) → $14B (2030)
-- Oral drugs command premium pricing + better adoption
-- Peak sales potential: $2-3B if approved
+### 2. Best-in-Class Clinical Profile ✓✓
 
-### 2. Strong IP Position ✓
+**Phase 2a Data Highlights:**
+- **Weight loss:** -12.3% at 16 weeks (projects to -18-20% at 52 weeks)
+- **Tolerability:** 32% nausea vs 47-58% all oral competitors
+- **Discontinuations:** 6% vs 12% oral semaglutide
+- **Dose-dependent:** Clear signal for higher doses in Phase 2b
 
-**Patent Protection:**
-- Core patent expires 2040 (17 years!)
-- Composition + method + formulation claims
-- Clear FTO - no blocking patents
-- Global coverage (US, EU, JP, CN)
+**Competitive Differentiation:**
+✓ **Superior tolerability** = higher dosing = better weight loss
+✓ **Oral convenience** vs weekly injections (30% prefer oral)
+✓ **Proprietary absorption enhancer** (NOT SNAC)
+✓ **Daily dosing with food** (better compliance)
 
-**Competitive Moat:**
-- First-in-class oral tau inhibitor
-- No competitors with similar mechanism
-- Strong defensive position
+**Clinical De-Risking:**
+- Phase 2b starting Q1 2025 (400 patients, 52 weeks)
+- Higher doses (30mg, 40mg) likely hit -18-22% weight loss
+- 85% probability hit primary endpoint (based on Phase 2a)
 
-### 3. Fair Valuation ✓
+### 3. Strategic Validation (Novo Holdings) ✓✓
+
+**Syndicate Quality:**
+- **Novo Holdings** (Novo Nordisk's investment arm) = strategic validation
+- RA Capital (top biotech investor)
+- Versant Ventures (early Beam, Verve)
+
+**Novo Holdings Significance:**
+✓ Signals non-competitive with oral amycretin (different mechanism/timeline)
+✓ Potential acquisition path at Phase 2b/3
+✓ Manufacturing/regulatory support possible
+✓ **De-risks investment** (Novo knows oral GLP-1 better than anyone)
+
+### 4. Compelling Valuation ✓
 
 **Valuation Analysis:**
-- Pre-money: $120M
-- Post-money: $165M
-- Comparable CNS Series B deals: $150-180M
-- **Verdict: Market rate** (not overpriced)
+- Pre-money: $450M
+- Post-money: $600M
+- **Our stake: 6.67% for $40M**
 
-**Ownership Economics:**
-- $25M for 14.2% post-money
-- Risk-adjusted value: $332M
-- **Upside: 2.0x** at $332M / $165M current
-- Estimated exit value (if Phase 2 success): $800M-1.2B
+**Comparable Transactions (2023-2024):**
+- Structure Therapeutics: $690M Series C (Phase 2 oral GLP-1)
+- Carmot Therapeutics: **$2.7B acquisition by Roche** (Phase 1 dual agonist!)
+- Altimmune: $105M Series B (Phase 1 GLP-1/Glucagon)
+- Median Phase 2 oral GLP-1: $400-600M pre-money
+
+**Verdict: FAIR TO ATTRACTIVE**
+- At low end of Phase 2 oral GLP-1 valuations
+- 4.5x cheaper than Carmot (earlier stage!)
+- Room for 10-30x upside if data replicates
 
 **ROI Scenarios:**
 
-| Scenario | Prob | Exit Value | Our Value | Return |
-|----------|------|------------|-----------|--------|
-| Phase 2 success → Acquisition | 40% | $900M | $90M | 3.6x |
-| Phase 2 fail → wind down | 60% | $20M | $2M | 0.1x |
-| **Expected Return** | | | **$37M** | **1.5x** |
+| Scenario | Prob | Exit Value | Our Diluted % | Our Value | ROI |
+|----------|------|------------|---------------|-----------|-----|
+| Phase 3 → Approval | 45% | $12-15B | 4.8% | $576-720M | 14-18x ✓✓ |
+| Phase 2b → Acquisition | 30% | $3.5-4.5B | 5.5% | $192-247M | 4.8-6.2x ✓ |
+| Phase 2b Failure | 25% | $80-120M | 6.0% | $5-7M | 0.1-0.2x ❌ |
+| **Expected Value** | | | | **$357.5M** | **794%** ✓✓✓ |
 
-### 4. Clear Path to Exit ✓
+### 5. Multiple Exit Paths ✓
 
-**Acquisition Targets:**
-- Biogen (Alzheimer's franchise)
-- Eli Lilly (needs oral complement to donanemab)
-- Eisai (lecanemab partner)
-- Big Pharma (Pfizer, Merck, Roche)
+**Acquisition Targets (High Probability):**
+- **Novo Nordisk:** Dominant in obesity, needs oral portfolio diversification
+- **Eli Lilly:** Orforglipron discontinued, need oral replacement
+- **Roche:** Acquired Carmot $2.7B, active in obesity
+- **AstraZeneca:** Needs obesity franchise
+- **Pfizer:** Danuglipron failed, need new oral program
 
-**Timing:**
-- Phase 2 interim: Month 12 (Q1 2027)
-- Phase 2 complete: Month 18 (Q3 2027)
-- Exit window: Q1-Q3 2027
+**Exit Timeline:**
+- Phase 2b interim (26 weeks): Q3 2026
+- Phase 2b complete (52 weeks): Q1 2027
+- **Exit window: Q4 2026 - Q2 2027**
 
 **Precedent Transactions:**
-- Prothena (Phase 2 Alzheimer's): Acquired for $1.1B (2023)
-- AC Immune (Phase 2): $500M upfront (2024)
-- **Comparable: $800M-1.2B range**
+- Carmot/Roche: $2.7B at Phase 1 (2024)
+- Rhythm/Sumitomo: $3.0B at Phase 2 (2023)
+- Prevail/Lilly: $1.0B at Phase 2 (2024)
+- **Expected ObesityRx: $3.5-4.5B at Phase 2b**
 
 ---
 
 ## Risk Assessment
 
-### Development Risk: MEDIUM-HIGH
+### Clinical Risk: MODERATE
 
-**Alzheimer's Historical Success Rates:**
-- Phase 1 → Phase 2: 40%
-- Phase 2 → Phase 3: 35%
-- Phase 3 → Approval: 60%
-- **Overall: 8.4%** (very low!)
+**Phase 2b Execution Risks:**
+⚠ Efficacy may not replicate (-12.3% → -18% target uncertain)
+⚠ Tolerability advantage may narrow at higher doses
+⚠ 52-week data may show weight regain (plateau)
+✓ Strong Phase 2a signal de-risks (85% success probability)
 
-**Mitigating Factors:**
-✓ Strong Phase 1 biomarker data (predictive)
-✓ Differentiated mechanism (tau vs amyloid)
-✓ Better safety profile than antibodies
-⚠ Still high risk category
+**Competitive Risks:**
+⚠ **Novo oral amycretin:** Phase 2 data 2026 (head-to-head timing risk)
+⚠ Structure Therapeutics advancing parallel oral GLP-1
+⚠ Wegovy price cuts could compress oral pricing
+✓ Tolerability differentiation defensible
+
+### IP Risk: MODERATE ⚠
+
+**Lilly Overlap (35% probability):**
+- Both non-peptide small molecule GLP-1R agonists
+- Structural similarity possible
+- Litigation: $15-25M cost + 2-year delay
+- Settlement: 5-8% royalty to Lilly (worst case)
+
+**Mitigation:**
+✓ 2 backup compounds (design-around options)
+✓ Absorption enhancer IP separate (strong defense)
+✓ FTO counsel 65% confident no infringement
+
+### Market Risk: LOW-MODERATE
+
+**Market Saturation:**
+⚠ Wegovy/Zepbound already $50B+ by 2027 (market mature)
+⚠ Payer pushback possible (cost containment)
+✓ Oral segment underpenetrated (large headroom)
+✓ Lifetime therapy = recurring revenue
 
 ### Financing Risk: LOW
 
-- $45M raise fully committed
-- 18-month runway to Phase 2 data
-- Tier 1 syndicate with deep pockets
-- Clear path to Series C at data readout
-
-### IP Risk: LOW
-
-- Clear FTO opinion
-- Strong patent prosecution
-- No oppositions or challenges
-- 17 years remaining exclusivity
-
-### Market Risk: LOW
-
-- Large unmet need ($14B market)
-- Oral drugs highly preferred
-- Limited competition in tau space
-- Strong commercial precedent
+- $150M raise fully committed (Novo Holdings lead)
+- 21-month runway to Phase 2b data
+- Series C/IPO path clear at data readout
+- Strategic investor (Novo) reduces financing risk
 
 ---
 
 ## Investment Structure
 
 **Terms:**
-- Investment: $25M
-- Ownership: 14.2% post-money
-- Board seat: Yes (observer rights minimum)
-- Pro rata rights: Yes (follow-on in Series C)
+- Investment: **$40M**
+- Ownership: **6.67% post-money** (dilutes to ~4.8% at exit)
+- Post-money valuation: $600M
+- Board seat: Observer rights
+- Pro rata rights: Full participation in Series C
 - Liquidation preference: 1x non-participating
 
 **Protective Provisions:**
-✓ Approval required for asset sales
-✓ Veto on down rounds
-✓ Information rights
-✓ Right of first refusal
+✓ Approval required for M&A, asset sales
+✓ Veto on down rounds > 20% dilution
+✓ Information rights (quarterly financials)
+✓ Right of first refusal on equity sales
+✓ Anti-dilution: Weighted average
 
-**Key Milestones:**
-- Month 6: 25% Phase 2 enrollment (trigger Series C planning)
-- Month 12: Interim data readout (decision point)
-- Month 18: Full Phase 2 data → Exit process
+**Key Milestones & Decision Points:**
+
+| Milestone | Timing | Action |
+|-----------|--------|--------|
+| Phase 2b 50% enrollment | Month 9 (Q3 2025) | Confirm on track |
+| Phase 2b interim (26-week) | Month 15 (Q3 2026) | GO/NO-GO decision |
+| Phase 2b complete (52-week) | Month 21 (Q1 2027) | Exit process or Series C |
+| Acquisition offer | Q4 2026 - Q2 2027 | Board approval |
 
 ---
 
 ## Final Recommendation
 
-### ✅ INVEST $25M
+### ✅ STRONGLY RECOMMEND: INVEST $40M
 
-**Rationale:**
-1. **Superior clinical data** - best-in-class Phase 1 results
-2. **Clear IP protection** - 17 years exclusivity, no FTO issues
-3. **Fair valuation** - $165M post-money = market rate
-4. **Strong syndicate** - tier 1 co-investors de-risk
-5. **Clear exit path** - Multiple acquisition targets at Phase 2 data
+**Investment Thesis (5 Key Points):**
 
-**Expected Outcome:**
-- Base case: 1.5x return ($37M value)
-- Success case: 3.6x return ($90M value)
-- Risk-adjusted: **Attractive vs portfolio hurdle**
+1. **Massive Validated Market** ($50B+ oral GLP-1 TAM)
+   - Wegovy $20B+ validates obesity drug demand
+   - 30% patients prefer oral (needle-phobic)
+   - Chronic lifetime therapy = recurring revenue
 
-**Next Steps:**
-1. Execute term sheet (1 week)
-2. Confirmatory due diligence (30 days)
-3. Close round (45-60 days)
-4. Appoint board observer
-5. Establish milestone tracking
+2. **Best-in-Class Clinical Profile**
+   - -12.3% weight loss (projects to -18-20% at 52 weeks)
+   - 32% nausea (vs 47-58% competitors) = key differentiator
+   - Tolerability enables higher dosing → superior efficacy
 
-**Investment Committee Vote: APPROVE**
+3. **Strategic De-Risking (Novo Holdings)**
+   - Novo investment arm co-leading = validation
+   - Signals non-competitive with internal programs
+   - Potential acquisition path at Phase 2b
+
+4. **Compelling Valuation**
+   - $450M pre-money (fair vs $2.7B Carmot at Phase 1)
+   - 794% expected ROI (risk-adjusted)
+   - Multiple 10-30x upside scenarios
+
+5. **Clear Exit Path (18-24 months)**
+   - Novo, Lilly, Roche active acquirers
+   - $3.5-4.5B expected deal value at Phase 2b
+   - 4.8-18x ROI across scenarios
+
+**Expected Outcomes:**
+
+- **Base case (partnership, 30%):** 4.8-6.2x return ($192-247M)
+- **Upside case (approval, 45%):** 14-18x return ($576-720M)
+- **Downside case (failure, 25%):** -93% loss ($5-7M recovery)
+- **Risk-adjusted expected return:** 794% (8.9x)
+
+**Key Success Factors:**
+✓ Phase 2a data substantially de-risks Phase 2b
+✓ Market timing perfect (oral wave just starting)
+✓ Tolera bility advantage = sustainable competitive moat
+✓ Novo Holdings strategic validation
+✓ Multiple exit paths (pharma M&A active)
+
+**Investment Committee Recommendation:**
+
+**APPROVE $40M INVESTMENT**
+
+- Allocation: Primary fund ($35M) + Opportunity fund ($5M)
+- Ownership target: 6.67% post-Series B
+- Follow-on reserve: $20M for Series C pro rata
+- Board representation: Observer seat minimum
+
+**Next Steps (60-day close):**
+1. Execute term sheet (Week 1)
+2. Confirmatory due diligence (Weeks 2-4):
+   - Independent FTO analysis (Lilly IP risk)
+   - Phase 2b protocol review
+   - Reference calls (investigators, KOLs)
+3. Investment committee approval (Week 5)
+4. Legal documentation (Weeks 6-8)
+5. Wire funds + board observer appointment (Week 9)
 
 ---
 
