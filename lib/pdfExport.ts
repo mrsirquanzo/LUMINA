@@ -164,6 +164,11 @@ function sanitizeForPDF(text: string): string {
   sanitized = sanitized.replace(/^(\[(OK|X|!)\]\s*)/gm, '');
   sanitized = sanitized.replace(/\n(\[(OK|X|!)\]\s*)/g, '\n');
 
+  // Step 9: Remove trailing [OK], [X], [!] at the end of lines (redundant status indicators)
+  // This catches patterns like "Assessment: STRONG [OK]" -> "Assessment: STRONG"
+  sanitized = sanitized.replace(/\s*\[(OK|X|!)\]\s*$/gm, '');
+  sanitized = sanitized.replace(/\s*\[(OK|X|!)\]\s*\n/g, '\n');
+
   return sanitized;
 }
 
@@ -755,7 +760,7 @@ class PDFGenerator {
 // Main export function
 export function exportToPDF(messages: ChatMessage[], agentName: string): void {
   // Version check - log to verify latest code is running
-  console.log('[PDF Export] Version 2024-11-15-v6 - FIXED: Removed leading symbols from lines');
+  console.log('[PDF Export] Version 2024-11-15-v7 - FIXED: Removed trailing symbols from assessments');
 
   const generator = new PDFGenerator();
   generator.generateChatPDF(messages, agentName);
