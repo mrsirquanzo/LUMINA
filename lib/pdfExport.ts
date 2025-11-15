@@ -64,21 +64,26 @@ const PDF_STYLES = {
 };
 
 // Symbol mapping for jsPDF-safe rendering
-// Replace Unicode symbols with ASCII equivalents that render correctly
+// Replace Unicode symbols with pure ASCII equivalents that render correctly
 const SYMBOL_MAP: { [key: string]: string } = {
-  '\u2713': '[✓]',  // Checkmark (✓)
-  '\u2717': '[X]',  // X mark (✗)
-  '\u2192': '->',   // Arrow (→)
-  '\u26A0': '[!]',  // Warning (⚠)
-  '\u2605': '*',    // Star (★)
-  '\u2022': '•',    // Bullet (•)
-  '\u2013': '-',    // En dash (–)
-  '\u2014': '--',   // Em dash (—)
-  '\u201C': '"',    // Smart quote left (")
-  '\u201D': '"',    // Smart quote right (")
-  '\u2018': "'",    // Smart apostrophe left (')
-  '\u2019': "'",    // Smart apostrophe right (')
-  '\u279C': '->',   // Another arrow variant (➜)
+  '\u2713': '[OK]',  // Checkmark (✓) -> [OK]
+  '\u2714': '[OK]',  // Heavy checkmark (✔) -> [OK]
+  '\u2717': '[X]',   // X mark (✗) -> [X]
+  '\u2718': '[X]',   // Heavy X mark (✘) -> [X]
+  '\u2192': '->',    // Arrow (→) -> ->
+  '\u2794': '->',    // Heavy arrow (➔) -> ->
+  '\u279C': '->',    // Heavy round arrow (➜) -> ->
+  '\u21D2': '=>',    // Double arrow (⇒) -> =>
+  '\u26A0': '[!]',   // Warning (⚠) -> [!]
+  '\u2605': '[*]',   // Star (★) -> [*]
+  '\u2022': '•',     // Bullet (•) - usually renders fine
+  '\u25CF': '*',     // Black circle (●) -> *
+  '\u2013': '-',     // En dash (–) -> -
+  '\u2014': '--',    // Em dash (—) -> --
+  '\u201C': '"',     // Smart quote left (") -> "
+  '\u201D': '"',     // Smart quote right (") -> "
+  '\u2018': "'",     // Smart apostrophe left (') -> '
+  '\u2019': "'",     // Smart apostrophe right (') -> '
 };
 
 // Replace problematic Unicode characters with jsPDF-safe alternatives
