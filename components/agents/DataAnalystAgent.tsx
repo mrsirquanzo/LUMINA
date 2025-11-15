@@ -478,76 +478,91 @@ export default function DataAnalystAgent() {
       </div>
 
       {/* Behind the Scenes */}
-      <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">
-          🔧 Behind the Scenes
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          Behind the Scenes
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <div>
-            <p className="font-medium text-gray-900 mb-1">AI Model</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Claude Sonnet 4 (Anthropic)'}</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Key Strengths</p>
-            <p>Advanced reasoning, complex data analysis, nuanced interpretation</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
-            <p>ClinicalTrials.gov • PubMed • Gosset.ai Pharmaceutical Intelligence</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Capabilities</p>
-            <p>PDF, Excel, CSV analysis • Vision API • Clinical trial data</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Context Window</p>
-            <p>200K tokens - Handles multiple large documents simultaneously</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Vision Support</p>
-            <p>Yes - Charts, graphs, study figures, biomarker data visualizations</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Cost</p>
-            <p>{mode === 'demo' ? 'Free (No API calls)' : '$0.01-0.10 per query'}</p>
-          </div>
-        </div>
-
-        {/* Gosset.ai Integration Section */}
-        <div className="mt-6 pt-6 border-t border-gray-300">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-2xl">🧬</span>
-            <h4 className="text-base font-semibold text-gray-900">
-              Gosset.ai Pharmaceutical Intelligence Integration
-            </h4>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-            <div>
-              <p className="font-medium text-gray-900 mb-1">Phase Transition Rates (PTRs)</p>
-              <p>Historical clinical trial success rates across 100K+ drug assets by indication, modality, and phase</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900 mb-1">Trial Success Predictions</p>
-              <p>Evidence-based probability estimates for trial outcomes using verified data from papers, posters, and regulatory filings</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900 mb-1">Trial Design Benchmarks</p>
-              <p>Average sample sizes, common endpoints, trial durations, biomarker prevalence for competitive benchmarking</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900 mb-1">Integration Status</p>
-              <p className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                <span>Hybrid Live/Simulated • MCP Protocol • Auto-fallback enabled</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Mode Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">⚙️</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Mode</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Demo' : 'Live AI'}
               </p>
             </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Demo Mode' : 'Live Mode'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Pre-recorded clinical analyses demonstrating capabilities without API costs'
+                    : 'Real-time clinical data analysis powered by Claude Sonnet 4 with Gosset.ai pharmaceutical intelligence'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs text-blue-800">
-              <strong>💡 How it works:</strong> This agent connects to Gosset.ai's MCP server for live pharmaceutical intelligence.
-              When GOSSET_OAUTH_TOKEN is configured, real-time PTR data is fetched. Otherwise, it gracefully falls back to
-              simulated data for portfolio demonstrations. Zero configuration required.
-            </p>
+
+          {/* Specialization Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">🔬</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Specialization</h4>
+              <p className="text-sm text-gray-600">Clinical Analysis</p>
+            </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Clinical Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  Trial design, efficacy endpoints, safety analysis, biomarker interpretation, competitive benchmarking, and phase transition rate predictions
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Capabilities Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">🧬</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Capabilities</h4>
+              <p className="text-sm text-gray-600">Gosset.ai</p>
+            </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Pharmaceutical Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  Phase transition rates across 100K+ drug assets, trial success predictions, design benchmarks, PDF/Excel analysis, vision API for charts
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Cost Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">💰</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Cost</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Free' : '$0.01-0.10'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Zero Cost' : 'Pay-per-Query'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Demo mode is completely free with pre-recorded clinical analyses'
+                    : 'Live mode charges $0.01-0.10 per query based on complexity and document size'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

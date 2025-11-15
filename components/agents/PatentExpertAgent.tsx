@@ -465,38 +465,91 @@ export default function PatentExpertAgent() {
       </div>
 
       {/* Behind the Scenes */}
-      <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">
-          🔧 Behind the Scenes
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          Behind the Scenes
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <div>
-            <p className="font-medium text-gray-900 mb-1">AI Model</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Perplexity Sonar Pro'}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Mode Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">⚙️</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Mode</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Demo' : 'Live AI'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-purple-50 border-2 border-purple-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Demo Mode' : 'Live Mode'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Pre-recorded patent analyses demonstrating capabilities without API costs'
+                    : 'Real-time IP analysis powered by Perplexity Sonar Pro with live patent database access'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Key Strengths</p>
-            <p>Real-time web search, current patent data, live USPTO/EPO access</p>
+
+          {/* Specialization Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">⚖️</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Specialization</h4>
+              <p className="text-sm text-gray-600">IP Strategy</p>
+            </div>
+            <div className="absolute inset-0 bg-purple-50 border-2 border-purple-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Patent Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  Patent landscape analysis, FTO assessment, IP portfolio strategy, competitive positioning, patent valuation, and licensing strategy
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">API Integrations</p>
-            <p>USPTO • Google Patents • EPO (European Patent Office)</p>
+
+          {/* Capabilities Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">🔍</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Capabilities</h4>
+              <p className="text-sm text-gray-600">Real-Time Data</p>
+            </div>
+            <div className="absolute inset-0 bg-purple-50 border-2 border-purple-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Live Patent Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  Real-time USPTO/EPO/Google Patents access, recent filings, litigation updates, prior art search, and comprehensive IP landscape analysis
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Specialization</p>
-            <p>Patent landscape analysis, FTO opinions, IP strategy, prior art search</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Online Capabilities</p>
-            <p>Live patent database search • Recent filings • Litigation updates</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Data Freshness</p>
-            <p>Real-time - Accesses latest patent filings and legal developments</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Cost</p>
-            <p>{mode === 'demo' ? 'Free (No API calls)' : '$0.01-0.10 per query'}</p>
+
+          {/* Cost Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">💰</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Cost</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Free' : '$0.01-0.10'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-purple-50 border-2 border-purple-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Zero Cost' : 'Pay-per-Query'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Demo mode is completely free with pre-recorded patent analyses'
+                    : 'Live mode charges $0.01-0.10 per query with real-time patent database access'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
