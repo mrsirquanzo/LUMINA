@@ -308,12 +308,14 @@ class PDFGenerator {
 
   // Add document header (only on first page)
   private addDocumentHeader(title: string, subtitle: string): void {
-    this.documentTitle = title;
+    const sanitizedTitle = sanitizeForPDF(title);
+    const sanitizedSubtitle = sanitizeForPDF(subtitle);
+    this.documentTitle = sanitizedTitle;
 
     // Title
     this.doc.setFontSize(PDF_STYLES.sizes.h1);
     this.doc.setFont(PDF_STYLES.fonts.primary, 'bold');
-    this.doc.text(title, PDF_STYLES.margins.left, this.currentY);
+    this.doc.text(sanitizedTitle, PDF_STYLES.margins.left, this.currentY);
     this.currentY += PDF_STYLES.sizes.h1 * 1.2;
 
     // Subtitle with date
@@ -324,7 +326,7 @@ class PDFGenerator {
       PDF_STYLES.colors.textLight.g,
       PDF_STYLES.colors.textLight.b
     );
-    this.doc.text(subtitle, PDF_STYLES.margins.left, this.currentY);
+    this.doc.text(sanitizedSubtitle, PDF_STYLES.margins.left, this.currentY);
 
     // Reset color
     this.doc.setTextColor(
@@ -599,8 +601,11 @@ class PDFGenerator {
 
     this.currentY += PDF_STYLES.sizes.small * 1.4 + 12; // More spacing
 
+    // Sanitize content BEFORE parsing to prevent invisible characters from affecting markdown
+    const sanitizedContent = sanitizeForPDF(message.content);
+
     // Parse and render message content
-    const elements = parseMarkdown(message.content);
+    const elements = parseMarkdown(sanitizedContent);
 
     for (const element of elements) {
       switch (element.type) {
