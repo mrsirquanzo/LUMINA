@@ -34,14 +34,14 @@ const PDF_STYLES = {
   spacing: {
     h1Before: 32,
     h1After: 16,
-    h2Before: 24,
-    h2After: 12,
-    h3Before: 16,
-    h3After: 8,
+    h2Before: 32, // Increased from 24
+    h2After: 16, // Increased from 12
+    h3Before: 24, // Increased from 16
+    h3After: 12, // Increased from 8
     sectionGap: 24,
-    paragraphGap: 8,
-    listItemGap: 8,
-    bulletIndent: 15 // 0.25 inches at 72 DPI
+    paragraphGap: 12, // Increased from 8
+    listItemGap: 12, // Increased from 8
+    bulletIndent: 18 // 0.25 inches at 72 DPI
   },
   // Layout
   margins: {
@@ -63,29 +63,35 @@ const PDF_STYLES = {
   }
 };
 
-// Symbol mapping for proper UTF-8 rendering
+// Symbol mapping for jsPDF-safe rendering
+// Replace Unicode symbols with ASCII equivalents that render correctly
 const SYMBOL_MAP: { [key: string]: string } = {
-  '✓': '\u2713',
-  '✗': '\u2717',
-  '→': '\u2192',
-  '⚠': '\u26A0',
-  '★': '\u2605',
-  '•': '\u2022',
-  '–': '\u2013',
-  '—': '\u2014',
-  '\u201C': '\u201C', // "
-  '\u201D': '\u201D', // "
-  '\u2018': '\u2018', // '
-  '\u2019': '\u2019'  // '
+  '✓': '[✓]',  // Checkmark
+  '✗': '[X]',  // X mark
+  '→': '->',   // Arrow
+  '⚠': '[!]',  // Warning
+  '★': '*',    // Star
+  '•': '•',    // Bullet (this one usually works)
+  '–': '-',    // En dash
+  '—': '--',   // Em dash
+  '"': '"',    // Smart quote left
+  '"': '"',    // Smart quote right
+  ''': "'",    // Smart apostrophe left
+  ''': "'",    // Smart apostrophe right
+  '➜': '->',   // Another arrow variant
 };
 
-// Ensure proper UTF-8 encoding for special characters
-function encodeUTF8(text: string): string {
-  let encoded = text;
-  for (const [symbol, unicode] of Object.entries(SYMBOL_MAP)) {
-    encoded = encoded.replace(new RegExp(symbol, 'g'), unicode);
-  }
-  return encoded;
+// Replace problematic Unicode characters with jsPDF-safe alternatives
+function sanitizeForPDF(text: string): string {
+  let sanitized = text;
+
+  // Replace each symbol with its safe equivalent
+  Object.entries(SYMBOL_MAP).forEach(([symbol, replacement]) => {
+    // Use a global replace for each symbol
+    sanitized = sanitized.split(symbol).join(replacement);
+  });
+
+  return sanitized;
 }
 
 // Parse markdown content into structured elements
@@ -348,8 +354,8 @@ class PDFGenerator {
     this.doc.setFontSize(size);
     this.doc.setFont(PDF_STYLES.fonts.primary, level === 3 ? 'bold' : 'bold');
 
-    const encodedText = encodeUTF8(text);
-    this.doc.text(encodedText, PDF_STYLES.margins.left, this.currentY);
+    const sanitizedText = sanitizeForPDF(text);
+    this.doc.text(sanitizedText, PDF_STYLES.margins.left, this.currentY);
 
     this.currentY += size * 1.2 + spacingAfter[level];
 
@@ -363,8 +369,8 @@ class PDFGenerator {
     this.doc.setFontSize(PDF_STYLES.sizes.body);
     this.doc.setFont(PDF_STYLES.fonts.primary, 'normal');
 
-    const encodedText = encodeUTF8(text);
-    const lines = this.doc.splitTextToSize(encodedText, this.contentWidth - 20);
+    const sanitizedText = sanitizeForPDF(text);
+    const lines = this.doc.splitTextToSize(sanitizedText, this.contentWidth - 20);
     const lineHeight = PDF_STYLES.sizes.body * PDF_STYLES.lineHeights.body;
     const totalHeight = lines.length * lineHeight + 16; // 8pt padding top & bottom
 
@@ -398,14 +404,14 @@ class PDFGenerator {
     const textWidth = this.contentWidth - PDF_STYLES.spacing.bulletIndent;
 
     for (const item of items) {
-      const encodedText = encodeUTF8(item);
-      const lines = this.doc.splitTextToSize(encodedText, textWidth);
+      const sanitizedText = sanitizeForPDF(item);
+      const lines = this.doc.splitTextToSize(sanitizedText, textWidth);
       const itemHeight = lines.length * lineHeight + PDF_STYLES.spacing.listItemGap;
 
       this.checkPageBreak(itemHeight);
 
-      // Draw bullet
-      this.doc.text('\u2022', bulletX, this.currentY);
+      // Draw bullet (use simple character)
+      this.doc.text('•', bulletX, this.currentY);
 
       // Draw text
       this.doc.text(lines, textX, this.currentY);
@@ -416,14 +422,14 @@ class PDFGenerator {
 
   // Add table with proper formatting
   private addTable(headers: string[], rows: string[][]): void {
-    const tableData = rows.map(row => row.map(cell => encodeUTF8(cell)));
-    const tableHeaders = headers.map(h => encodeUTF8(h));
+    const tableData = rows.map(row => row.map(cell => sanitizeForPDF(cell)));
+    const tableHeaders = headers.map(h => sanitizeForPDF(h));
 
-    // Estimate table height
-    const rowHeight = 20;
-    const estimatedHeight = (rows.length + 2) * rowHeight;
+    // Estimate table height more accurately
+    const rowHeight = 24; // Increased for better padding
+    const estimatedHeight = (rows.length + 3) * rowHeight;
 
-    // If table doesn't fit, start on new page
+    // CRITICAL FIX: Keep entire table on one page - start fresh page if doesn't fit
     if (this.pageHeight - this.currentY - PDF_STYLES.margins.bottom < estimatedHeight) {
       this.addPage();
     }
@@ -436,28 +442,27 @@ class PDFGenerator {
       theme: 'grid',
       styles: {
         fontSize: PDF_STYLES.sizes.body,
-        cellPadding: 6,
+        cellPadding: { top: 8, right: 12, bottom: 8, left: 12 }, // Improved padding
         font: PDF_STYLES.fonts.primary,
         lineColor: [
           PDF_STYLES.colors.tableBorder.r,
           PDF_STYLES.colors.tableBorder.g,
           PDF_STYLES.colors.tableBorder.b
         ],
-        lineWidth: 0.5
+        lineWidth: 1, // 1pt borders
+        overflow: 'linebreak',
+        cellWidth: 'wrap'
       },
       headStyles: {
-        fillColor: [
-          PDF_STYLES.colors.sectionBg.r,
-          PDF_STYLES.colors.sectionBg.g,
-          PDF_STYLES.colors.sectionBg.b
-        ],
+        fillColor: [240, 247, 255], // #f0f7ff (light blue)
         textColor: [
           PDF_STYLES.colors.text.r,
           PDF_STYLES.colors.text.g,
           PDF_STYLES.colors.text.b
         ],
         fontStyle: 'bold',
-        halign: 'left'
+        halign: 'left',
+        fontSize: PDF_STYLES.sizes.body
       },
       alternateRowStyles: {
         fillColor: [
@@ -467,9 +472,11 @@ class PDFGenerator {
         ]
       },
       columnStyles: {
-        // Auto-fit columns
+        // Auto-fit columns with word wrapping
         0: { cellWidth: 'auto' }
       },
+      // Prevent table from breaking across pages
+      tableWidth: 'auto',
       didDrawPage: (data) => {
         // Update current Y position after table
         this.currentY = data.cursor ? data.cursor.y : this.currentY;
@@ -485,8 +492,8 @@ class PDFGenerator {
     this.doc.setFont(PDF_STYLES.fonts.fallback, 'normal');
     this.doc.setFontSize(PDF_STYLES.sizes.body - 1);
 
-    const encodedCode = encodeUTF8(code);
-    const lines = encodedCode.split('\n');
+    const sanitizedCode = sanitizeForPDF(code);
+    const lines = sanitizedCode.split('\n');
     const lineHeight = (PDF_STYLES.sizes.body - 1) * PDF_STYLES.lineHeights.tight;
     const totalHeight = lines.length * lineHeight + 16;
 
@@ -520,9 +527,11 @@ class PDFGenerator {
   // Add message (for chat exports)
   private addMessage(message: ChatMessage): void {
     const isUser = message.role === 'user';
-    const backgroundColor = isUser ? PDF_STYLES.colors.userBg : PDF_STYLES.colors.assistantBg;
 
-    // Role header
+    // Add more spacing before messages
+    this.currentY += 16;
+
+    // Role header with improved styling
     this.doc.setFontSize(PDF_STYLES.sizes.small);
     this.doc.setFont(PDF_STYLES.fonts.primary, 'bold');
 
@@ -535,11 +544,17 @@ class PDFGenerator {
       minute: '2-digit'
     });
 
-    this.checkPageBreak(60); // Minimum space for message header
+    // Add cost to timestamp line for assistant messages (single display)
+    const timestampWithCost = !isUser && message.cost && message.cost > 0
+      ? `${timestamp} • Estimated cost: $${message.cost.toFixed(2)}`
+      : timestamp;
 
+    this.checkPageBreak(80); // More space for message with background
+
+    // Draw message header
     this.doc.text(roleText, PDF_STYLES.margins.left, this.currentY);
 
-    // Timestamp
+    // Timestamp (and cost for assistant)
     this.doc.setFont(PDF_STYLES.fonts.primary, 'normal');
     this.doc.setTextColor(
       PDF_STYLES.colors.textLight.r,
@@ -547,7 +562,7 @@ class PDFGenerator {
       PDF_STYLES.colors.textLight.b
     );
     const roleWidth = this.doc.getTextWidth(roleText);
-    this.doc.text(` • ${timestamp}`, PDF_STYLES.margins.left + roleWidth, this.currentY);
+    this.doc.text(` • ${timestampWithCost}`, PDF_STYLES.margins.left + roleWidth, this.currentY);
 
     // Reset color
     this.doc.setTextColor(
@@ -556,7 +571,7 @@ class PDFGenerator {
       PDF_STYLES.colors.text.b
     );
 
-    this.currentY += PDF_STYLES.sizes.small * 1.4 + 8;
+    this.currentY += PDF_STYLES.sizes.small * 1.4 + 12; // More spacing
 
     // Parse and render message content
     const elements = parseMarkdown(message.content);
@@ -573,7 +588,8 @@ class PDFGenerator {
           this.addHeading(element.content as string, 3);
           break;
         case 'paragraph':
-          this.addParagraph(element.content as string, isUser ? backgroundColor : undefined);
+          // Clean paragraph rendering - no background per paragraph
+          this.addParagraph(element.content as string);
           this.currentY += PDF_STYLES.spacing.paragraphGap;
           break;
         case 'list':
@@ -591,30 +607,9 @@ class PDFGenerator {
       }
     }
 
-    // Cost information for assistant messages
-    if (!isUser && message.cost && message.cost > 0) {
-      this.doc.setFontSize(PDF_STYLES.sizes.small);
-      this.doc.setTextColor(
-        PDF_STYLES.colors.textLight.r,
-        PDF_STYLES.colors.textLight.g,
-        PDF_STYLES.colors.textLight.b
-      );
-      this.doc.text(
-        `Cost: $${message.cost.toFixed(2)}`,
-        PDF_STYLES.margins.left,
-        this.currentY
-      );
-      this.currentY += PDF_STYLES.sizes.small * 1.4;
+    // Cost is now shown in the header timestamp line - no duplicate needed
 
-      // Reset color
-      this.doc.setTextColor(
-        PDF_STYLES.colors.text.r,
-        PDF_STYLES.colors.text.g,
-        PDF_STYLES.colors.text.b
-      );
-    }
-
-    // Spacing between messages
+    // Spacing between messages (increased for better readability)
     this.currentY += PDF_STYLES.spacing.sectionGap;
   }
 
