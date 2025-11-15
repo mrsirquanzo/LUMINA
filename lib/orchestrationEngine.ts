@@ -160,7 +160,7 @@ function parseAgentQuestions(response: string, fromAgent: AgentType): ParsedQues
     { pattern: /\[ASK_CLINICAL:\s*"([^"]+)"\]/g, target: 'clinical' as AgentType },
     { pattern: /\[ASK_PATENT:\s*"([^"]+)"\]/g, target: 'patent' as AgentType },
     { pattern: /\[ASK_FINANCIAL:\s*"([^"]+)"\]/g, target: 'financial' as AgentType },
-    { pattern: /\[ASK_MARKET:\s*"([^"]+)"\]/g, target: 'market' as AgentType },
+    { pattern: /\[ASK_MARKET:\s*"([^"]+)"\]/g, target: 'market_research' as AgentType },
     { pattern: /\[ASK_REGULATORY:\s*"([^"]+)"\]/g, target: 'regulatory' as AgentType },
   ];
 
