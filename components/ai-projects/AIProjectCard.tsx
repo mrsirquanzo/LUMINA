@@ -38,7 +38,7 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
       return 'bg-accent-100 text-accent-700';
     }
     if (projectType === 'multi-agent') {
-      return 'bg-blue-100 text-blue-700';
+      return 'bg-orange-100 text-orange-700';
     }
     return 'bg-purple-100 text-purple-700';
   };
