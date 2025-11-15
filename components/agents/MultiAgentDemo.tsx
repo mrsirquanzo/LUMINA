@@ -76,6 +76,7 @@ export default function MultiAgentDemo() {
   const [mode, setMode] = useState<ExecutionMode>('thorough');
   const [isDemo, setIsDemo] = useState(true);
   const [query, setQuery] = useState('');
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string>('ma-due-diligence');
   const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
   const [costEstimate, setCostEstimate] = useState<any>(null);
   const [isEstimating, setIsEstimating] = useState(false);
@@ -134,8 +135,11 @@ export default function MultiAgentDemo() {
     setCostEstimate(null);
   };
 
-  const handleSampleQueryClick = (sampleQuery: string) => {
+  const handleSampleQueryClick = (sampleQuery: string, scenarioId?: string) => {
     setQuery(sampleQuery);
+    if (scenarioId) {
+      setSelectedScenarioId(scenarioId);
+    }
   };
 
   const checkAuthentication = async () => {
@@ -246,6 +250,7 @@ export default function MultiAgentDemo() {
             documents={processedDocuments}
             mode={mode}
             isDemo={isDemo}
+            demoScenarioId={isDemo ? selectedScenarioId : undefined}
             customAgents={selectedCustomTeam?.agents}
           />
         </div>
@@ -462,7 +467,7 @@ export default function MultiAgentDemo() {
                     {DEMO_SCENARIOS.map((scenario) => (
                       <button
                         key={scenario.id}
-                        onClick={() => handleSampleQueryClick(scenario.query)}
+                        onClick={() => handleSampleQueryClick(scenario.query, scenario.id)}
                         className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-md transition-colors border border-gray-200"
                       >
                         <div className="flex items-start gap-2">
