@@ -66,6 +66,18 @@ const PDF_STYLES = {
 // Symbol mapping for jsPDF-safe rendering
 // Replace Unicode symbols with pure ASCII equivalents that render correctly
 const SYMBOL_MAP: { [key: string]: string } = {
+  // Invisible/formatting characters that cause spacing issues
+  '\u200B': '',      // Zero-width space -> remove
+  '\u200C': '',      // Zero-width non-joiner -> remove
+  '\u200D': '',      // Zero-width joiner -> remove
+  '\u200E': '',      // Left-to-right mark -> remove
+  '\u200F': '',      // Right-to-left mark -> remove
+  '\uFEFF': '',      // Zero-width no-break space (BOM) -> remove
+  '\u00AD': '',      // Soft hyphen -> remove
+  '\u00A0': ' ',     // Non-breaking space -> regular space
+  '\u2060': '',      // Word joiner -> remove
+
+  // Visible symbols
   '\u2713': '[OK]',  // Checkmark (✓) -> [OK]
   '\u2714': '[OK]',  // Heavy checkmark (✔) -> [OK]
   '\u2717': '[X]',   // X mark (✗) -> [X]
@@ -90,11 +102,20 @@ const SYMBOL_MAP: { [key: string]: string } = {
 function sanitizeForPDF(text: string): string {
   let sanitized = text;
 
-  // Replace each symbol with its safe equivalent
+  // Step 1: Normalize Unicode to composed form (NFC)
+  // This fixes issues where characters are decomposed (like é -> e + ´)
+  sanitized = sanitized.normalize('NFC');
+
+  // Step 2: Replace each symbol with its safe equivalent
   Object.entries(SYMBOL_MAP).forEach(([symbol, replacement]) => {
     // Use a global replace for each symbol
     sanitized = sanitized.split(symbol).join(replacement);
   });
+
+  // Step 3: Remove any remaining control characters and formatting marks
+  // This catches any invisible characters not in our map
+  // Preserve newlines (\n), tabs (\t), and carriage returns (\r)
+  sanitized = sanitized.replace(/[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u2000-\u200F\u2028-\u202F\u205F-\u206F]/g, '');
 
   return sanitized;
 }
