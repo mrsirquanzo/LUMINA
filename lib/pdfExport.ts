@@ -266,8 +266,12 @@ class PDFGenerator {
     this.doc = new jsPDF({
       orientation: 'portrait',
       unit: 'pt',
-      format: 'letter'
+      format: 'letter',
+      compress: true
     });
+
+    // Use standard fonts that support proper text rendering
+    this.doc.setFont('helvetica', 'normal');
 
     this.pageWidth = this.doc.internal.pageSize.getWidth();
     this.pageHeight = this.doc.internal.pageSize.getHeight();
@@ -615,6 +619,14 @@ class PDFGenerator {
     // Sanitize content BEFORE parsing to prevent invisible characters from affecting markdown
     const sanitizedContent = sanitizeForPDF(message.content);
 
+    // Debug: Log sanitization (remove in production)
+    if (message.content !== sanitizedContent) {
+      console.log('[PDF Export] Sanitized text changed:', {
+        original: message.content.substring(0, 100),
+        sanitized: sanitizedContent.substring(0, 100)
+      });
+    }
+
     // Parse and render message content
     const elements = parseMarkdown(sanitizedContent);
 
@@ -698,6 +710,9 @@ class PDFGenerator {
 
 // Main export function
 export function exportToPDF(messages: ChatMessage[], agentName: string): void {
+  // Version check - log to verify latest code is running
+  console.log('[PDF Export] Version 2024-11-15-v3 - Aggressive ASCII sanitization active');
+
   const generator = new PDFGenerator();
   generator.generateChatPDF(messages, agentName);
 
