@@ -123,35 +123,44 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
         agent: 'Patent Expert',
         response: `## Patent Portfolio & IP Analysis
 
-**GeneTech Patent Portfolio:**
-- **US10,123,456**: "IL-15 Fusion Proteins for CAR-T Therapy"
-  - Granted: March 2022
-  - Claim 1: Broad coverage of IL-15 linked CAR-T constructs
-  - Expires: 2042 (20 years from filing)
-- **EP3,456,789**: European counterpart (granted 2023)
-- **CN108,765,432**: Chinese patent (granted 2023)
+**BioSpectra Patent Portfolio:**
+- **US11,234,567**: "Bispecific T-Cell Engager with Fc-Silenced Linker"
+  - Granted: August 2023
+  - Claim 1: Broad coverage of Fc-silenced bispecific antibodies targeting novel epitope
+  - Expires: 2043 (20 years from filing)
+- **US11,456,789**: "Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies"
+  - Granted: January 2024
+  - Method claims for dosing regimens and CRS management
+  - Expires: 2044
+- **EP3,789,123**: European counterpart (granted 2024)
+- **CN109,876,543**: Chinese patent (granted 2024)
+- 12 continuation applications filed (2023-2024) covering linker variants and combination therapies
 
 **Patent Strength Assessment:**
-✓ Strong novelty vs prior art (no similar IL-15 costim CAR-T disclosures)
+✓ Strong novelty vs prior art (novel epitope not disclosed in prior TCEs)
+✓ Fc-silenced linker technology proprietary (composition of matter protection)
 ✓ No patent oppositions filed
-✓ Clean prosecution history
+✓ Clean prosecution history with minimal amendments
 
 **Competitive Landscape:**
-- Juno Therapeutics: Broad CAR-T claims but NOT specific to IL-15
-- Kite Pharma: CD28/4-1BB costim (different mechanism)
-- Novartis: IL-21 costim patents (different cytokine)
+- **Tecvayli (J&J):** Different epitope targeting, earlier expiry (2038)
+- **Talvey (Pfizer/J&J):** Complex dosing patent but overlapping bispecific claims
+- **Amgen TCEs:** Broad bispecific platform patents but FTO clear for our novel epitope
+- **Regeneron:** Half-life extension patents (orthogonal to our technology)
 
 **Freedom-to-Operate:**
-✓ **FTO STATUS: CLEAR** - No blocking patents identified
+✓ **FTO STATUS: CLEAR** - No blocking patents identified for novel epitope
 ✓ Can commercialize without licensing
-✓ Strong defensive position against competitors
+✓ Proprietary Fc-silenced linker provides differentiated IP position
+✓ Strong defensive position vs next-gen TCE developers
 
 **Patent Portfolio Valuation:**
-- Estimated standalone value: $150-200M
-- 20 years remaining exclusivity
-- Covers key markets (US, EU, CN)
+- Estimated standalone value: $350-450M
+- 18-20 years remaining exclusivity
+- Covers key markets (US, EU5, China, Japan = 90% global market)
+- Platform applicability to multiple solid tumor indications
 
-**Question for Financial Analyst:** Given strong IP position with clear FTO and 20-year exclusivity, is the $800M valuation justified based on their financial position and runway?`,
+**Question for Financial Analyst:** Given strong IP position with clear FTO, 18-year exclusivity, and platform potential, is the $2.2B valuation justified based on their financial position and runway?`,
       },
     },
     {
@@ -160,7 +169,7 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
       data: {
         from: 'Patent Expert',
         to: 'Financial Analyst',
-        question: 'Given strong IP position with clear FTO and 20-year exclusivity, is the $800M valuation justified?',
+        question: 'Given strong IP position with clear FTO, 18-year exclusivity, and platform potential, is the $2.2B valuation justified?',
       },
     },
     {
