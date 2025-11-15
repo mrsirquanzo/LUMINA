@@ -288,181 +288,150 @@ export default function PatentExpertAgent() {
         )}
       </div>
 
-      {/* Main Chat Interface */}
-      <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-        {/* Messages Area */}
-        <div className="h-[500px] overflow-y-auto p-6 space-y-4">
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <div className="text-6xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Ready to analyze data
-              </h3>
-              <p className="text-gray-600 mb-6 max-w-md">
-                {mode === 'demo'
-                  ? 'Click a sample query below to see a demo conversation'
-                  : 'Ask me about patent landscapes, IP strategy, freedom-to-operate, or competitive patent portfolios'
-                }
-              </p>
+      {/* Demo Mode Instructions */}
+      {mode === 'demo' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-purple-50 border border-purple-200 rounded-lg">
+          <h3 className="font-semibold text-gray-900 mb-2">Try Demo Mode</h3>
+          <p className="text-gray-700 mb-4">
+            Click the button below to see a pre-recorded patent analysis. No API costs.
+          </p>
+          <button
+            onClick={sendDemoMessage}
+            disabled={isLoading}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors disabled:opacity-50"
+          >
+            Run Demo Analysis
+          </button>
+        </div>
+      )}
 
-              {/* Sample Queries */}
-              <div className="space-y-2 w-full max-w-xl">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  {mode === 'demo' ? 'Try these demo examples:' : 'Try these examples:'}
-                </p>
-                {SAMPLE_QUERIES.map((query, index) => (
-                  <button
-                    key={index}
-                    onClick={() => mode === 'demo' ? sendDemoMessage() : sendLiveMessage(query)}
-                    className="block w-full text-left px-4 py-3 text-sm text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
-                  >
-                    {query}
-                  </button>
-                ))}
+      {/* Sample Queries */}
+      {mode === 'live' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <h3 className="font-semibold text-gray-900 mb-3">Sample Queries</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {SAMPLE_QUERIES.map((query, index) => (
+              <button
+                key={index}
+                onClick={() => sendLiveMessage(query)}
+                className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+              >
+                {query}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Messages */}
+      {messages.length > 0 && (
+        <div className="mb-6 space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg shadow-sm ${
+                message.role === 'user'
+                  ? 'bg-white border-l-4 border-purple-500 ml-auto max-w-3xl'
+                  : 'bg-gray-50 border border-gray-200'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="text-2xl flex-shrink-0">
+                  {message.role === 'user' ? '👤' : '⚖️'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className={`text-sm mb-1 ${message.role === 'user' ? 'text-purple-600 font-medium' : 'text-gray-500'}`}>
+                    {message.role === 'user' ? 'You' : 'Patent Expert'}
+                  </div>
+                  <div className="text-sm leading-relaxed max-w-none text-gray-800">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        // Minimal heading styling - just slightly larger, no bold
+                        h1: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
+                        h2: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
+                        h3: (props) => <p className="text-sm font-medium mt-2 mb-1 text-gray-900" {...props} />,
+                        // Subtle bold - just slightly heavier
+                        strong: (props) => <span className="font-semibold text-gray-900" {...props} />,
+                        // Clean lists
+                        ul: (props) => <ul className="list-disc list-inside my-2 space-y-1" {...props} />,
+                        ol: (props) => <ol className="list-decimal list-inside my-2 space-y-1" {...props} />,
+                        li: (props) => <li className="ml-0" {...props} />,
+                        // Simple paragraphs
+                        p: (props) => <p className="my-2" {...props} />,
+                        // Subtle code
+                        code: ({inline, ...props}: any) =>
+                          inline ? (
+                            <code className="px-1 py-0.5 bg-purple-50 text-purple-900 rounded text-xs font-mono border border-purple-200" {...props} />
+                          ) : (
+                            <code className="block p-2 bg-gray-100 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto border border-gray-300" {...props} />
+                          ),
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
               </div>
             </div>
-          ) : (
-            <>
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg px-4 py-3 shadow-sm ${
-                      message.role === 'user'
-                        ? 'bg-white border-l-4 border-purple-500'
-                        : 'bg-gray-50 border border-gray-200'
-                    }`}
-                  >
-                    <div className="text-sm leading-relaxed max-w-none text-gray-800">
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          // Minimal heading styling - just slightly larger, no bold
-                          h1: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
-                          h2: (props) => <p className="text-base font-semibold mt-3 mb-2 text-gray-900" {...props} />,
-                          h3: (props) => <p className="text-sm font-medium mt-2 mb-1 text-gray-900" {...props} />,
-                          // Subtle bold - just slightly heavier
-                          strong: (props) => <span className="font-semibold text-gray-900" {...props} />,
-                          // Clean lists
-                          ul: (props) => <ul className="list-disc list-inside my-2 space-y-1" {...props} />,
-                          ol: (props) => <ol className="list-decimal list-inside my-2 space-y-1" {...props} />,
-                          li: (props) => <li className="ml-0" {...props} />,
-                          // Simple paragraphs
-                          p: (props) => <p className="my-2" {...props} />,
-                          // Subtle code
-                          code: ({inline, ...props}: any) =>
-                            inline ? (
-                              <code className="px-1 py-0.5 bg-purple-50 text-purple-900 rounded text-xs font-mono border border-purple-200" {...props} />
-                            ) : (
-                              <code className="block p-2 bg-gray-100 text-gray-800 rounded text-xs font-mono my-2 overflow-x-auto border border-gray-300" {...props} />
-                            ),
-                        }}
-                      >
-                        {message.content}
-                      </ReactMarkdown>
-                    </div>
-                    <div
-                      className={`text-xs mt-2 ${
-                        message.role === 'user' ? 'text-purple-600 font-medium' : 'text-gray-500'
-                      }`}
-                    >
-                      {message.timestamp.toLocaleTimeString()}
-                    </div>
-                  </div>
-                </div>
-              ))}
+          ))}
+        </div>
+      )}
 
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-100 text-gray-900 rounded-lg px-4 py-3">
-                    <div className="flex items-center space-x-2">
-                      <div className="animate-pulse">
-                        {mode === 'demo' ? 'Loading demo response' : 'Analyzing'}
-                      </div>
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+            <span className="text-gray-600">Analyzing patent data...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
+      {/* File Upload - Live Mode Only */}
+      {mode === 'live' && (
+        <div className="mb-6">
+          <FileUpload onFilesProcessed={handleFilesProcessed} />
+        </div>
+      )}
+
+      {/* Input Area (Live Mode) */}
+      {mode === 'live' && (
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Ask about patents, IP strategy, or competitive analysis..."
+            rows={4}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 mb-3 resize-none"
+          />
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">
+              {processedDocuments.length > 0 && `${processedDocuments.length} file(s) attached`}
+            </span>
+            <button
+              onClick={() => sendLiveMessage()}
+              disabled={isLoading || !input.trim()}
+              className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Send
+            </button>
+          </div>
+          {messages.length > 0 && (
+            <div className="mt-3 flex items-center gap-3">
+              <ExportButton messages={messages} agentName="Patent Expert" />
+            </div>
           )}
         </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className="px-6 py-3 bg-red-50 border-t border-red-200">
-            <p className="text-sm text-red-700">⚠️ {error}</p>
-          </div>
-        )}
-
-        {/* File Upload - Only for Live Mode */}
-        {mode === 'live' && (
-          <div className="border-t border-gray-200 px-4 pt-4 bg-gray-50">
-            <FileUpload onFilesProcessed={handleFilesProcessed} />
-          </div>
-        )}
-
-        {/* Input Area - Only for Live Mode */}
-        {mode === 'live' && (
-          <div className="border-t border-gray-200 p-4 bg-gray-50">
-            <div className="flex items-end space-x-2">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask about patents, IP strategy, or competitive analysis..."
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-                rows={2}
-                disabled={isLoading}
-              />
-              <button
-                onClick={() => sendLiveMessage()}
-                disabled={isLoading || !input.trim()}
-                className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
-              >
-                Send
-              </button>
-            </div>
-
-            {messages.length > 0 && (
-              <div className="mt-3 flex items-center gap-3">
-                <ExportButton messages={messages} agentName="Patent Expert" />
-                <button
-                  onClick={clearConversation}
-                  className="text-sm text-gray-600 hover:text-gray-900"
-                >
-                  Clear conversation
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Demo Mode Controls */}
-        {mode === 'demo' && messages.length > 0 && (
-          <div className="border-t border-gray-200 p-4 bg-gray-50 text-center">
-            <button
-              onClick={() => sendDemoMessage()}
-              disabled={isLoading}
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium mr-3"
-            >
-              Next Demo
-            </button>
-            <button
-              onClick={clearConversation}
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Clear conversation
-            </button>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Behind the Scenes */}
       <div className="mt-8">
