@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     // Parse request body first to check if it's demo mode
     const { query, documents, mode, isDemo, demoScenarioId, customAgents } = await req.json();
 
-    console.log('[Orchestrator API] Received request:', {
+    console.log('[Sonny Orchestrator API] Received request:', {
       query: query?.substring(0, 50) + '...',
       mode,
       isDemo,
@@ -22,11 +22,11 @@ export async function POST(req: NextRequest) {
 
     // Skip authentication for demo mode (no API calls needed)
     if (!isDemo) {
-      console.log('[Orchestrator API] Not demo mode, checking authentication...');
+      console.log('[Sonny Orchestrator API] Not demo mode, checking authentication...');
       const authenticated = await isAuthenticated();
-      console.log('[Orchestrator API] Authentication result:', authenticated);
+      console.log('[Sonny Orchestrator API] Authentication result:', authenticated);
       if (!authenticated) {
-        console.log('[Orchestrator API] Authentication failed - returning 401');
+        console.log('[Sonny Orchestrator API] Authentication failed - returning 401');
         return new Response(
           JSON.stringify({ error: 'Authentication required for live analysis' }),
           {
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
         );
       }
     } else {
-      console.log('[Orchestrator API] Demo mode - skipping authentication check');
+      console.log('[Sonny Orchestrator API] Demo mode - skipping authentication check');
     }
 
     // Validate inputs
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Error in orchestrator API:', error);
+    console.error('Error in Sonny orchestrator API:', error);
     return new Response(
       JSON.stringify({
         error: error.message || 'Failed to start orchestration',
@@ -125,9 +125,9 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   return new Response(
     JSON.stringify({
-      name: 'Q · E Orchestrator API',
+      name: 'Sonny - Multi-Agent Orchestrator API',
       status: 'active',
-      description: 'Coordinates 5 specialized AI agents for comprehensive biotech analysis',
+      description: 'Sonny coordinates specialized AI agents for comprehensive biotech analysis',
       modes: ['fast', 'thorough'],
     }),
     {

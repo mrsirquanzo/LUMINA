@@ -484,7 +484,7 @@ Please provide your expert analysis.`;
 }
 
 /**
- * Synthesize results from all agents
+ * Synthesize results from all agents using Sonny
  */
 async function synthesizeResults(
   query: string,
@@ -499,11 +499,23 @@ async function synthesizeResults(
 Expert Analyses:
 ${combinedAnalysis}`;
 
-  // Use synthesis model configuration (Claude Sonnet 4)
+  // Use synthesis model configuration (Claude Sonnet 4) with Sonny identity
   const client = createLLMClient(SYNTHESIS_MODEL_CONFIG);
 
+  // Override the synthesis prompt to identify as Sonny
+  const sonnyPrompt = `You are Sonny, a senior biotech strategist AI that orchestrates and synthesizes input from multiple expert analysts.
+
+Your role as Sonny is to:
+1. Integrate findings across all expert domains (clinical, patent, financial, regulatory, market research)
+2. Identify key insights and cross-domain connections
+3. Highlight agreements and contradictions between experts
+4. Provide clear, actionable recommendations
+5. Structure your synthesis as an executive summary suitable for decision-makers
+
+Be specific, quantitative, and actionable in your recommendations.`;
+
   const response = await client.sendMessage(
-    SYNTHESIS_PROMPT,
+    sonnyPrompt,
     userMessage,
     { maxTokens: 4096 }
   );

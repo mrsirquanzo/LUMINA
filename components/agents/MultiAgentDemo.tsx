@@ -272,9 +272,16 @@ export default function MultiAgentDemo() {
               View History
             </button>
           </div>
+          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-4">
+            🤖 Sonny - Multi-Agent AI System
+          </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-6">
-            Q · E
+            Sonny Multi-Agent Collaboration
           </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
+            Sonny orchestrates specialized AI agents to analyze complex biotech scenarios.
+            Clinical, Patent, Financial, Market, and Regulatory analysts collaborate under Sonny's coordination to provide comprehensive insights.
+          </p>
 
           {/* Available AI Agents - Moved from bottom */}
           <div className="mb-6">
@@ -441,7 +448,7 @@ export default function MultiAgentDemo() {
             )}
             {mode === 'thorough' && (
               <p className="text-sm text-gray-600 mt-2">
-                <strong>Thorough:</strong> Agents work sequentially, building on each other's insights.
+                <strong>Thorough:</strong> Agents work sequentially, building on each other's insights under Sonny's coordination.
               </p>
             )}
           </div>
@@ -456,7 +463,7 @@ export default function MultiAgentDemo() {
           {viewMode === 'chat' && (
             <>
               <p className="text-sm text-gray-600 mb-4">
-                Enter your question and let our specialized AI agents collaborate to provide comprehensive insights.
+                Enter your question and let Sonny's specialized AI agents collaborate to provide comprehensive insights.
               </p>
 
               {/* Sample Queries - Show when no query */}
