@@ -8,6 +8,7 @@ import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownloa
 import { saveAnalysisToHistory } from '@/lib/analysisHistory';
 import ExportButton from '@/components/shared/ExportButton';
 import { ChatMessage } from '@/lib/pdfExport';
+import { CitedMarkdown } from '@/components/shared/CitedMarkdown';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -620,10 +621,11 @@ ${synthesis}
 
                       {activity.response && (
                         <div className={`mt-3 ${activity.isExpanded ? '' : 'max-h-32 overflow-hidden relative'}`}>
-                          <div className="agent-output bg-white/80 p-5 rounded-lg shadow-sm border border-gray-100">
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                              {activity.response}
-                            </ReactMarkdown>
+                          <div className="bg-white/80 p-5 rounded-lg shadow-sm border border-gray-100">
+                            <CitedMarkdown
+                              content={activity.response}
+                              isDemo={isDemo}
+                            />
                           </div>
                           {!activity.isExpanded && (
                             <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
@@ -795,10 +797,11 @@ ${synthesis}
             </button>
           </div>
 
-          <div className="agent-output bg-white p-8 rounded-xl shadow-md border border-gray-200">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {synthesis}
-            </ReactMarkdown>
+          <div className="bg-white p-8 rounded-xl shadow-md border border-gray-200">
+            <CitedMarkdown
+              content={synthesis}
+              isDemo={isDemo}
+            />
           </div>
         </div>
       )}
