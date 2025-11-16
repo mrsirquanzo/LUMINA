@@ -27,7 +27,7 @@ export function CitationBadge({ number, inline = true }: CitationBadgeProps) {
   );
 }
 
-interface SourcesReferenced SectionProps {
+interface SourcesReferencedSectionProps {
   sources: Array<{
     number: string;
     citation: string;
