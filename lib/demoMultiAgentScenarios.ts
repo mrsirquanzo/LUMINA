@@ -809,10 +809,10 @@ I've conducted a comprehensive freedom-to-operate analysis and evaluated the pat
 ### Enhertu (Daiichi Sankyo/AstraZeneca)
 
 **Core Patent Portfolio:**
-- **US 10,808,039** – DXd linker-payload composition of matter (filed 2017, expires 2038) [1]
-- **US 11,052,148** – HER2-targeting ADC formulations (filed 2018, expires 2040) [2]
-- **US 11,524,991** – DXd manufacturing processes (filed 2019, expires 2041) [3]
-- **JP 6,234,567** – Topoisomerase I inhibitor ADC platform (filed 2017, expires 2039) [4]
+- **US10808039** – DXd linker-payload composition of matter (filed 2017, expires 2038) [1]
+- **US11052148** – HER2-targeting ADC formulations (filed 2018, expires 2040) [2]
+- **US11524991** – DXd manufacturing processes (filed 2019, expires 2041) [3]
+- **JP6234567** – Topoisomerase I inhibitor ADC platform (filed 2017, expires 2039) [4]
 
 **Patent Strength: ✓ EXCEPTIONAL**
 - **400+ patent family members** globally (US, EU, Japan, China) [5]
@@ -841,9 +841,9 @@ I've conducted a comprehensive freedom-to-operate analysis and evaluated the pat
 ### Trodelvy (Gilead Sciences)
 
 **Core Patent Portfolio:**
-- **US 9,556,244** – SN-38 ADC targeting Trop-2 (filed 2014, expires 2033) [7]
-- **US 10,159,694** – CL2A linker technology (filed 2015, expires 2035) [8]
-- **US 10,238,747** – hRS7 antibody composition (filed 2014, expires 2034) [9]
+- **US9556244** – SN-38 ADC targeting Trop-2 (filed 2014, expires 2033) [7]
+- **US10159694** – CL2A linker technology (filed 2015, expires 2035) [8]
+- **US10238747** – hRS7 antibody composition (filed 2014, expires 2034) [9]
 
 **Patent Strength: MODERATE**
 - **45 patent family members** (vs Enhertu's 400+) [10]
@@ -866,9 +866,9 @@ I've conducted a comprehensive freedom-to-operate analysis and evaluated the pat
 ### Padcev (Astellas/Seagen, now Pfizer)
 
 **Core Patent Portfolio:**
-- **US 9,931,414** – Nectin-4 ADC with MMAE payload (filed 2014, expires 2034) [12]
-- **US 10,155,815** – AGS-22M6E antibody composition (filed 2016, expires 2036) [13]
-- **US 10,800,845** – Combination therapy (EV + pembrolizumab, filed 2018, expires 2038) [14]
+- **US9931414** – Nectin-4 ADC with MMAE payload (filed 2014, expires 2034) [12]
+- **US10155815** – AGS-22M6E antibody composition (filed 2016, expires 2036) [13]
+- **US10800845** – Combination therapy (EV + pembrolizumab, filed 2018, expires 2038) [14]
 
 **Patent Strength: ✓ STRONG (but narrow)**
 - **120 patent family members** [15]
@@ -913,22 +913,22 @@ Enhertu's IP estate creates durable competitive moat worth **$10-15B in platform
 
 ## 📚 Sources Referenced
 
-[1] **US Patent 10,808,039** - ADC_Patent_Landscape.pdf, pp. 8-45 (DXd composition of matter)
-[2] **US Patent 11,052,148** - ADC_Patent_Landscape.pdf, pp. 46-72 (HER2 ADC formulations)
-[3] **US Patent 11,524,991** - ADC_Patent_Landscape.pdf, pp. 73-89 (DXd manufacturing)
-[4] **JP Patent 6,234,567** - ADC_Patent_Landscape.pdf, pp. 90-108 (Topoisomerase ADC platform)
-[5] **Daiichi Sankyo Patent Family Analysis** - ADC_Patent_Landscape.pdf, pp. 125-156
-[6] **AstraZeneca-Daiichi License Agreement** - ADC_Patent_Landscape.pdf, pp. 178-192 (2019 announcement)
-[7] **US Patent 9,556,244** - ADC_Patent_Landscape.pdf, pp. 245-268 (Trodelvy core patent)
-[8] **US Patent 10,159,694** - ADC_Patent_Landscape.pdf, pp. 269-285 (CL2A linker)
-[9] **US Patent 10,238,747** - ADC_Patent_Landscape.pdf, pp. 286-301 (hRS7 antibody)
-[10] **Immunomedics Patent Portfolio Analysis** - ADC_Patent_Landscape.pdf, pp. 315-334
-[11] **Gilead-Immunomedics Acquisition** - ADC_Patent_Landscape.pdf, pp. 356-367 (2020 transaction)
-[12] **US Patent 9,931,414** - ADC_Patent_Landscape.pdf, pp. 412-438 (Padcev core patent)
-[13] **US Patent 10,155,815** - ADC_Patent_Landscape.pdf, pp. 439-456 (AGS-22M6E antibody)
-[14] **US Patent 10,800,845** - ADC_Patent_Landscape.pdf, pp. 457-475 (Combination therapy)
-[15] **Seagen ADC Patent Portfolio** - ADC_Patent_Landscape.pdf, pp. 498-542
-[16] **Pfizer-Seagen Acquisition** - ADC_Patent_Landscape.pdf, pp. 567-589 (2023 transaction)
+[1] **US Patent US10808039B2** - ADC_Patent_Landscape.pdf, pp. 8-45 (DXd composition of matter, filed 2017-03-15, expires 2038-03-15)
+[2] **US Patent US11052148B2** - ADC_Patent_Landscape.pdf, pp. 46-72 (HER2 ADC formulations, filed 2018-06-22, expires 2040-06-22)
+[3] **US Patent US11524991B2** - ADC_Patent_Landscape.pdf, pp. 73-89 (DXd manufacturing, filed 2019-01-10, expires 2041-01-10)
+[4] **JP Patent JP6234567B2** - ADC_Patent_Landscape.pdf, pp. 90-108 (Topoisomerase ADC platform, filed 2017-04-20, expires 2039-04-20)
+[5] **Daiichi Sankyo Patent Family Analysis** - ADC_Patent_Landscape.pdf, pp. 125-156 (400+ global patents, 2024 analysis)
+[6] **AstraZeneca-Daiichi License Agreement** - ADC_Patent_Landscape.pdf, pp. 178-192 (2019-03-28 announcement)
+[7] **US Patent US9556244B2** - ADC_Patent_Landscape.pdf, pp. 245-268 (Trodelvy SN-38 ADC, filed 2014-02-11, expires 2033-02-11)
+[8] **US Patent US10159694B2** - ADC_Patent_Landscape.pdf, pp. 269-285 (CL2A linker, filed 2015-07-18, expires 2035-07-18)
+[9] **US Patent US10238747B2** - ADC_Patent_Landscape.pdf, pp. 286-301 (hRS7 antibody, filed 2014-08-05, expires 2034-08-05)
+[10] **Immunomedics Patent Portfolio** - ADC_Patent_Landscape.pdf, pp. 315-334 (45 patent family members, 2020 analysis)
+[11] **Gilead-Immunomedics Acquisition** - ADC_Patent_Landscape.pdf, pp. 356-367 ($21B transaction, 2020-09-13)
+[12] **US Patent US9931414B2** - ADC_Patent_Landscape.pdf, pp. 412-438 (Padcev Nectin-4 ADC, filed 2014-12-19, expires 2034-12-19)
+[13] **US Patent US10155815B2** - ADC_Patent_Landscape.pdf, pp. 439-456 (AGS-22M6E antibody, filed 2016-03-30, expires 2036-03-30)
+[14] **US Patent US10800845B2** - ADC_Patent_Landscape.pdf, pp. 457-475 (EV+pembrolizumab combination, filed 2018-11-14, expires 2038-11-14)
+[15] **Seagen ADC Patent Portfolio** - ADC_Patent_Landscape.pdf, pp. 498-542 (120+ patent family members, 2023 analysis)
+[16] **Pfizer-Seagen Acquisition** - ADC_Patent_Landscape.pdf, pp. 567-589 ($43B transaction, 2023-12-14)
 
 **Question for Financial Analyst:** Given Enhertu's clinical AND patent dominance, what's the realistic peak sales potential and how does the IP moat affect valuation multiples?`,
       },
