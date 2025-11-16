@@ -118,7 +118,7 @@ These APIs have free tiers but require registration.
 - **Trial Benchmarks**: Sample sizes, endpoints, durations across therapeutic areas
 - **Success Predictions**: AI-powered probability estimates for trial outcomes
 
-**Current Implementation in Q·E Portfolio:**
+**Current Implementation in Sonny AI Portfolio:**
 ✅ **Hybrid Live/Simulated Integration** 🎯
 - **Live MCP Connection**: Direct SSE connection to `https://mcp.gosset.ai/sse` when OAuth token provided
 - **Automatic Fallback**: Uses simulated PTR data if `GOSSET_OAUTH_TOKEN` environment variable not set

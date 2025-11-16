@@ -196,7 +196,7 @@ export default function FileUpload({
     if (droppedFiles && droppedFiles.length > 0) {
       processFiles(droppedFiles);
     }
-  }, [files, maxFiles]);
+  }, [files, maxFiles, processFiles]);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files: selectedFiles } = e.target;

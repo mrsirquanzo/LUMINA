@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Q · E multi-agent system now supports **Model Context Protocol (MCP)**, which enables agents to access real-time external data sources. This dramatically enhances the capabilities of each specialized agent by providing live data instead of relying solely on the agent's training knowledge.
+Sonny's multi-agent system now supports **Model Context Protocol (MCP)**, which enables agents to access real-time external data sources. This dramatically enhances the capabilities of each specialized agent by providing live data instead of relying solely on the agent's training knowledge.
 
 ## What is MCP?
 
@@ -15,7 +15,7 @@ Model Context Protocol is a standard for connecting AI applications to external 
 
 ## Architecture
 
-Each agent in Q · E has access to specialized MCP servers:
+Each agent in Sonny has access to specialized MCP servers:
 
 ```
 ┌─────────────────┐      ┌──────────────────────┐

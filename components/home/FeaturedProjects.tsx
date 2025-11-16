@@ -4,8 +4,8 @@ import Button from "@/components/shared/Button";
 
 export default function FeaturedProjects() {
   const multiAgentProject = {
-    title: "Q · E",
-    description: "Experience how 5 specialized AI agents powered by different models (Claude Sonnet 4, Gemini 2.0 Flash, Perplexity Sonar Pro) work together to analyze complex biotech scenarios. Upload documents and watch as Clinical, Patent, Financial, Market Research, and Regulatory experts collaborate in real-time to provide comprehensive due diligence.",
+    title: "Sonny",
+    description: "Experience how Sonny orchestrates 5 specialized AI agents powered by different models (Claude Sonnet 4, Gemini 2.0 Flash, Perplexity Sonar Pro) to analyze complex biotech scenarios. Upload documents and watch as Clinical, Patent, Financial, Market Research, and Regulatory experts collaborate in real-time under Sonny's coordination to provide comprehensive due diligence.",
     demoUrl: "/ai-projects/multi-agent-demo",
     tags: ["Agent Orchestration", "Claude AI", "Real-time Analysis"],
   };

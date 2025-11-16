@@ -175,15 +175,60 @@ export default function MultiAgentDemo() {
         setShowLoginModal(true);
         return;
       }
+
+      // Check if API keys are configured
+      try {
+        const response = await fetch('/api/agents/check-api-keys');
+        const data = await response.json();
+
+        if (!data.configured) {
+          alert(
+            `⚠️ Live Mode Requires API Keys\n\n` +
+            `The following API keys need to be configured as environment variables:\n\n` +
+            `${data.missingKeys.map((key: string) => `• ${key}`).join('\n')}\n\n` +
+            `To use Live mode:\n` +
+            `1. Add these keys to your .env.local file (for local development)\n` +
+            `2. Or add them to your Vercel project settings (for deployed sites)\n\n` +
+            `For now, you can use Demo mode to see pre-recorded responses.`
+          );
+          return;
+        }
+      } catch (error) {
+        console.error('Failed to check API keys:', error);
+      }
+
       setIsDemo(false);
     } else {
       setIsDemo(true);
     }
   };
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = async () => {
     setIsAuthenticated(true);
-    setIsDemo(false);
+
+    // Check if API keys are configured
+    try {
+      const response = await fetch('/api/agents/check-api-keys');
+      const data = await response.json();
+
+      if (!data.configured) {
+        alert(
+          `⚠️ Live Mode Requires API Keys\n\n` +
+          `The following API keys need to be configured as environment variables:\n\n` +
+          `${data.missingKeys.map((key: string) => `• ${key}`).join('\n')}\n\n` +
+          `To use Live mode:\n` +
+          `1. Add these keys to your .env.local file (for local development)\n` +
+          `2. Or add them to your Vercel project settings (for deployed sites)\n\n` +
+          `For now, you can use Demo mode to see pre-recorded responses.`
+        );
+        return;
+      }
+
+      setIsDemo(false);
+    } catch (error) {
+      console.error('Failed to check API keys:', error);
+      setIsDemo(false);
+    }
   };
 
   const handleFilesProcessed = (files: UploadedFile[]) => {
@@ -231,6 +276,7 @@ export default function MultiAgentDemo() {
   if (showAnalysis && query.trim()) {
     console.log('[MultiAgentDemo] Starting analysis:', {
       isDemo,
+      selectedScenarioId,
       mode,
       query: query.substring(0, 50) + '...',
       customAgents: selectedCustomTeam?.agents.length || 'default',
