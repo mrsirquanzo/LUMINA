@@ -643,223 +643,863 @@ export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
     'ADC_Patent_Landscape.pdf (1.8 MB)',
     'ADC_Market_Analysis_2025.pdf (3.5 MB)',
   ],
-  estimatedDuration: 16000,
+  estimatedDuration: 22000,
   events: [
     {
       type: 'plan_created',
       timestamp: 0,
       data: {
-        plan: 'Comparative analysis: Clinical Performance → IP Landscape → Market Position → Synthesis',
+        plan: 'Comprehensive ADC analysis: Clinical Performance → Patent Landscape → Financial Outlook → Market Dynamics → Regulatory Pathways → Strategic Synthesis',
         mode: 'thorough',
-        estimatedCost: '$0.38',
+        estimatedCost: '$0.42',
       },
     },
     {
       type: 'agent_start',
-      timestamp: 700,
+      timestamp: 800,
       data: {
-        agent: 'Clinical Analyst',
-        task: 'Comparing efficacy and safety profiles across three leading ADCs',
+        agent: 'Clinical Data Analyst',
+        task: 'Analyzing clinical performance across three leading ADCs',
       },
     },
     {
       type: 'agent_thinking',
-      timestamp: 1300,
+      timestamp: 1400,
       data: {
-        agent: 'Clinical Analyst',
-        progress: 'Analyzing response rates and survival data across indications...',
+        agent: 'Clinical Data Analyst',
+        progress: 'Reviewing efficacy endpoints, safety profiles, and expanding indications...',
       },
     },
     {
       type: 'agent_response',
-      timestamp: 3000,
+      timestamp: 3200,
       data: {
-        agent: 'Clinical Analyst',
-        response: `## ADC Comparative Clinical Analysis (2024-2025)
+        agent: 'Clinical Data Analyst',
+        response: `## Comparative Clinical Analysis: ADC Landscape (2024-2025)
 
-**Enhertu (Daiichi Sankyo/AstraZeneca - trastuzumab deruxtecan):**
-- Primary indication: HER2+ breast cancer
-- ORR: 79.7% in HER2+ mBC (DESTINY-Breast03)
-- Median PFS: 28.8 months vs 6.8 months (T-DM1)
-- OS benefit: 23.4 months (hazard ratio 0.55)
-- Payload: Topoisomerase I inhibitor (DXd)
-- Key differentiator: Works in HER2-low tumors (expanding TAM)
-- Safety: ILD (interstitial lung disease) 15%, Grade 3+ in 3%
+I've analyzed the clinical performance of the three leading antibody-drug conjugates across their primary indications and expanding clinical programs.
 
-**Trodelvy (Gilead - sacituzumab govitecan):**
-- Primary indication: Triple-negative breast cancer (TNBC)
-- ORR: 35% in pre-treated TNBC
-- Median PFS: 5.6 months vs 1.7 months (chemo)
-- OS benefit: 12.1 months vs 6.7 months
-- Payload: SN-38 (topoisomerase I inhibitor)
-- Target: Trop-2 (broadly expressed)
-- Safety: Neutropenia 51% (Grade 3+), diarrhea 10%
+### Enhertu (trastuzumab deruxtecan) – Daiichi Sankyo/AstraZeneca
 
-**Padcev (Astellas/Seagen - enfortumab vedotin):**
-- Primary indication: Urothelial carcinoma
-- ORR: 51% in platinum-refractory patients
-- Median PFS: 12.9 months (EV-302 combo trial)
-- OS benefit: 31.5 months (combination, unprecedented)
-- Payload: MMAE (microtubule inhibitor)
-- Target: Nectin-4
-- Safety: Skin reactions 68% (mostly Grade 1-2), peripheral neuropathy 56%
+**Primary Indication: HER2+ Breast Cancer**
+- DESTINY-Breast03: 79.7% ORR, median PFS 28.8 months vs 6.8 months (T-DM1), HR 0.33
+- DESTINY-Breast09: 62.4% ORR in HER2-low breast cancer (game-changing expansion)
+- Overall Survival: 23.9 months vs 17.5 months (HR 0.64, statistically significant)
 
-**Clinical Winner: Enhertu** - Unprecedented PFS (28.8 mo), expanding to HER2-low, multiple indications approved in 2024
+**Expanding Indications (2024-2025):**
+- Non-small cell lung cancer (HER2-mutant): 54.9% ORR
+- Gastric cancer: 51.3% ORR (vs 14.3% for chemotherapy)
+- Colorectal cancer (trials ongoing)
 
-Question for Patent Expert: Does Enhertu's superior clinical data translate to stronger IP protection for the DXd payload technology?`,
+**Safety Profile:**
+- Interstitial lung disease: 15% (Grade 3+ in 3%)
+- Manageable with dose modification and monitoring
+- Overall discontinuation rate: 15.4%
+
+**Key Differentiator:** DXd payload technology enables efficacy in HER2-low tumors—expanding addressable population by 60%.
+
+---
+
+### Trodelvy (sacituzumab govitecan) – Gilead Sciences
+
+**Primary Indication: Triple-Negative Breast Cancer (TNBC)**
+- ASCENT trial: 35% ORR vs 5% (chemotherapy)
+- Median PFS: 5.6 months vs 1.7 months (HR 0.41)
+- Overall Survival: 12.1 months vs 6.7 months (HR 0.48)
+
+**Expanding Indications:**
+- HR+ breast cancer: 21% ORR (modest)
+- Urothelial cancer: 27% ORR
+
+**Safety Profile:**
+- Neutropenia: 51% (Grade 3+), requires growth factor support
+- Diarrhea: 10% (Grade 3+)
+- Overall discontinuation: 5%
+
+**Payload:** SN-38 (topoisomerase I inhibitor), CL2A linker
+**Target:** Trop-2 (broadly expressed on epithelial tumors)
+
+---
+
+### Padcev (enfortumab vedotin) – Astellas/Seagen (now Pfizer)
+
+**Primary Indication: Urothelial Carcinoma**
+- EV-301 (monotherapy): 40.6% ORR vs 17.9% (chemo)
+- EV-302 (combo with pembrolizumab): **UNPRECEDENTED** 67.7% ORR
+- Median PFS (combo): 12.5 months vs 6.3 months (chemo alone)
+- Overall Survival (combo): 31.5 months vs 16.1 months (HR 0.47, breakthrough!)
+
+**Safety Profile:**
+- Skin reactions: 68% (mostly Grade 1-2, manageable)
+- Peripheral neuropathy: 56% (dose-limiting in 5%)
+- Hyperglycemia: 10% (Grade 3+)
+
+**Payload:** MMAE (microtubule inhibitor)
+**Target:** Nectin-4 (highly specific to urothelial cancers)
+
+---
+
+## Clinical Verdict
+
+**Overall Winner: Enhertu**
+- Highest ORR (79.7%) and longest PFS (28.8 months)
+- Platform potential: DXd payload + HER2-low expansion = massive TAM
+- Multiple approved indications (breast, lung, gastric)
+
+**Niche Dominance: Padcev**
+- Game-changing combo data in bladder cancer (67.7% ORR, 31.5 mo OS)
+- Clear best-in-class for urothelial carcinoma
+
+**Steady Performer: Trodelvy**
+- Strong in TNBC but facing competition from Dato-DXd (Daiichi's Trop-2 ADC with superior DXd payload)
+
+**Question for Patent Expert:** Does Enhertu's broad clinical success translate to equally broad IP protection, especially around the DXd payload technology?`,
       },
     },
     {
       type: 'agent_question',
-      timestamp: 3400,
+      timestamp: 3600,
       data: {
-        from: 'Clinical Analyst',
+        from: 'Clinical Data Analyst',
         to: 'Patent Expert',
-        question: 'Does Enhertu\'s superior clinical data translate to stronger IP protection for the DXd payload technology?',
+        question: 'Does Enhertu\'s broad clinical success translate to equally broad IP protection, especially around the DXd payload technology?',
       },
     },
     {
       type: 'agent_start',
-      timestamp: 3900,
+      timestamp: 4100,
       data: {
         agent: 'Patent Expert',
-        task: 'Analyzing patent landscapes and competitive IP positioning',
+        task: 'Comprehensive freedom-to-operate and patent strength analysis',
       },
     },
     {
       type: 'agent_thinking',
-      timestamp: 4600,
+      timestamp: 4800,
       data: {
         agent: 'Patent Expert',
-        progress: 'Reviewing patent families and claim coverage...',
+        progress: 'Analyzing patent portfolios, claim breadth, and competitive moats...',
       },
     },
     {
       type: 'agent_response',
-      timestamp: 6500,
+      timestamp: 7200,
       data: {
         agent: 'Patent Expert',
-        response: `## ADC Patent Landscape Analysis (2024-2025)
+        response: `## Intellectual Property Landscape: ADC Patent Analysis
 
-**Enhertu (Daiichi Sankyo/AstraZeneca):**
-- Core patents: US10,808,039 (DXd linker-payload), US11,052,148 (HER2 ADC compositions)
-- Expiry: 2038-2040 (DXd payload composition of matter)
-- Breadth: Very broad - covers entire DXd payload class + multiple linkers
-- Strength: Exceptionally strong - 400+ patent family members globally
-- FTO: Dominant position in topoisomerase I ADC space
-- Platform value: DXd applicable to multiple targets (HER2, HER3, TROP2, B7-H3)
-- Additional: 85 continuations filed (2024-2041 protection)
+I've conducted a comprehensive freedom-to-operate analysis and evaluated the patent strength for each ADC platform.
 
-**Trodelvy (Gilead - acquired from Immunomedics $21B, 2020):**
-- Core patent: US9,556,244 (SN-38 ADC)
-- Expiry: 2033-2035
-- Breadth: Moderate - Trop-2 specific, some payload claims
-- Strength: Solid but facing biosimilar threats post-2033
-- FTO: Good position but CPI-613 linker not novel
-- Competition: Multiple Trop-2 ADCs in development (Dato-DXd)
+---
 
-**Padcev (Astellas/Seagen - part of $43B Pfizer acquisition):**
-- Core patent: US9,931,414 (Nectin-4 ADC with MMAE)
-- Expiry: 2034-2036
-- Breadth: Narrow - highly target-specific (Nectin-4)
-- Strength: Strong in urothelial space but limited to single indication
-- FTO: Clean but MMAE payload widely used (not proprietary)
-- Platform: Part of Seagen's broader ADC platform (now Pfizer)
+### Enhertu (Daiichi Sankyo/AstraZeneca)
 
-**Patent Winner: Enhertu** - Broadest IP estate (400+ patents), longest exclusivity (2041), platform technology applicable across multiple targets
+**Core Patent Portfolio:**
+- **US 10,808,039** – DXd linker-payload composition of matter (expires 2038)
+- **US 11,052,148** – HER2-targeting ADC formulations (expires 2040)
+- **US 11,524,991** – DXd manufacturing processes (expires 2041)
+- **JP 6,234,567** – Topoisomerase I inhibitor ADC platform (expires 2039)
 
-Question for Financial Analyst: Given Enhertu's clinical dominance AND strongest IP position, what's the peak sales potential and market share outlook?`,
+**Patent Strength: EXCEPTIONAL**
+- 400+ patent family members globally (US, EU, Japan, China)
+- 85 continuation applications filed (2024-2041 coverage)
+- Composition of matter claims on entire DXd payload class
+- Broad linker claims blocking competitors from using cleavable tetrapeptide linkers + camptothecin analogs
+
+**Freedom-to-Operate:**
+- Daiichi has dominant position in topoisomerase I ADC space
+- DXd payload + GGFG linker covered by multiple overlapping claims
+- Platform applicable to ANY antibody target (HER2, HER3, TROP2, B7-H3, Claudin-18.2)
+- Potential for 15+ different ADCs using DXd platform
+
+**Competitive Moat:**
+- Dato-DXd (Trop-2): Uses same DXd payload, expanding platform validation
+- DS-7300 (B7-H3): Phase 2 data strong, same DXd platform
+- Competitors must either license DXd or use inferior payloads
+
+**Commercial Strategy:**
+- AstraZeneca exclusive license for Enhertu (HER2) – global collaboration
+- Daiichi retains platform rights for other targets
+- Estimated royalty burden: 15-20% on future AstraZeneca sales
+
+---
+
+### Trodelvy (Gilead Sciences)
+
+**Core Patent Portfolio:**
+- **US 9,556,244** – SN-38 ADC targeting Trop-2 (expires 2033)
+- **US 10,159,694** – CL2A linker technology (expires 2035)
+- **US 10,238,747** – hRS7 antibody composition (expires 2034)
+
+**Patent Strength: MODERATE**
+- 45 patent family members (vs Enhertu's 400+)
+- Trop-2 antibody-specific claims (limited platform breadth)
+- SN-38 payload not novel (generic topoisomerase I inhibitor)
+- CL2A linker solid but not broadly blocking
+
+**Freedom-to-Operate:**
+- Good position for Trop-2 + SN-38 combination
+- BUT facing competitive threat: Dato-DXd uses superior DXd payload on same Trop-2 target
+- Biosimilar risk post-2033 (only 8 years of exclusivity remaining)
+
+**Acquisition Note:**
+- Gilead acquired Immunomedics for $21B (2020) primarily for Trodelvy
+- Deal justified by first-in-class TNBC approval
+- IP value declining due to Dato-DXd competition
+
+---
+
+### Padcev (Astellas/Seagen, now Pfizer)
+
+**Core Patent Portfolio:**
+- **US 9,931,414** – Nectin-4 ADC with MMAE payload (expires 2034)
+- **US 10,155,815** – AGS-22M6E antibody composition (expires 2036)
+- **US 10,800,845** – Combination therapy (EV + pembrolizumab, expires 2038)
+
+**Patent Strength: STRONG (but narrow)**
+- 120 patent family members
+- Highly target-specific (Nectin-4) – excellent FTO in bladder cancer
+- MMAE payload widely used (not proprietary to Seagen/Pfizer)
+- Combination patent (EV-302 regimen) adds value through 2038
+
+**Pfizer Seagen Acquisition ($43B, 2023):**
+- Pfizer acquired entire Seagen ADC platform
+- Includes 4 approved ADCs (Adcetris, Padcev, Tukysa, Tivdak)
+- Platform breadth: MMAE, MMAF, vedotin linker technology
+- Estimated 200+ ADC-related patents across Seagen portfolio
+
+**Freedom-to-Operate:**
+- Clean FTO for Nectin-4 targeting (no blocking patents)
+- MMAE widely available (licensed from multiple sources)
+- Strong position in bladder cancer but limited to single indication
+- Cannot easily expand to other tumor types (Nectin-4 expression limited)
+
+---
+
+## Patent Landscape Verdict
+
+**IP Winner: Enhertu (by substantial margin)**
+
+**Why:**
+1. **Patent breadth**: 400+ patents vs 45 (Trodelvy) and 120 (Padcev)
+2. **Longest exclusivity**: Expires 2041 vs 2033-2036 for competitors
+3. **Platform IP**: DXd payload applicable to 10+ targets vs single-target competitors
+4. **Blocking position**: Competitors cannot use topoisomerase I ADCs with cleavable linkers without infringing or licensing
+
+**Strategic Implications:**
+
+- **Enhertu**: Patent fortress enabling multi-indication dominance
+- **Trodelvy**: Vulnerable to biosimilars post-2033 AND superior Dato-DXd competition
+- **Padcev**: Strong but narrow—excellent in bladder, limited expansion potential
+
+**Recommendation for Investors:**
+Enhertu's IP estate creates durable competitive moat worth $10-15B in platform value alone (separate from individual product sales).
+
+**Question for Financial Analyst:** Given Enhertu's clinical AND patent dominance, what's the realistic peak sales potential and how does the IP moat affect valuation multiples?`,
       },
     },
     {
       type: 'agent_question',
-      timestamp: 7000,
+      timestamp: 7600,
       data: {
         from: 'Patent Expert',
         to: 'Financial Analyst',
-        question: 'Given Enhertu\'s clinical dominance AND strongest IP position, what\'s the peak sales potential and market share outlook?',
+        question: 'Given Enhertu\'s clinical AND patent dominance, what\'s the realistic peak sales potential and how does the IP moat affect valuation multiples?',
       },
     },
     {
       type: 'agent_start',
-      timestamp: 7500,
+      timestamp: 8100,
       data: {
         agent: 'Financial Analyst',
-        task: 'Analyzing market dynamics and commercial performance',
+        task: 'Analyzing commercial performance and peak sales forecasts',
       },
     },
     {
       type: 'agent_thinking',
-      timestamp: 8200,
+      timestamp: 8800,
       data: {
         agent: 'Financial Analyst',
-        progress: 'Extracting sales data and market trends...',
+        progress: 'Evaluating revenue trajectories, market dynamics, and valuation models...',
       },
     },
     {
       type: 'agent_response',
-      timestamp: 10500,
+      timestamp: 11500,
       data: {
         agent: 'Financial Analyst',
-        response: `## ADC Commercial & Market Analysis (2024-2025)
+        response: `## Financial Analysis: ADC Market Dynamics & Valuation
 
-**Current Sales Performance (2024):**
-- Enhertu: $3.2B (47% market share) - Clear leader
-- Trodelvy: $1.1B (16% market share)
-- Padcev: $1.4B (21% market share)
-- Other ADCs: $1.1B (16% - Kadcyla, Adcetris, etc.)
+I've analyzed the commercial performance, growth trajectories, and peak sales forecasts for the three leading ADCs.
 
-**Growth Trajectories (2024 vs 2023):**
-- Enhertu: +88% YoY (explosive growth!)
-- Trodelvy: +35% YoY (steady expansion)
-- Padcev: +125% YoY (rapid uptake in combo setting)
+---
 
-**Pricing:**
-- Enhertu: ~$165K per treatment course (breast cancer)
-- Trodelvy: ~$180K per treatment course
-- Padcev: ~$200K per treatment course (higher due to combo use)
+### Current Sales Performance (2024)
 
-**Peak Sales Forecasts (2030):**
-Based on approved indications + pipeline:
-- Enhertu: **$15-18B** - Multiple indications (breast, lung, gastric, expanding to HER2-low)
-- Trodelvy: $4-5B - TNBC, HR+ breast, bladder
-- Padcev: $6-7B - Bladder combo dominance
+**Q3 2024 Revenue:**
+- **Enhertu**: $3.5B annualized (+95% YoY) – explosive growth!
+- **Trodelvy**: $1.2B annualized (+38% YoY) – steady but decelerating
+- **Padcev**: $1.7B annualized (+142% YoY) – rapid combo-driven uptake
 
-**Total ADC Market:** $45-50B by 2030 (CAGR 22%)
+**Market Share (Total ADC Market: $7.8B in 2024):**
+- Enhertu: 45% (dominant leader)
+- Padcev: 22%
+- Trodelvy: 15%
+- Other ADCs (Kadcyla, Adcetris, etc.): 18%
 
-**Commercial Winner: Enhertu** - Dominant position with 3x larger peak sales potential than competitors
+---
 
-**Key Driver:** DXd payload platform enables expansion across 10+ tumor types vs single-target competitors`,
+### Pricing & Economics
+
+**Average Treatment Course Cost:**
+- Enhertu: ~$165,000 (breast cancer), ~$180,000 (lung cancer)
+- Trodelvy: ~$175,000 (TNBC)
+- Padcev: ~$220,000 (combo regimen with pembrolizumab)
+
+**Gross Margin Estimates:**
+- Enhertu: 85-90% (Daiichi manufacturing, AstraZeneca pays ~20% royalty)
+- Trodelvy: 80-85% (Gilead in-house manufacturing)
+- Padcev: 75-80% (Pfizer/Seagen platform, combo regimen shares revenue with Merck for Keytruda)
+
+**Payer Coverage:**
+- All three ADCs have broad coverage across Medicare, Medicaid, and commercial plans
+- Enhertu: 95% coverage (gold standard)
+- Padcev combo: 92% coverage (some prior auth requirements)
+- Trodelvy: 88% coverage (facing competition from biosimilar discussions)
+
+---
+
+### Peak Sales Forecasts (2030-2032)
+
+**Enhertu: $18-22B peak sales**
+
+Breakdown by indication:
+- HER2+ breast cancer: $8B (current stronghold)
+- HER2-low breast cancer: $5B (60% TAM expansion)
+- Non-small cell lung cancer: $3B
+- Gastric cancer: $1.5B
+- Other (colorectal, bladder, etc.): $1.5B
+
+**Growth Drivers:**
+- DXd platform applicable to 10+ targets (B7-H3, HER3, Claudin-18.2)
+- Patent protection through 2041 (no biosimilar risk)
+- AstraZeneca global reach accelerating adoption
+- Physician preference: "If it's HER2-positive, it's Enhertu"
+
+**Risks:**
+- ILD safety signal (15% incidence, though mostly manageable)
+- Already priced at premium multiples (Daiichi PE ~45x)
+
+---
+
+**Trodelvy: $4-5B peak sales**
+
+Breakdown:
+- TNBC: $2.5B (core indication, but facing Dato-DXd threat)
+- HR+ breast cancer: $1B (modest uptake)
+- Urothelial cancer: $500M
+- Other: $500M
+
+**Headwinds:**
+- Dato-DXd competition (same Trop-2 target, superior DXd payload) – could erode 30-40% of TNBC market share
+- Biosimilar risk post-2033 (only 8 years away)
+- Limited platform potential vs Enhertu
+
+**Valuation Impact:**
+- Gilead paid $21B for Trodelvy (2020) – arguably overpaid given current competitive dynamics
+- Current NPV: ~$12-15B (declining due to Dato-DXd threat)
+
+---
+
+**Padcev: $7-9B peak sales**
+
+Breakdown:
+- Urothelial carcinoma (1L combo): $5B (EV-302 data driving adoption)
+- Urothelial carcinoma (2L+ monotherapy): $1.5B
+- Potential expanded indications: $1B
+
+**Growth Drivers:**
+- EV-302 combo data is PRACTICE-CHANGING (67.7% ORR, 31.5 mo OS)
+- Pfizer commercial muscle (Seagen acquisition for $43B)
+- Limited competition in Nectin-4 space
+
+**Limitations:**
+- Single-indication concentration (bladder cancer ~80% of sales)
+- Nectin-4 expression limited to urothelial + breast (narrow expansion potential)
+- MMAE payload not proprietary (competitors can use same payload)
+
+**Valuation Note:**
+- Pfizer paid $43B for Seagen (2023) for entire ADC platform (4 approved products + pipeline)
+- Padcev represents ~25-30% of deal value (~$12B allocation)
+
+---
+
+### Total ADC Market Forecast
+
+**2024:** $7.8B
+**2030:** $48B (CAGR: 35%)
+**2035:** $75B (market maturation, multiple ADCs approved)
+
+**Market Dynamics:**
+- Consolidation expected: Enhertu + 3-4 niche leaders (Padcev in bladder, others in specific indications)
+- Payload quality emerging as key differentiator (DXd > SN-38 > MMAE in many settings)
+- Next-gen ADCs (tumor-activated, bispecifics) entering market 2027+
+
+---
+
+## Financial Verdict
+
+**Commercial Winner: Enhertu**
+
+**Why:**
+1. Largest peak sales: $18-22B (3x larger than nearest competitor)
+2. Platform revenue potential: DXd payload could generate $30B+ across all Daiichi ADCs
+3. Longest exclusivity: 2041 (maximizes NPV)
+4. Highest margins: 85-90%
+
+**Investment Recommendations:**
+
+**BUY: Daiichi Sankyo (Enhertu primary beneficiary)**
+- Target price: ¥7,500 (30% upside)
+- Catalyst: Continued indication expansion (B7-H3, HER3 data in 2025)
+- Risk: Already trading at premium (PE 45x)
+
+**BUY: Pfizer (Padcev asset within broader portfolio)**
+- Target price: $35 (15% upside)
+- Catalyst: EV-302 combo becoming standard of care
+- Diversification: Padcev is 5% of Pfizer revenue (limited single-product risk)
+
+**HOLD: Gilead (Trodelvy headwinds)**
+- Target price: $85 (flat)
+- Concern: Dato-DXd competition eroding Trodelvy value
+- Offsetting factors: HIV franchise stable, but ADC growth story weakening
+
+---
+
+**Question for Market Research:** How do payers and oncologists view these three ADCs? Are treatment algorithms solidifying, or is there still fluidity in adoption patterns?`,
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 11900,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Market Research Analyst',
+        question: 'How do payers and oncologists view these three ADCs? Are treatment algorithms solidifying, or is there still fluidity in adoption patterns?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 12400,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing physician adoption, payer dynamics, and market positioning',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 13100,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Reviewing KOL insights, treatment algorithms, and market access data...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 15800,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Market Research Analysis: Competitive Positioning & Adoption Trends
+
+I've analyzed physician surveys, payer policies, KOL insights, and market access dynamics to understand real-world adoption patterns.
+
+---
+
+### Physician Adoption & Treatment Algorithms (2024-2025)
+
+**Methodology:**
+- Surveyed 250 oncologists (breast, lung, bladder specialists)
+- Analyzed 50,000+ patient treatment records from Flatiron Health
+- Reviewed NCCN guidelines and institutional protocols
+
+---
+
+**HER2+ Breast Cancer:**
+
+**First-Line Treatment Preferences:**
+1. Enhertu: 78% (dominant)
+2. T-DM1: 15% (legacy standard, declining)
+3. Tucatinib + trastuzumab + capecitabine: 7%
+
+**Physician Sentiment:**
+- "Enhertu has become the default for HER2+ metastatic breast cancer. The PFS data is just too compelling."
+- "We've moved Enhertu to earlier lines. The question isn't 'if' but 'when' to use it."
+
+**Adoption Trajectory:**
+- 2022: 35% first-line use
+- 2024: 78% first-line use (rapid uptake)
+- 2025E: 85%+ (near-universal adoption)
+
+**Competitive Threat to Enhertu:** None identified. Treatment paradigm solidifying around Enhertu as standard of care.
+
+---
+
+**Triple-Negative Breast Cancer (TNBC):**
+
+**Second-Line+ Treatment Preferences:**
+1. Trodelvy: 62%
+2. Chemotherapy: 25%
+3. Keytruda (if PD-L1+): 13%
+
+**Physician Sentiment:**
+- "Trodelvy is our go-to for TNBC after frontline failure. Significant OS benefit."
+- "I'm watching Dato-DXd closely. If the data matches Enhertu's performance in HER2, Trodelvy could be displaced."
+
+**Competitive Dynamics:**
+- Trodelvy currently dominant in TNBC
+- BUT 45% of oncologists said they would switch to Dato-DXd if Phase 3 data positive (expected 2025)
+- Payload preference: "DXd has become the gold standard. SN-38 feels like last-gen."
+
+**Threat Level:** HIGH – Dato-DXd could capture 30-50% of TNBC market by 2027-2028
+
+---
+
+**Urothelial Carcinoma (Bladder Cancer):**
+
+**First-Line Treatment Preferences (EV-302 regimen):**
+1. Padcev + pembrolizumab: 71% (RAPID adoption post-FDA approval)
+2. Chemotherapy + pembrolizumab: 20%
+3. Chemotherapy alone: 9%
+
+**Physician Sentiment:**
+- "EV-302 data changed everything. 31.5 months OS in metastatic bladder cancer is unprecedented."
+- "Combination is now standard of care. We're seeing real-world outcomes matching trial data."
+
+**Adoption Trajectory:**
+- Q1 2024: 22% adoption (early post-approval)
+- Q4 2024: 71% adoption (EXPLOSIVE uptake)
+- 2025E: 80%+ (near-universal first-line use)
+
+**Competitive Position:** Padcev is UNTOUCHABLE in bladder cancer. No credible competitors in Nectin-4 space.
+
+---
+
+### Payer Dynamics & Market Access
+
+**Coverage Policies (2024):**
+
+| Payer Type | Enhertu Coverage | Trodelvy Coverage | Padcev Coverage |
+|------------|------------------|-------------------|-----------------|
+| Medicare | 98% (unrestricted) | 92% (some PA) | 95% (PA for combo) |
+| Commercial | 96% | 88% | 93% |
+| Medicaid | 90% | 85% | 89% |
+
+**Prior Authorization Requirements:**
+- Enhertu: Minimal (biomarker testing for HER2 status only)
+- Trodelvy: Moderate (prior chemo requirement, Trop-2 testing emerging)
+- Padcev: Moderate (PD-L1 testing for combo, prior platinum exposure)
+
+**Payer Sentiment:**
+- "Enhertu is expensive ($165K/course) but outcomes justify cost. QALY analysis strongly favorable."
+- "We're seeing budget impact from Padcev combo (EV + Keytruda = $420K/year), but OS benefit is undeniable."
+- "Trodelvy is well-covered now, but if biosimilars enter in 2033, we'll shift formularies."
+
+**Reimbursement Risk:**
+- Enhertu: LOW (clinical data too strong, outcomes-based contracts in place)
+- Padcev: LOW-MODERATE (high cost of combo raising eyebrows, but data supports coverage)
+- Trodelvy: MODERATE (payers watching Dato-DXd closely, potential for formulary shifts)
+
+---
+
+### Competitive Landscape: Market Share Forecasts (2030)
+
+**Total ADC Market: $48B**
+
+**Projected Share:**
+1. Enhertu: $20B (42% share) – Platform dominance across HER2+, HER2-low, lung, gastric
+2. Padcev: $8B (17% share) – Bladder cancer niche leader
+3. Trodelvy: $4B (8% share) – TNBC holdout, but declining due to Dato-DXd
+4. Dato-DXd: $5B (10% share) – Capturing TNBC + HR+ breast from Trodelvy
+5. Other ADCs: $11B (23% share) – Emerging players in lung, ovarian, etc.
+
+---
+
+### Key Opinion Leader (KOL) Insights
+
+**Breast Cancer KOLs:**
+- "The DXd payload is a paradigm shift. We're seeing responses in patients who've failed everything else."
+- "Enhertu has the longest PFS I've seen in my career for HER2+ disease. It's practice-changing."
+- "Dato-DXd will be huge. Same payload as Enhertu, but targeting Trop-2 for TNBC—Trodelvy should be worried."
+
+**Urology KOLs:**
+- "EV-302 is one of the most important bladder cancer trials in a decade. We're curing patients we couldn't save before."
+- "Padcev combo is the new standard. No debate."
+
+**Payer Medical Directors:**
+- "We're willing to pay for ADCs with strong OS data. Enhertu and Padcev clear that bar."
+- "Trodelvy is fine, but if Dato-DXd shows superiority, we'll update guidelines quickly."
+
+---
+
+## Market Research Verdict
+
+**Market Winner: Enhertu (by physician preference AND payer support)**
+
+**Why:**
+1. **Physician adoption**: 78% first-line use in HER2+ (nearly universal)
+2. **Payer coverage**: 96% unrestricted access (best-in-class)
+3. **Treatment algorithms**: Solidifying as standard of care across multiple indications
+4. **Platform expansion**: DXd payload preferred by oncologists ("gold standard")
+
+**Niche Leader: Padcev**
+- Dominant in bladder cancer (71% adoption of combo regimen)
+- No credible competition in Nectin-4 space
+- Limited to single indication (ceiling on growth)
+
+**Under Pressure: Trodelvy**
+- Currently leading TNBC (62% adoption)
+- BUT 45% of oncologists ready to switch to Dato-DXd
+- Payers watching competitive landscape closely
+
+---
+
+**Question for Regulatory Specialist:** Are there any regulatory pathways or approval timelines that could disrupt these market dynamics? For example, could Dato-DXd get accelerated approval and enter the market faster than expected?`,
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 16200,
+      data: {
+        from: 'Market Research Analyst',
+        to: 'Regulatory Specialist',
+        question: 'Are there any regulatory pathways or approval timelines that could disrupt these market dynamics? Could Dato-DXd get accelerated approval and enter the market faster than expected?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 16700,
+      data: {
+        agent: 'Regulatory Specialist',
+        task: 'Analyzing approval pathways and competitive regulatory timelines',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 17400,
+      data: {
+        agent: 'Regulatory Specialist',
+        progress: 'Reviewing FDA/EMA strategies, approval timelines, and regulatory catalysts...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 19500,
+      data: {
+        agent: 'Regulatory Specialist',
+        response: `## Regulatory Analysis: Approval Pathways & Competitive Timeline
+
+I've analyzed FDA/EMA regulatory strategies, approval timelines, and potential catalysts that could shift competitive dynamics.
+
+---
+
+### Current Regulatory Status (2024-2025)
+
+**Enhertu (Daiichi Sankyo/AstraZeneca):**
+
+**Approved Indications (FDA):**
+1. HER2+ metastatic breast cancer (2L+) – May 2022
+2. HER2-low metastatic breast cancer – August 2022 (BREAKTHROUGH)
+3. HER2+ metastatic gastric cancer – January 2021
+4. HER2-mutant non-small cell lung cancer – August 2022
+
+**Pending Submissions (2024-2025):**
+- HER2+ breast cancer (1st-line) – sBLA filed October 2024, PDUFA Q2 2025
+- HER2+ colorectal cancer – sBLA planned Q1 2025
+- Dato-DXd (Trop-2 ADC with DXd payload) – BLA filing expected late 2025 based on Phase 3 TROPION-Breast01 data
+
+**Regulatory Strategy:**
+- Rapid indication expansion via DESTINY trial series (12 ongoing Phase 3 studies)
+- FDA granted Breakthrough Therapy Designation for HER2-low expansion (accelerated 6-month review)
+- EMA parallel submissions ensuring global synchronization
+
+**Regulatory Risk: LOW**
+- Established safety profile (ILD manageable)
+- Strong biomarker strategy (HER2 IHC/FISH testing standard)
+- FDA precedent: All prior Enhertu submissions approved on first cycle
+
+---
+
+**Trodelvy (Gilead Sciences):**
+
+**Approved Indications (FDA):**
+1. Triple-negative breast cancer (2L+) – April 2020
+2. Locally advanced/metastatic TNBC (2L+) – April 2021 (full approval)
+3. HR+ breast cancer (post-chemo, post-endocrine) – February 2023
+
+**Pending Submissions:**
+- Urothelial carcinoma – Phase 3 TROPiCS-04 data mixed (did NOT meet primary endpoint in Intent-to-Treat population)
+- NSCLC – Phase 3 ongoing
+
+**Regulatory Challenges:**
+- TROPiCS-04 failure raises questions about Trop-2 platform breadth
+- Facing competition from Dato-DXd in core TNBC indication (head-to-head data expected 2025-2026)
+
+**Regulatory Risk: MODERATE**
+- Limited new indication approvals expected near-term
+- Post-marketing surveillance ongoing (neutropenia management)
+- Biosimilar pathway opens 2033 (regulatory exclusivity expires)
+
+---
+
+**Padcev (Astellas/Pfizer):**
+
+**Approved Indications (FDA):**
+1. Locally advanced/metastatic urothelial carcinoma (post-platinum) – December 2019
+2. Urothelial carcinoma (1st-line combo with pembrolizumab) – April 2024 (EV-302 data)
+
+**Pending Submissions:**
+- Muscle-invasive bladder cancer (neoadjuvant setting) – Phase 3 ongoing (EV-303)
+- Non-urothelial indications: Limited (Nectin-4 expression narrow)
+
+**Regulatory Strategy:**
+- Combination regimen approval (EV + pembrolizumab) was MAJOR catalyst
+- Focus on expanding within bladder cancer continuum (adjuvant, neoadjuvant, maintenance)
+- Pfizer leveraging global regulatory infrastructure post-Seagen acquisition
+
+**Regulatory Risk: LOW**
+- Strong safety/efficacy profile in approved indications
+- Combination approval solidifies market position through 2038 (combo patent protection)
+
+---
+
+### Competitive Regulatory Dynamics: Dato-DXd Threat to Trodelvy
+
+**Dato-DXd (datopotamab deruxtecan) – Daiichi Sankyo/AstraZeneca**
+
+**Target:** Trop-2 (same as Trodelvy)
+**Payload:** DXd (same as Enhertu) – superior to Trodelvy's SN-38
+
+**Clinical Program:**
+- TROPION-Breast01 (Phase 3, TNBC) – Data expected Q4 2024/Q1 2025
+- TROPION-Lung01 (Phase 3, NSCLC) – Topline data Q1 2025
+
+**Regulatory Pathway:**
+- BLA filing expected late 2025 (assuming positive Phase 3 data)
+- Likely Breakthrough Therapy Designation (based on Phase 2 data showing 32% ORR in TNBC)
+- Potential accelerated approval timeline: 6 months (similar to Enhertu HER2-low precedent)
+
+**Approval Timeline Estimate:**
+- Phase 3 data: Q1 2025
+- BLA submission: Q3 2025
+- FDA approval: Q1 2026 (accelerated pathway)
+
+**Impact on Trodelvy:**
+- If Dato-DXd shows superior efficacy (expected given DXd payload superiority), FDA could approve as early as 2026
+- Trodelvy market share in TNBC at risk: 30-50% erosion by 2027-2028
+- Payers likely to update guidelines within 6 months of Dato-DXd approval
+
+---
+
+### FDA Biomarker & Diagnostic Requirements
+
+**HER2 Testing (for Enhertu):**
+- Well-established: IHC 3+ or IHC 2+/FISH+ (HER2+)
+- HER2-low definition: IHC 1+ or IHC 2+/FISH- (FDA-approved companion diagnostic)
+- Testing standardized across pathology labs (minimal access barriers)
+
+**Trop-2 Testing (for Trodelvy/Dato-DXd):**
+- NOT currently required for Trodelvy approval (broadly expressed marker)
+- Emerging debate: Should Trop-2 IHC be required to optimize patient selection?
+- If Dato-DXd approval requires biomarker testing, could slow adoption vs Trodelvy (but improve outcomes)
+
+**Nectin-4 Testing (for Padcev):**
+- NOT required for current approvals
+- Nectin-4 highly enriched in urothelial cancers (90%+ expression)
+- Low barrier to use
+
+---
+
+### Global Regulatory Landscape: EMA & PMDA
+
+**European Medicines Agency (EMA):**
+- Enhertu: Approved in EU for all FDA-approved indications (synchronized timelines)
+- Trodelvy: Approved in EU, but uptake slower than US (pricing negotiations ongoing)
+- Padcev: Approved in EU (combo regimen), rapid uptake mirroring US
+
+**Japan PMDA:**
+- Enhertu: Priority review in Japan (Daiichi Sankyo home market)
+- Faster approval timelines than FDA in some cases (HER2+ breast approved 3 months ahead of US)
+
+**China NMPA:**
+- Enhertu: Approved 2023, pricing negotiations favorable
+- Trodelvy: Limited approval, competition from Chinese ADC developers (Remegen, Kelun)
+- Padcev: Approved 2024, strong uptake in urban centers
+
+---
+
+## Regulatory Verdict
+
+**Regulatory Winner: Enhertu**
+
+**Why:**
+1. **Broadest indication portfolio**: 4 approved + 3-4 pending (2025-2026)
+2. **Breakthrough designations**: FDA fast-tracking new indications (HER2-low precedent)
+3. **Global synchronization**: FDA, EMA, PMDA approvals aligned
+4. **Platform expansion**: Dato-DXd leveraging same DXd payload (validates technology)
+
+**Regulatory Catalyst:** Dato-DXd approval (2026E) will be MAJOR market disruptor
+- Validates DXd payload superiority across multiple targets
+- Threatens Trodelvy's core TNBC franchise
+- Could accelerate payer shifts toward DXd-based ADCs
+
+**Padcev Regulatory Position:** STRONG but NARROW
+- Excellent in bladder cancer (combo approval solidifies leadership)
+- Limited expansion opportunities (Nectin-4 biology constrains indications)
+
+**Trodelvy Regulatory Risk:** MODERATE-HIGH
+- No major new approvals expected near-term
+- TROPiCS-04 urothelial failure limits expansion
+- Biosimilar pathway opens 2033
+- Dato-DXd competitive threat as early as 2026
+
+---
+
+**Summary for Executive Synthesis:**
+Regulatory landscape strongly favors Enhertu (and DXd platform broadly). Padcev has locked in bladder cancer dominance. Trodelvy facing regulatory AND competitive headwinds with limited catalysts to offset Dato-DXd threat.`,
       },
     },
     {
       type: 'synthesis_start',
-      timestamp: 11000,
+      timestamp: 19900,
       data: {},
     },
     {
       type: 'synthesis_progress',
-      timestamp: 12000,
+      timestamp: 20500,
       data: {
-        step: 'Integrating clinical, patent, and market data...',
+        step: 'Integrating clinical, IP, financial, market, and regulatory analyses...',
       },
     },
     {
       type: 'synthesis_progress',
-      timestamp: 13000,
+      timestamp: 21000,
       data: {
-        step: 'Generating competitive positioning matrix...',
+        step: 'Building comprehensive competitive scorecard and strategic recommendations...',
       },
     },
     {
       type: 'complete',
-      timestamp: 15000,
+      timestamp: 22000,
       data: {
-        synthesis: `# ADC Competitive Analysis: Enhertu Dominates on All Fronts
+        synthesis: `# Competitive ADC Analysis: Enhertu Dominates Across All Dimensions
 
 ## Executive Summary
 
-**Enhertu (Daiichi Sankyo/AstraZeneca) has established dominant market leadership** with superior clinical efficacy (79.7% ORR, 28.8 mo PFS), the strongest IP position (400+ patents, expires 2041), and explosive commercial growth (+88% YoY). Platform potential across 10+ targets positions Enhertu for $15-18B peak sales—3x larger than nearest competitor.
+After comprehensive analysis across clinical performance, intellectual property, financial projections, market dynamics, and regulatory pathways, **Enhertu (trastuzumab deruxtecan) emerges as the clear leader** among antibody-drug conjugates in 2024-2025. Enhertu's DXd payload technology creates a durable competitive moat with platform potential extending across 10+ tumor types.
+
+**Winner: ENHERTU (Daiichi Sankyo/AstraZeneca)**
+**Niche Leader: PADCEV (Pfizer/Astellas)**
+**Under Pressure: TRODELVY (Gilead)**
 
 ---
 
@@ -867,68 +1507,18 @@ Based on approved indications + pipeline:
 
 | Dimension | Enhertu | Trodelvy | Padcev |
 |-----------|---------|----------|--------|
-| **ORR** | 79.7% ✓ | 35% | 51% |
-| **Median PFS** | 28.8 mo ✓ | 5.6 mo | 12.9 mo |
-| **OS Benefit** | 23.4 mo ✓ | 12.1 mo | 31.5 mo ✓ |
-| **Patent Expiry** | 2041 ✓ | 2035 | 2036 |
-| **Patent Family Size** | 400+ ✓ | 45 | 120 |
-| **Platform Breadth** | 10+ targets ✓ | Trop-2 focused | Nectin-4 only |
-| **2024 Sales** | $3.2B ✓ | $1.1B | $1.4B |
-| **Growth Rate YoY** | +88% ✓ | +35% | +125% |
-| **Peak Sales (2030)** | $15-18B ✓ | $4-5B | $6-7B |
+| **Clinical: ORR** | 79.7% ✓ | 35% | 51% |
+| **Clinical: PFS** | 28.8 mo ✓ | 5.6 mo | 12.5 mo |
+| **Clinical: Platform Breadth** | 10+ targets ✓ | Trop-2 focused | Nectin-4 only |
+| **IP: Patent Expiry** | 2041 ✓ | 2035 | 2036 |
+| **IP: Patent Portfolio Size** | 400+ ✓ | 45 | 120 |
+| **Financial: 2024 Sales** | $3.5B ✓ | $1.2B | $1.7B |
+| **Financial: Peak Sales Forecast** | $18-22B ✓ | $4-5B | $7-9B |
+| **Market: Physician Adoption** | 78% (HER2+) ✓ | 62% (TNBC) | 71% (bladder) |
+| **Market: Payer Coverage** | 96% ✓ | 88% | 93% |
+| **Regulatory: Approved Indications** | 4 (+ 3 pending) ✓ | 3 | 2 |
 
-**Overall Winner: ENHERTU** (8/9 categories)
-
----
-
-## Detailed Analysis
-
-### Clinical Performance
-
-**Winner: Enhertu (by wide margin)**
-- Highest ORR: 79.7% in HER2+ breast cancer
-- Best PFS: 28.8 months (4.2x better than prior standard)
-- Expanding indications: HER2-low breast (2024), lung, gastric approved
-- Platform flexibility: DXd payload works across multiple targets
-- Safety: Manageable ILD (3% Grade 3+), lower than expected
-
-**Key Insight:** Enhertu is redefining treatment standards across oncology. HER2-low expansion alone added 60% more patients to addressable market.
-
-**Padcev Note:** Remarkable OS (31.5 mo) in combination setting, but limited to bladder cancer only.
-
-### Patent Protection
-
-**Winner: Enhertu (overwhelmingly)**
-- Latest expiry: 2041 (5+ years beyond competitors)
-- Patent family size: 400+ patents globally (10x larger than Trodelvy)
-- DXd payload coverage: Composition of matter on entire linker-payload class
-- Platform protection: Blocks competitors from using topoisomerase I ADCs with similar linkers
-- Continuations: 85 filed through 2024, extending protection
-- FTO: Dominant—competitors must use inferior payloads or license DXd
-
-**Risk for Trodelvy:** Daiichi developing Dato-DXd (Trop-2 + DXd payload) which could cannibalize Trodelvy's core indication with superior payload.
-
-### Commercial Positioning
-
-**Current Leader: Enhertu** ($3.2B, 47% ADC market share)
-**Future Dominance: Enhertu** (projected $15-18B peak sales)
-
-**Market Dynamics:**
-- Total ADC market: $45-50B by 2030 (22% CAGR)
-- Enhertu capturing 33-36% of total market at peak
-- Platform approach: DXd payload being tested in 15 different ADCs
-- Partnership model: AstraZeneca co-development accelerating global reach
-- Indication expansion: 8 ongoing Phase 3 trials (HER3, B7-H3, TROP2)
-
-**Trodelvy Headwinds:**
-- Dato-DXd threat in core TNBC indication (better payload)
-- Limited to topoisomerase I ADCs (overlaps with Enhertu mechanism)
-- Biosimilar risk post-2033
-
-**Padcev Strengths:**
-- EV-302 combo data unprecedented in bladder cancer
-- Now Pfizer asset (acquired Seagen for $43B)—strong commercial support
-- Limited competition in Nectin-4 space
+**Overall Winner: ENHERTU (10/10 categories)**
 
 ---
 
@@ -936,59 +1526,63 @@ Based on approved indications + pipeline:
 
 ### For Investors:
 
-**STRONG BUY: Enhertu (Daiichi Sankyo/AstraZeneca)**
+**STRONG BUY: Enhertu/Daiichi Sankyo**
 - Best-in-class clinical + IP + commercial trajectory
-- Platform value: DXd payload applicable to 10+ targets
-- $15-18B peak sales (blockbuster x3)
-- Patent protection through 2041
-- Risk: Already priced at premium multiples
+- Platform potential: DXd payload applicable to 10+ targets
+- $18-22B peak sales for Enhertu alone
+- Patent protection through 2041 (maximizes NPV)
+- Target price: ¥7,500 (30% upside)
+- **Risks:** Already trading at premium multiples (PE ~45x), ILD safety signal requires monitoring
 
-**BUY: Padcev (Pfizer)**
-- Dominant in bladder cancer niche
-- Combination data outstanding (31.5 mo OS)
-- Pfizer commercial muscle post-Seagen acquisition
-- Upside from expanded indications
-- Risk: Single indication concentration
+**BUY: Padcev/Pfizer**
+- Dominant position in bladder cancer ($7-9B peak sales)
+- EV-302 combo data practice-changing (67.7% ORR, 31.5 mo OS)
+- Pfizer commercial infrastructure accelerates global adoption
+- Diversified portfolio (Padcev represents ~5% of Pfizer revenue, limited concentration risk)
+- **Risks:** Single-indication dependence, limited expansion opportunities
 
-**HOLD: Trodelvy (Gilead)**
-- Solid TNBC position but facing headwinds
-- Dato-DXd competitive threat in core market
-- Limited platform potential vs Enhertu
-- Patent expiry 2033-2035 creates biosimilar risk
-- Risk: Market share erosion to superior DXd-based ADCs
-
-### For Strategic Acquirers:
-
-**Target: DXd payload platform assets**
-- Any Daiichi Sankyo partnership opportunities
-- Novel linker technologies compatible with DXd
-- Manufacturing capabilities for next-gen payloads
-
-**Avoid: Trop-2 ADCs (crowded, inferior to Enhertu)**
-
-### For Competitors:
-
-**Design Strategy:**
-- Cannot compete with DXd in topoisomerase I space (patent blocking)
-- Focus on differentiated payloads: MMAE, MMAF, PBD dimers
-- Target novel antigens: Nectin-4, B7-H4, PTK7
-- Pursue tumor-activated prodrug ADCs to improve therapeutic index
-- Consider licensing DXd from Daiichi if developing promising antibody
+**HOLD: Trodelvy/Gilead**
+- Solid TNBC franchise ($1.2B current sales)
+- **BUT facing significant headwinds:**
+  - Dato-DXd competitive threat (approval as early as 2026)
+  - Biosimilar risk post-2033 (only 8 years of exclusivity remaining)
+  - Limited new indication catalysts (TROPiCS-04 urothelial trial failed)
+  - Valuation concern: Gilead paid $21B (2020), current NPV declining to ~$12-15B
 
 ---
 
 ## Key Takeaways
 
-1. **Platform >> Single Product** - Enhertu's DXd payload creates durable competitive moat across multiple indications
-2. **Patent breadth matters more than single patents** - 400 patents > narrow claims
-3. **Clinical excellence drives adoption** - 28.8 mo PFS changing treatment paradigms
-4. **ADC market consolidation** - Expect Enhertu + 2-3 niche players (Padcev in bladder, others in specific indications)
-5. **2024-2025 trend: Payload quality > Target selection** - DXd payload superiority outweighing target differences
+1. **Platform >> Single Product**: Enhertu's DXd payload technology creates durable competitive moat across multiple indications, vs single-target competitors
+
+2. **Patent breadth matters**: 400 patents (Enhertu) > 45 patents (Trodelvy) – IP estate determines long-term value
+
+3. **Clinical excellence drives adoption**: 28.8-month PFS is practice-changing; physicians rapidly adopting new standards of care
+
+4. **Payload quality > target selection**: DXd superiority enabling success across HER2, Trop-2, HER3, B7-H3 – mechanism matters more than target in many cases
+
+5. **Regulatory catalysts = market disruptors**: Dato-DXd approval (2026E) could reshape ADC competitive landscape, displacing Trodelvy in core indication
+
+6. **ADC market consolidation underway**: Expect Enhertu + 2-3 niche leaders (Padcev in bladder, others in specific tumors) to dominate $48B market by 2030
 
 ---
 
-**Analysis completed at $0.38 estimated cost**`,
-        cost: 0.38,
+## Final Recommendation
+
+**Enhertu (Daiichi Sankyo/AstraZeneca) is the clear winner** across clinical efficacy, intellectual property strength, commercial potential, physician adoption, and regulatory trajectory.
+
+**Strongest patent protection + broadest platform = $20B+ peak sales and market leadership through 2040+**
+
+**For investors:** Daiichi Sankyo offers the best risk-adjusted returns in the ADC space.
+
+**For patients:** Enhertu represents the most significant advance in HER2+ breast cancer treatment in the past decade, with expanding benefits across multiple tumor types.
+
+**Competitive dynamics:** Watch Dato-DXd Phase 3 data (Q1 2025) closely—positive results will validate DXd platform superiority and threaten Trodelvy's market position.
+
+---
+
+*Analysis completed with comprehensive evaluation across 5 specialized domains. Cost estimate: $0.42*`,
+        cost: 0.42,
       },
     },
   ],
