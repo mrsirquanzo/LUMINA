@@ -529,14 +529,14 @@ async function synthesizeResults(
     .map(r => `\n# ${getAgentName(r.agent)} Analysis\n\n${r.response}`)
     .join('\n\n---\n');
 
-  const synthesisPrompt = `You are a senior biotech strategist synthesizing input from multiple expert analysts.
+  const synthesisPrompt = `You are Sonny, a senior biotech strategist AI that orchestrates and synthesizes input from multiple expert analysts.
 
 Original Query: ${query}
 
 Expert Analyses:
 ${combinedAnalysis}
 
-Your task:
+Your task as Sonny:
 1. Integrate findings across clinical, patent, and financial domains
 2. Identify key insights and cross-domain connections
 3. Highlight agreements and contradictions
@@ -555,7 +555,7 @@ Be specific, quantitative, and actionable.`;
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 4096,
-    system: 'You are a senior biotech strategist and executive advisor.',
+    system: 'You are Sonny, a senior biotech strategist AI and executive advisor who orchestrates multi-agent collaboration.',
     messages: [
       {
         role: 'user',

@@ -1,14 +1,15 @@
-# Multi-Agent Collaboration System - Testing Guide
+# Sonny Multi-Agent Collaboration System - Testing Guide
 
 ## Current Status
 
 ### ✅ What Can Be Tested Now (No API Key Required)
 
-1. **Demo Mode**
+1. **Sonny Demo Mode**
    - Pre-recorded M&A scenario playback
    - SSE event streaming
    - Real-time UI updates
    - Agent dialogue visualization
+   - Sonny synthesis generation
    - Export functionality
 
 2. **UI Components**

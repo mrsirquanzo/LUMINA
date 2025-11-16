@@ -250,7 +250,7 @@ export default function MultiAgentCollaboration({
       <div className="mb-6 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Multi-Agent Analysis</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🤖 Sonny Multi-Agent Analysis</h3>
             <p className="text-sm text-gray-600">
               Query: <span className="font-medium">{query}</span>
             </p>
@@ -373,7 +373,7 @@ export default function MultiAgentCollaboration({
           <div className="flex items-center gap-3">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600"></div>
             <div>
-              <p className="text-sm font-medium text-indigo-900">Synthesis in Progress</p>
+              <p className="text-sm font-medium text-indigo-900">🤖 Sonny Synthesizing Results</p>
               <p className="text-sm text-indigo-700 mt-1">{synthesisStep}</p>
             </div>
           </div>

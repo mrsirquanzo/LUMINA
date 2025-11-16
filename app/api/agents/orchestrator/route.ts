@@ -110,9 +110,9 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   return new Response(
     JSON.stringify({
-      name: 'Multi-Agent Orchestrator API',
+      name: 'Sonny - Multi-Agent Orchestrator API',
       status: 'active',
-      description: 'Coordinates Clinical, Patent, and Financial agents for comprehensive analysis',
+      description: 'Sonny coordinates Clinical, Patent, and Financial agents for comprehensive biotech analysis',
       modes: ['fast', 'thorough'],
     }),
     {

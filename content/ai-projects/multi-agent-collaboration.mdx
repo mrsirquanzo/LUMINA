@@ -1,8 +1,8 @@
 ---
 slug: multi-agent-collaboration
-title: "Multi-Agent Collaboration System"
-subtitle: "Orchestrated AI agents for comprehensive biotech analysis across clinical, patent, and financial dimensions"
-description: "Multiple specialized AI agents work together, asking each other questions and building on insights to provide strategic recommendations for M&A, licensing, and investment decisions."
+title: "Sonny Multi-Agent Collaboration System"
+subtitle: "Sonny orchestrates AI agents for comprehensive biotech analysis across clinical, patent, and financial dimensions"
+description: "Sonny coordinates specialized AI agents that work together, asking each other questions and building on insights to provide strategic recommendations for M&A, licensing, and investment decisions."
 category: "AI System"
 publishedDate: "2025-01-16"
 tags: ["AI System", "Multi-Agent", "Orchestration", "Strategic Analysis", "Due Diligence"]
@@ -16,7 +16,7 @@ techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Server-Sent Events",
 
 ## Overview
 
-The Multi-Agent Collaboration System orchestrates three specialized AI agents—Clinical Data Analyst, Patent Expert, and Financial Analyst—to work together on complex biotech analysis scenarios. The agents don't just run in parallel; they actively collaborate by asking each other questions, sharing context, and building on each other's insights.
+Meet **Sonny** 🤖, an AI orchestrator that coordinates three specialized AI agents—Clinical Data Analyst, Patent Expert, and Financial Analyst—to work together on complex biotech analysis scenarios. The agents don't just run in parallel; they actively collaborate by asking each other questions, sharing context, and building on each other's insights under Sonny's coordination.
 
 **Key Innovation:** Real-time inter-agent communication where agents can dynamically request information from their peers, creating a collaborative analysis that's more comprehensive than any single agent could provide.
 
@@ -46,11 +46,11 @@ The Multi-Agent Collaboration System orchestrates three specialized AI agents—
 
 </div>
 
-**Example Collaboration Flow:**
+**Example Collaboration Flow (Orchestrated by Sonny):**
 1. Clinical Analyst analyzes Phase 2 data, asks Patent Expert: *"Are there blocking patents for this mechanism?"*
 2. Patent Expert provides FTO assessment, asks Financial Analyst: *"What valuation premium for 20-year exclusivity?"*
 3. Financial Analyst integrates clinical risk and IP strength into DCF model
-4. All insights synthesized into strategic recommendation
+4. Sonny synthesizes all insights into strategic recommendation
 
 ---
 
@@ -164,11 +164,12 @@ Upload your own documents (PDFs, Excel, images) and ask custom questions for liv
 <details>
 <summary><strong>Click to expand technical details</strong></summary>
 
-**Orchestration Engine**
+**Sonny Orchestration Engine**
 - Sequential and parallel execution modes
 - Dynamic question parsing and routing
 - Context accumulation across agent interactions
 - Real-time SSE streaming to frontend
+- Intelligent synthesis of multi-domain insights
 
 **Inter-Agent Communication**
 - Regex-based question extraction: `[ASK_CLINICAL: "question"]`
