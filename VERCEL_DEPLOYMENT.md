@@ -1,8 +1,8 @@
-# Deploying Q · E to Vercel with MCP Enabled
+# Deploying Sonny to Vercel with MCP Enabled
 
 ## Complete Deployment Guide
 
-This guide walks you through deploying your Q · E multi-agent system to Vercel with Model Context Protocol (MCP) enabled for real-time data access.
+This guide walks you through deploying your Sonny multi-agent system to Vercel with Model Context Protocol (MCP) enabled for real-time data access.
 
 ---
 
@@ -392,7 +392,7 @@ After deployment, you'll have:
 
 **Key Pages**:
 - Home: `/`
-- Q · E Demo: `/ai-projects/multi-agent-demo`
+- Sonny Demo: `/ai-projects/multi-agent-demo`
 - Clinical Agent: `/ai-projects/data-analyst-demo`
 - Financial Agent: `/ai-projects/financial-analyst-demo`
 - Patent Agent: `/ai-projects/patent-expert-demo`
@@ -403,8 +403,8 @@ After deployment, you'll have:
 
 ## ✅ Success!
 
-Your Q · E multi-agent system is now live with:
-- ✅ 5 specialized AI agents
+Your Sonny multi-agent system is now live with:
+- ✅ 5 specialized AI agents orchestrated by Sonny
 - ✅ 3 different AI models (Claude, Gemini, Perplexity)
 - ✅ MCP real-time data access
 - ✅ 400,000+ clinical trials (ClinicalTrials.gov)

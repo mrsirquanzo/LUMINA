@@ -2,7 +2,7 @@
 
 ## System Overview
 
-The Model Context Protocol (MCP) integration in Q · E provides a scalable, modular architecture for connecting specialized AI agents to external data sources. This document describes the technical architecture, design decisions, and implementation details.
+The Model Context Protocol (MCP) integration in Sonny provides a scalable, modular architecture for connecting specialized AI agents to external data sources. This document describes the technical architecture, design decisions, and implementation details.
 
 ## Core Principles
 

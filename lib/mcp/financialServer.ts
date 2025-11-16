@@ -215,7 +215,7 @@ export class FinancialMCPServer implements IMCPServer {
 
       const tickerResponse = await fetch(tickerUrl, {
         headers: {
-          'User-Agent': 'Q-E Portfolio contact@quanho.dev',
+          'User-Agent': 'Sonny AI Portfolio contact@quanho.dev',
           'Accept': 'application/json',
         },
       });
@@ -242,7 +242,7 @@ export class FinancialMCPServer implements IMCPServer {
 
       const submissionsResponse = await fetch(submissionsUrl, {
         headers: {
-          'User-Agent': 'Q-E Portfolio contact@quanho.dev',
+          'User-Agent': 'Sonny AI Portfolio contact@quanho.dev',
           'Accept': 'application/json',
         },
       });
