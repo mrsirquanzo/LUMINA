@@ -94,25 +94,33 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
     <div className={className}>
       {/* Demo/Live indicator */}
       {isDemo !== undefined && (
-        <div className="mb-4 p-2.5 bg-gray-50 border border-gray-300 rounded-lg flex items-center gap-2 text-sm">
-          {isDemo ? (
-            <>
-              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded font-medium text-xs">
-                DEMO MODE
-              </span>
-              <span className="text-gray-700">
-                Showing pre-recorded analysis with illustrative sources
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="px-2 py-0.5 bg-green-100 text-green-800 border border-green-300 rounded font-medium text-xs">
-                ✓ LIVE ANALYSIS
-              </span>
-              <span className="text-gray-700">
-                Sources extracted from uploaded documents and real-time data
-              </span>
-            </>
+        <div className="mb-4 p-3 bg-gray-50 border border-gray-300 rounded-lg">
+          <div className="flex items-center gap-2 text-sm mb-2">
+            {isDemo ? (
+              <>
+                <span className="px-2 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded font-medium text-xs">
+                  DEMO MODE
+                </span>
+                <span className="text-gray-700 font-medium">
+                  Showing pre-recorded analysis with illustrative sources
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="px-2 py-0.5 bg-green-100 text-green-800 border border-green-300 rounded font-medium text-xs">
+                  ✓ LIVE ANALYSIS
+                </span>
+                <span className="text-gray-700 font-medium">
+                  Sources extracted from uploaded documents and real-time data
+                </span>
+              </>
+            )}
+          </div>
+          {isDemo && (
+            <p className="text-xs text-gray-600 italic leading-relaxed">
+              Note: Document names (e.g., "ADC_Patent_Landscape.pdf") are placeholders showing what you would upload in Live mode.
+              Citations demonstrate the format you'll see when analyzing your actual files with page-level verification.
+            </p>
           )}
         </div>
       )}
