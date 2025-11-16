@@ -10,7 +10,7 @@ import {
 import { getDemoScenario, playDemoScenario } from './demoMultiAgentScenarios';
 import { createLLMClient } from './llm/clientFactory';
 import { AGENT_MODEL_CONFIG, SYNTHESIS_MODEL_CONFIG, getAgentName as getAgentDisplayName } from './llm/agentConfig';
-import { AGENT_PROMPTS, SYNTHESIS_PROMPT } from './agentPrompts';
+import { AGENT_PROMPTS } from './agentPrompts';
 import { getMCPClient } from './mcp';
 
 /**
