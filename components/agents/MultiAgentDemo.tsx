@@ -229,8 +229,15 @@ export default function MultiAgentDemo() {
   }
 
   if (showAnalysis && query.trim()) {
+    // Check if this is a pre-configured demo scenario
+    const isDemoScenario = DEMO_SCENARIOS.some(s => s.id === selectedScenarioId);
+    // Force demo mode for pre-configured scenarios, respect user choice otherwise
+    const effectiveIsDemo = isDemoScenario || isDemo;
+
     console.log('[MultiAgentDemo] Starting analysis:', {
-      isDemo,
+      isDemo: effectiveIsDemo,
+      isDemoScenario,
+      selectedScenarioId,
       mode,
       query: query.substring(0, 50) + '...',
       customAgents: selectedCustomTeam?.agents.length || 'default',
@@ -249,8 +256,8 @@ export default function MultiAgentDemo() {
             query={query}
             documents={processedDocuments}
             mode={mode}
-            isDemo={isDemo}
-            demoScenarioId={isDemo ? selectedScenarioId : undefined}
+            isDemo={effectiveIsDemo}
+            demoScenarioId={isDemoScenario ? selectedScenarioId : undefined}
             customAgents={selectedCustomTeam?.agents}
           />
         </div>
