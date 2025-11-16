@@ -5,17 +5,29 @@ import React, { useState } from 'react';
 interface CitationBadgeProps {
   number: string;
   inline?: boolean;
+  citation?: string; // Full citation text for tooltip
 }
 
 /**
  * CitationBadge - Visual component for inline numbered citations
- * Makes citations prominent and trustworthy
+ * Shows full citation on hover for instant verification
  */
-export function CitationBadge({ number, inline = true }: CitationBadgeProps) {
+export function CitationBadge({ number, inline = true, citation }: CitationBadgeProps) {
   if (inline) {
     return (
-      <sup className="inline-flex items-center justify-center min-w-[18px] h-[18px] mx-0.5 px-1 text-[10px] font-bold text-blue-700 bg-blue-100 border border-blue-300 rounded-sm hover:bg-blue-200 transition-colors cursor-help">
-        {number}
+      <sup className="relative group inline-block">
+        <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] mx-0.5 px-1 text-[10px] font-bold text-blue-700 bg-blue-100 border border-blue-300 rounded-sm hover:bg-blue-200 transition-colors cursor-help">
+          {number}
+        </span>
+
+        {/* Tooltip on hover */}
+        {citation && (
+          <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl z-50 pointer-events-none">
+            <span className="font-semibold text-blue-300">[{number}]</span> {citation}
+            {/* Tooltip arrow */}
+            <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-gray-900"></span>
+          </span>
+        )}
       </sup>
     );
   }

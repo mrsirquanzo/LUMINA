@@ -28,6 +28,8 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
 
   // Extract sources if they exist
   const sources: Array<{ number: string; citation: string }> = [];
+  const citationMap = new Map<string, string>();
+
   if (sourcesMatch) {
     const sourcesText = sourcesMatch[1];
     const sourceLines = sourcesText.split('\n').filter(line => line.trim().startsWith('['));
@@ -35,15 +37,15 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
     sourceLines.forEach(line => {
       const match = line.match(/\[(\d+)\]\s+(.*)/);
       if (match) {
-        sources.push({
-          number: match[1],
-          citation: match[2],
-        });
+        const number = match[1];
+        const citation = match[2];
+        sources.push({ number, citation });
+        citationMap.set(number, citation);
       }
     });
   }
 
-  // Custom component to render inline citations
+  // Custom component to render inline citations with tooltips
   const components = {
     p: ({ children, ...props }: any) => {
       // Process text nodes to detect [1], [2] style citations
@@ -54,7 +56,9 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
           return parts.map((part, index) => {
             const citationMatch = part.match(/\[(\d+)\]/);
             if (citationMatch) {
-              return <CitationBadge key={`${part}-${index}`} number={citationMatch[1]} inline />;
+              const citNumber = citationMatch[1];
+              const citText = citationMap.get(citNumber);
+              return <CitationBadge key={`${part}-${index}`} number={citNumber} citation={citText} inline />;
             }
             return <React.Fragment key={index}>{part}</React.Fragment>;
           });
@@ -72,7 +76,9 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
           return parts.map((part, index) => {
             const citationMatch = part.match(/\[(\d+)\]/);
             if (citationMatch) {
-              return <CitationBadge key={`${part}-${index}`} number={citationMatch[1]} inline />;
+              const citNumber = citationMatch[1];
+              const citText = citationMap.get(citNumber);
+              return <CitationBadge key={`${part}-${index}`} number={citNumber} citation={citText} inline />;
             }
             return <React.Fragment key={index}>{part}</React.Fragment>;
           });
