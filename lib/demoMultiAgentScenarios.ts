@@ -157,41 +157,91 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 > **📋 Demo Note:** This is a demonstration scenario. Patent numbers shown are placeholders for illustrative purposes and have not been verified against USPTO databases. In live mode, all patent citations undergo the Patent Verification Protocol to ensure accuracy and credibility.
 
 **BioSpectra Patent Portfolio:**
-- **US11234567**: "Bispecific T-Cell Engager with Fc-Silenced Linker"
+- **US11234567**: "Bispecific T-Cell Engager with Fc-Silenced Linker" [1]
   - Granted: August 2023
   - Claim 1: Broad coverage of Fc-silenced bispecific antibodies targeting novel epitope
   - Expires: 2043 (20 years from filing)
-- **US11456789**: "Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies"
+- **US11456789**: "Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies" [2]
   - Granted: January 2024
   - Method claims for dosing regimens and CRS management
   - Expires: 2044
-- **EP3789123**: European counterpart (granted 2024)
-- **CN109876543**: Chinese patent (granted 2024)
-- 12 continuation applications filed (2023-2024) covering linker variants and combination therapies
+- **EP3789123**: European counterpart (granted 2024) [3]
+- **CN109876543**: Chinese patent (granted 2024) [4]
+- 12 continuation applications filed (2023-2024) covering linker variants and combination therapies [5]
 
 **Patent Strength Assessment:**
-✓ Strong novelty vs prior art (novel epitope not disclosed in prior TCEs)
-✓ Fc-silenced linker technology proprietary (composition of matter protection)
-✓ No patent oppositions filed
-✓ Clean prosecution history with minimal amendments
+✓ Strong novelty vs prior art (novel epitope not disclosed in prior TCEs) [1]
+✓ Fc-silenced linker technology proprietary (composition of matter protection) [1]
+✓ No patent oppositions filed [5]
+✓ Clean prosecution history with minimal amendments [5]
 
 **Competitive Landscape:**
-- **Tecvayli (J&J):** Different epitope targeting, earlier expiry (2038)
-- **Talvey (Pfizer/J&J):** Complex dosing patent but overlapping bispecific claims
-- **Amgen TCEs:** Broad bispecific platform patents but FTO clear for our novel epitope
-- **Regeneron:** Half-life extension patents (orthogonal to our technology)
+- **Tecvayli (J&J):** Different epitope targeting, earlier expiry (2038) [6]
+- **Talvey (Pfizer/J&J):** Complex dosing patent but overlapping bispecific claims [6]
+- **Amgen TCEs:** Broad bispecific platform patents but FTO clear for our novel epitope [6]
+- **Regeneron:** Half-life extension patents (orthogonal to our technology) [6]
 
 **Freedom-to-Operate:**
-✓ **FTO STATUS: CLEAR** - No blocking patents identified for novel epitope
+✓ **FTO STATUS: CLEAR** - No blocking patents identified for novel epitope [7]
 ✓ Can commercialize without licensing
-✓ Proprietary Fc-silenced linker provides differentiated IP position
+✓ Proprietary Fc-silenced linker provides differentiated IP position [1]
 ✓ Strong defensive position vs next-gen TCE developers
 
 **Patent Portfolio Valuation:**
-- Estimated standalone value: $350-450M
-- 18-20 years remaining exclusivity
-- Covers key markets (US, EU5, China, Japan = 90% global market)
-- Platform applicability to multiple solid tumor indications
+- Estimated standalone value: $350-450M [7]
+- 18-20 years remaining exclusivity [1,2]
+- Covers key markets (US, EU5, China, Japan = 90% global market) [3,4]
+- Platform applicability to multiple solid tumor indications [5]
+
+---
+
+## 📚 Sources Referenced
+
+[1] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: US11234567 (demonstration placeholder)
+    **Title**: Bispecific T-Cell Engager with Fc-Silenced Linker
+    **Assignee**: BioSpectra (demonstration)
+    **Granted**: 2023-08
+    **Expires**: 2043
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 5-18
+    **Retrieved**: 2024-09-15
+
+[2] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: US11456789 (demonstration placeholder)
+    **Title**: Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies
+    **Granted**: 2024-01
+    **Expires**: 2044
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 22-35
+
+[3] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: EP3789123 (demonstration placeholder)
+    **Title**: European Patent - Bispecific TCE
+    **Granted**: 2024
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 38-42
+
+[4] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: CN109876543 (demonstration placeholder)
+    **Title**: Chinese Patent - Bispecific TCE
+    **Granted**: 2024
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 43-47
+
+[5] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Patent Portfolio Analysis
+    **Title**: BioSpectra Continuation Applications Strategy
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 52-68
+    **Date**: 2024-08
+    **Specific Data**: "12 continuation applications filed 2023-2024, no oppositions filed, clean prosecution history"
+
+[6] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Patent Landscape
+    **Title**: TCE Competitive IP Analysis 2024
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 72-89
+    **Date**: 2024-07
+    **Specific Data**: "Tecvayli expires 2038, Talvey overlapping claims, Amgen platform patents, Regeneron half-life extension"
+
+[7] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Freedom-to-Operate Analysis
+    **Title**: BioSpectra FTO Assessment & Portfolio Valuation
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 95-112
+    **Date**: 2024-08-15
+    **Specific Data**: "FTO clear for novel epitope, estimated standalone value $350-450M, no blocking patents identified"
 
 **Question for Financial Analyst:** Given strong IP position with clear FTO, 18-year exclusivity, and platform potential, is the $2.2B valuation justified based on their financial position and runway?`,
       },
@@ -237,59 +287,123 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
         response: `## Financial Analysis & Valuation
 
 **Current Financial Position (FY2024 10-K):**
-- Cash & equivalents: $185M
-- Quarterly cash burn: $28M
-- **Estimated runway: 6.6 quarters (~18 months)**
-- Revenue: $0 (pre-commercial)
-- Total assets: $215M
-- Long-term debt: $0
+- Cash & equivalents: $185M [1]
+- Quarterly cash burn: $28M [1]
+- **Estimated runway: 6.6 quarters (~18 months)** [1]
+- Revenue: $0 (pre-commercial) [1]
+- Total assets: $215M [1]
+- Long-term debt: $0 [1]
 
 **Burn Rate Analysis:**
-- Q1 2024: $22M
-- Q2 2024: $25M
-- Q3 2024: $28M
-- Q4 2024: $32M (Phase 3 startup costs + manufacturing)
+- Q1 2024: $22M [2]
+- Q2 2024: $25M [2]
+- Q3 2024: $28M [2]
+- Q4 2024: $32M (Phase 3 startup costs + manufacturing) [2]
 - **Trend:** Accelerating as Phase 3 and CMC scale-up
 
 **Capital Requirements:**
-- Phase 3 trial cost estimate: $150-180M (global, 400+ patients)
-- Manufacturing scale-up: $60-80M (needed for commercial launch)
-- Regulatory/commercial prep: $40-50M
-- **Total capital needed before approval: $250-310M**
+- Phase 3 trial cost estimate: $150-180M (global, 400+ patients) [3]
+- Manufacturing scale-up: $60-80M (needed for commercial launch) [3]
+- Regulatory/commercial prep: $40-50M [3]
+- **Total capital needed before approval: $250-310M** [3]
 - ⚠ Will need $150M+ financing by Q3 2025
 
 **Valuation Analysis:**
 
 *DCF Model (12% discount rate):*
-- Approval scenario (2028): 70% probability
-- Peak sales estimate: $2.8B (2033) - larger TAM for bispecifics
-- Operating margin: 78% (off-the-shelf, no CAR-T manufacturing)
-- **DCF Value: $1.95B**
+- Approval scenario (2028): 70% probability [4]
+- Peak sales estimate: $2.8B (2033) - larger TAM for bispecifics [4]
+- Operating margin: 78% (off-the-shelf, no CAR-T manufacturing) [4]
+- **DCF Value: $1.95B** [4]
 
 *Comparable Company Analysis:*
-- Similar Phase 2 bispecific/TCE companies: $1.8-2.6B range
-- Sanofi/Inhibrx (2024): $2.2B for Phase 2 bispecific
-- J&J/Ambrx (2024): $2.0B for ADC platform
-- BioSpectra at 0.78x peak sales → **Comp Value: $2.18B**
+- Similar Phase 2 bispecific/TCE companies: $1.8-2.6B range [5]
+- Sanofi/Inhibrx (2024): $2.2B for Phase 2 bispecific [6]
+- J&J/Ambrx (2024): $2.0B for ADC platform [7]
+- BioSpectra at 0.78x peak sales → **Comp Value: $2.18B** [5]
 
 *Precedent Transactions:*
-- Recent TCE/bispecific acquisitions (Phase 2): $1.6B-$2.6B
-- Sanofi/Inhibrx: $2.2B (May 2024)
-- Average: $2.13B
-- Median: $2.1B
+- Recent TCE/bispecific acquisitions (Phase 2): $1.6B-$2.6B [6,7,8]
+- Sanofi/Inhibrx: $2.2B (May 2024) [6]
+- Average: $2.13B [8]
+- Median: $2.1B [8]
 
 **Valuation Conclusion:**
-- DCF: $1.95B
-- Comps: $2.18B
-- Precedent: $2.1B
+- DCF: $1.95B [4]
+- Comps: $2.18B [5]
+- Precedent: $2.1B [8]
 - **Fair Value Range: $1.95-2.18B**
 
 **Assessment of $2.2B Ask:**
 ✓ **FAIRLY VALUED** given:
-- At median of recent transactions
+- At median of recent transactions [8]
 - Strong Phase 2 data de-risks Phase 3
-- $150M+ financing need offset by milestone structure
-- TCE market growing 45% annually (2024-2030)
+- $150M+ financing need offset by milestone structure [3]
+- TCE market growing 45% annually (2024-2030) [9]
+
+---
+
+## 📚 Sources Referenced
+
+[1] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: 10-K Filing
+    **Company**: BioSpectra (demonstration)
+    **Title**: BioSpectra Annual Report FY2024
+    **Period**: FY 2024 (Year ended 2024-12-31)
+    **Location**: BioSpectra_10K_2024.pdf, pp. 45-48, Balance Sheet & Cash Flow Statement
+    **Date Filed**: 2024-03-15
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "Cash $185M, Total assets $215M, Zero debt, Revenue $0 (pre-commercial)"
+
+[2] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: 10-K Filing
+    **Company**: BioSpectra
+    **Title**: Quarterly Cash Burn Analysis
+    **Location**: BioSpectra_10K_2024.pdf, pp. 52-55, Operating Expenses by Quarter
+    **Period**: Q1-Q4 2024
+    **Specific Data**: "Q1: $22M, Q2: $25M, Q3: $28M, Q4: $32M quarterly burn"
+
+[3] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Financial Model
+    **Title**: BioSpectra Capital Requirements Forecast
+    **Location**: BioSpectra_10K_2024.pdf, pp. 78-82, Management Discussion & Analysis
+    **Date**: 2024-03
+    **Specific Data**: "Phase 3 estimate $150-180M, manufacturing $60-80M, regulatory/commercial $40-50M, total $250-310M"
+
+[4] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: DCF Valuation Model
+    **Title**: BioSpectra DCF Analysis
+    **Location**: Internal valuation model (demonstration)
+    **Date**: 2024-09
+    **Assumptions**: "12% WACC, 70% approval probability, $2.8B peak sales 2033, 78% operating margin"
+    **DCF Value**: $1.95B
+
+[5] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Comparable Company Analysis
+    **Title**: Phase 2 Bispecific/TCE Valuation Benchmarks
+    **Location**: Market analysis (demonstration)
+    **Date**: 2024-08
+    **Specific Data**: "Phase 2 TCE companies valued $1.8-2.6B range, BioSpectra 0.78x peak sales = $2.18B"
+
+[6] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: M&A Transaction
+    **Title**: Sanofi Acquisition of Inhibrx
+    **Deal Value**: $2.2B
+    **Date**: 2024-05
+    **Stage**: Phase 2 bispecific
+    **Source**: Public press release
+
+[7] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: M&A Transaction
+    **Title**: J&J Acquisition of Ambrx
+    **Deal Value**: $2.0B
+    **Date**: 2024
+    **Stage**: ADC platform
+    **Source**: Public press release
+
+[8] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Precedent Transaction Analysis
+    **Title**: Recent TCE/Bispecific M&A Transactions
+    **Date**: 2024
+    **Specific Data**: "Phase 2 acquisitions range $1.6-2.6B, Average $2.13B, Median $2.1B"
+
+[9] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Market Research
+    **Title**: TCE Market Growth Forecast 2024-2030
+    **Publisher**: Industry market report
+    **Date**: 2024
+    **Specific Data**: "TCE market CAGR 45% (2024-2030)"
 
 **Recommended Deal Structure:**
 See synthesis for recommended approach.
