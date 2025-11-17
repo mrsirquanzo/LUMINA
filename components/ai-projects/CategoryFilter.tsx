@@ -1,6 +1,6 @@
 'use client';
 
-export type ProjectCategory = 'all' | 'ai-agent' | 'design';
+export type ProjectCategory = 'ai-agent' | 'design';
 
 interface CategoryFilterProps {
   activeCategory: ProjectCategory;
@@ -9,7 +9,6 @@ interface CategoryFilterProps {
 
 export default function CategoryFilter({ activeCategory, onCategoryChange }: CategoryFilterProps) {
   const categories: { value: ProjectCategory; label: string }[] = [
-    { value: 'all', label: 'All Projects' },
     { value: 'ai-agent', label: 'AI Agents' },
     { value: 'design', label: 'Design Work' },
   ];

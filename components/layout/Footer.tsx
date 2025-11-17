@@ -11,8 +11,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white text-lg font-semibold mb-4">Quan Ho</h3>
             <p className="text-sm leading-relaxed">
-              Translating breakthrough biology into investment insights.
-              10+ years in immunology, oncology, and AI-driven drug discovery.
+              Scientific expertise meets strategic intelligence. Building AI systems that make biotech due diligence scalable.
             </p>
           </div>
 
@@ -26,18 +25,18 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/portfolio" className="hover:text-white transition-colors">
-                  Portfolio
+                <Link href="/ai-projects" className="hover:text-white transition-colors">
+                  Build
+                </Link>
+              </li>
+              <li>
+                <Link href="/case-studies" className="hover:text-white transition-colors">
+                  Case Studies
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="hover:text-white transition-colors">
                   About
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
-                  Contact
                 </Link>
               </li>
             </ul>
@@ -69,8 +68,8 @@ export default function Footer() {
               </a>
             </div>
             <p className="text-sm">
-              Boston, MA • Open to Relocation<br />
-              Available Immediately
+              Boston, MA<br />
+              Available Now
             </p>
           </div>
         </div>

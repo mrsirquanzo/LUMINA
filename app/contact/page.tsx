@@ -43,7 +43,6 @@ export default function ContactPage() {
                     href="https://www.linkedin.com/in/quan-ho"
                     external
                     variant="primary"
-                    className="text-sm"
                   >
                     Connect on LinkedIn
                   </Button>

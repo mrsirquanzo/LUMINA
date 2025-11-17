@@ -24,52 +24,6 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* What I Do */}
-      <Section background="white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
-            What I Do
-          </h2>
-          <div className="prose prose-lg max-w-none">
-            <p className="text-body text-gray-700 mb-8">
-              Now I focus on bridging biology, data, and design to drive smarter biotech decisions.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="card text-center">
-                <div className="text-3xl mb-3">🔬</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Translate Scientific Data
-                </h3>
-                <p className="text-sm text-gray-700">
-                  Turn clinical data, patent landscapes, and competitive intelligence into business insight
-                </p>
-              </div>
-
-              <div className="card text-center">
-                <div className="text-3xl mb-3">🤖</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Build AI Agents
-                </h3>
-                <p className="text-sm text-gray-700">
-                  Automate research and diligence workflows with intelligent systems
-                </p>
-              </div>
-
-              <div className="card text-center">
-                <div className="text-3xl mb-3">📊</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Design Data Systems
-                </h3>
-                <p className="text-sm text-gray-700">
-                  Create clean dashboards, memo frameworks, and visual systems
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-
       {/* Experience & Background */}
       <Section background="gray">
         <div className="max-w-6xl mx-auto">
