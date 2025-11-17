@@ -23,6 +23,14 @@ export default function AIProjectsClient({ projects }: AIProjectsClientProps) {
     // Sort featured projects first
     if (a.frontmatter.featured && !b.frontmatter.featured) return -1;
     if (!a.frontmatter.featured && b.frontmatter.featured) return 1;
+
+    // If both featured, sort by order field
+    if (a.frontmatter.featured && b.frontmatter.featured) {
+      const orderA = a.frontmatter.order ?? 999;
+      const orderB = b.frontmatter.order ?? 999;
+      return orderA - orderB;
+    }
+
     return 0;
   });
 

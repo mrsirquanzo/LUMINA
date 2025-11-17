@@ -14,6 +14,7 @@ export interface MDXFrontmatter {
   publishedDate: string;
   tags: string[];
   featured?: boolean;
+  order?: number;
   thumbnail?: string;
   readingTime?: string;
   // Technical projects specific
