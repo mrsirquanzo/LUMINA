@@ -6,12 +6,11 @@ import {
   AGENT_INFO,
   CustomAgentTeam,
   validateTeam,
-  saveCustomTeam,
   deleteCustomTeam,
   getAgentTeams,
   DEFAULT_TEAMS,
 } from '@/lib/customAgentTeams';
-import { FiCheck, FiTrash2, FiSave, FiUsers, FiZap, FiClock } from 'react-icons/fi';
+import { FiCheck, FiTrash2, FiUsers, FiZap, FiClock } from 'react-icons/fi';
 
 interface CustomAgentTeamBuilderProps {
   onTeamSelect: (team: CustomAgentTeam) => void;
@@ -24,46 +23,12 @@ export default function CustomAgentTeamBuilder({
 }: CustomAgentTeamBuilderProps) {
   const [allTeams, setAllTeams] = useState<CustomAgentTeam[]>(getAgentTeams());
   const [selectedAgents, setSelectedAgents] = useState<AgentType[]>([]);
-  const [teamName, setTeamName] = useState('');
-  const [teamDescription, setTeamDescription] = useState('');
   const [mode, setMode] = useState<'fast' | 'thorough'>('thorough');
-  const [showSaveForm, setShowSaveForm] = useState(false);
 
   const toggleAgent = (agent: AgentType) => {
     setSelectedAgents(prev =>
       prev.includes(agent) ? prev.filter(a => a !== agent) : [...prev, agent]
     );
-  };
-
-  const handleSaveTeam = () => {
-    if (!teamName.trim()) {
-      alert('Please enter a team name');
-      return;
-    }
-
-    const validation = validateTeam(selectedAgents);
-    if (!validation.valid) {
-      alert(validation.error);
-      return;
-    }
-
-    try {
-      const newTeam = saveCustomTeam({
-        name: teamName,
-        description: teamDescription,
-        agents: selectedAgents,
-        mode,
-      });
-
-      setAllTeams(getAgentTeams());
-      setShowSaveForm(false);
-      setTeamName('');
-      setTeamDescription('');
-      onTeamSelect(newTeam);
-    } catch (err) {
-      console.error('Failed to save custom team:', err);
-      alert('Failed to save custom team');
-    }
   };
 
   const handleDeleteTeam = (id: string) => {
