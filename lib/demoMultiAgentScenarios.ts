@@ -56,29 +56,60 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
         response: `## Phase 2 Bispecific T-Cell Engager Trial Analysis
 
 **Efficacy Results:**
-- Primary endpoint (ORR): 63% (95% CI: 54-71%) vs 28% standard of care
-- Complete response: 42% (unprecedented for relapsed/refractory)
-- Median PFS: 12.4 months vs 5.1 months SoC (HR=0.48, p<0.001)
-- Duration of response: 18.2 months (highly durable)
+- Primary endpoint (ORR): 63% (95% CI: 54-71%) vs 28% standard of care [1]
+- Complete response: 42% (unprecedented for relapsed/refractory) [1]
+- Median PFS: 12.4 months vs 5.1 months SoC (HR=0.48, p<0.001) [1]
+- Duration of response: 18.2 months (highly durable) [1]
 
 **Safety Profile:**
-- Grade 3+ adverse events: 48% (in line with class)
-- CRS (Cytokine Release Syndrome): Grade 1-2 in 52%, Grade 3 in 8%
-- No Grade 4-5 CRS - improved vs earlier TCEs
-- Neurotoxicity: 12% (all Grade 1-2, minimal CNS involvement)
-- ICANS (Immune Cell-Associated Neurotoxicity): 3% (best in class)
+- Grade 3+ adverse events: 48% (in line with class) [2]
+- CRS (Cytokine Release Syndrome): Grade 1-2 in 52%, Grade 3 in 8% [2]
+- No Grade 4-5 CRS - improved vs earlier TCEs [2]
+- Neurotoxicity: 12% (all Grade 1-2, minimal CNS involvement) [2]
+- ICANS (Immune Cell-Associated Neurotoxicity): 3% (best in class) [2]
 
 **Competitive Context (2024-2025):**
-- Tecvayli (J&J): 63% ORR but higher neurotoxicity (15%)
-- Talvey (Pfizer/J&J): 73% ORR but complex dosing
+- Tecvayli (J&J): 63% ORR but higher neurotoxicity (15%) [3]
+- Talvey (Pfizer/J&J): 73% ORR but complex dosing [3]
 - BioSpectra shows best safety/efficacy balance
-- Off-the-shelf advantage vs CAR-T (no manufacturing delay)
+- Off-the-shelf advantage vs CAR-T (no manufacturing delay) [4]
 
 **Assessment:**
 ✓ Superior efficacy - 63% ORR competitive with leading TCEs
 ✓ Best-in-class safety profile for CRS and neurotoxicity
 ✓ Novel epitope targeting reduces target escape risk
 ⚠ Need to verify IP protection for proprietary linker technology
+
+---
+
+## 📚 Sources Referenced
+
+[1] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Clinical Trial Results
+    **Title**: BioSpectra Phase 2 Trial - Bispecific T-Cell Engager
+    **Trial ID**: NCT05234567 (demonstration placeholder)
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 15-28, Table 2, Figure 3
+    **Date**: Data cutoff 2024-06-30
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "ORR 63% (95% CI: 54-71%), median PFS 12.4 months (HR=0.48, p<0.001), CR 42%"
+
+[2] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Safety Analysis
+    **Title**: BioSpectra Phase 2 Safety Data
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 32-45, Table 5
+    **Date**: Data cutoff 2024-06-30
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "Grade 3+ AEs 48%, CRS Grade 1-2: 52%, Grade 3: 8%, Neurotoxicity 12% (Grade 1-2), ICANS 3%"
+
+[3] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Benchmark Data
+    **Title**: TCE Competitive Landscape Analysis 2024
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 68-72
+    **Date**: 2024-08
+    **Specific Data**: "Tecvayli ORR 63% with 15% neurotoxicity, Talvey ORR 73%"
+
+[4] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Clinical Trial Design
+    **Title**: CAR-T vs Off-the-Shelf Bispecific Comparison
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 8-12
+    **Date**: 2024-06
+    **Specific Data**: "Off-the-shelf delivery advantage, no manufacturing delay vs CAR-T"
 
 **Question for Patent Expert:** Are there blocking patents for the proprietary Fc-silenced linker technology? What's the FTO status for this novel epitope?`,
       },
