@@ -124,16 +124,16 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
         response: `## Patent Portfolio & IP Analysis
 
 **BioSpectra Patent Portfolio:**
-- **US11,234,567**: "Bispecific T-Cell Engager with Fc-Silenced Linker"
+- **US11234567**: "Bispecific T-Cell Engager with Fc-Silenced Linker"
   - Granted: August 2023
   - Claim 1: Broad coverage of Fc-silenced bispecific antibodies targeting novel epitope
   - Expires: 2043 (20 years from filing)
-- **US11,456,789**: "Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies"
+- **US11456789**: "Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies"
   - Granted: January 2024
   - Method claims for dosing regimens and CRS management
   - Expires: 2044
-- **EP3,789,123**: European counterpart (granted 2024)
-- **CN109,876,543**: Chinese patent (granted 2024)
+- **EP3789123**: European counterpart (granted 2024)
+- **CN109876543**: Chinese patent (granted 2024)
 - 12 continuation applications filed (2023-2024) covering linker variants and combination therapies
 
 **Patent Strength Assessment:**
@@ -1733,12 +1733,12 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
         response: `## Base Editing IP & Patent Analysis (2024-2025)
 
 **BaseGenomics Patent Portfolio:**
-- **US11,891,634**: "Evolved Adenine Deaminases for Base Editing" (ABE9.1)
+- **US11891634**: "Evolved Adenine Deaminases for Base Editing" (ABE9.1)
   - Filed: 2022, Granted: 2024
   - Claims: Evolved TadA variants with improved specificity
   - Composition of matter on ABE9.1 protein sequence
   - Expires: 2042
-- **US11,756,432**: "Methods for In Vivo Adenine Base Editing"
+- **US11756432**: "Methods for In Vivo Adenine Base Editing"
   - Filed: 2021, Granted: 2023
   - Method claims: LNP delivery + dosing regimens
   - Expires: 2041
@@ -2441,13 +2441,13 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
         response: `## Oral GLP-1 IP Portfolio Assessment (2024-2025)
 
 **Core Patents:**
-- **US11,892,456**: "Non-Peptide GLP-1 Receptor Agonists"
+- **US11892456**: "Non-Peptide GLP-1 Receptor Agonists"
   - Filed: 2021, Granted: 2024
   - Composition claims: Novel small molecule GLP-1R agonist (differentiated from semaglutide)
   - 22 compound claims including lead ORX-104
   - Expires: 2042
 
-- **US11,734,201**: "Oral Absorption Enhancer Formulations"
+- **US11734201**: "Oral Absorption Enhancer Formulations"
   - Filed: 2022, Granted: 2024
   - Method claims: Proprietary permeation enhancer (NOT SNAC like Rybelsus)
   - Reduces GI side effects vs standard formulations
@@ -2467,7 +2467,7 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 
 *Lilly (Orforglipron):*
 - Molecule: Small molecule GLP-1R agonist (similar class to ours)
-- IP: US11,234,890 (expires 2041)
+- IP: US11234890 (expires 2041)
 - **Concern:** Structural similarity possible - FTO analysis required
 
 *Pfizer (Danuglipron - discontinued 2024):*
