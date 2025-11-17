@@ -69,7 +69,7 @@ export default function Footer() {
             </div>
             <p className="text-sm">
               Boston, MA<br />
-              Available Now
+              Open to Collaborations
             </p>
           </div>
         </div>

@@ -25,9 +25,6 @@ export default function Hero() {
           <Button href="/about" variant="secondary">
             About Quan
           </Button>
-          <Button href="/contact" variant="secondary">
-            Get in Touch
-          </Button>
         </div>
 
         {/* Location & Availability */}
@@ -38,8 +35,6 @@ export default function Hero() {
             </svg>
             Boston
           </span>
-          <span className="text-gray-400">•</span>
-          <span>Biotech Business Intelligence & AI Systems</span>
           <span className="text-gray-400">•</span>
           <span className="text-accent-700 font-semibold">Open to Collaborations</span>
         </div>
