@@ -1892,33 +1892,95 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
         response: `## Adenine Base Editing Technology Assessment (2024-2025)
 
 **Mechanism:**
-- Evolved TadA deaminase fused to Cas9 nickase (ABE9.1 variant)
-- Converts A•T → G•C base pairs without double-strand breaks
-- PAM requirement: NGG (broad targeting range)
-- Editing window: 4-8 nucleotides
+- Evolved TadA deaminase fused to Cas9 nickase (ABE9.1 variant) [1]
+- Converts A•T → G•C base pairs without double-strand breaks [1]
+- PAM requirement: NGG (broad targeting range) [1]
+- Editing window: 4-8 nucleotides [1]
 
 **Technical Performance:**
-- On-target editing: 75-92% efficiency (ex vivo HSCs)
-- Off-target deamination: <0.5% (RNA-seq validated)
-- Bystander editing: Minimal (<2% unwanted A-to-G edits in window)
-- Delivery: Lipid nanoparticle (LNP) mRNA format
+- On-target editing: 75-92% efficiency (ex vivo HSCs) [2]
+- Off-target deamination: <0.5% (RNA-seq validated) [2]
+- Bystander editing: Minimal (<2% unwanted A-to-G edits in window) [2]
+- Delivery: Lipid nanoparticle (LNP) mRNA format [3]
 
 **Preclinical Validation:**
-✓ Mouse models: Corrected hemophilia B, sickle cell (>60% editing in vivo)
-✓ NHP studies: Liver PCSK9 editing 45% (durable >6 months), no toxicity
-✓ Human HSCs ex vivo: 82% editing (BCL11A enhancer for sickle cell)
+✓ Mouse models: Corrected hemophilia B, sickle cell (>60% editing in vivo) [4]
+✓ NHP studies: Liver PCSK9 editing 45% (durable >6 months), no toxicity [4]
+✓ Human HSCs ex vivo: 82% editing (BCL11A enhancer for sickle cell) [4]
 
 **Clinical Progress (2024-2025):**
-✓ Phase 1/2: Sickle cell disease (n=12 patients, 8-month follow-up)
-  - Mean HbF: 42% (functional cure threshold >20%)
-  - Zero VOC (vaso-occlusive crises) events in 9/12 patients
-  - Safety: No CRISPR-related AEs, transient cytopenias only
-✓ Phase 1: Familial hypercholesterolemia (liver PCSK9) - enrolling
+✓ Phase 1/2: Sickle cell disease (n=12 patients, 8-month follow-up) [5]
+  - Mean HbF: 42% (functional cure threshold >20%) [5]
+  - Zero VOC (vaso-occlusive crises) events in 9/12 patients [5]
+  - Safety: No CRISPR-related AEs, transient cytopenias only [5]
+✓ Phase 1: Familial hypercholesterolemia (liver PCSK9) - enrolling [6]
 
 **Competitive Context:**
-- Beam Therapeutics: Adenine BE (BEAM-101 sickle cell Phase 1/2)
-- Verve Therapeutics: In vivo liver editing (PCSK9) - approved New Zealand 2024
-- Prime Medicine: Prime editing (broader, but less efficient ~30-40%)
+- Beam Therapeutics: Adenine BE (BEAM-101 sickle cell Phase 1/2) [7]
+- Verve Therapeutics: In vivo liver editing (PCSK9) - approved New Zealand 2024 [8]
+- Prime Medicine: Prime editing (broader, but less efficient ~30-40%) [9]
+
+---
+
+## 📚 Sources Referenced
+
+[1] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Technology Package
+    **Title**: BaseGenomics ABE9.1 Mechanism of Action
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 8-22, Figures 1-3
+    **Date**: 2024-06
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "Evolved TadA-Cas9 nickase fusion, A→G conversion without DSBs, NGG PAM, 4-8 nt editing window"
+
+[2] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Technical Data
+    **Title**: BaseGenomics ABE9.1 Editing Efficiency and Specificity
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 28-45, Tables 2-4
+    **Date**: 2024-06
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "On-target 75-92% in HSCs, off-target <0.5% RNA-seq, bystander <2%"
+
+[3] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Delivery Platform
+    **Title**: LNP mRNA Delivery System
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 52-64
+    **Date**: 2024-06
+    **Specific Data**: "Lipid nanoparticle mRNA format for in vivo and ex vivo delivery"
+
+[4] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Preclinical Studies
+    **Title**: Preclinical Validation - Mouse and NHP Models
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 72-98
+    **Date**: 2024-05
+    **Specific Data**: "Mouse: >60% in vivo editing, NHP: 45% liver PCSK9 editing (6mo durable), HSC ex vivo: 82% BCL11A"
+
+[5] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Clinical Trial Data
+    **Title**: Phase 1/2 Sickle Cell Disease Trial
+    **Trial ID**: NCT placeholder (demonstration)
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 105-128, Table 8
+    **Date**: Data cutoff 2024-08
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "n=12, 8-month follow-up, mean HbF 42%, 9/12 patients zero VOC events, no CRISPR AEs"
+
+[6] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Clinical Pipeline
+    **Title**: Familial Hypercholesterolemia Phase 1 Study
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 132-138
+    **Date**: 2024-09
+    **Status**: Enrolling
+
+[7] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Intelligence
+    **Title**: Beam Therapeutics BEAM-101 Program
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 145-152
+    **Date**: 2024-07
+    **Specific Data**: "BEAM-101 sickle cell Phase 1/2, ABE8e variant"
+
+[8] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Competitive Intelligence
+    **Title**: Verve Therapeutics PCSK9 Editing Approval
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 153-158
+    **Date**: 2024
+    **Specific Data**: "Verve in vivo liver PCSK9 editing approved New Zealand 2024"
+
+[9] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Intelligence
+    **Title**: Prime Medicine Prime Editing Platform
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 159-164
+    **Date**: 2024-06
+    **Specific Data**: "Prime editing 30-40% efficiency, broader but less efficient than ABE"
 
 **Assessment:** Technology validated in humans with strong efficacy + safety data. Clinical-stage de-risks platform vs preclinical competitors.`,
       },
