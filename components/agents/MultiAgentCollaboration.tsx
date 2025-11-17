@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ProcessedDocument, ExecutionMode, SSEEvent, AgentType } from '@/lib/multiAgentTypes';
-import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { saveAnalysisToHistory } from '@/lib/analysisHistory';
 import ExportButton from '@/components/shared/ExportButton';
 import { ChatMessage } from '@/lib/pdfExport';
@@ -107,6 +107,11 @@ export default function MultiAgentCollaboration({
       });
     }
   }, [synthesis, agentActivities, query, mode, cost, isDemo]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-start analysis when component mounts
+  useEffect(() => {
+    startOrchestration();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const startOrchestration = async () => {
     setIsRunning(true);
@@ -497,15 +502,6 @@ ${synthesis}
                 </div>
               )}
             </div>
-            {!isRunning && !synthesis && (
-              <button
-                onClick={startOrchestration}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
-              >
-                <FiPlay className="w-4 h-4" />
-                Start Analysis
-              </button>
-            )}
           </div>
         </div>
 

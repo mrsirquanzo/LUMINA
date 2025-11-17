@@ -127,6 +127,8 @@ export default function MultiAgentDemo() {
 
   const handleStartAnalysis = () => {
     setShowAnalysis(true);
+    // Scroll to top when transitioning to analysis view
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleReset = () => {
