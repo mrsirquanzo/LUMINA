@@ -1,0 +1,151 @@
+---
+slug: regulatory-expert-agent
+title: "Regulatory Expert"
+subtitle: "FDA/EMA regulatory pathways, approval strategies, and compliance analysis"
+description: "Analyze regulatory pathways, submission strategies, approval timelines, and compliance requirements across FDA, EMA, and other agencies."
+category: "AI Agent"
+publishedDate: "2025-01-15"
+tags: ["FDA Strategy", "Approval Pathways", "Regulatory Compliance"]
+featured: true
+thumbnail: "/images/regulatory-agent-thumbnail.jpg"
+projectType: "ai-agent"
+demoUrl: "/ai-projects/regulatory-expert-demo"
+githubUrl: ""
+techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Regulatory Database"]
+---
+
+## Overview
+
+AI-powered regulatory strategist for FDA/EMA pathways, accelerated approval programs, and compliance requirements. Get strategic guidance on IND submissions, BLA/NDA applications, and post-market obligations with real-time regulatory intelligence. Built with **Claude Sonnet 4** featuring advanced reasoning for complex regulatory analysis.
+
+**Data Sources:** 🇺🇸 FDA openFDA • 🇪🇺 EMA (European Medicines Agency) • 📋 Regulatory Databases
+
+---
+
+## Key Features
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📋</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Regulatory Pathway Planning</h3>
+<p className="text-gray-700 text-sm">Navigate FDA/EMA approval pathways for small molecules, biologics, cell therapies, and gene therapies. Strategic guidance on 505(b)(1), 505(b)(2), and BLA routes with timeline estimates.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">⚡</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Accelerated Programs</h3>
+<p className="text-gray-700 text-sm">Evaluate eligibility for Fast Track, Breakthrough Therapy, RMAT, Accelerated Approval, and Priority Review. Assess qualification criteria and optimize submission strategies.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">🔬</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Clinical Endpoint Strategy</h3>
+<p className="text-gray-700 text-sm">Design Phase 2/3 clinical endpoints aligned with FDA/EMA guidance. Analyze surrogate vs clinical endpoints, biomarker qualification, and post-market commitments.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📄</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Submission Document Review</h3>
+<p className="text-gray-700 text-sm">Upload IND/BLA sections, clinical study reports, or CMC documents for compliance review. Identify gaps, formatting issues, and alignment with current FDA/EMA guidance.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">🌐</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Global Regulatory Intelligence</h3>
+<p className="text-gray-700 text-sm">Track FDA approvals, EMA opinions, and guidance updates in real-time. Monitor FAERS adverse event signals and post-market safety requirements via openFDA API.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">⚖️</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">ICH Guideline Compliance</h3>
+<p className="text-gray-700 text-sm">Navigate ICH Q/E/S/M guidelines for quality, efficacy, safety, and multidisciplinary topics. Understand harmonization requirements across US, EU, and Japan.</p>
+</div>
+</div>
+</div>
+
+</div>
+
+---
+
+## Example Questions
+
+**Pathway & Strategy:**
+- "What's the optimal FDA pathway for our CD19 CAR-T therapy—should we pursue RMAT designation?"
+- "Compare FDA vs EMA approval timelines for gene therapies. What are the key differences in requirements?"
+
+**Compliance & Submissions:**
+- "Review this IND clinical protocol Section 7.0—does it align with FDA's latest immunotherapy guidance?"
+- "What are the CMC requirements for a cell therapy BLA? Outline critical quality attributes and potency assays."
+
+*Ask the agent for a comprehensive list of regulatory pathways, submission requirements, and compliance checklists.*
+
+---
+
+## Future Enhancements
+
+**Planned Features:**
+- 📊 **Timeline Visualization** - IND-to-approval Gantt charts with milestones
+- 📁 **Multi-Program Comparison** - Compare 4 development strategies
+- 💾 **Submission Builder** - FDA-compliant IND/BLA templates
+- 📈 **Intelligence Alerts** - New guidance and policy monitoring
+- 🌍 **Global Expansion** - PMDA, NMPA, Health Canada coverage
+
+---
+
+## Technical Details
+
+<details>
+<summary><strong>Click to expand technical implementation details</strong></summary>
+
+**AI Model**
+- Claude Sonnet 4 (claude-sonnet-4-20250514)
+- Advanced reasoning for complex regulatory analysis
+- 200K token context window
+
+**Knowledge Base**
+- FDA guidance documents (2010-2025)
+- ICH guidelines (Q1-Q14, E-series, S-series)
+- CFR Title 21 regulations
+- EMA procedural advice and scientific guidelines
+
+**API Integrations**
+- FDA openFDA (drug approvals, adverse events)
+- EMA Register (centralized procedure tracking)
+- Regulatory databases (ICH, CFR Title 21)
+
+**Architecture**
+- Next.js 14 with App Router
+- TypeScript for type safety
+- Server-side API routes for document processing
+- Client-side React components for interactive UI
+
+**Security**
+- Session-based authentication
+- Environment variable configuration
+- No document storage (privacy-preserving)
+- All processing happens in real-time
+
+</details>

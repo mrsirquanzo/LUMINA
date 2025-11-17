@@ -10,12 +10,21 @@ interface AIProjectsClientProps {
 }
 
 export default function AIProjectsClient({ projects }: AIProjectsClientProps) {
-  const [activeCategory, setActiveCategory] = useState<ProjectCategory>('all');
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>('ai-agent');
 
   // Filter projects based on active category
-  const filteredProjects = activeCategory === 'all'
-    ? projects
-    : projects.filter(project => project.frontmatter.projectType === activeCategory);
+  const filteredProjects = (activeCategory === 'ai-agent'
+    ? projects.filter(project =>
+        project.frontmatter.projectType === 'ai-agent' ||
+        project.frontmatter.projectType === 'multi-agent'
+      )
+    : projects.filter(project => project.frontmatter.projectType === activeCategory)
+  ).sort((a, b) => {
+    // Sort featured projects first
+    if (a.frontmatter.featured && !b.frontmatter.featured) return -1;
+    if (!a.frontmatter.featured && b.frontmatter.featured) return 1;
+    return 0;
+  });
 
   return (
     <>
@@ -38,7 +47,7 @@ export default function AIProjectsClient({ projects }: AIProjectsClientProps) {
       ) : (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
-            No projects found in this category.
+            🧪 Brewing in the design lab
           </p>
         </div>
       )}

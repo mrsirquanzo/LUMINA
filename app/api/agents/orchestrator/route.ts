@@ -9,12 +9,24 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     // Parse request body first to check if it's demo mode
-    const { query, documents, mode, isDemo, demoScenarioId } = await req.json();
+    const { query, documents, mode, isDemo, demoScenarioId, customAgents } = await req.json();
+
+    console.log('[Sonny Orchestrator API] Received request:', {
+      query: query?.substring(0, 50) + '...',
+      mode,
+      isDemo,
+      isDemoType: typeof isDemo,
+      demoScenarioId,
+      documentsCount: documents?.length || 0,
+    });
 
     // Skip authentication for demo mode (no API calls needed)
     if (!isDemo) {
+      console.log('[Sonny Orchestrator API] Not demo mode, checking authentication...');
       const authenticated = await isAuthenticated();
+      console.log('[Sonny Orchestrator API] Authentication result:', authenticated);
       if (!authenticated) {
+        console.log('[Sonny Orchestrator API] Authentication failed - returning 401');
         return new Response(
           JSON.stringify({ error: 'Authentication required for live analysis' }),
           {
@@ -23,6 +35,8 @@ export async function POST(req: NextRequest) {
           }
         );
       }
+    } else {
+      console.log('[Sonny Orchestrator API] Demo mode - skipping authentication check');
     }
 
     // Validate inputs
@@ -66,7 +80,8 @@ export async function POST(req: NextRequest) {
             mode as ExecutionMode,
             sendEvent,
             isDemo,
-            demoScenarioId
+            demoScenarioId,
+            customAgents
           );
 
           controller.close();
@@ -93,7 +108,7 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Error in orchestrator API:', error);
+    console.error('Error in Sonny orchestrator API:', error);
     return new Response(
       JSON.stringify({
         error: error.message || 'Failed to start orchestration',
@@ -110,9 +125,9 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   return new Response(
     JSON.stringify({
-      name: 'Multi-Agent Orchestrator API',
+      name: 'Sonny - Multi-Agent Orchestrator API',
       status: 'active',
-      description: 'Coordinates Clinical, Patent, and Financial agents for comprehensive analysis',
+      description: 'Sonny coordinates specialized AI agents for comprehensive biotech analysis',
       modes: ['fast', 'thorough'],
     }),
     {

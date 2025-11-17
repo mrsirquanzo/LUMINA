@@ -1,13 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import LoginModal from '@/components/shared/LoginModal';
+import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
+import ExportButton from '@/components/shared/ExportButton';
 import { FINANCIAL_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+}
+
+interface ProcessedDocument {
+  name: string;
+  fileName: string;
+  fileType: string;
+  extractedText?: string;
+  text?: string;
+  isImage: boolean;
+  base64?: string;
+  mimeType?: string;
 }
 
 type AgentMode = 'demo' | 'live';
@@ -18,44 +33,71 @@ const SAMPLE_QUERIES = [
   "Compare the M&A premiums for recent ADC acquisitions. What are buyers paying per asset?",
 ];
 
-export default function DataAnalystAgent() {
+export default function FinancialAnalystAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [demoIndex, setDemoIndex] = useState(0);
-
-  // Check auth status on mount
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
+  const [showUploadPanel, setShowUploadPanel] = useState(false);
 
   const checkAuthStatus = async () => {
     try {
       const response = await fetch('/api/auth/check');
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
+      return data.authenticated;
     } catch (err) {
       console.error('Auth check failed:', err);
+      setIsAuthenticated(false);
+      return false;
     }
   };
 
-  const switchToLiveMode = () => {
-    if (!isAuthenticated) {
-      setShowLoginModal(true);
-    } else {
+  const switchToLiveMode = async () => {
+    const authenticated = await checkAuthStatus();
+    if (authenticated) {
       setMode('live');
       setMessages([]);
+    } else {
+      // Show login modal
+      setShowLoginModal(true);
     }
   };
+
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
     setMode('live');
     setMessages([]);
+  };
+
+  const handleFilesProcessed = (files: UploadedFile[]) => {
+    const newDocs: ProcessedDocument[] = files
+      .filter(f => f.status === 'processed')
+      .map(f => ({
+        name: f.name,
+        fileName: f.name,
+        fileType: f.type,
+        extractedText: f.extractedText,
+        text: f.extractedText,
+        isImage: false,
+      }));
+
+    setProcessedDocuments(prev => [...prev, ...newDocs]);
+    setShowUploadPanel(false);
+  };
+
+  const removeDocument = (index: number) => {
+    setProcessedDocuments(prev => prev.filter((_, i) => i !== index));
   };
 
   const sendDemoMessage = () => {
@@ -116,7 +158,10 @@ export default function DataAnalystAgent() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({
+          messages: apiMessages,
+          documents: processedDocuments,
+        }),
       });
 
       if (!response.ok) {
@@ -150,11 +195,6 @@ export default function DataAnalystAgent() {
         sendLiveMessage();
       }
     }
-  };
-
-  const clearConversation = () => {
-    setMessages([]);
-    setError(null);
   };
 
   const handleLogout = async () => {
@@ -223,175 +263,297 @@ export default function DataAnalystAgent() {
           </div>
         )}
 
-        {mode === 'live' && (
+        {mode === 'live' && isAuthenticated && (
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg max-w-2xl mx-auto">
             <p className="text-sm text-green-800">
               <strong>Live Mode:</strong> Real-time AI responses powered by Claude API. Authenticated session active.
             </p>
           </div>
         )}
-      </div>
 
-      {/* Main Chat Interface */}
-      <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-        {/* Messages Area */}
-        <div className="h-[500px] overflow-y-auto p-6 space-y-4">
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <div className="text-6xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Ready to analyze data
-              </h3>
-              <p className="text-gray-600 mb-6 max-w-md">
-                {mode === 'demo'
-                  ? 'Click a sample query below to see a demo conversation'
-                  : 'Ask me about company valuations, financial statements, Mclinical trials, biomarker data, competitive analysis, or market trendsA deals, or investment analysis'
-                }
-              </p>
-
-              {/* Sample Queries */}
-              <div className="space-y-2 w-full max-w-xl">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  {mode === 'demo' ? 'Try these demo examples:' : 'Try these examples:'}
-                </p>
-                {SAMPLE_QUERIES.map((query, index) => (
-                  <button
-                    key={index}
-                    onClick={() => mode === 'demo' ? sendDemoMessage() : sendLiveMessage(query)}
-                    className="block w-full text-left px-4 py-3 text-sm text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
-                  >
-                    {query}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <>
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg px-4 py-3 ${
-                      message.role === 'user'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 text-gray-900'
-                    }`}
-                  >
-                    <div className="whitespace-pre-wrap">{message.content}</div>
-                    <div
-                      className={`text-xs mt-2 ${
-                        message.role === 'user' ? 'text-green-200' : 'text-gray-500'
-                      }`}
-                    >
-                      {message.timestamp.toLocaleTimeString()}
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-100 text-gray-900 rounded-lg px-4 py-3">
-                    <div className="flex items-center space-x-2">
-                      <div className="animate-pulse">
-                        {mode === 'demo' ? 'Loading demo response' : 'Analyzing'}
-                      </div>
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className="px-6 py-3 bg-red-50 border-t border-red-200">
-            <p className="text-sm text-red-700">⚠️ {error}</p>
+        {mode === 'live' && !isAuthenticated && (
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg max-w-2xl mx-auto">
+            <p className="text-sm text-yellow-800 mb-2">
+              <strong>⚠️ Authentication Required</strong>
+            </p>
+            <p className="text-sm text-yellow-700 mb-3">
+              You need to log in to use Live Mode. Please authenticate to access real AI capabilities with full document analysis.
+            </p>
+            <a
+              href="/api/auth/login"
+              className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Log In to Continue
+            </a>
           </div>
         )}
+      </div>
 
-        {/* Input Area - Only for Live Mode */}
-        {mode === 'live' && (
-          <div className="border-t border-gray-200 p-4 bg-gray-50">
-            <div className="flex items-end space-x-2">
+      {/* Messages */}
+      {messages.length > 0 && (
+        <div className="mb-6 space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg shadow-sm ${
+                message.role === 'user'
+                  ? 'bg-white border-l-4 border-green-500 ml-auto max-w-3xl'
+                  : 'bg-gray-50 border border-gray-200'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="text-2xl flex-shrink-0">
+                  {message.role === 'user' ? '👤' : '💼'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className={`text-sm mb-1 ${message.role === 'user' ? 'text-green-600 font-medium' : 'text-gray-500'}`}>
+                    {message.role === 'user' ? 'You' : 'Financial Analyst'}
+                  </div>
+                  <div className="agent-output text-gray-800">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600"></div>
+            <span className="text-gray-600">Analyzing financial data...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
+      {/* Sample Queries - Live Mode Only when No Messages */}
+      {mode === 'live' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <h3 className="font-semibold text-gray-900 mb-3">Sample Queries</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {SAMPLE_QUERIES.map((query, index) => (
+              <button
+                key={index}
+                onClick={() => sendLiveMessage(query)}
+                className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+              >
+                {query}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Demo Mode Instructions */}
+      {mode === 'demo' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-green-50 border border-green-200 rounded-lg">
+          <h3 className="font-semibold text-gray-900 mb-2">Try Demo Mode</h3>
+          <p className="text-gray-700 mb-4">
+            Click the button below to see a pre-recorded financial analysis. No API costs.
+          </p>
+          <button
+            onClick={sendDemoMessage}
+            disabled={isLoading}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
+          >
+            Run Demo Analysis
+          </button>
+        </div>
+      )}
+
+      {/* Input Area (Live Mode) with Integrated Upload */}
+      {mode === 'live' && (
+        <div className="sticky bottom-0 bg-white border border-gray-200 rounded-lg shadow-lg">
+          {/* Upload Panel */}
+          {showUploadPanel && (
+            <div className="border-b border-gray-200 p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-sm font-semibold text-gray-900">Upload Files</h4>
+                <button
+                  onClick={() => setShowUploadPanel(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <FileUpload onFilesProcessed={handleFilesProcessed} />
+            </div>
+          )}
+
+          {/* File Chips */}
+          {processedDocuments.length > 0 && (
+            <div className="flex flex-wrap gap-2 p-3 border-b border-gray-200 bg-gray-50">
+              {processedDocuments.map((doc, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                >
+                  <span className="truncate max-w-[150px]">{doc.fileName}</span>
+                  <button
+                    onClick={() => removeDocument(index)}
+                    className="hover:text-green-900"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Input Row */}
+          <div className="p-4">
+            <div className="flex items-end gap-2">
+              {/* Upload Button */}
+              <button
+                onClick={() => setShowUploadPanel(!showUploadPanel)}
+                className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors relative"
+                title="Upload files"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                {processedDocuments.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-600 text-white text-xs rounded-full flex items-center justify-center">
+                    {processedDocuments.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Textarea */}
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask about valuations, financials, or Mclinical data, trials, or market analysisA analysis..."
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
-                rows={2}
-                disabled={isLoading}
+                placeholder="Ask about valuations, financials, or M&A analysis..."
+                rows={3}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
               />
+
+              {/* Send Button */}
               <button
                 onClick={() => sendLiveMessage()}
                 disabled={isLoading || !input.trim()}
-                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+                className="flex-shrink-0 p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Send message"
               >
-                Send
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
               </button>
             </div>
 
+            {/* Export Button */}
             {messages.length > 0 && (
-              <button
-                onClick={clearConversation}
-                className="mt-3 text-sm text-gray-600 hover:text-gray-900"
-              >
-                Clear conversation
-              </button>
+              <div className="mt-3">
+                <ExportButton messages={messages} agentName="Financial Analyst" />
+              </div>
             )}
           </div>
-        )}
-
-        {/* Demo Mode Controls */}
-        {mode === 'demo' && messages.length > 0 && (
-          <div className="border-t border-gray-200 p-4 bg-gray-50 text-center">
-            <button
-              onClick={() => sendDemoMessage()}
-              disabled={isLoading}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium mr-3"
-            >
-              Next Demo
-            </button>
-            <button
-              onClick={clearConversation}
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Clear conversation
-            </button>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Behind the Scenes */}
-      <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">
-          🔧 Behind the Scenes
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          Behind the Scenes
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Mode</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Live (Claude Sonnet 4)'}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Mode Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">⚙️</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Mode</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Demo' : 'Live AI'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-green-50 border-2 border-green-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Demo Mode' : 'Live Mode'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Pre-recorded financial analyses demonstrating capabilities without API costs'
+                    : 'Real-time financial analysis powered by Gemini 2.0 Flash via Google AI API'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Specialization</p>
-            <p>Biotech valuation, financial analysis, MClinical trials, biomarkers, competitive intelligenceA</p>
+
+          {/* Specialization Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">💼</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Specialization</h4>
+              <p className="text-sm text-gray-600">Financial Analysis</p>
+            </div>
+            <div className="absolute inset-0 bg-green-50 border-2 border-green-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Financial Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  Biotech valuation, DCF modeling, M&A deal analysis, burn rate calculation, investment thesis development, and financial statement analysis
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Capabilities</p>
-            <p>Data analysis, statistical interpretation, market trends</p>
+
+          {/* Capabilities Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">📈</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Capabilities</h4>
+              <p className="text-sm text-gray-600">Massive Context</p>
+            </div>
+            <div className="absolute inset-0 bg-green-50 border-2 border-green-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Quantitative Analysis</p>
+                <p className="text-xs text-gray-700">
+                  1M+ token context window for full 10-K analysis, Excel/PDF processing, complex calculations, multi-file synthesis, vision API for charts
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Cost</p>
-            <p>{mode === 'demo' ? 'Free (No API calls)' : '$0.01-0.10 per query'}</p>
+
+          {/* Cost Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">💰</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Cost</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Free' : '$0.01-0.10'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-green-50 border-2 border-green-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Zero Cost' : 'Pay-per-Query'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Demo mode is completely free with pre-recorded financial analyses'
+                    : 'Live mode charges $0.01-0.10 per query based on complexity and response length'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

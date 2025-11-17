@@ -58,6 +58,8 @@ export async function POST(req: NextRequest) {
     // If documents are provided, add them to the first user message
     const processedMessages = [...messages];
     if (documents && documents.length > 0) {
+      console.log(`Processing ${documents.length} document(s)`);
+
       // Find the last user message or create one
       const lastUserMsgIndex = processedMessages.map(m => m.role).lastIndexOf('user');
 
@@ -72,6 +74,7 @@ export async function POST(req: NextRequest) {
         // Add document content blocks
         for (const doc of documents) {
           if (doc.isImage && doc.base64) {
+            console.log(`Adding image document: ${doc.fileName}`);
             // Add image content block
             content.push({
               type: 'image',
@@ -81,12 +84,24 @@ export async function POST(req: NextRequest) {
                 data: doc.base64,
               },
             });
-          } else if (doc.text) {
-            // Add document text as a content block
-            content.push({
-              type: 'text',
-              text: `\n\n--- Document: ${doc.fileName} ---\n${doc.text}`,
-            });
+          } else {
+            const text = doc.extractedText || doc.text || '';
+            if (text) {
+              // Add document text as a content block
+              const fileName = doc.fileName || doc.name || 'Unknown';
+              console.log(`Adding text document: ${fileName}, length: ${text.length} characters`);
+
+              // Truncate very large documents (>100k chars = ~25k tokens)
+              const maxChars = 100000;
+              const truncatedText = text.length > maxChars
+                ? text.substring(0, maxChars) + `\n\n[Document truncated. Original length: ${text.length} characters]`
+                : text;
+
+              content.push({
+                type: 'text',
+                text: `\n\n--- Document: ${fileName} ---\n${truncatedText}`,
+              });
+            }
           }
         }
 
@@ -123,7 +138,7 @@ export async function POST(req: NextRequest) {
 
     // Build citations list from documents
     const citations = documents && documents.length > 0
-      ? documents.map((doc: any) => doc.fileName)
+      ? documents.map((doc: any) => doc.fileName || doc.name || 'Unknown')
       : [];
 
     return NextResponse.json({
@@ -136,7 +151,13 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('Error in Data Analyst API:', error);
+    console.error('Error in Data Analyst API:', {
+      message: error.message,
+      status: error.status,
+      type: error.type,
+      error: error.error,
+      stack: error.stack,
+    });
 
     // Handle Anthropic API specific errors
     if (error?.status === 401) {
@@ -153,11 +174,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (error?.error?.type === 'invalid_request_error') {
+      return NextResponse.json(
+        { error: `Invalid request: ${error.message || 'Please check your input'}` },
+        { status: 400 }
+      );
+    }
+
     // Generic error response
     return NextResponse.json(
       {
         error: 'An error occurred while processing your request. Please try again.',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        details: error.message
       },
       { status: 500 }
     );

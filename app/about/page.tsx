@@ -24,52 +24,6 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* What I Do */}
-      <Section background="white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
-            What I Do
-          </h2>
-          <div className="prose prose-lg max-w-none">
-            <p className="text-body text-gray-700 mb-8">
-              Now I focus on bridging biology, data, and design to drive smarter biotech decisions.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="card text-center">
-                <div className="text-3xl mb-3">🔬</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Translate Scientific Data
-                </h3>
-                <p className="text-sm text-gray-700">
-                  Turn clinical data, patent landscapes, and competitive intelligence into business insight
-                </p>
-              </div>
-
-              <div className="card text-center">
-                <div className="text-3xl mb-3">🤖</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Build AI Agents
-                </h3>
-                <p className="text-sm text-gray-700">
-                  Automate research and diligence workflows with intelligent systems
-                </p>
-              </div>
-
-              <div className="card text-center">
-                <div className="text-3xl mb-3">📊</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Design Data Systems
-                </h3>
-                <p className="text-sm text-gray-700">
-                  Create clean dashboards, memo frameworks, and visual systems
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-
       {/* Experience & Background */}
       <Section background="gray">
         <div className="max-w-6xl mx-auto">
@@ -184,27 +138,18 @@ export default function AboutPage() {
                 AI, Data & Systems Engineering
               </h3>
 
-              <ul className="space-y-3 text-gray-700">
+              <ul className="space-y-2.5 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Computational analysis & data visualization</span>
-                    <span className="text-sm text-gray-700"> — Python, R, SQL, Qiagen Omicsoft, Tableau, Spotfire</span>
-                  </div>
+                  <span className="text-sm">Computational analysis & visualization (Python, R, SQL, Tableau)</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">AI agent prototyping</span>
-                    <span className="text-sm text-gray-700"> — Developing portfolio-ready agents for patent analysis, business intelligence, and data-driven decision support</span>
-                  </div>
+                  <span className="text-sm">AI agent development for patent analysis & business intelligence</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Prompt engineering & automation</span>
-                    <span className="text-sm text-gray-700"> — Building LLM-based agents that convert technical or IP documents into strategic insights</span>
-                  </div>
+                  <span className="text-sm">LLM-based automation for strategic insights</span>
                 </li>
               </ul>
             </div>
@@ -222,19 +167,15 @@ export default function AboutPage() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">IP strategy and technology assessment</span>
+                  <span className="text-sm">Clinical data interpretation & biomarker strategy</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">Clinical and biomarker data interpretation</span>
+                  <span className="text-sm">Market opportunity evaluation</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">Market opportunity and portfolio evaluation</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <span className="text-sm">Vendor coordination, requirements definition, and platform adoption leadership</span>
+                  <span className="text-sm">IP strategy & technology assessment</span>
                 </li>
               </ul>
             </div>
@@ -248,31 +189,15 @@ export default function AboutPage() {
               <ul className="space-y-2.5 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Therapeutic areas:</span>
-                    <span className="text-sm text-gray-700"> Immunology & oncology, cell & gene therapy</span>
-                  </div>
+                  <span className="text-sm">Immunology, oncology, cell & gene therapy</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Modalities:</span>
-                    <span className="text-sm text-gray-700"> ADCs, TCEs, bispecifics, CRISPR, CAR-T, organ-on-chip</span>
-                  </div>
+                  <span className="text-sm">ADCs, TCEs, bispecifics, CRISPR, CAR-T</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Analytical skills:</span>
-                    <span className="text-sm text-gray-700"> Transcriptomics, multi-omics, flow cytometry, immunogenicity assays</span>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-primary-600 mr-2 mt-0.5">•</span>
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">Computational tools:</span>
-                    <span className="text-sm text-gray-700"> RNA-seq pipelines, data visualization, AI model validation</span>
-                  </div>
+                  <span className="text-sm">Transcriptomics, flow cytometry, immunogenicity assays</span>
                 </li>
               </ul>
             </div>
@@ -280,54 +205,73 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* Philosophy */}
-      <Section background="white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
-            Philosophy
-          </h2>
-
-          <div className="prose prose-lg max-w-none">
-            <p className="text-body text-gray-700 mb-6">
-              I see innovation as the intersection of science, strategy, and systems thinking. My approach combines the curiosity of a scientist, the analytical mindset of a strategist, and the pragmatism of a builder.
-            </p>
-
-            <p className="text-body text-gray-700 mb-6">
-              I'm drawn to problems where biology meets computation—where data can sharpen intuition and translate discovery into real decisions. Whether it's advancing therapeutic programs, refining AI tools, or evaluating emerging technologies, I focus on turning complex information into clear, actionable insight.
-            </p>
-
-            <p className="text-body text-gray-700 text-center font-semibold text-xl mt-8">
-              Scientist × Strategist × Builder
-            </p>
-          </div>
-        </div>
-      </Section>
-
       {/* Beyond Work */}
-      <Section background="gray">
+      <Section background="white">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
             Beyond Work
           </h2>
 
           <div className="card text-center">
-            <p className="text-body text-gray-700 mb-6">
-              <strong>Boston-based</strong> · <strong>Balancing curiosity & chaos</strong>
+            <p className="text-body text-gray-700 mb-4">
+              <strong>Boston-based</strong> · <strong>Always learning, always building</strong>
             </p>
-            <p className="text-sm text-gray-600 mb-6">
-              Outside of work, I'm learning as much from parenthood as I do from building AI systems—both push you to stay patient, flexible, and quick on your feet. When I'm not debugging models or baby sleep cycles, I'm playing soccer or squash, diving into new research, or watching Manchester United test my resilience.
+            <p className="text-sm text-gray-600">
+              Outside of work, I play soccer and squash, dive into new research, explore AI and emerging tech, or watch Manchester United test my loyalty. Parenthood has sharpened my patience and adaptability, skills that translate surprisingly well to navigating biotech.
             </p>
+          </div>
+        </div>
+      </Section>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button href="/case-studies" variant="primary">
-                View Case Studies
+      {/* Contact */}
+      <Section background="gray">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+            Get in Touch
+          </h2>
+
+          <div className="card text-center">
+            {/* Contact Methods */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+              <Button
+                href="https://www.linkedin.com/in/quan-ho"
+                external
+                variant="primary"
+              >
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+                Connect on LinkedIn
               </Button>
-              <Button href="/ai-projects" variant="secondary">
-                Explore AI Projects
+
+              <Button
+                href="mailto:hoquan12@gmail.com"
+                variant="secondary"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                hoquan12@gmail.com
               </Button>
-              <Button href="/contact" variant="secondary">
-                Get in Touch
-              </Button>
+            </div>
+
+            {/* Location & Availability */}
+            <div className="pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-center gap-4 text-gray-700">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-primary-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm">Boston, MA</span>
+                </div>
+                <span className="text-gray-400">·</span>
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-accent-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-semibold text-accent-700">Available now</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

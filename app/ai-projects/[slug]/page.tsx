@@ -48,7 +48,7 @@ export default async function AIProjectPage({ params }: Props) {
     notFound();
   }
 
-  const { title, subtitle, publishedDate, tags, readingTime, projectType, demoUrl, githubUrl, figmaUrl, techStack } = project.frontmatter;
+  const { title, subtitle, publishedDate, tags, readingTime, projectType, demoUrl, techStack } = project.frontmatter;
   const fullUrl = `https://quanho.io/ai-projects/${params.slug}`;
 
   // Get category label
@@ -91,25 +91,28 @@ export default async function AIProjectPage({ params }: Props) {
             </p>
           )}
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
-            {readingTime && (
-              <>
-                <span className="flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                  </svg>
-                  {readingTime}
-                </span>
-                <span className="text-gray-400">•</span>
-              </>
-            )}
-            <span>Published: {publishedDate}</span>
+          <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-gray-600 mb-6">
+            <div className="flex items-center gap-4">
+              {readingTime && (
+                <>
+                  <span className="flex items-center">
+                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                    {readingTime}
+                  </span>
+                  <span className="text-gray-400">•</span>
+                </>
+              )}
+              <span>Published: {publishedDate}</span>
+            </div>
+            <ShareButtons title={title} url={fullUrl} />
           </div>
 
-          {/* Tech stack and links */}
+          {/* Tech stack */}
           <div className="border-t border-gray-200 pt-6 mb-6">
             {techStack && techStack.length > 0 && (
-              <div className="mb-4">
+              <div>
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">Tech Stack:</h3>
                 <div className="flex flex-wrap gap-2">
                   {techStack.map((tech) => (
@@ -123,50 +126,25 @@ export default async function AIProjectPage({ params }: Props) {
                 </div>
               </div>
             )}
+          </div>
 
-            {/* Project links */}
-            <div className="flex flex-wrap gap-3">
-              {demoUrl && (
-                <a
-                  href={demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary text-sm"
-                >
-                  View Demo
-                </a>
-              )}
-              {githubUrl && (
-                <a
-                  href={githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-secondary text-sm"
-                >
-                  View Code
-                </a>
-              )}
-              {figmaUrl && (
-                <a
-                  href={figmaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-secondary text-sm"
-                >
-                  View in Figma
-                </a>
-              )}
+          {/* Prominent Demo Button */}
+          {demoUrl && (
+            <div className="text-center my-4 mb-0">
+              <a
+                href={demoUrl}
+                className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                🚀 Try Live Demo
+              </a>
+              <p className="mt-3 text-sm text-gray-600">Experience the agent in action with real AI capabilities</p>
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-gray-200">
-            <ShareButtons title={title} url={fullUrl} />
-          </div>
+          )}
         </div>
       </Section>
 
       {/* Main Content Section */}
-      <Section background="white">
+      <Section background="white" className="-mt-8 pt-8">
         <div className="max-w-4xl mx-auto">
           <article className="prose prose-lg max-w-none">
             <MDXContent />

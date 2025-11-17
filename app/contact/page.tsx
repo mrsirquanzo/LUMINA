@@ -12,7 +12,7 @@ export const metadata: Metadata = generateSEO({
 export default function ContactPage() {
   return (
     <>
-      <Section className="bg-gradient-to-br from-primary-50 via-white to-accent-50">
+      <Section className="bg-gradient-to-br from-sky-50 via-white to-blue-50">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Let's Connect
@@ -43,7 +43,6 @@ export default function ContactPage() {
                     href="https://www.linkedin.com/in/quan-ho"
                     external
                     variant="primary"
-                    className="text-sm"
                   >
                     Connect on LinkedIn
                   </Button>

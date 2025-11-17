@@ -1,11 +1,11 @@
 ---
 slug: data-analyst-agent
-title: "Clinical Data Analyst AI Agent"
-subtitle: "AI assistant for analyzing clinical trial reports, datasets, and competitive intelligence documents"
-description: "Upload clinical trial PDFs, Excel data, or URLs and get expert-level analysis of efficacy endpoints, safety profiles, and competitive intelligence in seconds."
+title: "Clinical Data Analyst"
+subtitle: "Analyze clinical trial reports, datasets, and competitive intelligence documents"
+description: "Analyze clinical trial reports, efficacy endpoints, safety data, and study protocols from PDFs, Excel files, or URLs."
 category: "AI Agent"
 publishedDate: "2025-01-15"
-tags: ["AI Agent", "Clinical Data", "Document Analysis", "Vision AI"]
+tags: ["Clinical Trials", "Efficacy Data", "Safety Analysis"]
 featured: true
 thumbnail: "/images/data-analyst-thumbnail.jpg"
 projectType: "ai-agent"
@@ -16,45 +16,83 @@ techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Vision API", "PDF-pa
 
 ## Overview
 
-The Clinical Data Analyst Agent is an AI-powered assistant that analyzes clinical trial reports, study data, and competitive intelligence documents. Upload PDFs, Excel files, images, or provide URLs to get instant analysis of efficacy endpoints, safety profiles, biomarker trends, and market intelligence.
+AI-powered analyst for clinical trials, efficacy data, and competitive intelligence. Upload PDFs, Excel files, images, or URLs to get instant analysis with automatic citations. Built with **Claude Sonnet 4** featuring vision capabilities for analyzing charts and figures.
 
-**Built with Claude Sonnet 4** featuring vision capabilities for analyzing charts, graphs, and figures from scientific publications.
+**Data Sources:** 🧬 Gosset.ai Pharmaceutical Intelligence • 🔬 ClinicalTrials.gov • 📚 PubMed E-utilities
 
----
-
-## What It Can Do
-
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">📄</div>
-<h3 className="text-lg font-semibold mb-2">Analyze Clinical Trial Reports</h3>
-<p className="text-gray-700 text-sm">Upload Phase 1-3 trial PDFs and extract key endpoints, statistical significance, patient populations, and study design details.</p>
-</div>
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">📊</div>
-<h3 className="text-lg font-semibold mb-2">Extract Key Endpoints</h3>
-<p className="text-gray-700 text-sm">Identify ORR, PFS, OS, p-values, confidence intervals, subgroup analyses, and safety signals from dense statistical tables.</p>
-</div>
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">🔬</div>
-<h3 className="text-lg font-semibold mb-2">Process Multiple Data Formats</h3>
-<p className="text-gray-700 text-sm">Handle Excel spreadsheets, CSV files, and images of charts/graphs using AI vision to extract data from figures.</p>
-</div>
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">🌐</div>
-<h3 className="text-lg font-semibold mb-2">Competitive Intelligence</h3>
-<p className="text-gray-700 text-sm">Analyze competitor websites, ClinicalTrials.gov entries, press releases, and conference presentations for strategic insights.</p>
-</div>
-
-</div>
+> **Gosset.ai Integration:** Access Phase Transition Rates (PTRs) and trial benchmarks across 100K+ drug assets via live MCP connection. Provides evidence-based success predictions with hybrid live/simulated mode.
 
 ---
 
-## 🤖 NEW: Multi-Agent Collaboration
+## Key Features
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📊</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Clinical Trial Analysis</h3>
+<p className="text-gray-700 text-sm">Extract efficacy endpoints (ORR, PFS, OS), p-values, confidence intervals, and safety signals from Phase 1-3 trial reports. Vision AI reads charts and statistical tables automatically.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">🧬</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Pharmaceutical Intelligence</h3>
+<p className="text-gray-700 text-sm">Gosset.ai integration provides Phase Transition Rates, trial success predictions, and design benchmarks (sample sizes, endpoints, durations) across indications and modalities.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">🔍</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Competitive Intelligence</h3>
+<p className="text-gray-700 text-sm">Compare competitor trials, analyze ClinicalTrials.gov entries, extract insights from press releases and conference presentations. Multi-document synthesis across sources.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📄</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Multi-Format Processing</h3>
+<p className="text-gray-700 text-sm">Handles PDFs, Excel/CSV, images (PNG/JPG), and URLs. Upload up to 5 files (10MB max) simultaneously. All insights include automatic source citations.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📚</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Literature Search</h3>
+<p className="text-gray-700 text-sm">Direct PubMed access to 35M+ biomedical publications. Search by indication, drug, biomarker, or endpoint. Retrieve abstracts, citations, and study metadata in real-time.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📝</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Citation Tracking</h3>
+<p className="text-gray-700 text-sm">Every insight references its source document with inline citations `[Source: filename.pdf]`. Track document history with timestamps for audit trails and compliance.</p>
+</div>
+</div>
+</div>
+
+</div>
+
+---
+
+## 🤖 NEW: Sonny Multi-Agent Collaboration System
 
 **Now available:** Combine the Clinical Data Analyst with Patent Expert and Financial Analyst for comprehensive biotech deal analysis.
 
@@ -64,11 +102,11 @@ Perfect for:
 - **Competitive Intelligence** - Clinical benchmarking + patent landscape + market sizing
 - **Licensing Deals** - Technology assessment + IP strength + deal structuring
 
-The agents work together, asking each other questions and building on insights to provide strategic recommendations.
+Coordinated by Sonny, the agents work together, asking each other questions and building on insights to provide strategic recommendations.
 
 <div className="my-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded-r-lg">
-<p className="text-sm font-semibold text-blue-900 mb-2">✨ Try Multi-Agent Collaboration</p>
-<p className="text-sm text-blue-800 mb-3">Experience how specialized AI agents collaborate to analyze complex scenarios.</p>
+<p className="text-sm font-semibold text-blue-900 mb-2">✨ Try Sonny Multi-Agent Collaboration</p>
+<p className="text-sm text-blue-800 mb-3">Experience how Sonny orchestrates specialized AI agents to analyze complex scenarios.</p>
 <a href="/ai-projects/multi-agent-demo" className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">Launch Multi-Agent Demo →</a>
 </div>
 
@@ -76,86 +114,15 @@ The agents work together, asking each other questions and building on insights t
 
 ## Example Questions
 
-Here are specific questions the agent can answer when you upload relevant documents:
+**Efficacy Analysis:**
+- "What's the Phase 2→3 success rate for Alzheimer's Disease? Use Gosset.ai to estimate trial probability."
+- "Compare CAR-T therapy PTRs by indication. What are melanoma vs lymphoma success rates?"
 
-### Efficacy Analysis
-- "What's the ORR and statistical significance in this Phase 2 trial?"
-- "Compare progression-free survival across these three studies"
-- "Analyze biomarker response trends in this dataset"
-- "How do these results compare to standard of care?"
+**Safety & Competitive Intelligence:**
+- "Identify all Grade 3+ adverse events and compare to competitor X's Phase 2 safety profile."
+- "Benchmark our Phase 2 trial design: What sample sizes and endpoints are typical for MS trials?"
 
-### Safety & Tolerability
-- "Identify all Grade 3+ adverse events in this study"
-- "Compare safety profiles between the treatment and control arms"
-- "What dose-limiting toxicities were observed?"
-- "Are there any concerning safety signals in the adverse event data?"
-
-### Competitive Intelligence
-- "How do these trial results compare to competitor X's Phase 2 data?"
-- "What are the key takeaways from this conference presentation?"
-- "Summarize the competitive landscape for CAR-T therapies in this indication"
-- "Extract key metrics from this press release and benchmark against our pipeline"
-
----
-
-## How It Works
-
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-
-<div className="text-center">
-<div className="text-4xl mb-3">1️⃣</div>
-<h3 className="font-semibold mb-2">Upload Documents</h3>
-<p className="text-sm text-gray-700">Drag and drop PDFs, Excel files, CSVs, images, or paste URLs</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">2️⃣</div>
-<h3 className="font-semibold mb-2">Ask Questions</h3>
-<p className="text-sm text-gray-700">Use plain English—no technical syntax or special commands needed</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">3️⃣</div>
-<h3 className="font-semibold mb-2">Get Expert Analysis</h3>
-<p className="text-sm text-gray-700">Receive detailed insights with citations linking back to source documents</p>
-</div>
-
-</div>
-
----
-
-## Supported Formats
-
-**Documents**
-- PDF (clinical trial reports, publications, regulatory documents)
-- Excel/CSV (study data, endpoint tables, patient demographics)
-- Plain text files
-
-**Images**
-- PNG, JPG, WebP (charts, graphs, Kaplan-Meier curves, waterfall plots)
-- AI vision automatically extracts data from figures
-
-**Web Content**
-- Any URL (ClinicalTrials.gov, company press releases, conference abstracts)
-- Automatic content extraction and analysis
-
-**Limits**: Up to 5 files per query, 10MB max file size
-
----
-
-## Key Features
-
-**Citation Tracking** ✅
-Every insight references its source document, so you know exactly where each finding came from. Citations appear inline as `[Source: filename.pdf]`.
-
-**Multi-Document Analysis**
-Upload multiple trials and compare them side-by-side. The agent synthesizes information across documents to provide comprehensive analysis.
-
-**Vision-Enabled**
-Claude's vision API analyzes charts, graphs, and figures directly from images or PDFs—no manual data entry required.
-
-**Document History**
-All uploaded files are tracked with timestamps. Easily re-analyze previous documents or compare with new data.
+*Ask the agent for a comprehensive list of analysis types, query templates, and advanced capabilities.*
 
 ---
 
@@ -163,7 +130,7 @@ All uploaded files are tracked with timestamps. Easily re-analyze previous docum
 
 **Live Now** ✅
 - ✅ **Citation Tracking** - Every insight references its source document
-- ✅ **Multi-Agent Collaboration** - Combine Clinical + Patent + Financial analysts for comprehensive deal analysis ([Try it now](/ai-projects/multi-agent-demo))
+- ✅ **Sonny Multi-Agent Collaboration** - Combine Clinical + Patent + Financial analysts for comprehensive deal analysis ([Try it now](/ai-projects/multi-agent-demo))
 
 **Coming Soon**
 - 📊 Data Visualization Export - Auto-generate charts from analysis
@@ -186,13 +153,18 @@ All uploaded files are tracked with timestamps. Easily re-analyze previous docum
 **AI Model**
 - Claude Sonnet 4 (claude-sonnet-4-20250514)
 - Vision API for image and chart analysis
-- 4K token context window per query
+- 200K token context window
 
 **Document Processing**
 - PDF parsing via pdf-parse library
 - Excel/CSV processing with xlsx and papaparse
 - HTML extraction with cheerio for URLs
 - Base64 encoding for image analysis
+
+**API Integrations**
+- Gosset.ai MCP server (SSE transport)
+- ClinicalTrials.gov API v2
+- PubMed E-utilities (NCBI)
 
 **Architecture**
 - Next.js 14 with App Router
@@ -207,7 +179,3 @@ All uploaded files are tracked with timestamps. Easily re-analyze previous docum
 - All processing happens in real-time
 
 </details>
-
----
-
-**Ready to try it?** Click the "View Demo" button above to start analyzing clinical data with AI.

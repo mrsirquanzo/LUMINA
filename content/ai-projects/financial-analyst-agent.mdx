@@ -1,60 +1,96 @@
 ---
 slug: financial-analyst-agent
-title: "Financial Intelligence AI Agent"
-subtitle: "AI assistant for analyzing SEC filings, financial models, and biotech company valuations"
-description: "Upload 10-Ks, financial models, or earnings reports and get expert analysis of financial metrics, valuations, and investment thesis."
+title: "Financial Analyst"
+subtitle: "Analyze SEC filings, financial models, and biotech company valuations"
+description: "Analyze SEC filings, financial models, and company valuations. Review burn rate, runway, revenue projections, and investment risks."
 category: "AI Agent"
 publishedDate: "2025-01-15"
-tags: ["AI Agent", "Financial Analysis", "SEC Filings", "Valuation"]
+tags: ["10-K/10-Q", "Valuation", "Burn Rate"]
 featured: true
 thumbnail: "/images/financial-agent-thumbnail.jpg"
 projectType: "ai-agent"
 demoUrl: "/ai-projects/financial-analyst-demo"
 githubUrl: ""
-techStack: ["Next.js 14", "TypeScript", "Claude Sonnet 4", "Vision API", "PDF-parse", "XLSX"]
+techStack: ["Next.js 14", "TypeScript", "Gemini 2.0 Flash", "Vision API", "PDF-parse", "XLSX"]
 ---
 
 ## Overview
 
-The Financial Intelligence Agent is an AI-powered assistant that analyzes SEC filings, financial models, and biotech company financials. Upload 10-K/10-Q PDFs, Excel models, earnings presentations, or provide investor relations URLs to get instant analysis of burn rate, runway, valuations, and investment risks.
+AI-powered analyst for SEC filings, financial models, and biotech valuations. Upload 10-K/10-Q documents, Excel models, or investor relations URLs to get instant analysis of burn rate, runway, and investment risks. Built with **Gemini 2.0 Flash** featuring massive context windows (1M+ tokens) for processing entire filings.
 
-**Built with Claude Sonnet 4** featuring vision capabilities for analyzing charts and financial visualizations.
-
----
-
-## What It Can Do
-
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">📊</div>
-<h3 className="text-lg font-semibold mb-2">Analyze SEC Filings</h3>
-<p className="text-gray-700 text-sm">Upload 10-K/10-Q documents and extract key financial metrics, revenue trends, burn rate, and risk factors automatically.</p>
-</div>
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">💰</div>
-<h3 className="text-lg font-semibold mb-2">Company Valuations</h3>
-<p className="text-gray-700 text-sm">Perform DCF analysis, comparable company valuations, and precedent transaction analysis for biotech companies.</p>
-</div>
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">📈</div>
-<h3 className="text-lg font-semibold mb-2">Financial Model Review</h3>
-<p className="text-gray-700 text-sm">Upload Excel financial models and get analysis of assumptions, sensitivities, and recommendations for improvement.</p>
-</div>
-
-<div className="p-6 border border-gray-200 rounded-lg">
-<div className="text-3xl mb-3">🎯</div>
-<h3 className="text-lg font-semibold mb-2">Deal Analysis</h3>
-<p className="text-gray-700 text-sm">Evaluate M&A transactions, licensing deals, and partnerships with analysis of terms, structure, and strategic rationale.</p>
-</div>
-
-</div>
+**Data Sources:** 📊 SEC EDGAR API • 💹 Alpha Vantage • 💼 Financial Data APIs
 
 ---
 
-## 🤖 NEW: Multi-Agent Collaboration
+## Key Features
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📊</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">SEC Filing Analysis</h3>
+<p className="text-gray-700 text-sm">Extract financial metrics, revenue trends, burn rate, and risk factors from 10-K/10-Q documents automatically. Direct EDGAR API access for real-time filing retrieval.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">💰</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Valuation & DCF Models</h3>
+<p className="text-gray-700 text-sm">Perform DCF analysis, comparable company valuations, and precedent transaction analysis. Calculate NPV for licensing deals with customizable discount rates and assumptions.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📈</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Financial Model Review</h3>
+<p className="text-gray-700 text-sm">Upload Excel models and get analysis of assumptions, sensitivities, and improvement recommendations. Vision AI reads complex spreadsheets and validates formulas.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">🤝</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Deal & Transaction Analysis</h3>
+<p className="text-gray-700 text-sm">Evaluate M&A transactions, licensing deals, and partnerships. Analyze terms, multiples, strategic rationale, and financial impact compared to industry benchmarks.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">💹</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Market Data Integration</h3>
+<p className="text-gray-700 text-sm">Real-time stock quotes, historical price data, market cap, and trading volume via Alpha Vantage API. Track biotech sector trends and peer comparisons.</p>
+</div>
+</div>
+</div>
+
+<div className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+<div className="flex items-start gap-3">
+<div className="text-2xl flex-shrink-0">📝</div>
+<div>
+<h3 className="text-lg font-semibold mb-1">Citation Tracking</h3>
+<p className="text-gray-700 text-sm">Every financial metric references its source with page numbers `[Source: 10-K FY2024, Page 42]`. Transparent calculation methodology for all valuations.</p>
+</div>
+</div>
+</div>
+
+</div>
+
+---
+
+## 🤖 NEW: Sonny Multi-Agent Collaboration System
 
 **Now available:** Combine the Financial Analyst with Clinical Data Analyst and Patent Expert for comprehensive biotech investment analysis.
 
@@ -64,11 +100,11 @@ Perfect for:
 - **Licensing Deals** - Deal structure + technology assessment + IP strength
 - **Portfolio Management** - Financial health + clinical progress + patent landscape
 
-The agents work together, with the Financial Analyst integrating clinical and IP insights into valuation models and deal recommendations.
+Coordinated by Sonny, the agents work together, with the Financial Analyst integrating clinical and IP insights into valuation models and deal recommendations.
 
 <div className="my-6 p-4 bg-green-50 border-l-4 border-green-600 rounded-r-lg">
-<p className="text-sm font-semibold text-green-900 mb-2">✨ Try Multi-Agent Collaboration</p>
-<p className="text-sm text-green-800 mb-3">Experience how specialized AI agents collaborate for strategic financial analysis.</p>
+<p className="text-sm font-semibold text-green-900 mb-2">✨ Try Sonny Multi-Agent Collaboration</p>
+<p className="text-sm text-green-800 mb-3">Experience how Sonny orchestrates specialized AI agents for strategic financial analysis.</p>
 <a href="/ai-projects/multi-agent-demo" className="inline-block px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors">Launch Multi-Agent Demo →</a>
 </div>
 
@@ -76,93 +112,15 @@ The agents work together, with the Financial Analyst integrating clinical and IP
 
 ## Example Questions
 
-Here are specific questions the agent can answer when you upload relevant financial documents:
+**Financial Analysis:**
+- "What's the quarterly burn rate and estimated cash runway from this 10-Q?"
+- "Compare Q3 vs Q4 operating expenses—identify areas of spending increase and analyze efficiency."
 
-### Financial Statement Analysis
-- "What's the quarterly burn rate and estimated cash runway?"
-- "Extract and analyze all revenue line items from this 10-K"
-- "What are the key risk factors mentioned in the MD&A section?"
-- "Compare Q3 vs Q4 operating expenses—where did spending increase?"
+**Valuation & Deals:**
+- "Perform DCF valuation with 12% discount rate using management's revenue guidance assumptions."
+- "Analyze this $2B acquisition deal—is the multiple favorable compared to recent biotech M&A?"
 
-### Valuation & Investment Thesis
-- "Perform a DCF valuation with 12% discount rate and these revenue assumptions"
-- "What comparable companies should be used for this gene therapy developer?"
-- "Assess the investment thesis for this Phase 2 oncology company"
-- "What's a fair valuation for this pre-revenue platform company?"
-
-### Deal & Transaction Analysis
-- "Analyze the terms of this $2B acquisition—is it favorable for the buyer?"
-- "What's the NPV of this licensing deal with 8% royalty on $500M peak sales?"
-- "Compare this M&A multiple to recent biotech transactions"
-- "Assess the financial impact of this partnership announcement"
-
-### Risk Assessment
-- "What are the top 3 financial risks for this company?"
-- "Analyze the debt covenants and refinancing risks"
-- "How does the burn rate compare to peer companies?"
-- "What's the probability of needing additional financing in the next 18 months?"
-
----
-
-## How It Works
-
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-
-<div className="text-center">
-<div className="text-4xl mb-3">1️⃣</div>
-<h3 className="font-semibold mb-2">Upload Documents</h3>
-<p className="text-sm text-gray-700">Drag and drop 10-Ks, Excel models, earnings presentations, or paste SEC EDGAR URLs</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">2️⃣</div>
-<h3 className="font-semibold mb-2">Ask Questions</h3>
-<p className="text-sm text-gray-700">Ask about financials, valuations, deal terms, or risk factors in plain English</p>
-</div>
-
-<div className="text-center">
-<div className="text-4xl mb-3">3️⃣</div>
-<h3 className="font-semibold mb-2">Get Financial Analysis</h3>
-<p className="text-sm text-gray-700">Receive detailed insights with calculations, assumptions, and citations to source documents</p>
-</div>
-
-</div>
-
----
-
-## Supported Formats
-
-**Documents**
-- PDF (10-K, 10-Q, 8-K, S-1, earnings presentations)
-- Excel/CSV (financial models, pro forma financials, cap tables)
-- Plain text (press releases, investor updates)
-
-**Images**
-- Charts and graphs from investor presentations
-- Financial visualizations and dashboards
-
-**Web Content**
-- SEC EDGAR filing URLs
-- Company investor relations pages
-- Deal announcement press releases
-
-**Limits**: Up to 5 files per query, 10MB max file size
-
----
-
-## Key Features
-
-**Citation Tracking** ✅
-Every financial metric and insight references its source document and page number. Citations appear inline as `[Source: 10-K FY2024, Page 42]`.
-
-**Multi-Document Analysis**
-Upload multiple filings (e.g., 10-K + 10-Q) to analyze trends over time or compare financial performance across periods.
-
-**Vision-Enabled**
-Claude's vision API analyzes financial charts, revenue breakdowns, and waterfall charts directly from images or presentation slides.
-
-**Calculation Transparency**
-All valuation calculations show their work—assumptions, formulas, and sensitivity analyses are explained step-by-step.
+*Ask the agent for a comprehensive list of financial metrics, valuation methodologies, and analysis capabilities.*
 
 ---
 
@@ -170,7 +128,7 @@ All valuation calculations show their work—assumptions, formulas, and sensitiv
 
 **Live Now** ✅
 - ✅ **Citation Tracking** - Every insight references its source document
-- ✅ **Multi-Agent Collaboration** - Combine Financial + Clinical + Patent experts for comprehensive biotech investment analysis ([Try it now](/ai-projects/multi-agent-demo))
+- ✅ **Sonny Multi-Agent Collaboration** - Combine Financial + Clinical + Patent experts for comprehensive biotech investment analysis ([Try it now](/ai-projects/multi-agent-demo))
 
 **Coming Soon**
 - 📊 Financial Visualization Export - Auto-generate charts from financial data
@@ -192,15 +150,20 @@ All valuation calculations show their work—assumptions, formulas, and sensitiv
 <summary><strong>Click to expand technical implementation details</strong></summary>
 
 **AI Model**
-- Claude Sonnet 4 (claude-sonnet-4-20250514)
-- Vision API for chart and graph analysis
-- 4K token context window per query
+- Gemini 2.0 Flash (gemini-2.0-flash-exp)
+- Vision API for financial charts and graphs
+- 1M+ token context window - processes entire 10-K filings
 
 **Document Processing**
-- PDF parsing for SEC filings and presentations
-- Excel/CSV processing for financial models
-- HTML extraction for investor relations websites
+- PDF parsing via pdf-parse library
+- Excel/CSV processing with xlsx and papaparse
+- PowerPoint extraction for investor presentations
 - Base64 encoding for image analysis
+
+**API Integrations**
+- SEC EDGAR API (real-time filing retrieval)
+- Alpha Vantage (stock data and market metrics)
+- Financial Data APIs (valuation multiples, benchmarking)
 
 **Architecture**
 - Next.js 14 with App Router
@@ -211,11 +174,7 @@ All valuation calculations show their work—assumptions, formulas, and sensitiv
 **Security**
 - Session-based authentication
 - Environment variable configuration
-- No financial data storage (privacy-preserving)
+- No document storage (privacy-preserving)
 - All processing happens in real-time
 
 </details>
-
----
-
-**Ready to try it?** Click the "View Demo" button above to start analyzing financial intelligence with AI.

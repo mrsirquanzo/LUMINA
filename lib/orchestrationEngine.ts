@@ -1,4 +1,3 @@
-import Anthropic from '@anthropic-ai/sdk';
 import {
   ProcessedDocument,
   ExecutionMode,
@@ -9,89 +8,10 @@ import {
   ExecutionPlan,
 } from './multiAgentTypes';
 import { getDemoScenario, playDemoScenario } from './demoMultiAgentScenarios';
-
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
-
-// Agent system prompts with enhanced collaboration
-const AGENT_PROMPTS = {
-  clinical: `You are an expert biotech and pharmaceutical data analyst specializing in clinical trial analysis.
-
-Your expertise includes:
-- Clinical trial design and endpoints
-- Efficacy and safety analysis
-- Competitive clinical benchmarking
-- Regulatory pathways (FDA, EMA)
-- Phase progression probabilities
-
-When analyzing:
-1. Cite documents inline using [Source: filename] format
-2. Be specific with statistics, p-values, confidence intervals
-3. Compare to relevant competitors and benchmarks
-4. Assess clinical risk factors
-
-If you need information from other experts to complete your analysis, ask targeted questions:
-- For patent/IP questions: [ASK_PATENT: "specific question"]
-- For financial questions: [ASK_FINANCIAL: "specific question"]
-
-Examples of good questions:
-- [ASK_PATENT: "Are there blocking patents for the IL-15 costimulation mechanism used in this trial?"]
-- [ASK_FINANCIAL: "What is the estimated Phase 3 trial cost for a similar CAR-T program?"]
-
-Only ask questions when the information is critical to your analysis and not already available.`,
-
-  patent: `You are an expert patent analyst specializing in biotechnology intellectual property.
-
-Your expertise includes:
-- Patent claim analysis and prosecution
-- Freedom-to-operate (FTO) assessments
-- Competitive patent landscaping
-- Patent valuation methodologies
-- IP strategy and licensing
-
-When analyzing:
-1. Cite documents inline using [Source: filename] format
-2. Identify key patent numbers, claims, and expiration dates
-3. Assess FTO risks and blocking patents
-4. Evaluate patent strength and enforceability
-
-If you need information from other experts to complete your analysis, ask targeted questions:
-- For clinical questions: [ASK_CLINICAL: "specific question"]
-- For financial questions: [ASK_FINANCIAL: "specific question"]
-
-Examples of good questions:
-- [ASK_CLINICAL: "What is the specific mechanism of action for the therapy? I need to assess patent coverage."]
-- [ASK_FINANCIAL: "What valuation premium should we apply for 20-year exclusivity in this indication?"]
-
-Only ask questions when the information is critical to your analysis and not already available.`,
-
-  financial: `You are an expert biotech financial analyst specializing in valuations and deal structures.
-
-Your expertise includes:
-- DCF and comparable company valuations
-- Biotech financial modeling
-- Deal structuring (M&A, licensing)
-- Burn rate and runway analysis
-- Risk-adjusted NPV calculations
-
-When analyzing:
-1. Cite documents inline using [Source: filename] format
-2. Provide specific numbers: burn rate, runway, valuations
-3. Show valuation methodologies (DCF, comps, precedents)
-4. Recommend specific deal structures with rationale
-
-If you need information from other experts to complete your analysis, ask targeted questions:
-- For clinical questions: [ASK_CLINICAL: "specific question"]
-- For patent questions: [ASK_PATENT: "specific question"]
-
-Examples of good questions:
-- [ASK_CLINICAL: "What is the probability of Phase 3 success based on the Phase 2 efficacy data?"]
-- [ASK_PATENT: "What is the estimated standalone value of the patent portfolio?"]
-
-Only ask questions when the information is critical to your analysis and not already available.`,
-};
+import { createLLMClient } from './llm/clientFactory';
+import { AGENT_MODEL_CONFIG, SYNTHESIS_MODEL_CONFIG, getAgentName as getAgentDisplayName } from './llm/agentConfig';
+import { AGENT_PROMPTS } from './agentPrompts';
+import { getMCPClient } from './mcp';
 
 /**
  * Main orchestration function
@@ -102,7 +22,8 @@ export async function runOrchestration(
   mode: ExecutionMode,
   sendEvent: (event: SSEEvent) => void,
   isDemo?: boolean,
-  demoScenarioId?: string
+  demoScenarioId?: string,
+  customAgents?: AgentType[]
 ): Promise<void> {
   // If demo mode, play pre-recorded scenario
   if (isDemo && demoScenarioId) {
@@ -113,12 +34,34 @@ export async function runOrchestration(
     }
   }
 
+  // Validate API keys before starting (for live mode)
+  if (!isDemo) {
+    const missingKeys: string[] = [];
+
+    if (!process.env.ANTHROPIC_API_KEY) {
+      missingKeys.push('ANTHROPIC_API_KEY');
+    }
+    if (!process.env.GOOGLE_API_KEY) {
+      missingKeys.push('GOOGLE_API_KEY');
+    }
+    if (!process.env.PERPLEXITY_API_KEY) {
+      missingKeys.push('PERPLEXITY_API_KEY');
+    }
+
+    if (missingKeys.length > 0) {
+      throw new Error(
+        `Missing required API keys: ${missingKeys.join(', ')}. ` +
+        `Please configure these environment variables in your Vercel project settings.`
+      );
+    }
+  }
+
   // Initialize conversation state
   const state: ConversationState = {
     query,
     documents,
     mode,
-    plan: createInitialPlan(mode),
+    plan: createInitialPlan(mode, customAgents),
     messages: [],
     currentStep: 0,
     iteration: 0,
@@ -156,8 +99,18 @@ export async function runOrchestration(
 /**
  * Create initial execution plan
  */
-function createInitialPlan(mode: ExecutionMode): ExecutionPlan {
-  const agents: AgentType[] = ['clinical', 'patent', 'financial'];
+function createInitialPlan(mode: ExecutionMode, customAgents?: AgentType[]): ExecutionPlan {
+  const validAgents: AgentType[] = ['clinical', 'patent', 'financial', 'market_research', 'regulatory'];
+
+  // Validate custom agents if provided
+  if (customAgents) {
+    const invalidAgents = customAgents.filter(a => !validAgents.includes(a));
+    if (invalidAgents.length > 0) {
+      throw new Error(`Invalid agent types in customAgents: ${invalidAgents.join(', ')}. Valid types: ${validAgents.join(', ')}`);
+    }
+  }
+
+  const agents: AgentType[] = customAgents || validAgents;
 
   if (mode === 'fast') {
     // Parallel execution
@@ -212,11 +165,13 @@ interface ParsedQuestion {
 function parseAgentQuestions(response: string, fromAgent: AgentType): ParsedQuestion[] {
   const questions: ParsedQuestion[] = [];
 
-  // Pattern: [ASK_CLINICAL: "question"], [ASK_PATENT: "question"], [ASK_FINANCIAL: "question"]
+  // Pattern: [ASK_CLINICAL: "question"], [ASK_PATENT: "question"], etc.
   const patterns = [
     { pattern: /\[ASK_CLINICAL:\s*"([^"]+)"\]/g, target: 'clinical' as AgentType },
     { pattern: /\[ASK_PATENT:\s*"([^"]+)"\]/g, target: 'patent' as AgentType },
     { pattern: /\[ASK_FINANCIAL:\s*"([^"]+)"\]/g, target: 'financial' as AgentType },
+    { pattern: /\[ASK_MARKET:\s*"([^"]+)"\]/g, target: 'market_research' as AgentType },
+    { pattern: /\[ASK_REGULATORY:\s*"([^"]+)"\]/g, target: 'regulatory' as AgentType },
   ];
 
   for (const { pattern, target } of patterns) {
@@ -247,9 +202,17 @@ async function answerAgentQuestion(
   query: string,
   documents: ProcessedDocument[]
 ): Promise<string> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
+  // Validate agent types
+  if (!AGENT_MODEL_CONFIG[targetAgent]) {
+    throw new Error(`Invalid target agent type: "${targetAgent}". Valid types: clinical, patent, financial, regulatory, market_research`);
   }
+  if (!AGENT_PROMPTS[targetAgent]) {
+    throw new Error(`Missing prompt for agent: "${targetAgent}"`);
+  }
+
+  // Get MCP client and context
+  const mcpClient = getMCPClient();
+  const mcpContext = await mcpClient.getContextForAgent(targetAgent);
 
   const userMessage = `You are being consulted by the ${getAgentName(fromAgent)} with a specific question.
 
@@ -265,24 +228,21 @@ ${documents.length > 0 ? `\nDocuments available:\n${documents.map(d => `- ${d.fi
 
 Provide a focused, expert answer to their specific question. Be concise but thorough.`;
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 2048,
-    system: AGENT_PROMPTS[targetAgent],
-    messages: [
-      {
-        role: 'user',
-        content: userMessage,
-      },
-    ],
-  });
+  // Inject MCP context into system prompt if MCP is enabled
+  const systemPrompt = mcpClient.isEnabled()
+    ? AGENT_PROMPTS[targetAgent] + mcpContext
+    : AGENT_PROMPTS[targetAgent];
 
-  const message = response.content[0];
-  if (message.type !== 'text') {
-    throw new Error('Unexpected response type');
-  }
+  // Create client for the target agent
+  const client = createLLMClient(AGENT_MODEL_CONFIG[targetAgent]);
 
-  return message.text;
+  const response = await client.sendMessage(
+    systemPrompt,
+    userMessage,
+    { maxTokens: 2048 }
+  );
+
+  return response.content;
 }
 
 /**
@@ -302,7 +262,7 @@ async function executeFastMode(
       },
     });
 
-    const response = await callAgent(
+    const { response } = await callAgent(
       step.agent,
       state.query,
       state.documents,
@@ -368,7 +328,7 @@ async function executeThoroughMode(
       });
     }
 
-    const response = await callAgent(
+    const { response } = await callAgent(
       step.agent,
       state.query,
       state.documents,
@@ -472,7 +432,7 @@ async function executeThoroughMode(
 }
 
 /**
- * Call a specific agent
+ * Call a specific agent using its configured LLM
  */
 async function callAgent(
   agent: AgentType,
@@ -480,12 +440,20 @@ async function callAgent(
   documents: ProcessedDocument[],
   messages: AgentMessage[],
   additionalContext?: string
-): Promise<string> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
+): Promise<{ response: string; usage?: { inputTokens: number; outputTokens: number } }> {
+  // Validate agent type
+  if (!AGENT_MODEL_CONFIG[agent]) {
+    throw new Error(`Invalid agent type: "${agent}". Valid types: clinical, patent, financial, regulatory, market_research`);
+  }
+  if (!AGENT_PROMPTS[agent]) {
+    throw new Error(`Missing prompt for agent: "${agent}"`);
   }
 
-  // Build messages for Claude
+  // Get MCP client and context
+  const mcpClient = getMCPClient();
+  const mcpContext = await mcpClient.getContextForAgent(agent);
+
+  // Build user message with MCP context
   const userMessage = `${query}
 
 ${additionalContext || ''}
@@ -494,92 +462,70 @@ ${documents.length > 0 ? `\nDocuments provided:\n${documents.map(d => `- ${d.fil
 
 Please provide your expert analysis.`;
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
-    system: AGENT_PROMPTS[agent],
-    messages: [
-      {
-        role: 'user',
-        content: userMessage,
-      },
-    ],
-  });
+  // Inject MCP context into system prompt if MCP is enabled
+  const systemPrompt = mcpClient.isEnabled()
+    ? AGENT_PROMPTS[agent] + mcpContext
+    : AGENT_PROMPTS[agent];
 
-  const message = response.content[0];
-  if (message.type !== 'text') {
-    throw new Error('Unexpected response type');
-  }
+  // Create client for this agent using its configured model
+  const client = createLLMClient(AGENT_MODEL_CONFIG[agent]);
 
-  return message.text;
+  // Send message using the appropriate LLM
+  const llmResponse = await client.sendMessage(
+    systemPrompt,
+    userMessage,
+    { maxTokens: 4096 }
+  );
+
+  return {
+    response: llmResponse.content,
+    usage: llmResponse.usage,
+  };
 }
 
 /**
- * Synthesize results from all agents
+ * Synthesize results from all agents using Sonny
  */
 async function synthesizeResults(
   query: string,
   results: Array<{ agent: AgentType; response: string }>
 ): Promise<string> {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error('ANTHROPIC_API_KEY not configured');
-  }
-
   const combinedAnalysis = results
     .map(r => `\n# ${getAgentName(r.agent)} Analysis\n\n${r.response}`)
     .join('\n\n---\n');
 
-  const synthesisPrompt = `You are a senior biotech strategist synthesizing input from multiple expert analysts.
-
-Original Query: ${query}
+  const userMessage = `Original Query: ${query}
 
 Expert Analyses:
-${combinedAnalysis}
+${combinedAnalysis}`;
 
-Your task:
-1. Integrate findings across clinical, patent, and financial domains
+  // Use synthesis model configuration (Claude Sonnet 4) with Sonny identity
+  const client = createLLMClient(SYNTHESIS_MODEL_CONFIG);
+
+  // Override the synthesis prompt to identify as Sonny
+  const sonnyPrompt = `You are Sonny, a senior biotech strategist AI that orchestrates and synthesizes input from multiple expert analysts.
+
+Your role as Sonny is to:
+1. Integrate findings across all expert domains (clinical, patent, financial, regulatory, market research)
 2. Identify key insights and cross-domain connections
-3. Highlight agreements and contradictions
-4. Provide a clear, actionable recommendation
-5. Structure as an executive summary suitable for decision-makers
+3. Highlight agreements and contradictions between experts
+4. Provide clear, actionable recommendations
+5. Structure your synthesis as an executive summary suitable for decision-makers
 
-Format your synthesis as a comprehensive report with:
-- Executive Summary
-- Key Findings by Domain
-- Cross-Domain Insights
-- Risk Assessment
-- Final Recommendation
+Be specific, quantitative, and actionable in your recommendations.`;
 
-Be specific, quantitative, and actionable.`;
+  const response = await client.sendMessage(
+    sonnyPrompt,
+    userMessage,
+    { maxTokens: 4096 }
+  );
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
-    system: 'You are a senior biotech strategist and executive advisor.',
-    messages: [
-      {
-        role: 'user',
-        content: synthesisPrompt,
-      },
-    ],
-  });
-
-  const message = response.content[0];
-  if (message.type !== 'text') {
-    throw new Error('Unexpected response type');
-  }
-
-  return message.text;
+  return response.content;
 }
 
 /**
- * Get human-readable agent name
+ * Get human-readable agent name (re-export from agentConfig)
  */
 function getAgentName(agent: AgentType): string {
-  const names = {
-    clinical: 'Clinical Analyst',
-    patent: 'Patent Expert',
-    financial: 'Financial Analyst',
-  };
-  return names[agent];
+  return getAgentDisplayName(agent);
 }

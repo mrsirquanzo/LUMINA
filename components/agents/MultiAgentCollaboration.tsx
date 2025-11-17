@@ -1,8 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { ProcessedDocument, ExecutionMode, SSEEvent } from '@/lib/multiAgentTypes';
-import { FiPlay, FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiCopy, FiDownload } from 'react-icons/fi';
+import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { ProcessedDocument, ExecutionMode, SSEEvent, AgentType } from '@/lib/multiAgentTypes';
+import { FiZap, FiClock, FiDollarSign, FiCheck, FiAlertCircle, FiDownload, FiCopy, FiMessageSquare, FiSend, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { saveAnalysisToHistory } from '@/lib/analysisHistory';
+import ExportButton from '@/components/shared/ExportButton';
+import { ChatMessage } from '@/lib/pdfExport';
+import { CitedMarkdown } from '@/components/shared/CitedMarkdown';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -10,6 +16,7 @@ interface MultiAgentCollaborationProps {
   mode: ExecutionMode;
   isDemo?: boolean;
   demoScenarioId?: string;
+  customAgents?: AgentType[];
   onComplete?: (synthesis: string, cost: number) => void;
 }
 
@@ -18,6 +25,11 @@ interface AgentActivity {
   status: 'thinking' | 'speaking' | 'complete';
   currentThought?: string;
   response?: string;
+  chatMessages?: Array<{ role: 'user' | 'assistant'; content: string }>;
+  isProcessingChat?: boolean;
+  isExpanded?: boolean;
+  chatInput?: string;
+  lastUpdate?: number;
 }
 
 interface AgentQuestion {
@@ -33,6 +45,7 @@ export default function MultiAgentCollaboration({
   mode,
   isDemo = false,
   demoScenarioId,
+  customAgents,
   onComplete,
 }: MultiAgentCollaborationProps) {
   const [isRunning, setIsRunning] = useState(false);
@@ -45,40 +58,60 @@ export default function MultiAgentCollaboration({
   const [error, setError] = useState<string>('');
   const [estimatedCost, setEstimatedCost] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [lastActivityTime, setLastActivityTime] = useState<number>(Date.now());
+  const [timeoutWarning, setTimeoutWarning] = useState<boolean>(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const timeoutCheckInterval = useRef<NodeJS.Timeout | null>(null);
 
-  // Export functions
-  const handleCopyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(synthesis);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const handleDownloadMarkdown = () => {
-    const blob = new Blob([synthesis], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `multi-agent-analysis-${new Date().toISOString().split('T')[0]}.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  // Auto-scroll to bottom when new content arrives
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  // Monitor for timeout/freezing
   useEffect(() => {
-    scrollToBottom();
-  }, [agentActivities, agentQuestions, synthesisStep, synthesis]);
+    if (isRunning && !synthesis) {
+      timeoutCheckInterval.current = setInterval(() => {
+        const timeSinceLastUpdate = Date.now() - lastActivityTime;
+
+        // Show warning after 45 seconds of no activity
+        if (timeSinceLastUpdate > 45000 && !timeoutWarning) {
+          setTimeoutWarning(true);
+        }
+
+        // Auto-cancel after 3 minutes of no activity
+        if (timeSinceLastUpdate > 180000) {
+          setError('Analysis timed out. The request took too long to complete. Please try again.');
+          setIsRunning(false);
+          if (timeoutCheckInterval.current) {
+            clearInterval(timeoutCheckInterval.current);
+          }
+        }
+      }, 5000); // Check every 5 seconds
+
+      return () => {
+        if (timeoutCheckInterval.current) {
+          clearInterval(timeoutCheckInterval.current);
+        }
+      };
+    }
+  }, [isRunning, synthesis, lastActivityTime, timeoutWarning]);
+
+  // Save analysis to history when complete
+  useEffect(() => {
+    if (synthesis && synthesis.length > 0) {
+      const agents = Array.from(agentActivities.keys());
+      saveAnalysisToHistory({
+        query,
+        mode,
+        agents,
+        synthesis,
+        cost,
+        isDemo: isDemo || false,
+      });
+    }
+  }, [synthesis, agentActivities, query, mode, cost, isDemo]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-start analysis when component mounts
+  useEffect(() => {
+    startOrchestration();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const startOrchestration = async () => {
     setIsRunning(true);
@@ -89,20 +122,29 @@ export default function MultiAgentCollaboration({
     setSynthesisStep('');
     setSynthesis('');
     setCost(0);
+    setLastActivityTime(Date.now());
+    setTimeoutWarning(false);
+
+    const requestPayload = {
+      query,
+      documents,
+      mode,
+      isDemo,
+      demoScenarioId,
+      customAgents,
+    };
+
+    console.log('[MultiAgentCollaboration] Sending request to orchestrator:', requestPayload);
 
     try {
       // Create SSE connection
       const response = await fetch('/api/agents/orchestrator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query,
-          documents,
-          mode,
-          isDemo,
-          demoScenarioId,
-        }),
+        body: JSON.stringify(requestPayload),
       });
+
+      console.log('[MultiAgentCollaboration] Response status:', response.status, response.statusText);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -134,6 +176,8 @@ export default function MultiAgentCollaboration({
             try {
               const event: SSEEvent = JSON.parse(eventData);
               handleSSEEvent(event);
+              setLastActivityTime(Date.now());
+              setTimeoutWarning(false);
             } catch (e) {
               console.error('Failed to parse SSE event:', e);
             }
@@ -146,6 +190,9 @@ export default function MultiAgentCollaboration({
       setError(err.message || 'An error occurred during orchestration');
     } finally {
       setIsRunning(false);
+      if (timeoutCheckInterval.current) {
+        clearInterval(timeoutCheckInterval.current);
+      }
     }
   };
 
@@ -158,40 +205,43 @@ export default function MultiAgentCollaboration({
 
       case 'agent_start':
         setAgentActivities(prev => {
-          const next = new Map(prev);
-          next.set(event.data.agent, {
+          const updated = new Map(prev);
+          updated.set(event.data.agent, {
             agent: event.data.agent,
             status: 'thinking',
-            currentThought: event.data.task,
+            currentThought: event.data.task || 'Starting analysis...',
+            chatMessages: [],
+            isExpanded: true,
+            chatInput: '',
+            lastUpdate: Date.now(),
           });
-          return next;
+          return updated;
         });
         break;
 
       case 'agent_thinking':
         setAgentActivities(prev => {
-          const next = new Map(prev);
-          const existing = next.get(event.data.agent) || {
-            agent: event.data.agent,
-            status: 'thinking' as const,
-          };
-          next.set(event.data.agent, {
-            ...existing,
-            currentThought: event.data.progress,
-          });
-          return next;
+          const updated = new Map(prev);
+          const activity = updated.get(event.data.agent);
+          if (activity) {
+            activity.currentThought = event.data.thought;
+            activity.lastUpdate = Date.now();
+          }
+          return updated;
         });
         break;
 
       case 'agent_response':
         setAgentActivities(prev => {
-          const next = new Map(prev);
-          next.set(event.data.agent, {
-            agent: event.data.agent,
-            status: 'complete',
-            response: event.data.response,
-          });
-          return next;
+          const updated = new Map(prev);
+          const activity = updated.get(event.data.agent);
+          if (activity) {
+            activity.status = 'complete';
+            activity.response = event.data.response;
+            activity.currentThought = undefined;
+            activity.lastUpdate = Date.now();
+          }
+          return updated;
         });
         break;
 
@@ -230,18 +280,197 @@ export default function MultiAgentCollaboration({
     }
   };
 
+  const toggleAgentExpansion = (agentName: string) => {
+    setAgentActivities(prev => {
+      const updated = new Map(prev);
+      const activity = updated.get(agentName);
+      if (activity) {
+        activity.isExpanded = !activity.isExpanded;
+      }
+      return updated;
+    });
+  };
+
+  const handleAgentChatInput = (agentName: string, value: string) => {
+    setAgentActivities(prev => {
+      const updated = new Map(prev);
+      const activity = updated.get(agentName);
+      if (activity) {
+        activity.chatInput = value;
+      }
+      return updated;
+    });
+  };
+
+  const sendChatToAgent = async (agentName: string) => {
+    const activity = agentActivities.get(agentName);
+    if (!activity || !activity.chatInput?.trim() || activity.isProcessingChat) return;
+
+    const userMessage = activity.chatInput.trim();
+
+    // Add user message to chat
+    setAgentActivities(prev => {
+      const updated = new Map(prev);
+      const act = updated.get(agentName);
+      if (act) {
+        act.chatMessages = [...(act.chatMessages || []), { role: 'user', content: userMessage }];
+        act.chatInput = '';
+        act.isProcessingChat = true;
+      }
+      return updated;
+    });
+
+    try {
+      // Determine which API endpoint to call based on agent name
+      let endpoint = '/api/agents/data-analyst';
+      if (agentName.includes('Patent')) endpoint = '/api/agents/patent-expert';
+      if (agentName.includes('Financial')) endpoint = '/api/agents/financial-analyst';
+      if (agentName.includes('Regulatory')) endpoint = '/api/agents/regulatory-expert';
+      if (agentName.includes('Market')) endpoint = '/api/agents/market-research';
+
+      // Build context from original response
+      const context = activity.response || '';
+      const fullQuery = `Context from earlier analysis:\n${context.substring(0, 500)}...\n\nFollow-up question: ${userMessage}`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: fullQuery }],
+          documents: [],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from agent');
+      }
+
+      const data = await response.json();
+
+      // Add assistant response to chat
+      setAgentActivities(prev => {
+        const updated = new Map(prev);
+        const act = updated.get(agentName);
+        if (act) {
+          act.chatMessages = [...(act.chatMessages || []), { role: 'assistant', content: data.message }];
+          act.isProcessingChat = false;
+        }
+        return updated;
+      });
+
+    } catch (err: any) {
+      console.error('Chat error:', err);
+      setAgentActivities(prev => {
+        const updated = new Map(prev);
+        const act = updated.get(agentName);
+        if (act) {
+          act.chatMessages = [...(act.chatMessages || []), {
+            role: 'assistant',
+            content: 'Sorry, I encountered an error processing your question. Please try again.'
+          }];
+          act.isProcessingChat = false;
+        }
+        return updated;
+      });
+    }
+  };
+
   const getAgentIcon = (agent: string) => {
-    if (agent.includes('Clinical')) return '🔬';
+    if (!agent) return '🤖';
+    if (agent.includes('Clinical') || agent.includes('Data')) return '🔬';
     if (agent.includes('Patent')) return '⚖️';
     if (agent.includes('Financial')) return '💰';
+    if (agent.includes('Regulatory')) return '📋';
+    if (agent.includes('Market')) return '📊';
     return '🤖';
   };
 
   const getAgentColor = (agent: string) => {
-    if (agent.includes('Clinical')) return 'text-blue-600 bg-blue-50 border-blue-200';
-    if (agent.includes('Patent')) return 'text-purple-600 bg-purple-50 border-purple-200';
-    if (agent.includes('Financial')) return 'text-green-600 bg-green-50 border-green-200';
-    return 'text-gray-600 bg-gray-50 border-gray-200';
+    if (!agent) return 'from-gray-50 to-gray-100 border-gray-300';
+    if (agent.includes('Clinical') || agent.includes('Data')) return 'from-blue-50 to-blue-100 border-blue-300';
+    if (agent.includes('Patent')) return 'from-purple-50 to-purple-100 border-purple-300';
+    if (agent.includes('Financial')) return 'from-green-50 to-green-100 border-green-300';
+    if (agent.includes('Regulatory')) return 'from-orange-50 to-orange-100 border-orange-300';
+    if (agent.includes('Market')) return 'from-teal-50 to-teal-100 border-teal-300';
+    return 'from-gray-50 to-gray-100 border-gray-300';
+  };
+
+  const getAgentTextColor = (agent: string) => {
+    if (!agent) return 'text-gray-900';
+    if (agent.includes('Clinical') || agent.includes('Data')) return 'text-blue-900';
+    if (agent.includes('Patent')) return 'text-purple-900';
+    if (agent.includes('Financial')) return 'text-green-900';
+    if (agent.includes('Regulatory')) return 'text-orange-900';
+    if (agent.includes('Market')) return 'text-teal-900';
+    return 'text-gray-900';
+  };
+
+  const getProgressPercentage = () => {
+    if (synthesis) return 100;
+    if (synthesisStep) return 90;
+    if (agentActivities.size === 0) return 0;
+
+    // Default is 5 agents: Clinical, Patent, Financial, Market, Regulatory
+    const totalAgents = customAgents?.length || 5;
+    const completedAgents = Array.from(agentActivities.values()).filter(a => a.status === 'complete').length;
+    const progressPercent = (completedAgents / totalAgents) * 80;
+
+    // Cap at 80% during agent phase (synthesis adds final 10-20%)
+    return Math.min(progressPercent, 80);
+  };
+
+  const generateExportContent = () => {
+    const timestamp = new Date().toLocaleString();
+    const agentList = Array.from(agentActivities.keys()).join(', ');
+
+    return `# Sonny Multi-Agent Analysis Report
+
+**Generated:** ${timestamp}
+**Query:** ${query}
+**Mode:** ${mode}
+**Agents:** ${agentList}
+${cost > 0 ? `**Cost:** $${cost.toFixed(2)}` : ''}
+
+---
+
+${synthesis}
+
+---
+
+*Generated by Sonny Multi-Agent AI Analysis System*
+`;
+  };
+
+  const handleCopyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(generateExportContent());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  const handleDownloadMarkdown = () => {
+    const content = generateExportContent();
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `analysis-${Date.now()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const getTimeSinceLastUpdate = (activity: AgentActivity) => {
+    if (!activity.lastUpdate) return '';
+    const seconds = Math.floor((Date.now() - activity.lastUpdate) / 1000);
+    if (seconds < 5) return 'just now';
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}m ago`;
   };
 
   return (
@@ -250,9 +479,9 @@ export default function MultiAgentCollaboration({
       <div className="mb-6 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Multi-Agent Analysis</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🤖 Sonny Multi-Agent Analysis</h3>
             <p className="text-sm text-gray-600">
-              Query: <span className="font-medium">{query}</span>
+              <span className="font-medium">{query}</span>
             </p>
             {documents.length > 0 && (
               <p className="text-sm text-gray-600 mt-1">
@@ -264,7 +493,7 @@ export default function MultiAgentCollaboration({
             <div className="text-right">
               <div className="flex items-center gap-1 text-sm text-gray-600">
                 {mode === 'fast' ? <FiZap className="w-4 h-4" /> : <FiClock className="w-4 h-4" />}
-                <span className="font-medium capitalize">{mode} Mode</span>
+                <span className="font-medium uppercase">{mode} Mode</span>
               </div>
               {estimatedCost && (
                 <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
@@ -273,17 +502,64 @@ export default function MultiAgentCollaboration({
                 </div>
               )}
             </div>
-            {!isRunning && !synthesis && (
-              <button
-                onClick={startOrchestration}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2"
-              >
-                <FiPlay className="w-4 h-4" />
-                Start Analysis
-              </button>
-            )}
           </div>
         </div>
+
+        {/* Progress Bar */}
+        {isRunning && !synthesis && (
+          <div className="mt-4">
+            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+              <span className="font-medium">Analysis Progress</span>
+              <span className="font-semibold">{Math.min(Math.round(getProgressPercentage()), 100)}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+              <div
+                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${Math.min(getProgressPercentage(), 100)}%`, maxWidth: '100%' }}
+              />
+            </div>
+
+            {/* Timeout Warning */}
+            {timeoutWarning && (
+              <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md flex items-start gap-2">
+                <FiClock className="w-4 h-4 text-yellow-600 mt-0.5" />
+                <div className="text-sm text-yellow-800">
+                  <p className="font-medium">Analysis is taking longer than expected...</p>
+                  <p className="text-xs mt-1">Still processing. This may take a few more minutes.</p>
+                </div>
+              </div>
+            )}
+
+            {/* Agent Status Indicators */}
+            <div className="flex items-center gap-4 text-sm flex-wrap">
+              {Array.from(agentActivities.values()).map((activity) => (
+                <div key={activity.agent} className="flex items-center gap-2">
+                  {activity.status === 'complete' ? (
+                    <FiCheck className="w-4 h-4 text-green-600" />
+                  ) : activity.status === 'thinking' ? (
+                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <div className="w-4 h-4 border-2 border-gray-300 rounded-full" />
+                  )}
+                  <span className={activity.status === 'complete' ? 'text-gray-900 font-medium' : 'text-gray-600'}>
+                    {activity.agent.split(' ')[0]}
+                  </span>
+                  {activity.lastUpdate && activity.status === 'thinking' && (
+                    <span className="text-xs text-gray-400">
+                      {getTimeSinceLastUpdate(activity)}
+                    </span>
+                  )}
+                </div>
+              ))}
+              {synthesisStep && (
+                <div className="flex items-center gap-2 ml-4">
+                  <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                  <span className="text-gray-900 font-medium">Synthesis</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Execution Plan */}
         {plan && (
@@ -311,37 +587,127 @@ export default function MultiAgentCollaboration({
           {Array.from(agentActivities.values()).map((activity) => (
             <div
               key={activity.agent}
-              className={`p-6 bg-white rounded-lg border shadow-sm ${getAgentColor(activity.agent)}`}
+              className={`bg-gradient-to-br ${getAgentColor(activity.agent)} rounded-lg border-2 shadow-sm transition-all duration-300`}
             >
-              <div className="flex items-start gap-3">
-                <div className="text-3xl">{getAgentIcon(activity.agent)}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-semibold text-gray-900">{activity.agent}</h4>
-                    {activity.status === 'thinking' && (
-                      <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">
-                        Thinking...
-                      </span>
-                    )}
-                    {activity.status === 'complete' && (
-                      <FiCheck className="w-5 h-5 text-green-600" />
-                    )}
+              {/* Agent Header */}
+              <div className="p-5">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-3 flex-1">
+                    <div className="text-3xl">{getAgentIcon(activity.agent)}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className={`font-bold text-lg ${getAgentTextColor(activity.agent)}`}>
+                          {activity.agent}
+                        </h4>
+                        {activity.status === 'thinking' && (
+                          <span className="text-xs px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded-full font-medium animate-pulse">
+                            Analyzing...
+                          </span>
+                        )}
+                        {activity.status === 'complete' && (
+                          <FiCheck className="w-5 h-5 text-green-600" />
+                        )}
+                      </div>
+
+                      {activity.currentThought && activity.status === 'thinking' && (
+                        <p className="text-sm text-gray-700 italic mb-3 bg-white/50 p-2 rounded">
+                          💭 {activity.currentThought}
+                        </p>
+                      )}
+
+                      {activity.response && (
+                        <div className={`mt-3 ${activity.isExpanded ? '' : 'max-h-32 overflow-hidden relative'}`}>
+                          <div className="bg-white/80 p-5 rounded-lg shadow-sm border border-gray-100">
+                            <CitedMarkdown
+                              content={activity.response}
+                              isDemo={isDemo}
+                            />
+                          </div>
+                          {!activity.isExpanded && (
+                            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {activity.currentThought && activity.status === 'thinking' && (
-                    <p className="text-sm text-gray-600 italic mb-2">
-                      {activity.currentThought}
-                    </p>
-                  )}
-
                   {activity.response && (
-                    <div className="mt-3 prose prose-sm max-w-none">
-                      <div className="text-sm text-gray-800 whitespace-pre-wrap">
-                        {activity.response}
-                      </div>
-                    </div>
+                    <button
+                      onClick={() => toggleAgentExpansion(activity.agent)}
+                      className="ml-3 p-2 hover:bg-white/50 rounded-md transition-colors"
+                    >
+                      {activity.isExpanded ? (
+                        <FiChevronUp className="w-5 h-5" />
+                      ) : (
+                        <FiChevronDown className="w-5 h-5" />
+                      )}
+                    </button>
                   )}
                 </div>
+
+                {/* Interactive Chat Section */}
+                {activity.status === 'complete' && activity.isExpanded && (
+                  <div className="mt-4 pt-4 border-t border-gray-300">
+                    <div className="flex items-center gap-2 mb-3">
+                      <FiMessageSquare className="w-4 h-4 text-gray-600" />
+                      <h5 className="text-sm font-semibold text-gray-700">Ask Follow-up Questions</h5>
+                    </div>
+
+                    {/* Chat Messages */}
+                    {activity.chatMessages && activity.chatMessages.length > 0 && (
+                      <div className="mb-3 space-y-2 max-h-64 overflow-y-auto">
+                        {activity.chatMessages.map((msg, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-3 rounded-lg shadow-sm ${
+                              msg.role === 'user'
+                                ? 'bg-white border-l-4 border-blue-500 ml-8'
+                                : 'bg-gray-50 border border-gray-200 mr-8'
+                            }`}
+                          >
+                            <div className={`text-xs mb-1 ${msg.role === 'user' ? 'text-blue-600 font-medium' : 'text-gray-600 font-medium'}`}>
+                              {msg.role === 'user' ? 'You' : activity.agent}
+                            </div>
+                            <div className="agent-output text-gray-800">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {msg.content}
+                              </ReactMarkdown>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Chat Input */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={activity.chatInput || ''}
+                        onChange={(e) => handleAgentChatInput(activity.agent, e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            sendChatToAgent(activity.agent);
+                          }
+                        }}
+                        placeholder="Ask a follow-up question..."
+                        disabled={activity.isProcessingChat}
+                        className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                      />
+                      <button
+                        onClick={() => sendChatToAgent(activity.agent)}
+                        disabled={activity.isProcessingChat || !activity.chatInput?.trim()}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      >
+                        {activity.isProcessingChat ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <FiSend className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -354,7 +720,7 @@ export default function MultiAgentCollaboration({
           {agentQuestions.map((question, idx) => (
             <div
               key={idx}
-              className="p-4 bg-amber-50 border border-amber-200 rounded-lg"
+              className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-300 rounded-lg shadow-sm"
             >
               <div className="flex items-center gap-2 text-sm font-medium text-amber-900 mb-1">
                 <span>{getAgentIcon(question.from)} {question.from}</span>
@@ -369,11 +735,11 @@ export default function MultiAgentCollaboration({
 
       {/* Synthesis Progress */}
       {synthesisStep && (
-        <div className="mb-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg">
+        <div className="mb-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300 rounded-lg shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
             <div>
-              <p className="text-sm font-medium text-indigo-900">Synthesis in Progress</p>
+              <p className="text-sm font-semibold text-indigo-900">🤖 Sonny Synthesizing Results</p>
               <p className="text-sm text-indigo-700 mt-1">{synthesisStep}</p>
             </div>
           </div>
@@ -382,36 +748,56 @@ export default function MultiAgentCollaboration({
 
       {/* Final Synthesis */}
       {synthesis && (
-        <div className="mb-6 p-6 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-md">
+        <div className="mb-6 p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg shadow-md">
           <div className="flex items-center gap-2 mb-4">
             <FiCheck className="w-6 h-6 text-green-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Analysis Complete</h3>
-            <div className="ml-auto flex items-center gap-2">
-              {cost > 0 && (
-                <span className="text-sm text-gray-600 mr-2">
-                  Cost: ${cost.toFixed(2)}
-                </span>
-              )}
-              <button
-                onClick={handleCopyToClipboard}
-                className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2 transition-colors"
-              >
-                <FiCopy className="w-4 h-4" />
-                {copied ? 'Copied!' : 'Copy'}
-              </button>
-              <button
-                onClick={handleDownloadMarkdown}
-                className="px-3 py-1.5 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2 transition-colors"
-              >
-                <FiDownload className="w-4 h-4" />
-                Download
-              </button>
-            </div>
+            <h3 className="text-xl font-bold text-gray-900">Analysis Complete</h3>
+            {cost > 0 && (
+              <span className="ml-auto text-sm font-medium text-gray-600 bg-white px-3 py-1 rounded-full">
+                Cost: ${cost.toFixed(4)}
+              </span>
+            )}
           </div>
-          <div className="prose prose-sm max-w-none">
-            <div className="text-sm text-gray-800 whitespace-pre-wrap">
-              {synthesis}
-            </div>
+
+          {/* Export Actions */}
+          <div className="mb-4 flex items-center gap-2 flex-wrap">
+            <ExportButton
+              messages={[
+                { role: 'user', content: query, timestamp: new Date() },
+                { role: 'assistant', content: synthesis, timestamp: new Date(), cost }
+              ] as ChatMessage[]}
+              agentName="Sonny Multi-Agent Analysis"
+            />
+            <button
+              onClick={handleCopyToClipboard}
+              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
+            >
+              {copied ? (
+                <>
+                  <FiCheck className="w-4 h-4 text-green-600" />
+                  <span className="text-green-600">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <FiCopy className="w-4 h-4" />
+                  <span>Copy to Clipboard</span>
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleDownloadMarkdown}
+              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
+            >
+              <FiDownload className="w-4 h-4" />
+              <span>Download Markdown</span>
+            </button>
+          </div>
+
+          <div className="bg-white p-8 rounded-xl shadow-md border border-gray-200">
+            <CitedMarkdown
+              content={synthesis}
+              isDemo={isDemo}
+            />
           </div>
         </div>
       )}

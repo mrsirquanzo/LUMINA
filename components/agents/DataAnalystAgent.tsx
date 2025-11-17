@@ -1,17 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import LoginModal from '@/components/shared/LoginModal';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
-import URLInput from '@/components/shared/URLInput';
-import DocumentHistory, { DocumentRecord } from '@/components/shared/DocumentHistory';
+import ExportButton from '@/components/shared/ExportButton';
 import { DATA_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  attachments?: string[]; // Document names attached to this message
 }
 
 type AgentMode = 'demo' | 'live';
@@ -26,8 +26,9 @@ interface ProcessedDocument {
 }
 
 const SAMPLE_QUERIES = [
-  "Analyze the efficacy endpoints from this Phase 2 trial data. What are the key biomarker trends?",
-  "Compare the top 3 CAR-T therapies by response rates, durability, and safety profile.",
+  "What's the Phase 2→3 success rate for Alzheimer's Disease trials? Use Gosset.ai to estimate our trial's probability.",
+  "Compare CAR-T therapy success rates by indication. What are the PTRs for melanoma vs lymphoma?",
+  "Benchmark our Phase 2 trial design: What sample size and endpoints are typical for MS trials?",
   "What are the approval trends for oncology drugs in 2023-2024? Which indications are hottest?",
 ];
 
@@ -40,35 +41,39 @@ export default function DataAnalystAgent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [demoIndex, setDemoIndex] = useState(0);
+  const [showUploadPanel, setShowUploadPanel] = useState(false);
 
   // Document management
   const [currentDocuments, setCurrentDocuments] = useState<ProcessedDocument[]>([]);
-  const [documentHistory, setDocumentHistory] = useState<DocumentRecord[]>([]);
-  const [showDocuments, setShowDocuments] = useState(false);
-
-  // Check auth status on mount
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
 
   const checkAuthStatus = async () => {
     try {
       const response = await fetch('/api/auth/check');
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
+      return data.authenticated;
     } catch (err) {
       console.error('Auth check failed:', err);
+      setIsAuthenticated(false);
+      return false;
     }
   };
 
-  const switchToLiveMode = () => {
-    if (!isAuthenticated) {
-      setShowLoginModal(true);
-    } else {
+  const switchToLiveMode = async () => {
+    const authenticated = await checkAuthStatus();
+    if (authenticated) {
       setMode('live');
       setMessages([]);
+    } else {
+      // Show login modal
+      setShowLoginModal(true);
     }
   };
+
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
@@ -87,45 +92,11 @@ export default function DataAnalystAgent() {
       }));
 
     setCurrentDocuments(prev => [...prev, ...newDocs]);
-
-    // Add to history
-    const newHistoryItems: DocumentRecord[] = files.map(f => ({
-      id: `doc-${Date.now()}-${Math.random()}`,
-      name: f.name,
-      type: 'file' as const,
-      timestamp: new Date(),
-      fileType: f.type,
-    }));
-    setDocumentHistory(prev => [...prev, ...newHistoryItems]);
-  };
-
-  const handleURLProcessed = (url: string, content: string) => {
-    const newDoc: ProcessedDocument = {
-      fileName: url,
-      fileType: 'text/html',
-      text: content,
-      isImage: false,
-    };
-
-    setCurrentDocuments(prev => [...prev, newDoc]);
-
-    // Add to history
-    const newHistoryItem: DocumentRecord = {
-      id: `url-${Date.now()}`,
-      name: url,
-      type: 'url',
-      timestamp: new Date(),
-      url,
-    };
-    setDocumentHistory(prev => [...prev, newHistoryItem]);
+    setShowUploadPanel(false); // Close upload panel after files are added
   };
 
   const removeDocument = (index: number) => {
     setCurrentDocuments(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const clearDocuments = () => {
-    setCurrentDocuments([]);
   };
 
   const sendDemoMessage = () => {
@@ -139,12 +110,10 @@ export default function DataAnalystAgent() {
       role: 'user',
       content: demo.query,
       timestamp: new Date(),
-      attachments: currentDocuments.map(d => d.fileName),
     };
 
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
-    clearDocuments(); // Clear after sending
 
     // Simulate typing delay
     setTimeout(() => {
@@ -168,7 +137,6 @@ export default function DataAnalystAgent() {
       role: 'user',
       content: textToSend,
       timestamp: new Date(),
-      attachments: currentDocuments.map(d => d.fileName),
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -210,7 +178,6 @@ export default function DataAnalystAgent() {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-      clearDocuments(); // Clear after successful send
 
     } catch (err: any) {
       console.error('Error sending message:', err);
@@ -227,12 +194,6 @@ export default function DataAnalystAgent() {
         sendLiveMessage();
       }
     }
-  };
-
-  const clearConversation = () => {
-    setMessages([]);
-    setError(null);
-    clearDocuments();
   };
 
   const handleLogout = async () => {
@@ -253,10 +214,19 @@ export default function DataAnalystAgent() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Clinical Data Analyst Agent
         </h1>
-        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-6">
+        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-4">
           AI-powered analyst for biotech clinical trials, competitive intelligence, and market analysis.
           Upload documents, analyze websites, or chat directly.
         </p>
+
+        {/* Gosset.ai Integration Badge */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-full">
+            <span className="text-xl">🧬</span>
+            <span className="text-sm font-semibold text-blue-900">Powered by Gosset.ai</span>
+            <span className="text-xs text-blue-600">Pharmaceutical Intelligence</span>
+          </div>
+        </div>
 
         {/* Mode Switcher */}
         <div className="flex items-center justify-center gap-4">
@@ -302,284 +272,297 @@ export default function DataAnalystAgent() {
           </div>
         )}
 
-        {mode === 'live' && (
+        {mode === 'live' && isAuthenticated && (
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg max-w-2xl mx-auto">
             <p className="text-sm text-green-800">
               <strong>Live Mode:</strong> Real-time AI with full document analysis (PDF, Excel, images, URLs).
             </p>
           </div>
         )}
+
+        {mode === 'live' && !isAuthenticated && (
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg max-w-2xl mx-auto">
+            <p className="text-sm text-yellow-800 mb-2">
+              <strong>⚠️ Authentication Required</strong>
+            </p>
+            <p className="text-sm text-yellow-700 mb-3">
+              You need to log in to use Live Mode. Please authenticate to access real AI capabilities with full document analysis.
+            </p>
+            <a
+              href="/api/auth/login"
+              className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Log In to Continue
+            </a>
+          </div>
+        )}
       </div>
 
-      {/* Document Upload Section */}
-      {mode === 'live' && (
-        <div className="mb-6">
-          <button
-            onClick={() => setShowDocuments(!showDocuments)}
-            className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-center">
-              <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <span className="font-medium text-gray-900">
-                Upload Documents or Analyze URLs
-                {currentDocuments.length > 0 && (
-                  <span className="ml-2 text-sm text-blue-600">
-                    ({currentDocuments.length} attached)
-                  </span>
-                )}
-              </span>
-            </div>
-            <svg
-              className={`w-5 h-5 text-gray-400 transition-transform ${showDocuments ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+      {/* Messages */}
+      {messages.length > 0 && (
+        <div className="mb-6 space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg shadow-sm ${
+                message.role === 'user'
+                  ? 'bg-white border-l-4 border-blue-500 ml-auto max-w-3xl'
+                  : 'bg-gray-50 border border-gray-200'
+              }`}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {showDocuments && (
-            <div className="mt-4 p-6 bg-white border border-gray-200 rounded-lg space-y-6">
-              {/* File Upload */}
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Upload Files</h3>
-                <FileUpload onFilesProcessed={handleFilesProcessed} />
-              </div>
-
-              {/* URL Input */}
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3">Analyze Website</h3>
-                <URLInput onURLProcessed={handleURLProcessed} />
-              </div>
-
-              {/* Current Attachments */}
-              {currentDocuments.length > 0 && (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-semibold text-gray-700">
-                      Current Attachments ({currentDocuments.length})
-                    </h3>
-                    <button
-                      onClick={clearDocuments}
-                      className="text-xs text-red-600 hover:text-red-700"
-                    >
-                      Clear All
-                    </button>
+              <div className="flex items-start gap-3">
+                <div className="text-2xl flex-shrink-0">
+                  {message.role === 'user' ? '👤' : '📊'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className={`text-sm mb-1 ${message.role === 'user' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
+                    {message.role === 'user' ? 'You' : 'Clinical Data Analyst'}
                   </div>
-                  <div className="space-y-2">
-                    {currentDocuments.map((doc, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg"
-                      >
-                        <div className="flex items-center flex-1 min-w-0">
-                          <svg className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          <span className="text-sm font-medium text-blue-900 truncate">
-                            {doc.fileName}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => removeDocument(index)}
-                          className="ml-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    ))}
+                  <div className="agent-output text-gray-800">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
-              )}
-
-              {/* Document History */}
-              {documentHistory.length > 0 && (
-                <DocumentHistory
-                  documents={documentHistory}
-                  onSelectDocument={() => {}}
-                  onClearHistory={() => setDocumentHistory([])}
-                />
-              )}
+              </div>
             </div>
-          )}
+          ))}
         </div>
       )}
 
-      {/* Main Chat Interface */}
-      <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-        {/* Messages Area */}
-        <div className="h-[500px] overflow-y-auto p-6 space-y-4">
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <div className="text-6xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Ready to analyze data
-              </h3>
-              <p className="text-gray-600 mb-6 max-w-md">
-                {mode === 'demo'
-                  ? 'Click a sample query below to see a demo conversation'
-                  : 'Upload documents, add URLs, or ask questions about clinical trials and market trends'
-                }
-              </p>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            <span className="text-gray-600">Analyzing clinical data...</span>
+          </div>
+        </div>
+      )}
 
-              {/* Sample Queries */}
-              <div className="space-y-2 w-full max-w-xl">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  {mode === 'demo' ? 'Try these demo examples:' : 'Try these examples:'}
-                </p>
-                {SAMPLE_QUERIES.map((query, index) => (
-                  <button
-                    key={index}
-                    onClick={() => mode === 'demo' ? sendDemoMessage() : sendLiveMessage(query)}
-                    className="block w-full text-left px-4 py-3 text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
-                  >
-                    {query}
-                  </button>
-                ))}
+      {/* Error State */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
+      {/* Sample Queries - Live Mode Only when No Messages */}
+      {mode === 'live' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <h3 className="font-semibold text-gray-900 mb-3">Sample Queries</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {SAMPLE_QUERIES.map((query, index) => (
+              <button
+                key={index}
+                onClick={() => sendLiveMessage(query)}
+                className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+              >
+                {query}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Demo Mode Instructions */}
+      {mode === 'demo' && messages.length === 0 && (
+        <div className="mb-6 p-6 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="font-semibold text-gray-900 mb-2">Try Demo Mode</h3>
+          <p className="text-gray-700 mb-4">
+            Click the button below to see a pre-recorded clinical data analysis. No API costs.
+          </p>
+          <button
+            onClick={sendDemoMessage}
+            disabled={isLoading}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            Run Demo Analysis
+          </button>
+        </div>
+      )}
+
+      {/* Input Area (Live Mode) with Integrated Upload */}
+      {mode === 'live' && (
+        <div className="sticky bottom-0 bg-white border border-gray-200 rounded-lg shadow-lg">
+          {/* Upload Panel */}
+          {showUploadPanel && (
+            <div className="border-b border-gray-200 p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-sm font-semibold text-gray-900">Upload Files</h4>
+                <button
+                  onClick={() => setShowUploadPanel(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
+              <FileUpload onFilesProcessed={handleFilesProcessed} />
             </div>
-          ) : (
-            <>
-              {messages.map((message, index) => (
+          )}
+
+          {/* File Chips */}
+          {currentDocuments.length > 0 && (
+            <div className="flex flex-wrap gap-2 p-3 border-b border-gray-200 bg-gray-50">
+              {currentDocuments.map((doc, index) => (
                 <div
                   key={index}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
                 >
-                  <div
-                    className={`max-w-[80%] rounded-lg px-4 py-3 ${
-                      message.role === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-900'
-                    }`}
+                  <span className="truncate max-w-[150px]">{doc.fileName}</span>
+                  <button
+                    onClick={() => removeDocument(index)}
+                    className="hover:text-blue-900"
                   >
-                    {message.attachments && message.attachments.length > 0 && (
-                      <div className="mb-2 pb-2 border-b border-blue-500">
-                        <div className="text-xs opacity-75 mb-1">Attachments:</div>
-                        {message.attachments.map((att, i) => (
-                          <div key={i} className="text-xs opacity-90 truncate">
-                            📎 {att}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <div className="whitespace-pre-wrap">{message.content}</div>
-                    <div
-                      className={`text-xs mt-2 ${
-                        message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
-                      }`}
-                    >
-                      {message.timestamp.toLocaleTimeString()}
-                    </div>
-                  </div>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
               ))}
-
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-100 text-gray-900 rounded-lg px-4 py-3">
-                    <div className="flex items-center space-x-2">
-                      <div className="animate-pulse">
-                        {mode === 'demo' ? 'Loading demo response' : 'Analyzing'}
-                      </div>
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
+            </div>
           )}
-        </div>
 
-        {/* Error Display */}
-        {error && (
-          <div className="px-6 py-3 bg-red-50 border-t border-red-200">
-            <p className="text-sm text-red-700">⚠️ {error}</p>
-          </div>
-        )}
+          {/* Input Row */}
+          <div className="p-4">
+            <div className="flex items-end gap-2">
+              {/* Upload Button */}
+              <button
+                onClick={() => setShowUploadPanel(!showUploadPanel)}
+                className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors relative"
+                title="Upload files"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                {currentDocuments.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center">
+                    {currentDocuments.length}
+                  </span>
+                )}
+              </button>
 
-        {/* Input Area - Only for Live Mode */}
-        {mode === 'live' && (
-          <div className="border-t border-gray-200 p-4 bg-gray-50">
-            <div className="flex items-end space-x-2">
+              {/* Textarea */}
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ask about clinical data, trials, or market analysis..."
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                rows={2}
-                disabled={isLoading}
+                rows={3}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
+
+              {/* Send Button */}
               <button
                 onClick={() => sendLiveMessage()}
                 disabled={isLoading || !input.trim()}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+                className="flex-shrink-0 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Send message"
               >
-                Send
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
               </button>
             </div>
 
+            {/* Export Button */}
             {messages.length > 0 && (
-              <button
-                onClick={clearConversation}
-                className="mt-3 text-sm text-gray-600 hover:text-gray-900"
-              >
-                Clear conversation
-              </button>
+              <div className="mt-3">
+                <ExportButton messages={messages} agentName="Clinical Data Analyst" />
+              </div>
             )}
           </div>
-        )}
-
-        {/* Demo Mode Controls */}
-        {mode === 'demo' && messages.length > 0 && (
-          <div className="border-t border-gray-200 p-4 bg-gray-50 text-center">
-            <button
-              onClick={() => sendDemoMessage()}
-              disabled={isLoading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium mr-3"
-            >
-              Next Demo
-            </button>
-            <button
-              onClick={clearConversation}
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Clear conversation
-            </button>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Behind the Scenes */}
-      <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">
-          🔧 Behind the Scenes
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+          Behind the Scenes
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Mode</p>
-            <p>{mode === 'demo' ? 'Demo (Mock Responses)' : 'Live (Claude Sonnet 4)'}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Mode Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">⚙️</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Mode</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Demo' : 'Live AI'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Demo Mode' : 'Live Mode'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Pre-recorded clinical analyses demonstrating capabilities without API costs'
+                    : 'Real-time clinical data analysis powered by Claude Sonnet 4 with Gosset.ai pharmaceutical intelligence'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Capabilities</p>
-            <p>PDF, Excel, CSV, Images, URLs, Clinical data analysis</p>
+
+          {/* Specialization Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">🔬</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Specialization</h4>
+              <p className="text-sm text-gray-600">Clinical Analysis</p>
+            </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Clinical Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  Trial design, efficacy endpoints, safety analysis, biomarker interpretation, competitive benchmarking, and phase transition rate predictions
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Vision Support</p>
-            <p>Yes - Charts, graphs, study figures</p>
+
+          {/* Capabilities Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">🧬</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Capabilities</h4>
+              <p className="text-sm text-gray-600">Gosset.ai</p>
+            </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">Pharmaceutical Intelligence</p>
+                <p className="text-xs text-gray-700">
+                  Phase transition rates across 100K+ drug assets, trial success predictions, design benchmarks, PDF/Excel analysis, vision API for charts
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="font-medium text-gray-900 mb-1">Cost</p>
-            <p>{mode === 'demo' ? 'Free (No API calls)' : '$0.01-0.10 per query'}</p>
+
+          {/* Cost Card */}
+          <div className="group relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="text-center">
+              <div className="text-2xl mb-2">💰</div>
+              <h4 className="font-semibold text-gray-900 mb-1">Cost</h4>
+              <p className="text-sm text-gray-600">
+                {mode === 'demo' ? 'Free' : '$0.01-0.10'}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="h-full flex flex-col justify-center">
+                <p className="text-sm text-gray-800 font-medium mb-2">
+                  {mode === 'demo' ? 'Zero Cost' : 'Pay-per-Query'}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {mode === 'demo'
+                    ? 'Demo mode is completely free with pre-recorded clinical analyses'
+                    : 'Live mode charges $0.01-0.10 per query based on complexity and document size'
+                  }
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

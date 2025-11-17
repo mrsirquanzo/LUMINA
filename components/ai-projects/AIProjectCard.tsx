@@ -17,6 +17,14 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
         </svg>
       );
     }
+    if (projectType === 'multi-agent') {
+      // Multi-agent icon (connected nodes)
+      return (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      );
+    }
     // Design icon
     return (
       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,11 +37,15 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
     if (projectType === 'ai-agent') {
       return 'bg-accent-100 text-accent-700';
     }
+    if (projectType === 'multi-agent') {
+      return 'bg-orange-100 text-orange-700';
+    }
     return 'bg-purple-100 text-purple-700';
   };
 
   const getCategoryLabel = () => {
     if (projectType === 'ai-agent') return 'AI Agent';
+    if (projectType === 'multi-agent') return 'Multi-Agent';
     return 'Design';
   };
 
@@ -68,7 +80,7 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
         {/* Tags */}
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {tags.slice(0, 4).map((tag) => (
+            {tags.map((tag) => (
               <span
                 key={tag}
                 className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
@@ -76,11 +88,6 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
                 {tag}
               </span>
             ))}
-            {tags.length > 4 && (
-              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                +{tags.length - 4} more
-              </span>
-            )}
           </div>
         )}
 
@@ -88,7 +95,7 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
         {techStack && techStack.length > 0 && (
           <div className="border-t border-gray-200 pt-4 mt-4">
             <div className="flex flex-wrap gap-2">
-              {techStack.slice(0, 5).map((tech) => (
+              {techStack.map((tech) => (
                 <span
                   key={tech}
                   className="text-xs font-mono text-gray-500 bg-gray-50 px-2 py-1 rounded"
@@ -96,11 +103,6 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
                   {tech}
                 </span>
               ))}
-              {techStack.length > 5 && (
-                <span className="text-xs text-gray-400">
-                  +{techStack.length - 5} more
-                </span>
-              )}
             </div>
           </div>
         )}
