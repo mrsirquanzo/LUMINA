@@ -18,9 +18,6 @@ export default function AIProjectsPage() {
       {/* Hero Section */}
       <Section className="bg-gradient-to-br from-emerald-50 via-white to-green-50">
         <div className="max-w-4xl mx-auto text-center">
-          <span className="text-sm font-semibold text-primary-600 uppercase tracking-wide mb-3 block">
-            Building & Designing
-          </span>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Build
           </h1>

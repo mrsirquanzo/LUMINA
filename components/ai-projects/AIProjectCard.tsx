@@ -80,7 +80,7 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
         {/* Tags */}
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {tags.slice(0, 4).map((tag) => (
+            {tags.map((tag) => (
               <span
                 key={tag}
                 className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
@@ -88,11 +88,6 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
                 {tag}
               </span>
             ))}
-            {tags.length > 4 && (
-              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                +{tags.length - 4} more
-              </span>
-            )}
           </div>
         )}
 
@@ -100,7 +95,7 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
         {techStack && techStack.length > 0 && (
           <div className="border-t border-gray-200 pt-4 mt-4">
             <div className="flex flex-wrap gap-2">
-              {techStack.slice(0, 5).map((tech) => (
+              {techStack.map((tech) => (
                 <span
                   key={tech}
                   className="text-xs font-mono text-gray-500 bg-gray-50 px-2 py-1 rounded"
@@ -108,11 +103,6 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
                   {tech}
                 </span>
               ))}
-              {techStack.length > 5 && (
-                <span className="text-xs text-gray-400">
-                  +{techStack.length - 5} more
-                </span>
-              )}
             </div>
           </div>
         )}
