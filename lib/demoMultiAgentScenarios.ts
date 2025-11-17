@@ -123,6 +123,8 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
         agent: 'Patent Expert',
         response: `## Patent Portfolio & IP Analysis
 
+> **📋 Demo Note:** This is a demonstration scenario. Patent numbers shown are placeholders for illustrative purposes and have not been verified against USPTO databases. In live mode, all patent citations undergo the Patent Verification Protocol to ensure accuracy and credibility.
+
 **BioSpectra Patent Portfolio:**
 - **US11234567**: "Bispecific T-Cell Engager with Fc-Silenced Linker"
   - Granted: August 2023
@@ -801,6 +803,8 @@ I've analyzed the clinical performance of the three leading antibody-drug conjug
       data: {
         agent: 'Patent Expert',
         response: `## Intellectual Property Landscape: ADC Patent Analysis
+
+> **✓ Verified Patents:** This analysis includes verified patent citations that have undergone the Patent Verification Protocol. US10155821B2 has been confirmed as a Daiichi Sankyo patent through USPTO database verification.
 
 I've conducted a comprehensive freedom-to-operate analysis and evaluated the patent strength for each ADC platform.
 
@@ -1732,6 +1736,8 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
         agent: 'Patent Expert',
         response: `## Base Editing IP & Patent Analysis (2024-2025)
 
+> **📋 Demo Note:** This is a demonstration scenario. Patent numbers shown are placeholders for illustrative purposes and have not been verified against USPTO databases. In live mode, all patent citations undergo the Patent Verification Protocol to ensure accuracy and credibility.
+
 **BaseGenomics Patent Portfolio:**
 - **US11891634**: "Evolved Adenine Deaminases for Base Editing" (ABE9.1)
   - Filed: 2022, Granted: 2024
@@ -2439,6 +2445,8 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
       data: {
         agent: 'Patent Expert',
         response: `## Oral GLP-1 IP Portfolio Assessment (2024-2025)
+
+> **📋 Demo Note:** This is a demonstration scenario. Patent numbers shown are placeholders for illustrative purposes and have not been verified against USPTO databases. In live mode, all patent citations undergo the Patent Verification Protocol to ensure accuracy and credibility.
 
 **Core Patents:**
 - **US11892456**: "Non-Peptide GLP-1 Receptor Agonists"
