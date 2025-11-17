@@ -13,8 +13,8 @@ export default function Hero() {
         {/* Subheading */}
         <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
           I combine scientific expertise with strategic business intelligence to identify
-          promising biotech opportunities, and I develop AI-powered tools that make
-          sophisticated due diligence accessible and scalable.
+          promising biotech opportunities— and develop AI-powered tools that make
+          due diligence faster, more accessible, and scalable.
         </p>
 
         {/* CTA Buttons */}
