@@ -493,7 +493,7 @@ ${synthesis}
             <div className="text-right">
               <div className="flex items-center gap-1 text-sm text-gray-600">
                 {mode === 'fast' ? <FiZap className="w-4 h-4" /> : <FiClock className="w-4 h-4" />}
-                <span className="font-medium capitalize">{mode} Mode</span>
+                <span className="font-medium uppercase">{mode} Mode</span>
               </div>
               {estimatedCost && (
                 <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">

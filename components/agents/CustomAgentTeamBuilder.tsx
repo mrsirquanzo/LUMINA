@@ -177,7 +177,7 @@ export default function CustomAgentTeamBuilder({
             }`}
           >
             <FiZap className="w-4 h-4" />
-            Fast
+            FAST
           </button>
           <button
             onClick={() => setMode('thorough')}
@@ -188,7 +188,7 @@ export default function CustomAgentTeamBuilder({
             }`}
           >
             <FiClock className="w-4 h-4" />
-            Thorough
+            THOROUGH
           </button>
         </div>
 
@@ -202,64 +202,6 @@ export default function CustomAgentTeamBuilder({
               <FiUsers className="w-4 h-4" />
               Use This Team ({selectedAgents.length} agents)
             </button>
-            {!showSaveForm && (
-              <button
-                onClick={() => setShowSaveForm(true)}
-                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors flex items-center gap-2"
-              >
-                <FiSave className="w-4 h-4" />
-                Save as Preset
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Save Form */}
-        {showSaveForm && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <h4 className="font-medium text-gray-900 mb-3">Save Custom Team</h4>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Team Name</label>
-                <input
-                  type="text"
-                  value={teamName}
-                  onChange={e => setTeamName(e.target.value)}
-                  placeholder="e.g., IP-Heavy Analysis"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description (optional)
-                </label>
-                <input
-                  type="text"
-                  value={teamDescription}
-                  onChange={e => setTeamDescription(e.target.value)}
-                  placeholder="e.g., Focus on patent and regulatory analysis"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleSaveTeam}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  Save Team
-                </button>
-                <button
-                  onClick={() => {
-                    setShowSaveForm(false);
-                    setTeamName('');
-                    setTeamDescription('');
-                  }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
           </div>
         )}
       </div>

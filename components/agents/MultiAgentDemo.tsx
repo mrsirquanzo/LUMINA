@@ -318,7 +318,7 @@ export default function MultiAgentDemo() {
               </div>
             </div>
             <p className="text-sm text-gray-600 mt-4 max-w-2xl mx-auto">
-              <strong>How it works:</strong> Agents analyze in parallel (Fast Mode) or sequentially with collaboration (Thorough Mode).
+              <strong>How it works:</strong> Agents analyze in parallel (FAST MODE) or sequentially with collaboration (THOROUGH MODE).
               Powered by Claude Sonnet 4, Gemini 2.0 Flash, and Perplexity Sonar Pro.
             </p>
           </div>
@@ -369,7 +369,7 @@ export default function MultiAgentDemo() {
                   }`}
                 >
                   <FiZap className="w-4 h-4" />
-                  Fast
+                  FAST
                 </button>
                 <button
                   onClick={() => setMode('thorough')}
@@ -380,7 +380,7 @@ export default function MultiAgentDemo() {
                   }`}
                 >
                   <FiClock className="w-4 h-4" />
-                  Thorough
+                  THOROUGH
                 </button>
               </div>
             </div>

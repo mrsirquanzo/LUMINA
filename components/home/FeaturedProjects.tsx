@@ -92,48 +92,52 @@ export default function FeaturedProjects() {
         </div>
 
         {/* Multi-Agent Featured Hero Card */}
-        <Link
-          href={multiAgentProject.demoUrl}
-          className="block mb-12 group"
-        >
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-accent-50 via-primary-50 to-purple-50 border-2 border-transparent hover:border-accent-300 transition-all shadow-lg hover:shadow-2xl">
-            <div className="p-8 md:p-12">
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex-1">
-                  <div className="inline-flex items-center gap-2 bg-accent-600 text-white text-sm font-semibold px-4 py-2 rounded-full mb-4">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
-                      <path d="M3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z" />
-                    </svg>
-                    Featured Project
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-accent-700 transition-colors">
-                    {multiAgentProject.title}
-                  </h3>
-                  <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed max-w-3xl">
-                    {multiAgentProject.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {multiAgentProject.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="text-sm bg-white/80 text-gray-700 px-3 py-1 rounded-full border border-gray-200"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="inline-flex items-center gap-2 text-accent-600 font-semibold text-lg group-hover:gap-3 transition-all">
-                    Try Interactive Demo
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </div>
-                </div>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-accent-50 via-primary-50 to-purple-50 border-2 border-gray-200 transition-all shadow-lg mb-12">
+          <div className="p-8 md:p-12">
+            <div className="flex flex-col mb-6">
+              <div className="inline-flex items-center gap-2 bg-accent-600 text-white text-sm font-semibold px-4 py-2 rounded-full mb-4 self-start">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
+                  <path d="M3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z" />
+                </svg>
+                Featured Project
+              </div>
+              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                {multiAgentProject.title}
+              </h3>
+              <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
+                {multiAgentProject.description}
+              </p>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {multiAgentProject.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="text-sm bg-white/80 text-gray-700 px-3 py-1 rounded-full border border-gray-200"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-3">
+                <Link
+                  href="/ai-projects/multi-agent-system"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-accent-600 text-white font-semibold rounded-lg hover:bg-accent-700 transition-colors"
+                >
+                  Learn More
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+                <Link
+                  href={multiAgentProject.demoUrl}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent-600 font-semibold rounded-lg border-2 border-accent-600 hover:bg-accent-50 transition-colors"
+                >
+                  Try Demo
+                </Link>
               </div>
             </div>
           </div>
-        </Link>
+        </div>
 
         {/* Individual Agent Cards */}
         <div className="mb-8">

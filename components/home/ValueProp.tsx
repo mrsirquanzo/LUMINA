@@ -67,8 +67,7 @@ export default function ValueProp() {
           {values.map((value, index) => (
             <div
               key={index}
-              className="group card text-center hover:shadow-xl transition-all transform hover:-translate-y-0.5"
-              title={value.hover}
+              className="card text-center"
             >
               <div className="flex justify-center text-primary-600 mb-4">
                 {value.icon}
@@ -76,12 +75,9 @@ export default function ValueProp() {
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {value.title}
               </h3>
-              <p className="text-gray-700 leading-relaxed mb-3">
+              <p className="text-gray-700 leading-relaxed">
                 {value.description}
               </p>
-              <div className="opacity-0 group-hover:opacity-100 mt-3 text-xs text-gray-500 transition-opacity">
-                {value.hover}
-              </div>
             </div>
           ))}
         </div>
