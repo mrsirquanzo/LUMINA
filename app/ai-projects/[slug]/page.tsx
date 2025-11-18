@@ -55,6 +55,24 @@ export default async function AIProjectPage({ params }: Props) {
   const categoryLabel = projectType === 'ai-agent' ? 'AI Agent' : 'Design';
   const categoryColor = projectType === 'ai-agent' ? 'text-accent-600' : 'text-purple-600';
 
+  // Reorder tech stack to put LLM models first
+  const reorderedTechStack = techStack ? [
+    ...techStack.filter(tech =>
+      tech.includes('Claude') ||
+      tech.includes('Gemini') ||
+      tech.includes('Perplexity') ||
+      tech.includes('GPT') ||
+      tech.includes('Sonar')
+    ),
+    ...techStack.filter(tech =>
+      !tech.includes('Claude') &&
+      !tech.includes('Gemini') &&
+      !tech.includes('Perplexity') &&
+      !tech.includes('GPT') &&
+      !tech.includes('Sonar')
+    )
+  ] : [];
+
   // Dynamically import the MDX content
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const MDXContent = require(`@/content/ai-projects/${params.slug}.mdx`).default;
@@ -111,11 +129,11 @@ export default async function AIProjectPage({ params }: Props) {
 
           {/* Tech stack */}
           <div className="border-t border-gray-200 pt-6 mb-6">
-            {techStack && techStack.length > 0 && (
+            {reorderedTechStack && reorderedTechStack.length > 0 && (
               <div>
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">Tech Stack:</h3>
                 <div className="flex flex-wrap gap-2">
-                  {techStack.map((tech) => (
+                  {reorderedTechStack.map((tech) => (
                     <span
                       key={tech}
                       className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded font-mono"
