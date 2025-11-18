@@ -835,17 +835,15 @@ export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
 
 ---
 
-## ⚠️ IMPORTANT: DEMONSTRATION MODE
+## 📋 DEMO NOTE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
-
-This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+This demonstration analyzes **REAL FDA-approved drugs** (Enhertu, Trodelvy, Padcev) using:
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ✅ **REAL patents**: Verified USPTO/Google Patents data
+- ✅ **REAL market data**: Official company reports and analyst data
 
-**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** for in-depth analysis with current data.
 
 ---
 
@@ -962,17 +960,15 @@ I've analyzed the clinical performance of the three leading antibody-drug conjug
 
 ---
 
-## ⚠️ IMPORTANT: DEMONSTRATION MODE
+## 📋 DEMO NOTE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
-
-This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+This demonstration analyzes **REAL FDA-approved drugs** (Enhertu, Trodelvy, Padcev) using:
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ✅ **REAL patents**: Verified USPTO/Google Patents data
+- ✅ **REAL market data**: Official company reports and analyst data
 
-**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** for in-depth analysis with current data.
 
 ---
 
@@ -1145,17 +1141,15 @@ Enhertu's IP estate creates durable competitive moat worth **$10-15B in platform
 
 ---
 
-## ⚠️ IMPORTANT: DEMONSTRATION MODE
+## 📋 DEMO NOTE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
-
-This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+This demonstration analyzes **REAL FDA-approved drugs** (Enhertu, Trodelvy, Padcev) using:
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ✅ **REAL patents**: Verified USPTO/Google Patents data
+- ✅ **REAL market data**: Official company reports and analyst data
 
-**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** for in-depth analysis with current data.
 
 ---
 
@@ -1344,15 +1338,13 @@ Breakdown:
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
-
-This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+This demonstration analyzes **REAL FDA-approved drugs** (Enhertu, Trodelvy, Padcev) using:
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ✅ **REAL patents**: Verified USPTO/Google Patents data
+- ✅ **REAL market data**: Official company reports and analyst data
 
-**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** for in-depth analysis with current data.
 
 ---
 
@@ -1549,17 +1541,15 @@ I've analyzed physician surveys, payer policies, KOL insights, and market access
 
 ---
 
-## ⚠️ IMPORTANT: DEMONSTRATION MODE
+## 📋 DEMO NOTE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
-
-This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+This demonstration analyzes **REAL FDA-approved drugs** (Enhertu, Trodelvy, Padcev) using:
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ✅ **REAL patents**: Verified USPTO/Google Patents data
+- ✅ **REAL market data**: Official company reports and analyst data
 
-**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** for in-depth analysis with current data.
 
 ---
 
@@ -1904,13 +1894,13 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"BaseGenomics" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: Published CRISPR research and approved gene therapies
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: BaseGenomics and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
@@ -1995,13 +1985,13 @@ This demo shows realistic analysis methodology using:
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"BaseGenomics" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: Published CRISPR research and approved gene therapies
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: BaseGenomics and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
@@ -2095,13 +2085,13 @@ This demo shows realistic analysis methodology using:
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"BaseGenomics" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: Published CRISPR research and approved gene therapies
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: BaseGenomics and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
@@ -2218,13 +2208,13 @@ This demo shows realistic analysis methodology using:
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"BaseGenomics" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: Published CRISPR research and approved gene therapies
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: BaseGenomics and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
@@ -2662,13 +2652,13 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"ObesityRx" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: FDA-approved GLP-1 drugs (Wegovy, Zepbound, Rybelsus)
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: ObesityRx and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
@@ -2769,13 +2759,13 @@ This demo shows realistic analysis methodology using:
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"ObesityRx" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: FDA-approved GLP-1 drugs (Wegovy, Zepbound, Rybelsus)
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: ObesityRx and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
@@ -2896,13 +2886,13 @@ This demo shows realistic analysis methodology using:
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"ObesityRx" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: FDA-approved GLP-1 drugs (Wegovy, Zepbound, Rybelsus)
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: ObesityRx and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
@@ -3042,13 +3032,13 @@ This demo shows realistic analysis methodology using:
 
 ## ⚠️ IMPORTANT: DEMONSTRATION MODE
 
-**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+**"ObesityRx" is a FICTIONAL COMPANY created for demonstration purposes.**
 
 This demo shows realistic analysis methodology using:
-- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL comparator data**: FDA-approved GLP-1 drugs (Wegovy, Zepbound, Rybelsus)
 - ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
 - ✅ **REAL publications**: PubMed papers with PMIDs
-- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+- ❌ **FICTIONAL company**: ObesityRx and its data are hypothetical
 
 **[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
