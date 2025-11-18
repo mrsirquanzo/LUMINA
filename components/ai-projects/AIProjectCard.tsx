@@ -8,6 +8,15 @@ interface AIProjectCardProps {
 export default function AIProjectCard({ project }: AIProjectCardProps) {
   const { slug, title, subtitle, description, tags, projectType, techStack } = project.frontmatter;
 
+  // Filter tech stack to show only LLM models on cards
+  const llmModels = techStack?.filter(tech =>
+    tech.includes('Claude') ||
+    tech.includes('Gemini') ||
+    tech.includes('Perplexity') ||
+    tech.includes('GPT') ||
+    tech.includes('Sonar')
+  ) || [];
+
   // Icon based on project type
   const getIcon = () => {
     if (projectType === 'ai-agent') {
@@ -91,11 +100,11 @@ export default function AIProjectCard({ project }: AIProjectCardProps) {
           </div>
         )}
 
-        {/* Tech stack */}
-        {techStack && techStack.length > 0 && (
+        {/* Tech stack - LLM models only */}
+        {llmModels && llmModels.length > 0 && (
           <div className="border-t border-gray-200 pt-4 mt-4">
             <div className="flex flex-wrap gap-2">
-              {techStack.map((tech) => (
+              {llmModels.map((tech) => (
                 <span
                   key={tech}
                   className="text-xs font-mono text-gray-500 bg-gray-50 px-2 py-1 rounded"
