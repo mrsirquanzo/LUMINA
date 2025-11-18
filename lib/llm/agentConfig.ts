@@ -18,13 +18,13 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     apiKey: process.env.ANTHROPIC_API_KEY,
   },
 
-  // Patent Expert - Claude Sonnet 4 (best reasoning for complex patent analysis)
+  // Patent Expert - Perplexity Sonar Pro (real-time patent database searches with deeper retrieval)
   patent: {
-    provider: 'anthropic',
-    model: 'claude-sonnet-4-20250514',
+    provider: 'perplexity',
+    model: 'sonar-pro', // Deep retrieval with real-time search
     maxTokens: 4096,
-    temperature: 1.0,
-    apiKey: process.env.ANTHROPIC_API_KEY,
+    temperature: 0.7,
+    apiKey: process.env.PERPLEXITY_API_KEY,
   },
 
   // Financial Analyst - Gemini 2.0 Flash (large context + cost-effective + fast)

@@ -15,10 +15,10 @@ Changed from generic "Claude Sonnet 4" to specific model names:
 | Agent | Before | After |
 |-------|--------|-------|
 | Clinical Data Analyst | Claude Sonnet 4 | **Claude Sonnet 4** ✓ |
-| Patent Expert | Claude Sonnet 4 | **Claude Sonnet 4** ✓ |
 | Regulatory Expert | Claude Sonnet 4 | **Claude Sonnet 4** ✓ |
-| Financial Analyst | ~~Claude Sonnet 4~~ | **Gemini 2.0 Flash** |
+| Patent Expert | ~~Claude Sonnet 4~~ | **Perplexity Sonar Pro** |
 | Market Research | ~~Claude Sonnet 4~~ | **Perplexity Sonar Pro** |
+| Financial Analyst | ~~Claude Sonnet 4~~ | **Gemini 2.0 Flash** |
 
 **Files updated:**
 - `content/ai-projects/patent-expert-agent.mdx`
@@ -122,32 +122,32 @@ Changed from generic "Claude Sonnet 4" to specific model names:
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  Clinical Data Analyst  →  Claude Sonnet 4 (Anthropic)      │
-│  Patent Expert         →  Claude Sonnet 4 (Anthropic)       │
 │  Regulatory Expert     →  Claude Sonnet 4 (Anthropic)       │
 │                                                              │
-│  Financial Analyst     →  Gemini 2.0 Flash (Google)         │
-│                                                              │
+│  Patent Expert         →  Perplexity Sonar Pro (Online)     │
 │  Market Research       →  Perplexity Sonar Pro (Online)     │
+│                                                              │
+│  Financial Analyst     →  Gemini 2.0 Flash (Google)         │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ### Why Multi-Model?
 
-**Claude Sonnet 4** (Clinical, Patent, Regulatory)
+**Claude Sonnet 4** (Clinical, Regulatory)
 - Superior reasoning for complex analysis
-- Best for scientific, IP, and regulatory assessment
-- Deep understanding of technical and legal documents
+- Best for scientific and regulatory assessment
+- Deep understanding of clinical and regulatory documents
+
+**Perplexity Sonar Pro** (Patent, Market Research)
+- Real-time web search capabilities
+- Access to live patent databases and market intelligence
+- Current competitive information and patent filing searches
 
 **Gemini 2.0 Flash** (Financial)
 - Large context windows for lengthy documents
 - Cost-effective for high-volume analysis
 - Fast processing of structured financial data
-
-**Perplexity Sonar Pro** (Market Research)
-- Real-time web search capabilities
-- Current market intelligence
-- Access to latest competitive information
 
 ---
 
@@ -173,10 +173,10 @@ git push origin claude/multi-model-integration-019fch7UpNnz8Nro1UmYcTeB
 Once deployed, test each agent:
 
 - [ ] **Clinical Data Analyst** - Upload PDF, verify Claude Sonnet 4 response
-- [ ] **Patent Expert** - Ask about patents, verify Claude Sonnet 4 response
 - [ ] **Regulatory Expert** - Ask regulatory question, verify Claude Sonnet 4
-- [ ] **Financial Analyst** - Test with financial doc, verify Gemini 2.0 Flash
+- [ ] **Patent Expert** - Ask about patents, verify Perplexity Sonar Pro response
 - [ ] **Market Research** - Ask market question, verify Perplexity Sonar Pro
+- [ ] **Financial Analyst** - Test with financial doc, verify Gemini 2.0 Flash
 
 ### Step 4: Check Agent Cards
 Visit `/ai-projects` and verify cards show:
