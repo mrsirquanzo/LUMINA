@@ -369,7 +369,7 @@ export default function MultiAgentDemo() {
                   }`}
                 >
                   <FiZap className="w-4 h-4" />
-                  FAST
+                  Fast
                 </button>
                 <button
                   onClick={() => setMode('thorough')}
@@ -380,7 +380,7 @@ export default function MultiAgentDemo() {
                   }`}
                 >
                   <FiClock className="w-4 h-4" />
-                  THOROUGH
+                  Thorough
                 </button>
               </div>
             </div>
