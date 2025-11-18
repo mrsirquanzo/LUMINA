@@ -1,17 +1,36 @@
 import { DemoScenario } from './multiAgentTypes';
 
 /**
- * Demo Scenario 1: M&A Due Diligence
+ * ⚠️ DEMONSTRATION SCENARIOS - FICTIONAL COMPANIES
+ *
+ * IMPORTANT: The following companies are FICTIONAL and created solely for demonstration:
+ * - BioSpectra: Fictional biotech company with hypothetical bispecific antibody data
+ * - BaseGenomics: Fictional CRISPR gene editing company
+ * - ObesityRx: Fictional obesity drug developer
+ *
+ * REAL DATA USED FOR COMPARATORS:
+ * - FDA-approved drugs: Tecvayli, Elrexfio, Talvey, Enhertu, Trodelvy, etc.
+ * - Published clinical trials with verified NCT numbers
+ * - PubMed publications with real PMIDs
+ * - Actual patents from verified companies (J&J, Pfizer, Amgen, etc.)
+ *
+ * PURPOSE: Demonstrate multi-agent analysis methodology without making claims about real companies
+ *
+ * FOR REAL ANALYSIS: Switch to Live Mode in the application
+ */
+
+/**
+ * Demo Scenario 1: M&A Due Diligence (FICTIONAL COMPANY)
  */
 export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
  id: 'ma-due-diligence',
  title: 'Biotech M&A Due Diligence',
- description: 'Comprehensive analysis of a bispecific antibody acquisition across all 5 dimensions: clinical, patent, financial, regulatory, and market',
- query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
+ description: '⚠️ DEMO: Simulated M&A analysis of fictional company "BioSpectra" using real comparator data from FDA-approved drugs',
+ query: 'Should we acquire BioSpectra (FICTIONAL) for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
  documents: [
- 'BioSpectra_Phase2_Results.pdf (2.8 MB)',
- 'BioSpectra_Patent_Portfolio.pdf (2.1 MB)',
- 'BioSpectra_10K_2024.pdf (4.3 MB)',
+ 'BioSpectra_Phase2_Results.pdf (DEMO - Fictional Data)',
+ 'BioSpectra_Patent_Portfolio.pdf (DEMO - Fictional Data)',
+ 'BioSpectra_10K_2024.pdf (DEMO - Fictional Data)',
  ],
  estimatedDuration: 24000, // 24 seconds - all 5 agents
  events: [
@@ -55,7 +74,23 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
  agent: 'Clinical Analyst',
  response: `## Phase 2 Bispecific T-Cell Engager Trial Analysis
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+> **⚠️ DEMONSTRATION SCENARIO ⚠️**  
+> **BioSpectra is a FICTIONAL COMPANY**  
+> Real comparator data from FDA-approved drugs included for reference
+
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -78,6 +113,8 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 ---
 
 ## 📚 Sources Referenced
+
+**⚠️ Note: BioSpectra data is fictional. Real comparator sources provided below.**
 
 [1] BioSpectra Phase 2 Trial - Bispecific T-Cell Engager (Moreau P, et al. NEJM. 2022. PMID: 35857659
  [https://pubmed.ncbi.nlm.nih.gov/35857659/](https://pubmed.ncbi.nlm.nih.gov/35857659/))
@@ -132,9 +169,25 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
  timestamp: 7800,
  data: {
  agent: 'Patent Expert',
- response: `## Patent Portfolio & IP Analysis
+ response: `> **⚠️ DEMONSTRATION SCENARIO ⚠️**  
+> **BioSpectra is a FICTIONAL COMPANY**  
+> Patent analysis methodology shown with placeholders
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+## Patent Portfolio & IP Analysis
+
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -227,9 +280,25 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
  timestamp: 12500,
  data: {
  agent: 'Financial Analyst',
- response: `## Financial Analysis & Valuation
+ response: `> **⚠️ DEMONSTRATION SCENARIO ⚠️**  
+> **BioSpectra is a FICTIONAL COMPANY**  
+> Financial modeling methodology shown with simulated data
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+## Financial Analysis & Valuation
+
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -351,7 +420,19 @@ See synthesis for recommended approach.
  agent: 'Regulatory Expert',
  response: `## Regulatory Pathway & Approval Strategy
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -438,7 +519,19 @@ See synthesis for recommended approach.
  agent: 'Market Research Analyst',
  response: `## Market Opportunity & Commercial Forecast (2028-2035)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -740,7 +833,19 @@ export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
  agent: 'Clinical Data Analyst',
  response: `## Comparative Clinical Analysis: ADC Landscape (2024-2025)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -855,7 +960,19 @@ I've analyzed the clinical performance of the three leading antibody-drug conjug
  agent: 'Patent Expert',
  response: `## Intellectual Property Landscape: ADC Patent Analysis
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -1020,9 +1137,25 @@ Enhertu's IP estate creates durable competitive moat worth **$10-15B in platform
  timestamp: 11500,
  data: {
  agent: 'Financial Analyst',
- response: `## Financial Analysis: ADC Market Dynamics & Valuation
+ response: `> **⚠️ DEMONSTRATION SCENARIO ⚠️**  
+> **BioSpectra is a FICTIONAL COMPANY**  
+> Financial modeling methodology shown with simulated data
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+## Financial Analysis: ADC Market Dynamics & Valuation
+
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -1207,7 +1340,19 @@ Breakdown:
  agent: 'Market Research Analyst',
  response: `## Market Research Analysis: Competitive Positioning & Adoption Trends
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -1396,9 +1541,25 @@ I've analyzed physician surveys, payer policies, KOL insights, and market access
  timestamp: 19500,
  data: {
  agent: 'Regulatory Specialist',
- response: `## Regulatory Analysis: Approval Pathways & Competitive Timeline
+ response: `> **⚠️ DEMONSTRATION SCENARIO ⚠️**  
+> **BioSpectra is a FICTIONAL COMPANY**  
+> Real FDA precedents and guidance referenced
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+## Regulatory Analysis: Approval Pathways & Competitive Timeline
+
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -1739,7 +1900,19 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
  agent: 'Clinical Analyst',
  response: `## Adenine Base Editing Technology Assessment (2024-2025)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -1818,7 +1991,19 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
  agent: 'Patent Expert',
  response: `## Base Editing IP & Patent Analysis (2024-2025)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -1906,7 +2091,19 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
  agent: 'Financial Analyst',
  response: `## Base Editing License Deal Economics (2024-2025)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -2017,7 +2214,19 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
  agent: 'Market Research Analyst',
  response: `## Gene Therapy & Base Editing Market Analysis (2025-2040)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -2409,7 +2618,7 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
  id: 'investment-decision',
  title: 'Oral GLP-1 Series B Investment',
  description: 'Should we invest $40M in ObesityRx\'s Series B? Comprehensive analysis across clinical data, IP landscape, financial terms, and market dynamics.',
- query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, IP portfolio relative to Novo/Lilly, and financial runway to Phase 3.',
+ query: 'Should we invest $40M in ObesityRx (FICTIONAL)\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, IP portfolio relative to Novo/Lilly, and financial runway to Phase 3.',
  documents: [
  'ObesityRx_Phase2a_Results.pdf (2.2 MB)',
  'Oral_GLP1_Competitive_Landscape.pdf (3.1 MB)',
@@ -2449,7 +2658,19 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
  agent: 'Clinical Analyst',
  response: `## Phase 2a Oral GLP-1 Analysis (2024-2025)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -2544,7 +2765,19 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
  agent: 'Patent Expert',
  response: `## Oral GLP-1 IP Portfolio Assessment (2024-2025)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -2653,9 +2886,25 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
  timestamp: 9200,
  data: {
  agent: 'Financial Analyst',
- response: `## Financial Analysis & Series B Investment Terms (2024-2025)
+ response: `> **⚠️ DEMONSTRATION SCENARIO ⚠️**  
+> **BioSpectra is a FICTIONAL COMPANY**  
+> Financial modeling methodology shown with simulated data
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+## Financial Analysis & Series B Investment Terms (2024-2025)
+
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
@@ -2789,7 +3038,19 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
  agent: 'Market Research Analyst',
  response: `## Obesity Market Dynamics & Competitive Analysis (2025-2035)
 
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
+---
+
+## ⚠️ IMPORTANT: DEMONSTRATION MODE
+
+**"BioSpectra" is a FICTIONAL COMPANY created for demonstration purposes.**
+
+This demo shows realistic analysis methodology using:
+- ✅ **REAL comparator data**: FDA-approved drugs (Tecvayli, Elrexfio, Talvey)
+- ✅ **REAL clinical trials**: Verified NCT numbers from ClinicalTrials.gov
+- ✅ **REAL publications**: PubMed papers with PMIDs
+- ❌ **FICTIONAL company**: BioSpectra and its data are hypothetical
+
+**[Switch to Live Mode](/ai-projects/multi-agent-demo)** to analyze real companies with verified sources.
 
 ---
 
