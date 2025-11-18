@@ -56,10 +56,10 @@ After deployment completes:
 ### 3. Verify Multi-Model Architecture
 Check that agent cards show correct models:
 - Clinical Data Analyst → Claude Sonnet 4 ✓
+- Patent Expert → Claude Sonnet 4 ✓
 - Regulatory Expert → Claude Sonnet 4 ✓
-- Patent Expert → Perplexity Sonar Large ✓
-- Market Research → Perplexity Sonar Large ✓
-- Financial Analyst → Gemini Pro ✓
+- Financial Analyst → Gemini 2.0 Flash ✓
+- Market Research → Perplexity Sonar Pro ✓
 
 ---
 

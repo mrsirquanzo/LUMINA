@@ -143,10 +143,10 @@ This portfolio demonstrates a **multi-model approach** where each agent uses the
 | Agent | Model | Key Strength |
 |-------|-------|--------------|
 | Clinical Data Analyst | Claude Sonnet 4 | Complex reasoning |
+| Patent Expert | Claude Sonnet 4 | IP analysis & reasoning |
 | Regulatory Expert | Claude Sonnet 4 | Regulatory knowledge |
-| Patent Expert | Perplexity Sonar Pro | Real-time patent search |
-| Market Research | Perplexity Sonar Pro | Live market data |
 | Financial Analyst | Gemini 2.0 Flash | Large context + fast + cost-effective |
+| Market Research | Perplexity Sonar Pro | Live market data |
 
 This architecture optimizes for **performance**, **cost**, and **specialized capabilities** rather than using a single model for everything.
 
