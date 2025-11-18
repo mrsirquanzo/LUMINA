@@ -4,73 +4,78 @@ import { DemoScenario } from './multiAgentTypes';
  * Demo Scenario 1: M&A Due Diligence
  */
 export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
- id: 'ma-due-diligence',
- title: 'Biotech M&A Due Diligence',
- description: 'Comprehensive analysis of a bispecific antibody acquisition across all 5 dimensions: clinical, patent, financial, regulatory, and market',
- query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
- documents: [
- 'BioSpectra_Phase2_Results.pdf (2.8 MB)',
- 'BioSpectra_Patent_Portfolio.pdf (2.1 MB)',
- 'BioSpectra_10K_2024.pdf (4.3 MB)',
- ],
- estimatedDuration: 24000, // 24 seconds - all 5 agents
- events: [
- {
- type: 'plan_created',
- timestamp: 0,
- data: {
- plan: 'Sequential analysis: Clinical Data → Patent IP → Financials → Cross-reference → Synthesis',
- mode: 'thorough',
- estimatedCost: '$0.45',
- },
- },
- {
- type: 'agent_start',
- timestamp: 800,
- data: {
- agent: 'Clinical Analyst',
- task: 'Analyzing Phase 2 bispecific T-cell engager trial results and safety data',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 1500,
- data: {
- agent: 'Clinical Analyst',
- progress: 'Extracting efficacy endpoints from trial data...',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 2200,
- data: {
- agent: 'Clinical Analyst',
- progress: 'Analyzing safety profile and adverse events...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 3500,
- data: {
- agent: 'Clinical Analyst',
- response: `## Phase 2 Bispecific T-Cell Engager Trial Analysis
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+  id: 'ma-due-diligence',
+  title: 'Biotech M&A Due Diligence',
+  description: 'Comprehensive analysis of a bispecific antibody acquisition across all 5 dimensions: clinical, patent, financial, regulatory, and market',
+  query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
+  documents: [
+    'BioSpectra_Phase2_Results.pdf (2.8 MB)',
+    'BioSpectra_Patent_Portfolio.pdf (2.1 MB)',
+    'BioSpectra_10K_2024.pdf (4.3 MB)',
+  ],
+  estimatedDuration: 24000, // 24 seconds - all 5 agents
+  events: [
+    {
+      type: 'plan_created',
+      timestamp: 0,
+      data: {
+        plan: 'Sequential analysis: Clinical Data → Patent IP → Financials → Cross-reference → Synthesis',
+        mode: 'thorough',
+        estimatedCost: '$0.45',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 800,
+      data: {
+        agent: 'Clinical Analyst',
+        task: 'Analyzing Phase 2 bispecific T-cell engager trial results and safety data',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 1500,
+      data: {
+        agent: 'Clinical Analyst',
+        progress: 'Extracting efficacy endpoints from trial data...',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 2200,
+      data: {
+        agent: 'Clinical Analyst',
+        progress: 'Analyzing safety profile and adverse events...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 3500,
+      data: {
+        agent: 'Clinical Analyst',
+        response: `## Phase 2 Bispecific T-Cell Engager Trial Analysis
 
 **Efficacy Results:**
 - Primary endpoint (ORR): 63% (95% CI: 54-71%) vs 28% standard of care [1]
 - Complete response: 42% (unprecedented for relapsed/refractory) [1]
 - Median PFS: 12.4 months vs 5.1 months SoC (HR=0.48, p<0.001) [1]
-- Duration of response: 18.2 months (highly durable) [1] - Grade 3+ adverse events: 48% (in line with class) [2]
+- Duration of response: 18.2 months (highly durable) [1]
+
+**Safety Profile:**
+- Grade 3+ adverse events: 48% (in line with class) [2]
 - CRS (Cytokine Release Syndrome): Grade 1-2 in 52%, Grade 3 in 8% [2]
 - No Grade 4-5 CRS - improved vs earlier TCEs [2]
 - Neurotoxicity: 12% (all Grade 1-2, minimal CNS involvement) [2]
-- ICANS (Immune Cell-Associated Neurotoxicity): 3% (best in class) [2] - Tecvayli (J&J): 63% ORR but higher neurotoxicity (15%) [3]
+- ICANS (Immune Cell-Associated Neurotoxicity): 3% (best in class) [2]
+
+**Competitive Context (2024-2025):**
+- Tecvayli (J&J): 63% ORR but higher neurotoxicity (15%) [3]
 - Talvey (Pfizer/J&J): 73% ORR but complex dosing [3]
 - BioSpectra shows best safety/efficacy balance
-- Off-the-shelf advantage vs CAR-T (no manufacturing delay) [4] ✓ Superior efficacy - 63% ORR competitive with leading TCEs
+- Off-the-shelf advantage vs CAR-T (no manufacturing delay) [4]
+
+**Assessment:**
+✓ Superior efficacy - 63% ORR competitive with leading TCEs
 ✓ Best-in-class safety profile for CRS and neurotoxicity
 ✓ Novel epitope targeting reduces target escape risk
 ⚠ Need to verify IP protection for proprietary linker technology
@@ -79,85 +84,105 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 
 ## 📚 Sources Referenced
 
-[1] BioSpectra Phase 2 Trial - Bispecific T-Cell Engager (Moreau P, et al. NEJM. 2022. PMID: 35857659
- [https://pubmed.ncbi.nlm.nih.gov/35857659/](https://pubmed.ncbi.nlm.nih.gov/35857659/))
+[1] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Clinical Trial Results
+    **Title**: BioSpectra Phase 2 Trial - Bispecific T-Cell Engager
+    **Trial ID**: NCT05234567 (demonstration placeholder)
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 15-28, Table 2, Figure 3
+    **Date**: Data cutoff 2024-06-30
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "ORR 63% (95% CI: 54-71%), median PFS 12.4 months (HR=0.48, p<0.001), CR 42%"
 
-[2] BioSpectra Phase 2 Safety Data (FDA. Approval Letter. Teclistamab-cqyv (TECVAYLI) BLA 761218. October 25, 2022.
- [https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2022/761218Orig1s000ltr.pdf](https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2022/761218Orig1s000ltr.pdf))
+[2] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Safety Analysis
+    **Title**: BioSpectra Phase 2 Safety Data
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 32-45, Table 5
+    **Date**: Data cutoff 2024-06-30
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "Grade 3+ AEs 48%, CRS Grade 1-2: 52%, Grade 3: 8%, Neurotoxicity 12% (Grade 1-2), ICANS 3%"
 
-[3] TCE Competitive Landscape Analysis 2024 (Chari A, et al. NEJM. 2022. PMID: 36103415
- [https://pubmed.ncbi.nlm.nih.gov/36103415/](https://pubmed.ncbi.nlm.nih.gov/36103415/))
+[3] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Benchmark Data
+    **Title**: TCE Competitive Landscape Analysis 2024
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 68-72
+    **Date**: 2024-08
+    **Specific Data**: "Tecvayli ORR 63% with 15% neurotoxicity, Talvey ORR 73%"
 
-[4] CAR-T vs Off-the-Shelf Bispecific Comparison (Lesokhin AM, et al. Nature Med. 2023. PMID: 37679455
- [https://pubmed.ncbi.nlm.nih.gov/37679455/](https://pubmed.ncbi.nlm.nih.gov/37679455/))
+[4] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Clinical Trial Design
+    **Title**: CAR-T vs Off-the-Shelf Bispecific Comparison
+    **Location**: BioSpectra_Phase2_Results.pdf, pp. 8-12
+    **Date**: 2024-06
+    **Specific Data**: "Off-the-shelf delivery advantage, no manufacturing delay vs CAR-T"
 
 **Question for Patent Expert:** Are there blocking patents for the proprietary Fc-silenced linker technology? What's the FTO status for this novel epitope?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 4000,
- data: {
- from: 'Clinical Analyst',
- to: 'Patent Expert',
- question: 'Are there blocking patents for the proprietary Fc-silenced linker technology? What\'s the FTO status for this novel epitope?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 4500,
- data: {
- agent: 'Patent Expert',
- task: 'Analyzing patent portfolio and freedom-to-operate',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 5200,
- data: {
- agent: 'Patent Expert',
- progress: 'Reviewing patent claims and prosecution history...',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 6000,
- data: {
- agent: 'Patent Expert',
- progress: 'Conducting competitive patent landscape search...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 7800,
- data: {
- agent: 'Patent Expert',
- response: `## Patent Portfolio & IP Analysis
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 4000,
+      data: {
+        from: 'Clinical Analyst',
+        to: 'Patent Expert',
+        question: 'Are there blocking patents for the proprietary Fc-silenced linker technology? What\'s the FTO status for this novel epitope?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 4500,
+      data: {
+        agent: 'Patent Expert',
+        task: 'Analyzing patent portfolio and freedom-to-operate',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 5200,
+      data: {
+        agent: 'Patent Expert',
+        progress: 'Reviewing patent claims and prosecution history...',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 6000,
+      data: {
+        agent: 'Patent Expert',
+        progress: 'Conducting competitive patent landscape search...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 7800,
+      data: {
+        agent: 'Patent Expert',
+        response: `## Patent Portfolio & IP Analysis
 
 > **📋 Demo Note:** This is a demonstration scenario. Patent numbers shown are placeholders for illustrative purposes and have not been verified against USPTO databases. In live mode, all patent citations undergo the Patent Verification Protocol to ensure accuracy and credibility.
 
 **BioSpectra Patent Portfolio:**
 - **US11234567**: "Bispecific T-Cell Engager with Fc-Silenced Linker" [1]
- - Granted: August 2023
- - Claim 1: Broad coverage of Fc-silenced bispecific antibodies targeting novel epitope
- - Expires: 2043 (20 years from filing)
+  - Granted: August 2023
+  - Claim 1: Broad coverage of Fc-silenced bispecific antibodies targeting novel epitope
+  - Expires: 2043 (20 years from filing)
 - **US11456789**: "Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies" [2]
- - Granted: January 2024
- - Method claims for dosing regimens and CRS management
- - Expires: 2044
+  - Granted: January 2024
+  - Method claims for dosing regimens and CRS management
+  - Expires: 2044
 - **EP3789123**: European counterpart (granted 2024) [3]
 - **CN109876543**: Chinese patent (granted 2024) [4]
-- 12 continuation applications filed (2023-2024) covering linker variants and combination therapies [5] ✓ Strong novelty vs prior art (novel epitope not disclosed in prior TCEs) [1]
+- 12 continuation applications filed (2023-2024) covering linker variants and combination therapies [5]
+
+**Patent Strength Assessment:**
+✓ Strong novelty vs prior art (novel epitope not disclosed in prior TCEs) [1]
 ✓ Fc-silenced linker technology proprietary (composition of matter protection) [1]
 ✓ No patent oppositions filed [5]
-✓ Clean prosecution history with minimal amendments [5] - **Tecvayli (J&J):** Different epitope targeting, earlier expiry (2038) [6]
+✓ Clean prosecution history with minimal amendments [5]
+
+**Competitive Landscape:**
+- **Tecvayli (J&J):** Different epitope targeting, earlier expiry (2038) [6]
 - **Talvey (Pfizer/J&J):** Complex dosing patent but overlapping bispecific claims [6]
 - **Amgen TCEs:** Broad bispecific platform patents but FTO clear for our novel epitope [6]
-- **Regeneron:** Half-life extension patents (orthogonal to our technology) [6] ✓ **FTO STATUS: CLEAR** - No blocking patents identified for novel epitope [7]
+- **Regeneron:** Half-life extension patents (orthogonal to our technology) [6]
+
+**Freedom-to-Operate:**
+✓ **FTO STATUS: CLEAR** - No blocking patents identified for novel epitope [7]
 ✓ Can commercialize without licensing
 ✓ Proprietary Fc-silenced linker provides differentiated IP position [1]
 ✓ Strong defensive position vs next-gen TCE developers
@@ -172,66 +197,94 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 
 ## 📚 Sources Referenced
 
-[1] Patent US11234567 (Demonstration - See live mode for verified patent citations)
+[1] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: US11234567 (demonstration placeholder)
+    **Title**: Bispecific T-Cell Engager with Fc-Silenced Linker
+    **Assignee**: BioSpectra (demonstration)
+    **Granted**: 2023-08
+    **Expires**: 2043
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 5-18
+    **Retrieved**: 2024-09-15
 
-[2] Patent US11456789 (Demonstration - See live mode for verified patent citations)
+[2] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: US11456789 (demonstration placeholder)
+    **Title**: Methods for Reducing Cytokine Release Syndrome in Bispecific Therapies
+    **Granted**: 2024-01
+    **Expires**: 2044
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 22-35
 
-[3] Patent EP3789123 (demonstration placeholder) European Patent - Bispecific TCE 2024 BioSpectra_Patent_Portfolio.pdf, pp. 38-42
+[3] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: EP3789123 (demonstration placeholder)
+    **Title**: European Patent - Bispecific TCE
+    **Granted**: 2024
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 38-42
 
-[4] Patent CN109876543 (demonstration placeholder) Chinese Patent - Bispecific TCE 2024 BioSpectra_Patent_Portfolio.pdf, pp. 43-47
+[4] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent
+    **Patent Number**: CN109876543 (demonstration placeholder)
+    **Title**: Chinese Patent - Bispecific TCE
+    **Granted**: 2024
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 43-47
 
-[5] BioSpectra Continuation Applications Strategy (Patent Portfolio Analysis)
+[5] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Patent Portfolio Analysis
+    **Title**: BioSpectra Continuation Applications Strategy
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 52-68
+    **Date**: 2024-08
+    **Specific Data**: "12 continuation applications filed 2023-2024, no oppositions filed, clean prosecution history"
 
-[6] TCE Competitive IP Analysis 2024 (Competitive Patent Landscape)
+[6] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Patent Landscape
+    **Title**: TCE Competitive IP Analysis 2024
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 72-89
+    **Date**: 2024-07
+    **Specific Data**: "Tecvayli expires 2038, Talvey overlapping claims, Amgen platform patents, Regeneron half-life extension"
 
-[7] BioSpectra FTO Assessment & Portfolio Valuation (Freedom-to-Operate Analysis)
+[7] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Freedom-to-Operate Analysis
+    **Title**: BioSpectra FTO Assessment & Portfolio Valuation
+    **Location**: BioSpectra_Patent_Portfolio.pdf, pp. 95-112
+    **Date**: 2024-08-15
+    **Specific Data**: "FTO clear for novel epitope, estimated standalone value $350-450M, no blocking patents identified"
 
 **Question for Financial Analyst:** Given strong IP position with clear FTO, 18-year exclusivity, and platform potential, is the $2.2B valuation justified based on their financial position and runway?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 8300,
- data: {
- from: 'Patent Expert',
- to: 'Financial Analyst',
- question: 'Given strong IP position with clear FTO, 18-year exclusivity, and platform potential, is the $2.2B valuation justified?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 8800,
- data: {
- agent: 'Financial Analyst',
- task: 'Analyzing 10-K financials and performing valuation',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 9500,
- data: {
- agent: 'Financial Analyst',
- progress: 'Extracting key financial metrics from 10-K...',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 10500,
- data: {
- agent: 'Financial Analyst',
- progress: 'Building DCF valuation model...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 12500,
- data: {
- agent: 'Financial Analyst',
- response: `## Financial Analysis & Valuation
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 8300,
+      data: {
+        from: 'Patent Expert',
+        to: 'Financial Analyst',
+        question: 'Given strong IP position with clear FTO, 18-year exclusivity, and platform potential, is the $2.2B valuation justified?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 8800,
+      data: {
+        agent: 'Financial Analyst',
+        task: 'Analyzing 10-K financials and performing valuation',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 9500,
+      data: {
+        agent: 'Financial Analyst',
+        progress: 'Extracting key financial metrics from 10-K...',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 10500,
+      data: {
+        agent: 'Financial Analyst',
+        progress: 'Building DCF valuation model...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 12500,
+      data: {
+        agent: 'Financial Analyst',
+        response: `## Financial Analysis & Valuation
 
 **Current Financial Position (FY2024 10-K):**
 - Cash & equivalents: $185M [1]
@@ -239,7 +292,10 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 - **Estimated runway: 6.6 quarters (~18 months)** [1]
 - Revenue: $0 (pre-commercial) [1]
 - Total assets: $215M [1]
-- Long-term debt: $0 [1] - Q1 2024: $22M [2]
+- Long-term debt: $0 [1]
+
+**Burn Rate Analysis:**
+- Q1 2024: $22M [2]
 - Q2 2024: $25M [2]
 - Q3 2024: $28M [2]
 - Q4 2024: $32M (Phase 3 startup costs + manufacturing) [2]
@@ -270,7 +326,10 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 - Recent TCE/bispecific acquisitions (Phase 2): $1.6B-$2.6B [6,7,8]
 - Sanofi/Inhibrx: $2.2B (May 2024) [6]
 - Average: $2.13B [8]
-- Median: $2.1B [8] - DCF: $1.95B [4]
+- Median: $2.1B [8]
+
+**Valuation Conclusion:**
+- DCF: $1.95B [4]
 - Comps: $2.18B [5]
 - Precedent: $2.1B [8]
 - **Fair Value Range: $1.95-2.18B**
@@ -286,74 +345,103 @@ export const DEMO_MA_DUE_DILIGENCE: DemoScenario = {
 
 ## 📚 Sources Referenced
 
-[1] Financial data (Demonstration - See live mode for verified SEC filings)
+[1] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: 10-K Filing
+    **Company**: BioSpectra (demonstration)
+    **Title**: BioSpectra Annual Report FY2024
+    **Period**: FY 2024 (Year ended 2024-12-31)
+    **Location**: BioSpectra_10K_2024.pdf, pp. 45-48, Balance Sheet & Cash Flow Statement
+    **Date Filed**: 2024-03-15
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "Cash $185M, Total assets $215M, Zero debt, Revenue $0 (pre-commercial)"
 
-[2] Financial data (Demonstration - See live mode for verified SEC filings)
+[2] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: 10-K Filing
+    **Company**: BioSpectra
+    **Title**: Quarterly Cash Burn Analysis
+    **Location**: BioSpectra_10K_2024.pdf, pp. 52-55, Operating Expenses by Quarter
+    **Period**: Q1-Q4 2024
+    **Specific Data**: "Q1: $22M, Q2: $25M, Q3: $28M, Q4: $32M quarterly burn"
 
-[3] BioSpectra Capital Requirements Forecast (Financial Model)
+[3] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Financial Model
+    **Title**: BioSpectra Capital Requirements Forecast
+    **Location**: BioSpectra_10K_2024.pdf, pp. 78-82, Management Discussion & Analysis
+    **Date**: 2024-03
+    **Specific Data**: "Phase 3 estimate $150-180M, manufacturing $60-80M, regulatory/commercial $40-50M, total $250-310M"
 
-[4] BioSpectra DCF Analysis (DCF Valuation Model)
- **Assumptions**: "12% WACC, 70% approval probability, $2.8B peak sales 2033, 78% operating margin"
- **DCF Value**: $1.95B
+[4] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: DCF Valuation Model
+    **Title**: BioSpectra DCF Analysis
+    **Location**: Internal valuation model (demonstration)
+    **Date**: 2024-09
+    **Assumptions**: "12% WACC, 70% approval probability, $2.8B peak sales 2033, 78% operating margin"
+    **DCF Value**: $1.95B
 
-[5] Phase 2 Bispecific/TCE Valuation Benchmarks (Comparable Company Analysis)
+[5] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Comparable Company Analysis
+    **Title**: Phase 2 Bispecific/TCE Valuation Benchmarks
+    **Location**: Market analysis (demonstration)
+    **Date**: 2024-08
+    **Specific Data**: "Phase 2 TCE companies valued $1.8-2.6B range, BioSpectra 0.78x peak sales = $2.18B"
 
-[6] Sanofi Acquisition of Inhibrx (M&A Transaction)
- **Deal Value**: $2.2B 2024-05
- **Stage**: Phase 2 bispecific
- **Source**: Public press release
+[6] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: M&A Transaction
+    **Title**: Sanofi Acquisition of Inhibrx
+    **Deal Value**: $2.2B
+    **Date**: 2024-05
+    **Stage**: Phase 2 bispecific
+    **Source**: Public press release
 
-[7] J&J Acquisition of Ambrx (M&A Transaction)
- **Deal Value**: $2.0B 2024
- **Stage**: ADC platform
- **Source**: Public press release
+[7] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: M&A Transaction
+    **Title**: J&J Acquisition of Ambrx
+    **Deal Value**: $2.0B
+    **Date**: 2024
+    **Stage**: ADC platform
+    **Source**: Public press release
 
-[8] Recent TCE/Bispecific M&A Transactions (Precedent Transaction Analysis)
+[8] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Precedent Transaction Analysis
+    **Title**: Recent TCE/Bispecific M&A Transactions
+    **Date**: 2024
+    **Specific Data**: "Phase 2 acquisitions range $1.6-2.6B, Average $2.13B, Median $2.1B"
 
-[9] TCE Market Growth Forecast 2024-2030 (Market Research)
- **Publisher**: Industry market report 2024 "TCE market CAGR 45% (2024-2030)"
+[9] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Market Research
+    **Title**: TCE Market Growth Forecast 2024-2030
+    **Publisher**: Industry market report
+    **Date**: 2024
+    **Specific Data**: "TCE market CAGR 45% (2024-2030)"
 
 **Recommended Deal Structure:**
 See synthesis for recommended approach.
 
 **Question for Regulatory Expert:** What regulatory pathway and timeline should we expect for Phase 3 and approval?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 13000,
- data: {
- from: 'Financial Analyst',
- to: 'Regulatory Expert',
- question: 'What regulatory pathway and timeline should we expect for Phase 3 and approval?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 13500,
- data: {
- agent: 'Regulatory Expert',
- task: 'Assessing regulatory pathway and approval timeline',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 14200,
- data: {
- agent: 'Regulatory Expert',
- progress: 'Reviewing FDA guidance for bispecific antibodies...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 15800,
- data: {
- agent: 'Regulatory Expert',
- response: `## Regulatory Pathway & Approval Strategy
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 13000,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Regulatory Expert',
+        question: 'What regulatory pathway and timeline should we expect for Phase 3 and approval?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 13500,
+      data: {
+        agent: 'Regulatory Expert',
+        task: 'Assessing regulatory pathway and approval timeline',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 14200,
+      data: {
+        agent: 'Regulatory Expert',
+        progress: 'Reviewing FDA guidance for bispecific antibodies...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 15800,
+      data: {
+        agent: 'Regulatory Expert',
+        response: `## Regulatory Pathway & Approval Strategy
 
 **Recommended Regulatory Strategy:**
 
@@ -400,47 +488,43 @@ See synthesis for recommended approach.
 - **Approvability:** 75% probability (strong Phase 2 + head-to-head superiority expected)
 - **Timeline risk:** Low (~10% chance of delay beyond Q1 2028)
 - **Key risk factors:**
- - Manufacturing inspection delays (FDA capacity constraints 2026-2027)
- - OS data maturity requirements (may need 24-month follow-up)
+  - Manufacturing inspection delays (FDA capacity constraints 2026-2027)
+  - OS data maturity requirements (may need 24-month follow-up)
 
 **Question for Market Research:** Given Q1 2028 FDA approval target, what is the market landscape and peak sales potential?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 16200,
- data: {
- from: 'Regulatory Expert',
- to: 'Market Research Analyst',
- question: 'Given Q1 2028 FDA approval target, what is the market landscape and peak sales potential?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 16700,
- data: {
- agent: 'Market Research Analyst',
- task: 'Analyzing market size, competitive landscape, and peak sales forecast',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 17400,
- data: {
- agent: 'Market Research Analyst',
- progress: 'Sizing addressable patient population and pricing dynamics...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 19200,
- data: {
- agent: 'Market Research Analyst',
- response: `## Market Opportunity & Commercial Forecast (2028-2035)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 16200,
+      data: {
+        from: 'Regulatory Expert',
+        to: 'Market Research Analyst',
+        question: 'Given Q1 2028 FDA approval target, what is the market landscape and peak sales potential?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 16700,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing market size, competitive landscape, and peak sales forecast',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 17400,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Sizing addressable patient population and pricing dynamics...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 19200,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Market Opportunity & Commercial Forecast (2028-2035)
 
 **Addressable Market (Multiple Myeloma Bispecific TCE):**
 
@@ -525,39 +609,39 @@ See synthesis for recommended approach.
 2. **Launch (2028):** Safety-first messaging, target high-volume academic centers
 3. **Expansion (2029-2030):** Community oncology rollout, real-world evidence studies
 4. **Lifecycle (2031+):** Line expansion (frontline MM trials), combination strategies`,
- },
- },
- {
- type: 'synthesis_start',
- timestamp: 19700,
- data: {},
- },
- {
- type: 'synthesis_progress',
- timestamp: 20200,
- data: {
- step: 'Integrating clinical, patent, financial, regulatory, and market analyses...',
- },
- },
- {
- type: 'synthesis_progress',
- timestamp: 21200,
- data: {
- step: 'Cross-referencing risk factors and market opportunities...',
- },
- },
- {
- type: 'synthesis_progress',
- timestamp: 22200,
- data: {
- step: 'Generating acquisition recommendation and deal structure...',
- },
- },
- {
- type: 'complete',
- timestamp: 23500,
- data: {
- synthesis: `# M&A Recommendation: PROCEED WITH ACQUISITION
+      },
+    },
+    {
+      type: 'synthesis_start',
+      timestamp: 19700,
+      data: {},
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 20200,
+      data: {
+        step: 'Integrating clinical, patent, financial, regulatory, and market analyses...',
+      },
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 21200,
+      data: {
+        step: 'Cross-referencing risk factors and market opportunities...',
+      },
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 22200,
+      data: {
+        step: 'Generating acquisition recommendation and deal structure...',
+      },
+    },
+    {
+      type: 'complete',
+      timestamp: 23500,
+      data: {
+        synthesis: `# M&A Recommendation: PROCEED WITH ACQUISITION
 
 ## Executive Summary
 
@@ -687,62 +771,58 @@ BioSpectra represents an **exceptional acquisition target** with best-in-class P
 ---
 
 **Analysis completed at $0.45 estimated cost**`,
- cost: 0.45,
- },
- },
- ],
+        cost: 0.45,
+      },
+    },
+  ],
 };
 
 /**
  * Demo Scenario 2: Competitive Analysis
  */
 export const DEMO_COMPETITIVE_ANALYSIS: DemoScenario = {
- id: 'competitive-analysis',
- title: 'ADC Competitive Landscape Analysis',
- description: 'Compare Enhertu, Trodelvy, and Padcev across clinical efficacy, IP protection, and market positioning',
- query: 'Compare the competitive positioning of Enhertu, Trodelvy, and Padcev. Which antibody-drug conjugate has the strongest patent protection and commercial potential in 2024-2025?',
- documents: [
- 'ADC_Clinical_Data_2024.pdf (2.3 MB)',
- 'ADC_Patent_Landscape.pdf (1.8 MB)',
- 'ADC_Market_Analysis_2025.pdf (3.5 MB)',
- ],
- estimatedDuration: 22000,
- events: [
- {
- type: 'plan_created',
- timestamp: 0,
- data: {
- plan: 'Comprehensive ADC analysis: Clinical Performance → Patent Landscape → Financial Outlook → Market Dynamics → Regulatory Pathways → Strategic Synthesis',
- mode: 'thorough',
- estimatedCost: '$0.42',
- },
- },
- {
- type: 'agent_start',
- timestamp: 800,
- data: {
- agent: 'Clinical Data Analyst',
- task: 'Analyzing clinical performance across three leading ADCs',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 1400,
- data: {
- agent: 'Clinical Data Analyst',
- progress: 'Reviewing efficacy endpoints, safety profiles, and expanding indications...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 3200,
- data: {
- agent: 'Clinical Data Analyst',
- response: `## Comparative Clinical Analysis: ADC Landscape (2024-2025)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+  id: 'competitive-analysis',
+  title: 'ADC Competitive Landscape Analysis',
+  description: 'Compare Enhertu, Trodelvy, and Padcev across clinical efficacy, IP protection, and market positioning',
+  query: 'Compare the competitive positioning of Enhertu, Trodelvy, and Padcev. Which antibody-drug conjugate has the strongest patent protection and commercial potential in 2024-2025?',
+  documents: [
+    'ADC_Clinical_Data_2024.pdf (2.3 MB)',
+    'ADC_Patent_Landscape.pdf (1.8 MB)',
+    'ADC_Market_Analysis_2025.pdf (3.5 MB)',
+  ],
+  estimatedDuration: 22000,
+  events: [
+    {
+      type: 'plan_created',
+      timestamp: 0,
+      data: {
+        plan: 'Comprehensive ADC analysis: Clinical Performance → Patent Landscape → Financial Outlook → Market Dynamics → Regulatory Pathways → Strategic Synthesis',
+        mode: 'thorough',
+        estimatedCost: '$0.42',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 800,
+      data: {
+        agent: 'Clinical Data Analyst',
+        task: 'Analyzing clinical performance across three leading ADCs',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 1400,
+      data: {
+        agent: 'Clinical Data Analyst',
+        progress: 'Reviewing efficacy endpoints, safety profiles, and expanding indications...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 3200,
+      data: {
+        agent: 'Clinical Data Analyst',
+        response: `## Comparative Clinical Analysis: ADC Landscape (2024-2025)
 
 I've analyzed the clinical performance of the three leading antibody-drug conjugates across their primary indications and expanding clinical programs.
 
@@ -751,7 +831,10 @@ I've analyzed the clinical performance of the three leading antibody-drug conjug
 **Primary Indication: HER2+ Breast Cancer**
 - **DESTINY-Breast03**: 79.7% ORR, median PFS 28.8 months vs 6.8 months (T-DM1), HR 0.33 [1]
 - **DESTINY-Breast09**: 62.4% ORR in HER2-low breast cancer (game-changing expansion) [2]
-- **Overall Survival**: 23.9 months vs 17.5 months (HR 0.64, p<0.001) [1] - Non-small cell lung cancer (HER2-mutant): 54.9% ORR [3]
+- **Overall Survival**: 23.9 months vs 17.5 months (HR 0.64, p<0.001) [1]
+
+**Expanding Indications (2024-2025):**
+- Non-small cell lung cancer (HER2-mutant): 54.9% ORR [3]
 - Gastric cancer: 51.3% ORR vs 14.3% for chemotherapy [4]
 - Colorectal cancer (trials ongoing: DESTINY-CRC02)
 
@@ -769,8 +852,14 @@ I've analyzed the clinical performance of the three leading antibody-drug conjug
 **Primary Indication: Triple-Negative Breast Cancer (TNBC)**
 - **ASCENT trial (NCT02574455)**: 35% ORR vs 5% (chemotherapy) [5]
 - Median PFS: 5.6 months vs 1.7 months (HR 0.41, p<0.001) [5]
-- Overall Survival: 12.1 months vs 6.7 months (HR 0.48) [5] - HR+ breast cancer: 21% ORR (modest) [6]
-- Urothelial cancer: 27% ORR [7] - Neutropenia: 51% (Grade 3+), requires growth factor support [5]
+- Overall Survival: 12.1 months vs 6.7 months (HR 0.48) [5]
+
+**Expanding Indications:**
+- HR+ breast cancer: 21% ORR (modest) [6]
+- Urothelial cancer: 27% ORR [7]
+
+**Safety Profile:**
+- Neutropenia: 51% (Grade 3+), requires growth factor support [5]
 - Diarrhea: 10% (Grade 3+) [5]
 - Overall discontinuation: 5%
 
@@ -785,9 +874,14 @@ I've analyzed the clinical performance of the three leading antibody-drug conjug
 - **EV-301 (monotherapy, NCT03474107)**: 40.6% ORR vs 17.9% (chemo) [8]
 - **EV-302 (combo with pembrolizumab, NCT04223856)**: **UNPRECEDENTED** 67.7% ORR [9]
 - Median PFS (combo): 12.5 months vs 6.3 months (chemo alone, HR 0.45) [9]
-- Overall Survival (combo): 31.5 months vs 16.1 months (HR 0.47, p<0.001) [9] - Skin reactions: 68% (mostly Grade 1-2, manageable) [8]
+- Overall Survival (combo): 31.5 months vs 16.1 months (HR 0.47, p<0.001) [9]
+
+**Safety Profile:**
+- Skin reactions: 68% (mostly Grade 1-2, manageable) [8]
 - Peripheral neuropathy: 56% (dose-limiting in 5%) [8]
-- Hyperglycemia: 10% (Grade 3+) [9] MMAE (monomethyl auristatin E, microtubule inhibitor)
+- Hyperglycemia: 10% (Grade 3+) [9]
+
+**Payload:** MMAE (monomethyl auristatin E, microtubule inhibitor)
 **Target:** Nectin-4 (highly specific to urothelial cancers)
 
 ---
@@ -810,54 +904,50 @@ I've analyzed the clinical performance of the three leading antibody-drug conjug
 
 ## 📚 Sources Referenced
 
-[1] - ADC_Clinical_Data_2024.pdf, pp. 12-28 (Cortés et al., NEJM 2022)
-[2] - ADC_Clinical_Data_2024.pdf, pp. 45-62 (Modi et al., NEJM 2022)
-[3] - ADC_Clinical_Data_2024.pdf, pp. 78-89 (Li et al., JCO 2023)
-[4] - ADC_Clinical_Data_2024.pdf, pp. 102-118 (Shitara et al., Lancet 2023)
-[5] - ADC_Clinical_Data_2024.pdf, pp. 156-174 (Bardia et al., NEJM 2021)
-[6] - ADC_Clinical_Data_2024.pdf, pp. 189-203 (Rugo et al., Lancet Oncol 2023)
-[7] - ADC_Clinical_Data_2024.pdf, pp. 221-235 (Tagawa et al., JCO 2021)
-[8] - ADC_Clinical_Data_2024.pdf, pp. 267-285 (Powles et al., NEJM 2021)
-[9] - ADC_Clinical_Data_2024.pdf, pp. 302-324 (Powles et al., NEJM 2024)
+[1] **DESTINY-Breast03** - ADC_Clinical_Data_2024.pdf, pp. 12-28 (Cortés et al., NEJM 2022)
+[2] **DESTINY-Breast09** - ADC_Clinical_Data_2024.pdf, pp. 45-62 (Modi et al., NEJM 2022)
+[3] **DESTINY-Lung02** - ADC_Clinical_Data_2024.pdf, pp. 78-89 (Li et al., JCO 2023)
+[4] **DESTINY-Gastric03** - ADC_Clinical_Data_2024.pdf, pp. 102-118 (Shitara et al., Lancet 2023)
+[5] **ASCENT Trial** - ADC_Clinical_Data_2024.pdf, pp. 156-174 (Bardia et al., NEJM 2021)
+[6] **TROPiCS-02** - ADC_Clinical_Data_2024.pdf, pp. 189-203 (Rugo et al., Lancet Oncol 2023)
+[7] **TROPHY Trial** - ADC_Clinical_Data_2024.pdf, pp. 221-235 (Tagawa et al., JCO 2021)
+[8] **EV-301 Trial** - ADC_Clinical_Data_2024.pdf, pp. 267-285 (Powles et al., NEJM 2021)
+[9] **EV-302 Trial** - ADC_Clinical_Data_2024.pdf, pp. 302-324 (Powles et al., NEJM 2024)
 
 **Question for Patent Expert:** Does Enhertu's broad clinical success translate to equally broad IP protection, especially around the DXd payload technology?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 3600,
- data: {
- from: 'Clinical Data Analyst',
- to: 'Patent Expert',
- question: 'Does Enhertu\'s broad clinical success translate to equally broad IP protection, especially around the DXd payload technology?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 4100,
- data: {
- agent: 'Patent Expert',
- task: 'Comprehensive freedom-to-operate and patent strength analysis',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 4800,
- data: {
- agent: 'Patent Expert',
- progress: 'Analyzing patent portfolios, claim breadth, and competitive moats...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 7200,
- data: {
- agent: 'Patent Expert',
- response: `## Intellectual Property Landscape: ADC Patent Analysis
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 3600,
+      data: {
+        from: 'Clinical Data Analyst',
+        to: 'Patent Expert',
+        question: 'Does Enhertu\'s broad clinical success translate to equally broad IP protection, especially around the DXd payload technology?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 4100,
+      data: {
+        agent: 'Patent Expert',
+        task: 'Comprehensive freedom-to-operate and patent strength analysis',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 4800,
+      data: {
+        agent: 'Patent Expert',
+        progress: 'Analyzing patent portfolios, claim breadth, and competitive moats...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 7200,
+      data: {
+        agent: 'Patent Expert',
+        response: `## Intellectual Property Landscape: ADC Patent Analysis
 
 > **✓ Verified Patents:** This analysis includes verified patent citations that have undergone the Patent Verification Protocol. US10155821B2 has been confirmed as a Daiichi Sankyo patent through USPTO database verification.
 
@@ -870,10 +960,16 @@ I've conducted a comprehensive freedom-to-operate analysis and evaluated the pat
 **Core Patent Portfolio:**
 - **US10155821B2** – Anti-HER2 antibody-drug conjugate with DXd payload (filed 2016-07-28, expires 2036-07-28) [1]
 - Additional DXd platform patents covering linker technology and manufacturing processes (expires 2038-2041) [2]
-- Topoisomerase I inhibitor ADC platform patents protecting the DXd payload class [3] - **400+ patent family members** globally (US, EU, Japan, China) [4]
+- Topoisomerase I inhibitor ADC platform patents protecting the DXd payload class [3]
+
+**Patent Strength: ✓ EXCEPTIONAL**
+- **400+ patent family members** globally (US, EU, Japan, China) [4]
 - **85 continuation applications** filed (2024-2041 coverage) [4]
 - Composition of matter claims on DXd payload class providing broad platform protection [2,3]
-- Broad linker claims blocking competitors from using cleavable tetrapeptide linkers + camptothecin analogs [2] - Daiichi has **dominant position** in topoisomerase I ADC space
+- Broad linker claims blocking competitors from using cleavable tetrapeptide linkers + camptothecin analogs [2]
+
+**Freedom-to-Operate:**
+- Daiichi has **dominant position** in topoisomerase I ADC space
 - DXd payload + GGFG linker covered by multiple overlapping claims [2,3]
 - Platform applicable to ANY antibody target (HER2, HER3, TROP2, B7-H3, Claudin-18.2)
 - Potential for 15+ different ADCs using DXd platform
@@ -895,12 +991,21 @@ I've conducted a comprehensive freedom-to-operate analysis and evaluated the pat
 **Core Patent Portfolio:**
 - SN-38 ADC patents targeting Trop-2 antigen (core patents expire 2033-2034) [6]
 - CL2A linker technology patents (expires around 2035) [7]
-- hRS7 antibody composition patents [8] - **45 patent family members** (vs Enhertu's 400+) [9]
+- hRS7 antibody composition patents [8]
+
+**Patent Strength: MODERATE**
+- **45 patent family members** (vs Enhertu's 400+) [9]
 - Trop-2 antibody-specific claims (limited platform breadth) [6]
 - SN-38 payload not novel (generic topoisomerase I inhibitor)
-- CL2A linker solid but not broadly blocking [7] - Good position for Trop-2 + SN-38 combination
+- CL2A linker solid but not broadly blocking [7]
+
+**Freedom-to-Operate:**
+- Good position for Trop-2 + SN-38 combination
 - **BUT facing competitive threat**: Dato-DXd uses superior DXd payload on same Trop-2 target
-- **Biosimilar risk post-2033** (only 8 years of exclusivity remaining) [6] - Gilead acquired Immunomedics for **$21B (2020)** primarily for Trodelvy [10]
+- **Biosimilar risk post-2033** (only 8 years of exclusivity remaining) [6]
+
+**Acquisition Note:**
+- Gilead acquired Immunomedics for **$21B (2020)** primarily for Trodelvy [10]
 - Deal justified by first-in-class TNBC approval
 - IP value declining due to Dato-DXd competition
 
@@ -911,13 +1016,22 @@ I've conducted a comprehensive freedom-to-operate analysis and evaluated the pat
 **Core Patent Portfolio:**
 - Nectin-4 ADC patents with MMAE payload (core patents expire 2034-2036) [11]
 - AGS-22M6E antibody composition patents [12]
-- Combination therapy patents (EV + pembrolizumab regimen, expires around 2038) [13] - **120 patent family members** [14]
+- Combination therapy patents (EV + pembrolizumab regimen, expires around 2038) [13]
+
+**Patent Strength: ✓ STRONG (but narrow)**
+- **120 patent family members** [14]
 - Highly target-specific (Nectin-4) – excellent FTO in bladder cancer
 - MMAE payload widely used (not proprietary to Seagen/Pfizer)
-- Combination patents (EV-302 regimen) add value through 2038 [13] - Pfizer acquired entire Seagen ADC platform [15]
+- Combination patents (EV-302 regimen) add value through 2038 [13]
+
+**Pfizer Seagen Acquisition ($43B, 2023):**
+- Pfizer acquired entire Seagen ADC platform [15]
 - Includes 4 approved ADCs (Adcetris, Padcev, Tukysa, Tivdak)
 - Platform breadth: MMAE, MMAF, vedotin linker technology
-- Estimated **200+ ADC-related patents** across Seagen portfolio [14] - Clean FTO for Nectin-4 targeting (no blocking patents)
+- Estimated **200+ ADC-related patents** across Seagen portfolio [14]
+
+**Freedom-to-Operate:**
+- Clean FTO for Nectin-4 targeting (no blocking patents)
 - MMAE widely available (licensed from multiple sources)
 - Strong position in bladder cancer but limited to single indication
 - Cannot easily expand to other tumor types (Nectin-4 expression limited)
@@ -947,84 +1061,130 @@ Enhertu's IP estate creates durable competitive moat worth **$10-15B in platform
 
 ## 📚 Sources Referenced
 
-[1] Patent US10155821 (Demonstration - See live mode for verified patent citations)
+[1] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Patent
+    **Patent Number**: US10155821B2
+    **Title**: Anti-HER2 antibody-drug conjugate
+    **Assignee**: Daiichi Sankyo Company, Limited (Verified via USPTO)
+    **Filed**: 2016-07-28
+    **Granted**: 2018-12-18
+    **Expires**: 2036-07-28
+    **Legal Status**: Active
+    **Location**: ADC_Patent_Landscape.pdf, pp. 8-32
+    **Retrieved**: 2024-01-15
 
-[2] Daiichi Sankyo DXd Platform Patents (Patent Portfolio Analysis) Linker and manufacturing technology
- **Expiration Range**: 2038-2041 ADC_Patent_Landscape.pdf, pp. 33-89 2024 analysis
+[2] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio Analysis
+    **Title**: Daiichi Sankyo DXd Platform Patents
+    **Coverage**: Linker and manufacturing technology
+    **Expiration Range**: 2038-2041
+    **Location**: ADC_Patent_Landscape.pdf, pp. 33-89
+    **Date**: 2024 analysis
 
-[3] Daiichi Sankyo Topoisomerase I ADC Patents (Patent Portfolio Analysis) DXd payload platform protection ADC_Patent_Landscape.pdf, pp. 90-124 2024 analysis
+[3] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio Analysis
+    **Title**: Daiichi Sankyo Topoisomerase I ADC Patents
+    **Coverage**: DXd payload platform protection
+    **Location**: ADC_Patent_Landscape.pdf, pp. 90-124
+    **Date**: 2024 analysis
 
-[4] Daiichi Sankyo Global Patent Family (Patent Family Analysis)
- **Data**: 400+ global patents across US, EU, Japan, China ADC_Patent_Landscape.pdf, pp. 125-156 2024 comprehensive analysis 2024-01-15
+[4] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Patent Family Analysis
+    **Title**: Daiichi Sankyo Global Patent Family
+    **Data**: 400+ global patents across US, EU, Japan, China
+    **Location**: ADC_Patent_Landscape.pdf, pp. 125-156
+    **Date**: 2024 comprehensive analysis
+    **Retrieved**: 2024-01-15
 
-[5] AstraZeneca-Daiichi Sankyo Collaboration Agreement (License Agreement) ADC_Patent_Landscape.pdf, pp. 178-192 2024-01-15
+[5] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: License Agreement
+    **Title**: AstraZeneca-Daiichi Sankyo Collaboration Agreement
+    **Date**: 2019-03-28
+    **Location**: ADC_Patent_Landscape.pdf, pp. 178-192
+    **Retrieved**: 2024-01-15
 
-[6] Trodelvy SN-38 ADC Patent Portfolio (Patent Portfolio) Trop-2 targeting technology
- **Expiration**: 2033-2034 ADC_Patent_Landscape.pdf, pp. 245-285
+[6] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio
+    **Title**: Trodelvy SN-38 ADC Patent Portfolio
+    **Coverage**: Trop-2 targeting technology
+    **Expiration**: 2033-2034
+    **Location**: ADC_Patent_Landscape.pdf, pp. 245-285
 
-[7] Trodelvy CL2A Linker Patents (Patent Portfolio)
- **Expiration**: Around 2035 ADC_Patent_Landscape.pdf, pp. 286-301
+[7] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio
+    **Title**: Trodelvy CL2A Linker Patents
+    **Expiration**: Around 2035
+    **Location**: ADC_Patent_Landscape.pdf, pp. 286-301
 
-[8] Trodelvy hRS7 Antibody Patents (Patent Portfolio)
+[8] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio
+    **Title**: Trodelvy hRS7 Antibody Patents
+    **Location**: ADC_Patent_Landscape.pdf, pp. 302-314
 
-[9] Immunomedics Patent Portfolio Analysis (Company Analysis)
- **Data**: 45 patent family members 2020 analysis ADC_Patent_Landscape.pdf, pp. 315-334
+[9] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Company Analysis
+    **Title**: Immunomedics Patent Portfolio Analysis
+    **Data**: 45 patent family members
+    **Date**: 2020 analysis
+    **Location**: ADC_Patent_Landscape.pdf, pp. 315-334
 
-[10] Gilead-Immunomedics Acquisition (M&A Transaction)
- **Deal Value**: $21B 2020-09-13 ADC_Patent_Landscape.pdf, pp. 356-367
+[10] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: M&A Transaction
+    **Title**: Gilead-Immunomedics Acquisition
+    **Deal Value**: $21B
+    **Date**: 2020-09-13
+    **Location**: ADC_Patent_Landscape.pdf, pp. 356-367
 
-[11] Padcev Nectin-4 ADC Patents (Patent Portfolio)
- **Expiration**: 2034-2036 ADC_Patent_Landscape.pdf, pp. 412-456
+[11] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio
+    **Title**: Padcev Nectin-4 ADC Patents
+    **Expiration**: 2034-2036
+    **Location**: ADC_Patent_Landscape.pdf, pp. 412-456
 
-[12] Padcev AGS-22M6E Antibody Patents (Patent Portfolio)
+[12] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio
+    **Title**: Padcev AGS-22M6E Antibody Patents
+    **Location**: ADC_Patent_Landscape.pdf, pp. 457-475
 
-[13] Padcev Combination Therapy Patents (EV+pembrolizumab) (Patent Portfolio)
- **Expiration**: Around 2038 ADC_Patent_Landscape.pdf, pp. 476-497
+[13] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Patent Portfolio
+    **Title**: Padcev Combination Therapy Patents (EV+pembrolizumab)
+    **Expiration**: Around 2038
+    **Location**: ADC_Patent_Landscape.pdf, pp. 476-497
 
-[14] Seagen ADC Patent Portfolio (Company Analysis)
- **Data**: 120+ patent family members 2023 analysis ADC_Patent_Landscape.pdf, pp. 498-542
+[14] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Company Analysis
+    **Title**: Seagen ADC Patent Portfolio
+    **Data**: 120+ patent family members
+    **Date**: 2023 analysis
+    **Location**: ADC_Patent_Landscape.pdf, pp. 498-542
 
-[15] Pfizer-Seagen Acquisition (M&A Transaction)
- **Deal Value**: $43B 2023-12-14 ADC_Patent_Landscape.pdf, pp. 567-589
+[15] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: M&A Transaction
+    **Title**: Pfizer-Seagen Acquisition
+    **Deal Value**: $43B
+    **Date**: 2023-12-14
+    **Location**: ADC_Patent_Landscape.pdf, pp. 567-589
 
 **Question for Financial Analyst:** Given Enhertu's clinical AND patent dominance, what's the realistic peak sales potential and how does the IP moat affect valuation multiples?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 7600,
- data: {
- from: 'Patent Expert',
- to: 'Financial Analyst',
- question: 'Given Enhertu\'s clinical AND patent dominance, what\'s the realistic peak sales potential and how does the IP moat affect valuation multiples?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 8100,
- data: {
- agent: 'Financial Analyst',
- task: 'Analyzing commercial performance and peak sales forecasts',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 8800,
- data: {
- agent: 'Financial Analyst',
- progress: 'Evaluating revenue trajectories, market dynamics, and valuation models...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 11500,
- data: {
- agent: 'Financial Analyst',
- response: `## Financial Analysis: ADC Market Dynamics & Valuation
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 7600,
+      data: {
+        from: 'Patent Expert',
+        to: 'Financial Analyst',
+        question: 'Given Enhertu\'s clinical AND patent dominance, what\'s the realistic peak sales potential and how does the IP moat affect valuation multiples?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 8100,
+      data: {
+        agent: 'Financial Analyst',
+        task: 'Analyzing commercial performance and peak sales forecasts',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 8800,
+      data: {
+        agent: 'Financial Analyst',
+        progress: 'Evaluating revenue trajectories, market dynamics, and valuation models...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 11500,
+      data: {
+        agent: 'Financial Analyst',
+        response: `## Financial Analysis: ADC Market Dynamics & Valuation
 
 I've analyzed the commercial performance, growth trajectories, and peak sales forecasts for the three leading ADCs.
 
@@ -1173,43 +1333,39 @@ Breakdown:
 ---
 
 **Question for Market Research:** How do payers and oncologists view these three ADCs? Are treatment algorithms solidifying, or is there still fluidity in adoption patterns?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 11900,
- data: {
- from: 'Financial Analyst',
- to: 'Market Research Analyst',
- question: 'How do payers and oncologists view these three ADCs? Are treatment algorithms solidifying, or is there still fluidity in adoption patterns?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 12400,
- data: {
- agent: 'Market Research Analyst',
- task: 'Analyzing physician adoption, payer dynamics, and market positioning',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 13100,
- data: {
- agent: 'Market Research Analyst',
- progress: 'Reviewing KOL insights, treatment algorithms, and market access data...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 15800,
- data: {
- agent: 'Market Research Analyst',
- response: `## Market Research Analysis: Competitive Positioning & Adoption Trends
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 11900,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Market Research Analyst',
+        question: 'How do payers and oncologists view these three ADCs? Are treatment algorithms solidifying, or is there still fluidity in adoption patterns?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 12400,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing physician adoption, payer dynamics, and market positioning',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 13100,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Reviewing KOL insights, treatment algorithms, and market access data...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 15800,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Market Research Analysis: Competitive Positioning & Adoption Trends
 
 I've analyzed physician surveys, payer policies, KOL insights, and market access dynamics to understand real-world adoption patterns.
 
@@ -1364,43 +1520,39 @@ I've analyzed physician surveys, payer policies, KOL insights, and market access
 ---
 
 **Question for Regulatory Specialist:** Are there any regulatory pathways or approval timelines that could disrupt these market dynamics? For example, could Dato-DXd get accelerated approval and enter the market faster than expected?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 16200,
- data: {
- from: 'Market Research Analyst',
- to: 'Regulatory Specialist',
- question: 'Are there any regulatory pathways or approval timelines that could disrupt these market dynamics? Could Dato-DXd get accelerated approval and enter the market faster than expected?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 16700,
- data: {
- agent: 'Regulatory Specialist',
- task: 'Analyzing approval pathways and competitive regulatory timelines',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 17400,
- data: {
- agent: 'Regulatory Specialist',
- progress: 'Reviewing FDA/EMA strategies, approval timelines, and regulatory catalysts...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 19500,
- data: {
- agent: 'Regulatory Specialist',
- response: `## Regulatory Analysis: Approval Pathways & Competitive Timeline
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 16200,
+      data: {
+        from: 'Market Research Analyst',
+        to: 'Regulatory Specialist',
+        question: 'Are there any regulatory pathways or approval timelines that could disrupt these market dynamics? Could Dato-DXd get accelerated approval and enter the market faster than expected?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 16700,
+      data: {
+        agent: 'Regulatory Specialist',
+        task: 'Analyzing approval pathways and competitive regulatory timelines',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 17400,
+      data: {
+        agent: 'Regulatory Specialist',
+        progress: 'Reviewing FDA/EMA strategies, approval timelines, and regulatory catalysts...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 19500,
+      data: {
+        agent: 'Regulatory Specialist',
+        response: `## Regulatory Analysis: Approval Pathways & Competitive Timeline
 
 I've analyzed FDA/EMA regulatory strategies, approval timelines, and potential catalysts that could shift competitive dynamics.
 
@@ -1570,32 +1722,32 @@ I've analyzed FDA/EMA regulatory strategies, approval timelines, and potential c
 
 **Summary for Executive Synthesis:**
 Regulatory landscape strongly favors Enhertu (and DXd platform broadly). Padcev has locked in bladder cancer dominance. Trodelvy facing regulatory AND competitive headwinds with limited catalysts to offset Dato-DXd threat.`,
- },
- },
- {
- type: 'synthesis_start',
- timestamp: 19900,
- data: {},
- },
- {
- type: 'synthesis_progress',
- timestamp: 20500,
- data: {
- step: 'Integrating clinical, IP, financial, market, and regulatory analyses...',
- },
- },
- {
- type: 'synthesis_progress',
- timestamp: 21000,
- data: {
- step: 'Building comprehensive competitive scorecard and strategic recommendations...',
- },
- },
- {
- type: 'complete',
- timestamp: 22000,
- data: {
- synthesis: `# Competitive ADC Analysis: Enhertu Dominates Across All Dimensions
+      },
+    },
+    {
+      type: 'synthesis_start',
+      timestamp: 19900,
+      data: {},
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 20500,
+      data: {
+        step: 'Integrating clinical, IP, financial, market, and regulatory analyses...',
+      },
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 21000,
+      data: {
+        step: 'Building comprehensive competitive scorecard and strategic recommendations...',
+      },
+    },
+    {
+      type: 'complete',
+      timestamp: 22000,
+      data: {
+        synthesis: `# Competitive ADC Analysis: Enhertu Dominates Across All Dimensions
 
 ## Executive Summary
 
@@ -1648,10 +1800,10 @@ After comprehensive analysis across clinical performance, intellectual property,
 **HOLD: Trodelvy/Gilead**
 - Solid TNBC franchise ($1.2B current sales)
 - **BUT facing significant headwinds:**
- - Dato-DXd competitive threat (approval as early as 2026)
- - Biosimilar risk post-2033 (only 8 years of exclusivity remaining)
- - Limited new indication catalysts (TROPiCS-04 urothelial trial failed)
- - Valuation concern: Gilead paid $21B (2020), current NPV declining to ~$12-15B
+  - Dato-DXd competitive threat (approval as early as 2026)
+  - Biosimilar risk post-2033 (only 8 years of exclusivity remaining)
+  - Limited new indication catalysts (TROPiCS-04 urothelial trial failed)
+  - Valuation concern: Gilead paid $21B (2020), current NPV declining to ~$12-15B
 
 ---
 
@@ -1686,77 +1838,85 @@ After comprehensive analysis across clinical performance, intellectual property,
 ---
 
 *Analysis completed with comprehensive evaluation across 5 specialized domains. Cost estimate: $0.42*`,
- cost: 0.42,
- },
- },
- ],
+        cost: 0.42,
+      },
+    },
+  ],
 };
 
 /**
  * Demo Scenario 3: Technology Licensing Deal
  */
 export const DEMO_LICENSING_DEAL: DemoScenario = {
- id: 'licensing-deal',
- title: 'CRISPR Base Editing Platform License',
- description: 'Comprehensive evaluation of BaseGenomics\' adenine base editor platform across technology validation, IP landscape, deal economics, and market potential.',
- query: 'Should we license BaseGenomics\' adenine base editing platform for $125M upfront + double-digit royalties? Analyze the technology validation, IP landscape, and deal economics.',
- documents: [
- 'BaseGenomics_Technology_Package.pdf (2.1 MB)',
- 'Base_Editing_Patent_Analysis.pdf (3.2 MB)',
- 'License_Term_Sheet.pdf (0.8 MB)',
- ],
- estimatedDuration: 19500,
- events: [
- {
- type: 'plan_created',
- timestamp: 0,
- data: {
- plan: 'Technology evaluation: Clinical Validation → IP Assessment → Deal Economics → Market Analysis → Decision',
- mode: 'thorough',
- estimatedCost: '$0.42',
- },
- },
- {
- type: 'agent_start',
- timestamp: 650,
- data: {
- agent: 'Clinical Analyst',
- task: 'Evaluating adenine base editing technology and clinical validation',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 1200,
- data: {
- agent: 'Clinical Analyst',
- progress: 'Reviewing editing mechanism, efficiency, and off-target data...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 2800,
- data: {
- agent: 'Clinical Analyst',
- response: `## Adenine Base Editing Technology Assessment (2024-2025)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+  id: 'licensing-deal',
+  title: 'CRISPR Base Editing Platform License',
+  description: 'Comprehensive evaluation of BaseGenomics\' adenine base editor platform across technology validation, IP landscape, deal economics, and market potential.',
+  query: 'Should we license BaseGenomics\' adenine base editing platform for $125M upfront + double-digit royalties? Analyze the technology validation, IP landscape, and deal economics.',
+  documents: [
+    'BaseGenomics_Technology_Package.pdf (2.1 MB)',
+    'Base_Editing_Patent_Analysis.pdf (3.2 MB)',
+    'License_Term_Sheet.pdf (0.8 MB)',
+  ],
+  estimatedDuration: 19500,
+  events: [
+    {
+      type: 'plan_created',
+      timestamp: 0,
+      data: {
+        plan: 'Technology evaluation: Clinical Validation → IP Assessment → Deal Economics → Market Analysis → Decision',
+        mode: 'thorough',
+        estimatedCost: '$0.42',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 650,
+      data: {
+        agent: 'Clinical Analyst',
+        task: 'Evaluating adenine base editing technology and clinical validation',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 1200,
+      data: {
+        agent: 'Clinical Analyst',
+        progress: 'Reviewing editing mechanism, efficiency, and off-target data...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 2800,
+      data: {
+        agent: 'Clinical Analyst',
+        response: `## Adenine Base Editing Technology Assessment (2024-2025)
 
 **Mechanism:**
 - Evolved TadA deaminase fused to Cas9 nickase (ABE9.1 variant) [1]
 - Converts A•T → G•C base pairs without double-strand breaks [1]
 - PAM requirement: NGG (broad targeting range) [1]
-- Editing window: 4-8 nucleotides [1] - On-target editing: 75-92% efficiency (ex vivo HSCs) [2]
+- Editing window: 4-8 nucleotides [1]
+
+**Technical Performance:**
+- On-target editing: 75-92% efficiency (ex vivo HSCs) [2]
 - Off-target deamination: <0.5% (RNA-seq validated) [2]
 - Bystander editing: Minimal (<2% unwanted A-to-G edits in window) [2]
-- Delivery: Lipid nanoparticle (LNP) mRNA format [3] ✓ Mouse models: Corrected hemophilia B, sickle cell (>60% editing in vivo) [4]
+- Delivery: Lipid nanoparticle (LNP) mRNA format [3]
+
+**Preclinical Validation:**
+✓ Mouse models: Corrected hemophilia B, sickle cell (>60% editing in vivo) [4]
 ✓ NHP studies: Liver PCSK9 editing 45% (durable >6 months), no toxicity [4]
-✓ Human HSCs ex vivo: 82% editing (BCL11A enhancer for sickle cell) [4] ✓ Phase 1/2: Sickle cell disease (n=12 patients, 8-month follow-up) [5]
- - Mean HbF: 42% (functional cure threshold >20%) [5]
- - Zero VOC (vaso-occlusive crises) events in 9/12 patients [5]
- - Safety: No CRISPR-related AEs, transient cytopenias only [5]
-✓ Phase 1: Familial hypercholesterolemia (liver PCSK9) - enrolling [6] - Beam Therapeutics: Adenine BE (BEAM-101 sickle cell Phase 1/2) [7]
+✓ Human HSCs ex vivo: 82% editing (BCL11A enhancer for sickle cell) [4]
+
+**Clinical Progress (2024-2025):**
+✓ Phase 1/2: Sickle cell disease (n=12 patients, 8-month follow-up) [5]
+  - Mean HbF: 42% (functional cure threshold >20%) [5]
+  - Zero VOC (vaso-occlusive crises) events in 9/12 patients [5]
+  - Safety: No CRISPR-related AEs, transient cytopenias only [5]
+✓ Phase 1: Familial hypercholesterolemia (liver PCSK9) - enrolling [6]
+
+**Competitive Context:**
+- Beam Therapeutics: Adenine BE (BEAM-101 sickle cell Phase 1/2) [7]
 - Verve Therapeutics: In vivo liver editing (PCSK9) - approved New Zealand 2024 [8]
 - Prime Medicine: Prime editing (broader, but less efficient ~30-40%) [9]
 
@@ -1764,76 +1924,111 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 
 ## 📚 Sources Referenced
 
-[1] BaseGenomics ABE9.1 Mechanism of Action (Technology Package) (Demonstration data)
+[1] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Technology Package
+    **Title**: BaseGenomics ABE9.1 Mechanism of Action
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 8-22, Figures 1-3
+    **Date**: 2024-06
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "Evolved TadA-Cas9 nickase fusion, A→G conversion without DSBs, NGG PAM, 4-8 nt editing window"
 
-[2] BaseGenomics ABE9.1 Editing Efficiency and Specificity (Technical Data) (Demonstration data)
+[2] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Technical Data
+    **Title**: BaseGenomics ABE9.1 Editing Efficiency and Specificity
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 28-45, Tables 2-4
+    **Date**: 2024-06
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "On-target 75-92% in HSCs, off-target <0.5% RNA-seq, bystander <2%"
 
-[3] LNP mRNA Delivery System (Delivery Platform)
+[3] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Delivery Platform
+    **Title**: LNP mRNA Delivery System
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 52-64
+    **Date**: 2024-06
+    **Specific Data**: "Lipid nanoparticle mRNA format for in vivo and ex vivo delivery"
 
-[4] Preclinical Validation - Mouse and NHP Models (Preclinical Studies)
+[4] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Preclinical Studies
+    **Title**: Preclinical Validation - Mouse and NHP Models
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 72-98
+    **Date**: 2024-05
+    **Specific Data**: "Mouse: >60% in vivo editing, NHP: 45% liver PCSK9 editing (6mo durable), HSC ex vivo: 82% BCL11A"
 
-[5] Phase 1/2 Sickle Cell Disease Trial (Clinical Trial Data)
+[5] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Clinical Trial Data
+    **Title**: Phase 1/2 Sickle Cell Disease Trial
+    **Trial ID**: NCT placeholder (demonstration)
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 105-128, Table 8
+    **Date**: Data cutoff 2024-08
+    **Retrieved**: 2024-09-15
+    **Specific Data**: "n=12, 8-month follow-up, mean HbF 42%, 9/12 patients zero VOC events, no CRISPR AEs"
 
-[6] Familial Hypercholesterolemia Phase 1 Study (Clinical Pipeline)
- **Status**: Enrolling
+[6] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Clinical Pipeline
+    **Title**: Familial Hypercholesterolemia Phase 1 Study
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 132-138
+    **Date**: 2024-09
+    **Status**: Enrolling
 
-[7] Beam Therapeutics BEAM-101 Program (Competitive Intelligence)
+[7] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Intelligence
+    **Title**: Beam Therapeutics BEAM-101 Program
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 145-152
+    **Date**: 2024-07
+    **Specific Data**: "BEAM-101 sickle cell Phase 1/2, ABE8e variant"
 
-[8] Verve Therapeutics PCSK9 Editing Approval (Competitive Intelligence)
+[8] **[HIGH CONFIDENCE ✓✓✓]** **Source Type**: Competitive Intelligence
+    **Title**: Verve Therapeutics PCSK9 Editing Approval
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 153-158
+    **Date**: 2024
+    **Specific Data**: "Verve in vivo liver PCSK9 editing approved New Zealand 2024"
 
-[9] Prime Medicine Prime Editing Platform (Competitive Intelligence)
+[9] **[MODERATE CONFIDENCE ✓✓]** **Source Type**: Competitive Intelligence
+    **Title**: Prime Medicine Prime Editing Platform
+    **Location**: BaseGenomics_Technology_Package.pdf, pp. 159-164
+    **Date**: 2024-06
+    **Specific Data**: "Prime editing 30-40% efficiency, broader but less efficient than ABE"
 
 **Assessment:** Technology validated in humans with strong efficacy + safety data. Clinical-stage de-risks platform vs preclinical competitors.`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 3200,
- data: {
- from: 'Clinical Analyst',
- to: 'Patent Expert',
- question: 'What\'s the IP coverage on this base editing platform? Do we have freedom-to-operate given Broad/Harvard foundational CRISPR patents?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 3700,
- data: {
- agent: 'Patent Expert',
- task: 'Analyzing patent portfolio and freedom-to-operate',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 4400,
- data: {
- agent: 'Patent Expert',
- progress: 'Reviewing patent claims and competitive landscape...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 6300,
- data: {
- agent: 'Patent Expert',
- response: `## Base Editing IP & Patent Analysis (2024-2025)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 3200,
+      data: {
+        from: 'Clinical Analyst',
+        to: 'Patent Expert',
+        question: 'What\'s the IP coverage on this base editing platform? Do we have freedom-to-operate given Broad/Harvard foundational CRISPR patents?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 3700,
+      data: {
+        agent: 'Patent Expert',
+        task: 'Analyzing patent portfolio and freedom-to-operate',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 4400,
+      data: {
+        agent: 'Patent Expert',
+        progress: 'Reviewing patent claims and competitive landscape...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 6300,
+      data: {
+        agent: 'Patent Expert',
+        response: `## Base Editing IP & Patent Analysis (2024-2025)
 
 > **📋 Demo Note:** This is a demonstration scenario. Patent numbers shown are placeholders for illustrative purposes and have not been verified against USPTO databases. In live mode, all patent citations undergo the Patent Verification Protocol to ensure accuracy and credibility.
 
 **BaseGenomics Patent Portfolio:**
 - **US11891634**: "Evolved Adenine Deaminases for Base Editing" (ABE9.1)
- - Filed: 2022, Granted: 2024
- - Claims: Evolved TadA variants with improved specificity
- - Composition of matter on ABE9.1 protein sequence
- - Expires: 2042
+  - Filed: 2022, Granted: 2024
+  - Claims: Evolved TadA variants with improved specificity
+  - Composition of matter on ABE9.1 protein sequence
+  - Expires: 2042
 - **US11756432**: "Methods for In Vivo Adenine Base Editing"
- - Filed: 2021, Granted: 2023
- - Method claims: LNP delivery + dosing regimens
- - Expires: 2041
+  - Filed: 2021, Granted: 2023
+  - Method claims: LNP delivery + dosing regimens
+  - Expires: 2041
 - **WO2023/234567**: PCT application (35 countries including EU, China, Japan)
 - 14 continuations filed 2023-2024 (editing window optimization, disease-specific guides)
 
@@ -1872,43 +2067,39 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 - Sublicense rights included (can sublicense to regional partners)
 
 **Question for Financial:** Given strong IP position, low legal risk, and broad platform applicability, is $125M upfront justified by revenue potential?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 6700,
- data: {
- from: 'Patent Expert',
- to: 'Financial Analyst',
- question: 'Given strong IP position, low legal risk, and broad platform applicability, is $125M upfront justified by revenue potential?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 7200,
- data: {
- agent: 'Financial Analyst',
- task: 'Analyzing licensing economics and deal structure',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 7900,
- data: {
- agent: 'Financial Analyst',
- progress: 'Evaluating term sheet and financial projections...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 9800,
- data: {
- agent: 'Financial Analyst',
- response: `## Base Editing License Deal Economics (2024-2025)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 6700,
+      data: {
+        from: 'Patent Expert',
+        to: 'Financial Analyst',
+        question: 'Given strong IP position, low legal risk, and broad platform applicability, is $125M upfront justified by revenue potential?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 7200,
+      data: {
+        agent: 'Financial Analyst',
+        task: 'Analyzing licensing economics and deal structure',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 7900,
+      data: {
+        agent: 'Financial Analyst',
+        progress: 'Evaluating term sheet and financial projections...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 9800,
+      data: {
+        agent: 'Financial Analyst',
+        response: `## Base Editing License Deal Economics (2024-2025)
 
 **Proposed Terms:**
 - Upfront: $125M
@@ -1983,43 +2174,39 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 **Recommendation:** **PROCEED** - This is a compelling risk/reward profile with 1,100%+ expected ROI.
 
 **Question for Market Research:** What's the total addressable market for base editing therapies across genetic diseases, and how does this platform position against Beam and Verve?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 10100,
- data: {
- from: 'Financial Analyst',
- to: 'Market Research Analyst',
- question: 'What\'s the total addressable market for base editing therapies across genetic diseases, and how does this platform position against Beam and Verve?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 10600,
- data: {
- agent: 'Market Research Analyst',
- task: 'Analyzing gene therapy market, base editing competitive landscape, and commercial potential',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 11300,
- data: {
- agent: 'Market Research Analyst',
- progress: 'Sizing genetic disease markets and mapping competitive positioning...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 13100,
- data: {
- agent: 'Market Research Analyst',
- response: `## Gene Therapy & Base Editing Market Analysis (2025-2040)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 10100,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Market Research Analyst',
+        question: 'What\'s the total addressable market for base editing therapies across genetic diseases, and how does this platform position against Beam and Verve?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 10600,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing gene therapy market, base editing competitive landscape, and commercial potential',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 11300,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Sizing genetic disease markets and mapping competitive positioning...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 13100,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Gene Therapy & Base Editing Market Analysis (2025-2040)
 
 **Total Gene Therapy Market:**
 
@@ -2040,26 +2227,26 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 **Market Leaders (2024-2025):**
 
 1. **Beam Therapeutics (Public, $2.8B market cap):**
- - Platform: ABE8e + CBE4max (adenine & cytosine base editors)
- - Lead programs:
- - BEAM-101: Sickle cell disease (Phase 1/2)
- - BEAM-302: Glycogen storage disease (Phase 1/2)
- - BEAM-201: T-ALL (preclinical)
- - Partnerships: Pfizer ($300M), Verve ($600M)
- - **Market position:** Broadest base editing pipeline
+   - Platform: ABE8e + CBE4max (adenine & cytosine base editors)
+   - Lead programs:
+     - BEAM-101: Sickle cell disease (Phase 1/2)
+     - BEAM-302: Glycogen storage disease (Phase 1/2)
+     - BEAM-201: T-ALL (preclinical)
+   - Partnerships: Pfizer ($300M), Verve ($600M)
+   - **Market position:** Broadest base editing pipeline
 
 2. **Verve Therapeutics (Public, $1.1B market cap):**
- - Platform: In vivo liver base editing (licensed from Beam)
- - Lead programs:
- - VERVE-101: PCSK9 (heart disease) - **APPROVED New Zealand 2024!**
- - VERVE-102: ANGPTL3 (heart disease, Phase 1)
- - **Market position:** First approved base editing therapy
+   - Platform: In vivo liver base editing (licensed from Beam)
+   - Lead programs:
+     - VERVE-101: PCSK9 (heart disease) - **APPROVED New Zealand 2024!**
+     - VERVE-102: ANGPTL3 (heart disease, Phase 1)
+   - **Market position:** First approved base editing therapy
 
 3. **Prime Medicine (Private, $1.6B valuation):**
- - Platform: Prime editing (broader than base editing but less efficient)
- - Lead: Chronic granulomatous disease (Phase 1/2)
- - Backed by: F-Prime, Arch Ventures
- - **Market position:** Next-gen editing, but 30-40% efficiency vs 75-92% base editors
+   - Platform: Prime editing (broader than base editing but less efficient)
+   - Lead: Chronic granulomatous disease (Phase 1/2)
+   - Backed by: F-Prime, Arch Ventures
+   - **Market position:** Next-gen editing, but 30-40% efficiency vs 75-92% base editors
 
 **BaseGenomics Competitive Positioning:**
 
@@ -2087,39 +2274,39 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 **Lead Indications (BaseGenomics Platform):**
 
 1. **Sickle Cell Disease:**
- - Addressable patients: 100,000 (US) + 50,000 (EU)
- - Treatment price: $2.8M (Casgevy precedent)
- - Market penetration: 20-25% at peak
- - **Market size: $14.7-21B** (annual at peak)
- - Peak: 2032-2036
+   - Addressable patients: 100,000 (US) + 50,000 (EU)
+   - Treatment price: $2.8M (Casgevy precedent)
+   - Market penetration: 20-25% at peak
+   - **Market size: $14.7-21B** (annual at peak)
+   - Peak: 2032-2036
 
 2. **Hemophilia A & B:**
- - Addressable patients: 40,000 (US+EU)
- - Treatment price: $3.2M (one-time cure)
- - Market penetration: 30% (gene therapy accepted)
- - **Market size: $8-10B**
- - Peak: 2033-2037
+   - Addressable patients: 40,000 (US+EU)
+   - Treatment price: $3.2M (one-time cure)
+   - Market penetration: 30% (gene therapy accepted)
+   - **Market size: $8-10B**
+   - Peak: 2033-2037
 
 3. **Familial Hypercholesterolemia (PCSK9):**
- - Addressable patients: 1.3M (homozygous + severe heterozygous)
- - Treatment price: $500K (in vivo, one-time)
- - Market penetration: 8-12% (conservative, in vivo risk)
- - **Market size: $6-8B**
- - Peak: 2034-2038
+   - Addressable patients: 1.3M (homozygous + severe heterozygous)
+   - Treatment price: $500K (in vivo, one-time)
+   - Market penetration: 8-12% (conservative, in vivo risk)
+   - **Market size: $6-8B**
+   - Peak: 2034-2038
 
 4. **Ornithine Transcarbamylase Deficiency:**
- - Addressable patients: 15,000 (US+EU)
- - Treatment price: $2.5M
- - Market penetration: 40% (severe unmet need)
- - **Market size: $2-3B**
- - Peak: 2035-2038
+   - Addressable patients: 15,000 (US+EU)
+   - Treatment price: $2.5M
+   - Market penetration: 40% (severe unmet need)
+   - **Market size: $2-3B**
+   - Peak: 2035-2038
 
 5. **Beta-Thalassemia:**
- - Addressable patients: 60,000 (US+EU)
- - Treatment price: $2.8M
- - Market penetration: 18-22%
- - **Market size: $4-5B**
- - Peak: 2033-2037
+   - Addressable patients: 60,000 (US+EU)
+   - Treatment price: $2.8M
+   - Market penetration: 18-22%
+   - **Market size: $4-5B**
+   - Peak: 2033-2037
 
 **Total Platform TAM: $35-47B** (across 5 indications)
 
@@ -2203,32 +2390,32 @@ export const DEMO_LICENSING_DEAL: DemoScenario = {
 3. Maintain 18-22% market share vs Beam/Verve
 4. Execute regional sublicenses (China/Japan)
 5. Consider pharma acquisition exit at Phase 3 data (2027-2028)`,
- },
- },
- {
- type: 'synthesis_start',
- timestamp: 13600,
- data: {},
- },
- {
- type: 'synthesis_progress',
- timestamp: 14500,
- data: {
- step: 'Integrating technology, IP, financial, and market analyses...',
- },
- },
- {
- type: 'synthesis_progress',
- timestamp: 15600,
- data: {
- step: 'Generating deal structure alternatives...',
- },
- },
- {
- type: 'complete',
- timestamp: 18000,
- data: {
- synthesis: `# Licensing Recommendation: PROCEED WITH DEAL
+      },
+    },
+    {
+      type: 'synthesis_start',
+      timestamp: 13600,
+      data: {},
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 14500,
+      data: {
+        step: 'Integrating technology, IP, financial, and market analyses...',
+      },
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 15600,
+      data: {
+        step: 'Generating deal structure alternatives...',
+      },
+    },
+    {
+      type: 'complete',
+      timestamp: 18000,
+      data: {
+        synthesis: `# Licensing Recommendation: PROCEED WITH DEAL
 
 ## Executive Summary
 
@@ -2396,62 +2583,58 @@ This is an **exceptional opportunity** to acquire a validated, best-in-class ade
 ---
 
 **Analysis completed at $0.42 estimated cost**`,
- cost: 0.42,
- },
- },
- ],
+        cost: 0.42,
+      },
+    },
+  ],
 };
 
 /**
  * Demo Scenario 4: Series B Investment Decision
  */
 export const DEMO_INVESTMENT_DECISION: DemoScenario = {
- id: 'investment-decision',
- title: 'Oral GLP-1 Series B Investment',
- description: 'Should we invest $40M in ObesityRx\'s Series B? Comprehensive analysis across clinical data, IP landscape, financial terms, and market dynamics.',
- query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, IP portfolio relative to Novo/Lilly, and financial runway to Phase 3.',
- documents: [
- 'ObesityRx_Phase2a_Results.pdf (2.2 MB)',
- 'Oral_GLP1_Competitive_Landscape.pdf (3.1 MB)',
- 'Series_B_Term_Sheet.pdf (0.6 MB)',
- ],
- estimatedDuration: 19000,
- events: [
- {
- type: 'plan_created',
- timestamp: 0,
- data: {
- plan: 'Investment evaluation: Phase 2a Analysis → IP Review → Financial Model → Market Dynamics → Investment Decision',
- mode: 'thorough',
- estimatedCost: '$0.38',
- },
- },
- {
- type: 'agent_start',
- timestamp: 600,
- data: {
- agent: 'Clinical Analyst',
- task: 'Analyzing Phase 2a oral GLP-1 efficacy and safety vs injectable competitors',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 1100,
- data: {
- agent: 'Clinical Analyst',
- progress: 'Reviewing weight loss efficacy and GI tolerability data...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 2600,
- data: {
- agent: 'Clinical Analyst',
- response: `## Phase 2a Oral GLP-1 Analysis (2024-2025)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+  id: 'investment-decision',
+  title: 'Oral GLP-1 Series B Investment',
+  description: 'Should we invest $40M in ObesityRx\'s Series B? Comprehensive analysis across clinical data, IP landscape, financial terms, and market dynamics.',
+  query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, IP portfolio relative to Novo/Lilly, and financial runway to Phase 3.',
+  documents: [
+    'ObesityRx_Phase2a_Results.pdf (2.2 MB)',
+    'Oral_GLP1_Competitive_Landscape.pdf (3.1 MB)',
+    'Series_B_Term_Sheet.pdf (0.6 MB)',
+  ],
+  estimatedDuration: 19000,
+  events: [
+    {
+      type: 'plan_created',
+      timestamp: 0,
+      data: {
+        plan: 'Investment evaluation: Phase 2a Analysis → IP Review → Financial Model → Market Dynamics → Investment Decision',
+        mode: 'thorough',
+        estimatedCost: '$0.38',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 600,
+      data: {
+        agent: 'Clinical Analyst',
+        task: 'Analyzing Phase 2a oral GLP-1 efficacy and safety vs injectable competitors',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 1100,
+      data: {
+        agent: 'Clinical Analyst',
+        progress: 'Reviewing weight loss efficacy and GI tolerability data...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 2600,
+      data: {
+        agent: 'Clinical Analyst',
+        response: `## Phase 2a Oral GLP-1 Analysis (2024-2025)
 
 **Trial Design:**
 - N=182 adults with obesity (BMI 30-45)
@@ -2510,58 +2693,54 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 ✓ Patent runway: 2042 expiry vs Wegovy 2032
 
 **Question for Patent Expert:** How differentiated is our molecule vs Novo's oral semaglutide and Lilly's orforglipron?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 3000,
- data: {
- from: 'Clinical Analyst',
- to: 'Patent Expert',
- question: 'How differentiated is our oral GLP-1 molecule vs Novo\'s oral semaglutide and Lilly\'s orforglipron? What\'s our FTO position?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 3500,
- data: {
- agent: 'Patent Expert',
- task: 'Reviewing patent portfolio and competitive IP landscape',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 4100,
- data: {
- agent: 'Patent Expert',
- progress: 'Analyzing composition and method claims...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 5800,
- data: {
- agent: 'Patent Expert',
- response: `## Oral GLP-1 IP Portfolio Assessment (2024-2025)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 3000,
+      data: {
+        from: 'Clinical Analyst',
+        to: 'Patent Expert',
+        question: 'How differentiated is our oral GLP-1 molecule vs Novo\'s oral semaglutide and Lilly\'s orforglipron? What\'s our FTO position?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 3500,
+      data: {
+        agent: 'Patent Expert',
+        task: 'Reviewing patent portfolio and competitive IP landscape',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 4100,
+      data: {
+        agent: 'Patent Expert',
+        progress: 'Analyzing composition and method claims...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 5800,
+      data: {
+        agent: 'Patent Expert',
+        response: `## Oral GLP-1 IP Portfolio Assessment (2024-2025)
 
 > **📋 Demo Note:** This is a demonstration scenario. Patent numbers shown are placeholders for illustrative purposes and have not been verified against USPTO databases. In live mode, all patent citations undergo the Patent Verification Protocol to ensure accuracy and credibility.
 
 **Core Patents:**
 - **US11892456**: "Non-Peptide GLP-1 Receptor Agonists"
- - Filed: 2021, Granted: 2024
- - Composition claims: Novel small molecule GLP-1R agonist (differentiated from semaglutide)
- - 22 compound claims including lead ORX-104
- - Expires: 2042
+  - Filed: 2021, Granted: 2024
+  - Composition claims: Novel small molecule GLP-1R agonist (differentiated from semaglutide)
+  - 22 compound claims including lead ORX-104
+  - Expires: 2042
 
 - **US11734201**: "Oral Absorption Enhancer Formulations"
- - Filed: 2022, Granted: 2024
- - Method claims: Proprietary permeation enhancer (NOT SNAC like Rybelsus)
- - Reduces GI side effects vs standard formulations
- - Expires: 2043
+  - Filed: 2022, Granted: 2024
+  - Method claims: Proprietary permeation enhancer (NOT SNAC like Rybelsus)
+  - Reduces GI side effects vs standard formulations
+  - Expires: 2043
 
 **Additional IP:**
 - Dosing regimen patent (QD with food): Expires 2041
@@ -2589,9 +2768,9 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 
 ✓ **vs Novo (Rybelsus):** CLEAR - completely different molecular structure
 ⚠ **vs Lilly (Orforglipron):** MODERATE RISK - both non-peptide small molecules
- - Independent FTO counsel opinion: 65% confidence no infringement
- - Key differentiator: Our absorption enhancer (not SNAC)
- - Structural claims differ in core scaffold
+  - Independent FTO counsel opinion: 65% confidence no infringement
+  - Key differentiator: Our absorption enhancer (not SNAC)
+  - Structural claims differ in core scaffold
 
 **FTO Risk Mitigation:**
 - Design-around options available if Lilly asserts (2 backup compounds)
@@ -2621,43 +2800,39 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 ⚠ Settlement/license: Possible 5-8% royalty to Lilly in worst case
 
 **Question for Financial:** Given 35% IP risk from Lilly and strong Phase 2a data, what's the Series B valuation and our expected return?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 6200,
- data: {
- from: 'Patent Expert',
- to: 'Financial Analyst',
- question: 'Given 35% IP risk from Lilly and strong Phase 2a data, what\'s the Series B valuation and our expected return?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 6700,
- data: {
- agent: 'Financial Analyst',
- task: 'Analyzing financials, burn rate, and Series B terms',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 7300,
- data: {
- agent: 'Financial Analyst',
- progress: 'Building cash flow projections and runway analysis...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 9200,
- data: {
- agent: 'Financial Analyst',
- response: `## Financial Analysis & Series B Investment Terms (2024-2025)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 6200,
+      data: {
+        from: 'Patent Expert',
+        to: 'Financial Analyst',
+        question: 'Given 35% IP risk from Lilly and strong Phase 2a data, what\'s the Series B valuation and our expected return?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 6700,
+      data: {
+        agent: 'Financial Analyst',
+        task: 'Analyzing financials, burn rate, and Series B terms',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 7300,
+      data: {
+        agent: 'Financial Analyst',
+        progress: 'Building cash flow projections and runway analysis...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 9200,
+      data: {
+        agent: 'Financial Analyst',
+        response: `## Financial Analysis & Series B Investment Terms (2024-2025)
 
 **Current Financial Position (Q4 2024):**
 - Cash: $22M
@@ -2675,9 +2850,9 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 
 **Use of Proceeds (18-month plan):**
 - Phase 2b trial (400 pts, 52 weeks): $85M
- - Patient recruitment + site costs: $52M
- - Drug manufacturing (GMP): $22M
- - CRO + data management: $11M
+  - Patient recruitment + site costs: $52M
+  - Drug manufacturing (GMP): $22M
+  - CRO + data management: $11M
 - Phase 3 planning + regulatory: $18M
 - Operations + G&A: $32M
 - IP defense fund (Lilly risk mitigation): $15M
@@ -2755,43 +2930,39 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 **Financial Recommendation:** **INVEST $40M** - Compelling risk/reward (794% expected ROI) in massive, validated market. Novo Holdings co-investment de-risks.
 
 **Question for Market Research:** What's the realistic market penetration and competitive positioning for an oral GLP-1 entering in 2029-2030?`,
- },
- },
- {
- type: 'agent_question',
- timestamp: 9700,
- data: {
- from: 'Financial Analyst',
- to: 'Market Research Analyst',
- question: 'What\'s the realistic market penetration and competitive positioning for an oral GLP-1 entering in 2029-2030?',
- },
- },
- {
- type: 'agent_start',
- timestamp: 10200,
- data: {
- agent: 'Market Research Analyst',
- task: 'Analyzing obesity market dynamics, competitive timeline, and market share projections',
- },
- },
- {
- type: 'agent_thinking',
- timestamp: 10900,
- data: {
- agent: 'Market Research Analyst',
- progress: 'Mapping competitive landscape and patient preferences...',
- },
- },
- {
- type: 'agent_response',
- timestamp: 12700,
- data: {
- agent: 'Market Research Analyst',
- response: `## Obesity Market Dynamics & Competitive Analysis (2025-2035)
-
-**📋 DEMO NOTE:** This is a simulated demonstration using hypothetical data for "BioSpectra" (fictional company). In live mode, all analyses use real, verifiable sources from PubMed, FDA.gov, USPTO, SEC Edgar, and ClinicalTrials.gov with clickable URLs. [Try Live Mode](/ai-projects/multi-agent-demo) to see real citations.
-
----
+      },
+    },
+    {
+      type: 'agent_question',
+      timestamp: 9700,
+      data: {
+        from: 'Financial Analyst',
+        to: 'Market Research Analyst',
+        question: 'What\'s the realistic market penetration and competitive positioning for an oral GLP-1 entering in 2029-2030?',
+      },
+    },
+    {
+      type: 'agent_start',
+      timestamp: 10200,
+      data: {
+        agent: 'Market Research Analyst',
+        task: 'Analyzing obesity market dynamics, competitive timeline, and market share projections',
+      },
+    },
+    {
+      type: 'agent_thinking',
+      timestamp: 10900,
+      data: {
+        agent: 'Market Research Analyst',
+        progress: 'Mapping competitive landscape and patient preferences...',
+      },
+    },
+    {
+      type: 'agent_response',
+      timestamp: 12700,
+      data: {
+        agent: 'Market Research Analyst',
+        response: `## Obesity Market Dynamics & Competitive Analysis (2025-2035)
 
 **Total Obesity Drug Market:**
 
@@ -2835,34 +3006,34 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 
 **Current Oral Options:**
 1. **Rybelsus (Novo - oral semaglutide):**
- - Approved for diabetes only (no obesity indication)
- - Weight loss: -5% (modest)
- - Limitations: Fasting requirement, SNAC enhancer (GI issues)
- - Not competitive in obesity space
+   - Approved for diabetes only (no obesity indication)
+   - Weight loss: -5% (modest)
+   - Limitations: Fasting requirement, SNAC enhancer (GI issues)
+   - Not competitive in obesity space
 
 **Emerging Oral Competitors (2025-2030):**
 
 2. **Novo Nordisk - Oral Amycretin (dual GLP-1/amylin):**
- - Status: Phase 2 ongoing (data expected Q2 2026)
- - Advantage: Novo brand + dual mechanism
- - Timeline: Launch 2029-2030 (head-to-head with ObesityRx)
- - **KEY COMPETITIVE THREAT**
+   - Status: Phase 2 ongoing (data expected Q2 2026)
+   - Advantage: Novo brand + dual mechanism
+   - Timeline: Launch 2029-2030 (head-to-head with ObesityRx)
+   - **KEY COMPETITIVE THREAT**
 
 3. **Eli Lilly - Orforglipron:**
- - Status: **DISCONTINUED Q3 2024** due to 47% nausea rate
- - Leaves Lilly without oral GLP-1 program
- - **ACQUISITION OPPORTUNITY**
+   - Status: **DISCONTINUED Q3 2024** due to 47% nausea rate
+   - Leaves Lilly without oral GLP-1 program
+   - **ACQUISITION OPPORTUNITY**
 
 4. **Structure Therapeutics - GSBR-1290:**
- - Status: Phase 2 (52-week data Q1 2026)
- - Advantage: Clean Phase 1 data, experienced team
- - Timeline: Launch 2029-2030
- - **DIRECT COMPETITOR**
+   - Status: Phase 2 (52-week data Q1 2026)
+   - Advantage: Clean Phase 1 data, experienced team
+   - Timeline: Launch 2029-2030
+   - **DIRECT COMPETITOR**
 
 5. **Pfizer - Danuglipron:**
- - Status: **DISCONTINUED 2024** due to 71% nausea rate
- - Pfizer exited oral GLP-1 space
- - **MARKET CONSOLIDATION**
+   - Status: **DISCONTINUED 2024** due to 71% nausea rate
+   - Pfizer exited oral GLP-1 space
+   - **MARKET CONSOLIDATION**
 
 **Oral GLP-1 Addressable Market:**
 
@@ -2883,11 +3054,11 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 **Market Entry Scenario:**
 - Launch year: 2029-2030
 - Competitors at launch:
- - Wegovy (injectable): Mature, losing share to Zepbound
- - Zepbound (injectable): Market leader
- - Novo oral amycretin: Launching simultaneously (major risk)
- - Structure GSBR-1290: Launching 2029-2030
- - Rybelsus: Not competitive in obesity
+  - Wegovy (injectable): Mature, losing share to Zepbound
+  - Zepbound (injectable): Market leader
+  - Novo oral amycretin: Launching simultaneously (major risk)
+  - Structure GSBR-1290: Launching 2029-2030
+  - Rybelsus: Not competitive in obesity
 
 **ObesityRx Differentiation:**
 ✓ **Best-in-class tolerability** (32% nausea vs 47-58% other orals)
@@ -2998,32 +3169,32 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 - Novo amycretin risk is manageable (not fatal)
 - Multiple exit scenarios all profitable (except failure)
 - **Expected ROI: 775%** justifies $40M investment`,
- },
- },
- {
- type: 'synthesis_start',
- timestamp: 13200,
- data: {},
- },
- {
- type: 'synthesis_progress',
- timestamp: 14100,
- data: {
- step: 'Integrating clinical, IP, financial, and market analyses...',
- },
- },
- {
- type: 'synthesis_progress',
- timestamp: 15200,
- data: {
- step: 'Building investment decision framework...',
- },
- },
- {
- type: 'complete',
- timestamp: 17500,
- data: {
- synthesis: `# Investment Recommendation: INVEST $40M in ObesityRx Series B
+      },
+    },
+    {
+      type: 'synthesis_start',
+      timestamp: 13200,
+      data: {},
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 14100,
+      data: {
+        step: 'Integrating clinical, IP, financial, and market analyses...',
+      },
+    },
+    {
+      type: 'synthesis_progress',
+      timestamp: 15200,
+      data: {
+        step: 'Building investment decision framework...',
+      },
+    },
+    {
+      type: 'complete',
+      timestamp: 17500,
+      data: {
+        synthesis: `# Investment Recommendation: INVEST $40M in ObesityRx Series B
 
 ## Executive Summary
 
@@ -3227,29 +3398,29 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 **Investment Thesis (5 Key Points):**
 
 1. **Massive Validated Market** ($50B+ oral GLP-1 TAM)
- - Wegovy $20B+ validates obesity drug demand
- - 30% patients prefer oral (needle-phobic)
- - Chronic lifetime therapy = recurring revenue
+   - Wegovy $20B+ validates obesity drug demand
+   - 30% patients prefer oral (needle-phobic)
+   - Chronic lifetime therapy = recurring revenue
 
 2. **Best-in-Class Clinical Profile**
- - -12.3% weight loss (projects to -18-20% at 52 weeks)
- - 32% nausea (vs 47-58% competitors) = key differentiator
- - Tolerability enables higher dosing → superior efficacy
+   - -12.3% weight loss (projects to -18-20% at 52 weeks)
+   - 32% nausea (vs 47-58% competitors) = key differentiator
+   - Tolerability enables higher dosing → superior efficacy
 
 3. **Strategic De-Risking (Novo Holdings)**
- - Novo investment arm co-leading = validation
- - Signals non-competitive with internal programs
- - Potential acquisition path at Phase 2b
+   - Novo investment arm co-leading = validation
+   - Signals non-competitive with internal programs
+   - Potential acquisition path at Phase 2b
 
 4. **Compelling Valuation**
- - $450M pre-money (fair vs $2.7B Carmot at Phase 1)
- - 794% expected ROI (risk-adjusted)
- - Multiple 10-30x upside scenarios
+   - $450M pre-money (fair vs $2.7B Carmot at Phase 1)
+   - 794% expected ROI (risk-adjusted)
+   - Multiple 10-30x upside scenarios
 
 5. **Clear Exit Path (18-24 months)**
- - Novo, Lilly, Roche active acquirers
- - $3.5-4.5B expected deal value at Phase 2b
- - 4.8-18x ROI across scenarios
+   - Novo, Lilly, Roche active acquirers
+   - $3.5-4.5B expected deal value at Phase 2b
+   - 4.8-18x ROI across scenarios
 
 **Expected Outcomes:**
 
@@ -3277,9 +3448,9 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 **Next Steps (60-day close):**
 1. Execute term sheet (Week 1)
 2. Confirmatory due diligence (Weeks 2-4):
- - Independent FTO analysis (Lilly IP risk)
- - Phase 2b protocol review
- - Reference calls (investigators, KOLs)
+   - Independent FTO analysis (Lilly IP risk)
+   - Phase 2b protocol review
+   - Reference calls (investigators, KOLs)
 3. Investment committee approval (Week 5)
 4. Legal documentation (Weeks 6-8)
 5. Wire funds + board observer appointment (Week 9)
@@ -3287,60 +3458,60 @@ export const DEMO_INVESTMENT_DECISION: DemoScenario = {
 ---
 
 **Analysis completed at $0.38 estimated cost**`,
- cost: 0.38,
- },
- },
- ],
+        cost: 0.38,
+      },
+    },
+  ],
 };
 
 /**
  * All available demo scenarios
  */
 export const DEMO_SCENARIOS: DemoScenario[] = [
- DEMO_MA_DUE_DILIGENCE,
- DEMO_COMPETITIVE_ANALYSIS,
- DEMO_LICENSING_DEAL,
- DEMO_INVESTMENT_DECISION,
+  DEMO_MA_DUE_DILIGENCE,
+  DEMO_COMPETITIVE_ANALYSIS,
+  DEMO_LICENSING_DEAL,
+  DEMO_INVESTMENT_DECISION,
 ];
 
 /**
  * Get demo scenario by ID
  */
 export function getDemoScenario(id: string): DemoScenario | undefined {
- return DEMO_SCENARIOS.find(scenario => scenario.id === id);
+  return DEMO_SCENARIOS.find(scenario => scenario.id === id);
 }
 
 /**
  * Play demo scenario with event streaming
  */
 export function playDemoScenario(
- scenario: DemoScenario,
- onEvent: (event: any) => void,
- speedMultiplier: number = 1
+  scenario: DemoScenario,
+  onEvent: (event: any) => void,
+  speedMultiplier: number = 1
 ): Promise<void> {
- return new Promise((resolve) => {
- const timeouts: NodeJS.Timeout[] = [];
- let maxDelay = 0;
+  return new Promise((resolve) => {
+    const timeouts: NodeJS.Timeout[] = [];
+    let maxDelay = 0;
 
- console.log('[playDemoScenario] Starting playback of', scenario.events.length, 'events');
+    console.log('[playDemoScenario] Starting playback of', scenario.events.length, 'events');
 
- scenario.events.forEach(event => {
- const adjustedDelay = event.timestamp! / speedMultiplier;
- maxDelay = Math.max(maxDelay, adjustedDelay);
+    scenario.events.forEach(event => {
+      const adjustedDelay = event.timestamp! / speedMultiplier;
+      maxDelay = Math.max(maxDelay, adjustedDelay);
 
- const timeout = setTimeout(() => {
- console.log('[playDemoScenario] Firing event:', event.type, 'at', adjustedDelay, 'ms');
- onEvent(event);
- }, adjustedDelay);
- timeouts.push(timeout);
- });
+      const timeout = setTimeout(() => {
+        console.log('[playDemoScenario] Firing event:', event.type, 'at', adjustedDelay, 'ms');
+        onEvent(event);
+      }, adjustedDelay);
+      timeouts.push(timeout);
+    });
 
- console.log('[playDemoScenario] Max delay:', maxDelay, 'ms');
+    console.log('[playDemoScenario] Max delay:', maxDelay, 'ms');
 
- // Resolve after all events have fired
- setTimeout(() => {
- console.log('[playDemoScenario] All events fired, resolving');
- resolve();
- }, maxDelay + 100); // Add small buffer
- });
+    // Resolve after all events have fired
+    setTimeout(() => {
+      console.log('[playDemoScenario] All events fired, resolving');
+      resolve();
+    }, maxDelay + 100); // Add small buffer
+  });
 }
