@@ -12,21 +12,9 @@ import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 
 const DEMO_SCENARIOS = [
   {
-    id: 'ma-due-diligence',
-    title: 'M&A Due Diligence',
-    description: 'Comprehensive analysis of a bispecific antibody acquisition target',
-    query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
-    documents: [
-      { fileName: 'BioSpectra_Phase2_Results.pdf', size: '2.8 MB' },
-      { fileName: 'BioSpectra_Patent_Portfolio.pdf', size: '2.1 MB' },
-      { fileName: 'BioSpectra_10K_2024.pdf', size: '4.3 MB' },
-    ],
-    icon: '🤝',
-  },
-  {
     id: 'competitive-analysis',
     title: 'Competitive Landscape Analysis',
-    description: 'Compare antibody-drug conjugates across clinical efficacy, IP, and market positioning',
+    description: '✅ REAL: Analyze FDA-approved ADCs (Enhertu, Trodelvy, Padcev) with real patent and clinical data',
     query: 'Compare the competitive positioning of Enhertu, Trodelvy, and Padcev. Which antibody-drug conjugate has the strongest patent protection and commercial potential in 2024-2025?',
     documents: [
       { fileName: 'Enhertu_Clinical_Portfolio.pdf', size: '3.2 MB' },
@@ -36,9 +24,21 @@ const DEMO_SCENARIOS = [
     icon: '📊',
   },
   {
+    id: 'ma-due-diligence',
+    title: 'M&A Due Diligence',
+    description: '⚠️ DEMO: Fictional company "BioSpectra" - comprehensive bispecific antibody acquisition analysis',
+    query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
+    documents: [
+      { fileName: 'BioSpectra_Phase2_Results.pdf', size: '2.8 MB' },
+      { fileName: 'BioSpectra_Patent_Portfolio.pdf', size: '2.1 MB' },
+      { fileName: 'BioSpectra_10K_2024.pdf', size: '4.3 MB' },
+    ],
+    icon: '🤝',
+  },
+  {
     id: 'licensing-deal',
     title: 'Technology Licensing Deal',
-    description: 'Evaluate a CRISPR base editing platform for potential licensing',
+    description: '⚠️ DEMO: Fictional company "BaseGenomics" - CRISPR base editing platform evaluation',
     query: 'Should we license BaseGenomics\' adenine base editing platform for $125M upfront + double-digit royalties? Analyze the technology, IP strength, competitive landscape, and financial terms.',
     documents: [
       { fileName: 'BaseGenomics_Technology_Package.pdf', size: '2.1 MB' },
@@ -50,7 +50,7 @@ const DEMO_SCENARIOS = [
   {
     id: 'investment-decision',
     title: 'Series B Investment Decision',
-    description: 'Due diligence for a Series B investment in an oral GLP-1 biotech',
+    description: '⚠️ DEMO: Fictional company "ObesityRx" - oral GLP-1 biotech investment analysis',
     query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, patent portfolio, competitive landscape, and burn rate.',
     documents: [
       { fileName: 'ObesityRx_Phase2a_Data.pdf', size: '2.2 MB' },
@@ -76,7 +76,7 @@ export default function MultiAgentDemo() {
   const [mode, setMode] = useState<ExecutionMode>('thorough');
   const [isDemo, setIsDemo] = useState(true);
   const [query, setQuery] = useState('');
-  const [selectedScenarioId, setSelectedScenarioId] = useState<string>('ma-due-diligence');
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string>('competitive-analysis');
   const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
   const [costEstimate, setCostEstimate] = useState<any>(null);
   const [isEstimating, setIsEstimating] = useState(false);
