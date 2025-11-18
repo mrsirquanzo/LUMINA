@@ -16,9 +16,9 @@ Changed from generic "Claude Sonnet 4" to specific model names:
 |-------|--------|-------|
 | Clinical Data Analyst | Claude Sonnet 4 | **Claude Sonnet 4** ✓ |
 | Regulatory Expert | Claude Sonnet 4 | **Claude Sonnet 4** ✓ |
-| Patent Expert | ~~Claude Sonnet 4~~ | **Perplexity Sonar Large** (Llama 3.1 128K Online) |
-| Market Research | ~~Claude Sonnet 4~~ | **Perplexity Sonar Large** (Llama 3.1 128K Online) |
-| Financial Analyst | ~~Claude Sonnet 4~~ | **Gemini Pro** |
+| Patent Expert | ~~Claude Sonnet 4~~ | **Perplexity Sonar Pro** |
+| Market Research | ~~Claude Sonnet 4~~ | **Perplexity Sonar Pro** |
+| Financial Analyst | ~~Claude Sonnet 4~~ | **Gemini 2.0 Flash** |
 
 **Files updated:**
 - `content/ai-projects/patent-expert-agent.mdx`
@@ -124,10 +124,10 @@ Changed from generic "Claude Sonnet 4" to specific model names:
 │  Clinical Data Analyst  →  Claude Sonnet 4 (Anthropic)      │
 │  Regulatory Expert     →  Claude Sonnet 4 (Anthropic)       │
 │                                                              │
-│  Patent Expert         →  Perplexity Sonar Large (Online)   │
-│  Market Research       →  Perplexity Sonar Large (Online)   │
+│  Patent Expert         →  Perplexity Sonar Pro (Online)     │
+│  Market Research       →  Perplexity Sonar Pro (Online)     │
 │                                                              │
-│  Financial Analyst     →  Gemini Pro (Google)               │
+│  Financial Analyst     →  Gemini 2.0 Flash (Google)         │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -137,16 +137,17 @@ Changed from generic "Claude Sonnet 4" to specific model names:
 **Claude Sonnet 4** (Clinical, Regulatory)
 - Superior reasoning for complex analysis
 - Best for scientific and regulatory assessment
+- Deep understanding of clinical and regulatory documents
 
-**Perplexity Sonar** (Patent, Market Research)
+**Perplexity Sonar Pro** (Patent, Market Research)
 - Real-time web search capabilities
-- Access to live patent databases
-- Current market intelligence
+- Access to live patent databases and market intelligence
+- Current competitive information and patent filing searches
 
-**Gemini Pro** (Financial)
+**Gemini 2.0 Flash** (Financial)
 - Large context windows for lengthy documents
 - Cost-effective for high-volume analysis
-- Good at structured financial data
+- Fast processing of structured financial data
 
 ---
 
@@ -172,10 +173,10 @@ git push origin claude/multi-model-integration-019fch7UpNnz8Nro1UmYcTeB
 Once deployed, test each agent:
 
 - [ ] **Clinical Data Analyst** - Upload PDF, verify Claude Sonnet 4 response
-- [ ] **Financial Analyst** - Test with financial doc, verify Gemini Pro
-- [ ] **Patent Expert** - Ask about patents, verify Perplexity response
-- [ ] **Market Research** - Ask market question, verify Perplexity
 - [ ] **Regulatory Expert** - Ask regulatory question, verify Claude Sonnet 4
+- [ ] **Patent Expert** - Ask about patents, verify Perplexity Sonar Pro response
+- [ ] **Market Research** - Ask market question, verify Perplexity Sonar Pro
+- [ ] **Financial Analyst** - Test with financial doc, verify Gemini 2.0 Flash
 
 ### Step 4: Check Agent Cards
 Visit `/ai-projects` and verify cards show:

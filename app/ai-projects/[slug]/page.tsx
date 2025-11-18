@@ -52,8 +52,14 @@ export default async function AIProjectPage({ params }: Props) {
   const fullUrl = `https://quanho.io/ai-projects/${params.slug}`;
 
   // Get category label
-  const categoryLabel = projectType === 'ai-agent' ? 'AI Agent' : 'Design';
-  const categoryColor = projectType === 'ai-agent' ? 'text-accent-600' : 'text-purple-600';
+  const categoryLabel =
+    projectType === 'ai-agent' ? 'AI Agent' :
+    projectType === 'multi-agent' ? 'Multi-Agent' :
+    'Design';
+  const categoryColor =
+    projectType === 'ai-agent' ? 'text-accent-600' :
+    projectType === 'multi-agent' ? 'text-indigo-600' :
+    'text-purple-600';
 
   // Reorder tech stack to put LLM models first
   const reorderedTechStack = techStack ? [

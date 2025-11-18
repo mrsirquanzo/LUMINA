@@ -57,9 +57,9 @@ After deployment completes:
 Check that agent cards show correct models:
 - Clinical Data Analyst → Claude Sonnet 4 ✓
 - Regulatory Expert → Claude Sonnet 4 ✓
-- Patent Expert → Perplexity Sonar Large ✓
-- Market Research → Perplexity Sonar Large ✓
-- Financial Analyst → Gemini Pro ✓
+- Patent Expert → Perplexity Sonar Pro ✓
+- Market Research → Perplexity Sonar Pro ✓
+- Financial Analyst → Gemini 2.0 Flash ✓
 
 ---
 
