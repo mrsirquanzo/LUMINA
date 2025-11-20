@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 interface CitationBadgeProps {
   number: string;
@@ -94,8 +95,25 @@ export function SourcesReferencedSection({ sources }: SourcesReferencedSectionPr
                     {source.number}
                   </span>
                 </div>
-                <div className="flex-1 text-sm text-gray-800 leading-relaxed">
-                  {source.citation}
+                <div className="flex-1 text-sm text-gray-800 leading-relaxed prose prose-sm max-w-none prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline">
+                  <ReactMarkdown
+                    components={{
+                      a: ({ href, children, ...props }) => (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                          {...props}
+                        >
+                          {children}
+                        </a>
+                      ),
+                      p: ({ children }) => <>{children}</>,
+                    }}
+                  >
+                    {source.citation}
+                  </ReactMarkdown>
                 </div>
               </div>
             ))}

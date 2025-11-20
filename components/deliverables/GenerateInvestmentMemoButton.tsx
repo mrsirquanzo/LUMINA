@@ -62,8 +62,21 @@ export function GenerateInvestmentMemoButton({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.details || errorData.error || 'Failed to generate memo');
+        // Try to parse error as JSON, but handle plain text errors gracefully
+        let errorMessage = 'Failed to generate memo';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.details || errorData.error || errorMessage;
+        } catch {
+          // Response is not JSON, try to read as text
+          try {
+            const errorText = await response.text();
+            errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+          } catch {
+            errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       // Extract metadata from headers

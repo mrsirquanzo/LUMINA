@@ -20,10 +20,10 @@ interface CitedMarkdownProps {
  * - Adds demo/live indicators for transparency
  */
 export function CitedMarkdown({ content, className = '', isDemo = false }: CitedMarkdownProps) {
-  // Parse out the Sources Referenced section
-  const sourcesMatch = content.match(/## 📚 Sources Referenced\n\n([\s\S]*?)(?=\n##|$)/);
+  // Parse out the Sources Referenced / References section - support both formats
+  const sourcesMatch = content.match(/## (?:📚 Sources Referenced|References)\n\n([\s\S]*?)(?=\n##|$)/);
   const mainContent = sourcesMatch
-    ? content.replace(/## 📚 Sources Referenced\n\n[\s\S]*?(?=\n##|$)/, '').trim()
+    ? content.replace(/## (?:📚 Sources Referenced|References)\n\n[\s\S]*?(?=\n##|$)/, '').trim()
     : content;
 
   // Extract sources if they exist
@@ -32,21 +32,37 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
 
   if (sourcesMatch) {
     const sourcesText = sourcesMatch[1];
-    const sourceLines = sourcesText.split('\n').filter(line => line.trim().startsWith('['));
 
-    sourceLines.forEach(line => {
-      const match = line.match(/\[(\d+)\]\s+(.*)/);
+    // Split by citation numbers and extract multi-line citations
+    const citationBlocks = sourcesText.split(/(?=^\[\d+\])/gm).filter(block => block.trim());
+
+    citationBlocks.forEach(block => {
+      // Match citation number and all subsequent lines until next citation or end
+      const match = block.match(/^\[(\d+)\]\s+([\s\S]*?)$/);
       if (match) {
         const number = match[1];
-        const citation = match[2];
-        sources.push({ number, citation });
-        citationMap.set(number, citation);
+        // Get all lines for this citation, join them, and render markdown
+        const rawCitation = match[2].trim();
+        sources.push({ number, citation: rawCitation });
+        citationMap.set(number, rawCitation);
       }
     });
   }
 
-  // Custom component to render inline citations with tooltips
+  // Custom component to render inline citations with tooltips and clickable links
   const components = {
+    // Render links properly with proper styling
+    a: ({ href, children, ...props }: any) => (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:text-blue-800 underline hover:no-underline transition-colors"
+        {...props}
+      >
+        {children}
+      </a>
+    ),
     p: ({ children, ...props }: any) => {
       // Process text nodes to detect [1], [2] style citations
       const processedChildren = React.Children.map(children, (child) => {
