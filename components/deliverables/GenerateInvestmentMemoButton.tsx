@@ -56,7 +56,7 @@ export function GenerateInvestmentMemoButton({
           agentResponses,
           companyName,
           analysisId,
-          generatedBy: 'QuanHo.me AI Agent System',
+          generatedBy: 'Sonny: Multi-Agent System',
           format
         })
       });
