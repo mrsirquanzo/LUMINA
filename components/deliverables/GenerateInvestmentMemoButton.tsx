@@ -7,7 +7,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Download, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { FiFileText, FiDownload, FiLoader, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 
 interface GenerateInvestmentMemoButtonProps {
   agentResponses: {
@@ -109,25 +109,25 @@ export function GenerateInvestmentMemoButton({
 
   const statusConfig = {
     idle: {
-      icon: FileText,
+      icon: FiFileText,
       text: 'Generate Investment Memo',
       color: 'bg-blue-600 hover:bg-blue-700',
       textColor: 'text-white'
     },
     generating: {
-      icon: Loader2,
+      icon: FiLoader,
       text: 'Generating Memo...',
       color: 'bg-blue-500',
       textColor: 'text-white'
     },
     success: {
-      icon: CheckCircle,
+      icon: FiCheckCircle,
       text: `Memo Generated! ${generationStats.totalWords ? `(${generationStats.totalWords?.toLocaleString()} words)` : ''}`,
       color: 'bg-green-600',
       textColor: 'text-white'
     },
     error: {
-      icon: AlertCircle,
+      icon: FiAlertCircle,
       text: 'Generation Failed',
       color: 'bg-red-600',
       textColor: 'text-white'

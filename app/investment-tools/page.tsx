@@ -8,7 +8,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Section from '@/components/shared/Section';
 import { generateSEO } from '@/components/layout/SEO';
-import { FileText, TrendingUp, BarChart3, Target, Briefcase, CheckSquare } from 'lucide-react';
+import { FiFileText, FiTrendingUp, FiBarChart2, FiTarget, FiBriefcase, FiCheckSquare } from 'react-icons/fi';
 
 export const metadata: Metadata = generateSEO({
   title: 'Investment Workflow Tools',
@@ -22,7 +22,7 @@ export default function InvestmentToolsPage() {
       id: 'investment-memo',
       title: 'Investment Memo Generator',
       description: 'Generate comprehensive 15-25 page institutional-grade investment memos with executive summary, market analysis, financial modeling, risk assessment, and IC-ready recommendations.',
-      icon: FileText,
+      icon: FiFileText,
       color: 'blue',
       status: 'available',
       features: [
@@ -48,7 +48,7 @@ export default function InvestmentToolsPage() {
       id: 'financial-models',
       title: 'Financial Modeling Suite',
       description: 'Automated DCF models, risk-adjusted NPV, scenario analysis, and comparable company valuations with Excel export.',
-      icon: TrendingUp,
+      icon: FiTrendingUp,
       color: 'green',
       status: 'coming-soon',
       features: [
@@ -65,7 +65,7 @@ export default function InvestmentToolsPage() {
       id: 'competitive-benchmarking',
       title: 'Competitive Benchmarking Engine',
       description: 'Auto-identify comparable companies and generate side-by-side competitive analysis with percentile rankings.',
-      icon: BarChart3,
+      icon: FiBarChart2,
       color: 'purple',
       status: 'coming-soon',
       features: [
@@ -82,7 +82,7 @@ export default function InvestmentToolsPage() {
       id: 'risk-scoring',
       title: 'Risk Scoring System',
       description: 'Automated risk assessment across clinical, commercial, financial, IP, and regulatory dimensions with actionable insights.',
-      icon: Target,
+      icon: FiTarget,
       color: 'red',
       status: 'coming-soon',
       features: [
@@ -99,7 +99,7 @@ export default function InvestmentToolsPage() {
       id: 'deal-pipeline',
       title: 'Deal Pipeline Dashboard',
       description: 'Manage multiple investment opportunities with Kanban boards, stage gates, and portfolio analytics.',
-      icon: Briefcase,
+      icon: FiBriefcase,
       color: 'indigo',
       status: 'coming-soon',
       features: [
@@ -116,7 +116,7 @@ export default function InvestmentToolsPage() {
       id: 'due-diligence-checklist',
       title: 'Due Diligence Checklist Tracker',
       description: 'Comprehensive checklists for biotech DD with progress tracking, document collection, and completion status.',
-      icon: CheckSquare,
+      icon: FiCheckSquare,
       color: 'teal',
       status: 'coming-soon',
       features: [
@@ -146,7 +146,7 @@ export default function InvestmentToolsPage() {
       <Section className="bg-gradient-to-br from-blue-50 via-white to-cyan-50">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6">
-            <Briefcase className="w-4 h-4" />
+            <FiBriefcase className="w-4 h-4" />
             Professional Deliverables
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -202,7 +202,7 @@ export default function InvestmentToolsPage() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                             {tool.features.map((feature, idx) => (
                               <div key={idx} className="flex items-start gap-2">
-                                <CheckSquare className={`w-4 h-4 mt-0.5 flex-shrink-0 ${colors.icon}`} />
+                                <FiCheckSquare className={`w-4 h-4 mt-0.5 flex-shrink-0 ${colors.icon}`} />
                                 <span className="text-sm text-gray-700">{feature}</span>
                               </div>
                             ))}
