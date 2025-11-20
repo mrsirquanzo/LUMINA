@@ -6,6 +6,8 @@ import remarkGfm from 'remark-gfm';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import LoginModal from '@/components/shared/LoginModal';
 import ExportButton from '@/components/shared/ExportButton';
+import { ModelBadge } from '@/components/shared/ModelBadge';
+import { AgentSpecsCard, type AgentSpecs } from '@/components/shared/AgentSpecsCard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -231,6 +233,64 @@ To capture 15-20% market share, focus on:
   },
 ];
 
+const MARKET_RESEARCH_SPECS: AgentSpecs = {
+  agentName: 'Market Research Analyst',
+  model: {
+    provider: 'Perplexity',
+    modelName: 'sonar-pro',
+    optimizedFor: 'Real-time market data and competitor intelligence with deep retrieval',
+    maxTokens: 4096,
+    temperature: 0.7,
+  },
+  apiConnections: [
+    {
+      name: 'Perplexity Real-Time Search',
+      status: 'connected',
+      description: 'Live market intelligence, news, and competitor analysis with citation tracking',
+    },
+    {
+      name: 'Vision API (Document Analysis)',
+      status: 'connected',
+      description: 'Extract market data, charts, and competitor intelligence from documents',
+    },
+  ],
+  dataSources: [
+    {
+      name: 'Real-Time Market Intelligence',
+      type: 'real-time',
+      description: 'News, competitor activity, market trends, and commercial developments',
+    },
+    {
+      name: 'Industry Reports & Analysis',
+      type: 'real-time',
+      description: 'Market forecasts, industry reports, and commercial assessments',
+    },
+    {
+      name: 'Uploaded Market Research',
+      type: 'on-demand',
+      description: 'Proprietary reports, competitor presentations, and internal market analysis',
+    },
+  ],
+  mcpServer: {
+    available: true,
+    enabled: process.env.MCP_ENABLED === 'true',
+    tools: [
+      {
+        name: 'search_market_news',
+        description: 'Search real-time news and market intelligence for biotech companies',
+      },
+      {
+        name: 'analyze_competitors',
+        description: 'Analyze competitive landscape and market positioning',
+      },
+      {
+        name: 'forecast_market_size',
+        description: 'Generate market size forecasts and revenue projections',
+      },
+    ],
+  },
+};
+
 export default function MarketResearchAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -390,9 +450,12 @@ export default function MarketResearchAgent() {
         <div className="inline-block px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-4">
           📊 Market Research
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Market Research Agent
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900">
+            Market Research Agent
+          </h1>
+          <ModelBadge provider="Perplexity" modelName="Sonar Pro" />
+        </div>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           Get data-driven market analysis including market sizing, competitive landscape,
           pricing strategy, revenue forecasting, and commercial opportunity assessment.
@@ -640,6 +703,11 @@ export default function MarketResearchAgent() {
           </div>
         </div>
       )}
+
+      {/* Technical Specifications */}
+      <div className="mt-8">
+        <AgentSpecsCard specs={MARKET_RESEARCH_SPECS} />
+      </div>
 
       {/* Behind the Scenes */}
       <div className="mt-8">

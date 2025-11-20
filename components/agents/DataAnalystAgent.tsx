@@ -7,6 +7,8 @@ import LoginModal from '@/components/shared/LoginModal';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import ExportButton from '@/components/shared/ExportButton';
 import { DATA_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
+import { ModelBadge } from '@/components/shared/ModelBadge';
+import { AgentSpecsCard, type AgentSpecs } from '@/components/shared/AgentSpecsCard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -31,6 +33,59 @@ const SAMPLE_QUERIES = [
   "Benchmark our Phase 2 trial design: What sample size and endpoints are typical for MS trials?",
   "What are the approval trends for oncology drugs in 2023-2024? Which indications are hottest?",
 ];
+
+const CLINICAL_ANALYST_SPECS: AgentSpecs = {
+  agentName: 'Clinical Data Analyst',
+  model: {
+    provider: 'Anthropic',
+    modelName: 'claude-sonnet-4-20250514',
+    optimizedFor: 'Advanced reasoning for complex clinical trial analysis, efficacy interpretation, and safety assessments',
+    maxTokens: 4096,
+    temperature: 1.0,
+  },
+  apiConnections: [
+    {
+      name: 'Gosset.ai Pharmaceutical Intelligence',
+      status: 'connected',
+      description: 'Real-time access to 100K+ drug assets, phase transition rates, trial success predictions, and design benchmarks',
+    },
+    {
+      name: 'Vision API (Document Analysis)',
+      status: 'connected',
+      description: 'Multi-modal analysis of charts, graphs, and figures in clinical documents and trial reports',
+    },
+  ],
+  dataSources: [
+    {
+      name: 'Gosset.ai Drug Database',
+      type: 'real-time',
+      description: 'Phase transition rates, trial outcomes, and success predictions across therapeutic areas',
+    },
+    {
+      name: 'Uploaded Documents',
+      type: 'on-demand',
+      description: 'PDF/Excel clinical reports, trial protocols, efficacy data with text and image extraction',
+    },
+  ],
+  mcpServer: {
+    available: true,
+    enabled: process.env.MCP_ENABLED === 'true',
+    tools: [
+      {
+        name: 'search_pubmed',
+        description: 'Search PubMed for clinical studies, trial results, and medical literature',
+      },
+      {
+        name: 'get_clinical_trial',
+        description: 'Retrieve detailed clinical trial information from ClinicalTrials.gov',
+      },
+      {
+        name: 'search_clinical_trials',
+        description: 'Search clinical trials by condition, intervention, phase, or sponsor',
+      },
+    ],
+  },
+};
 
 export default function DataAnalystAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
@@ -211,9 +266,12 @@ export default function DataAnalystAgent() {
     <div className="max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Clinical Data Analyst Agent
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900">
+            Clinical Data Analyst Agent
+          </h1>
+          <ModelBadge provider="Anthropic" modelName="Sonnet 4" />
+        </div>
         <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-4">
           AI-powered analyst for biotech clinical trials, competitive intelligence, and market analysis.
           Upload documents, analyze websites, or chat directly.
@@ -476,6 +534,11 @@ export default function DataAnalystAgent() {
           </div>
         </div>
       )}
+
+      {/* Technical Specifications */}
+      <div className="mt-8">
+        <AgentSpecsCard specs={CLINICAL_ANALYST_SPECS} />
+      </div>
 
       {/* Behind the Scenes */}
       <div className="mt-8">
