@@ -36,10 +36,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log('Generating investment memo...');
-    console.log('Company:', companyName || 'Unknown');
-    console.log('Format:', format);
-    console.log('Available agent responses:', Object.keys(agentResponses));
+    console.log('[Investment Memo] Starting generation...');
+    console.log('[Investment Memo] Company:', companyName || 'Unknown');
+    console.log('[Investment Memo] Format:', format);
+    console.log('[Investment Memo] Available agent responses:', Object.keys(agentResponses));
+    console.log('[Investment Memo] Agent response lengths:', Object.entries(agentResponses).map(([key, val]) =>
+      `${key}: ${val ? (typeof val === 'string' ? val.length : 'not a string') : 'undefined'} chars`
+    ));
 
     // Generate memo content by extracting sections
     const { sections, metadata } = await generateInvestmentMemo(agentResponses, {
@@ -90,18 +93,36 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Error generating investment memo:', error);
+    console.error('[Investment Memo] Generation failed:', error);
 
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     const errorStack = error instanceof Error ? error.stack : undefined;
 
-    console.error('Error details:', { message: errorMessage, stack: errorStack });
+    console.error('[Investment Memo] Error details:', {
+      message: errorMessage,
+      stack: errorStack,
+      type: error instanceof Error ? error.constructor.name : typeof error
+    });
+
+    // If it's an Anthropic API error, provide more specific details
+    if (errorMessage.includes('API') || errorMessage.includes('Anthropic')) {
+      return NextResponse.json(
+        {
+          error: 'Failed to generate investment memo - API Error',
+          details: errorMessage,
+          suggestion: 'This may be due to API rate limits or authentication issues. Please check your Anthropic API key and try again.',
+          technicalDetails: process.env.NODE_ENV === 'development' ? errorStack : undefined
+        },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       {
         error: 'Failed to generate investment memo',
         details: errorMessage,
-        suggestion: 'Please ensure all required agent responses are provided and try again.'
+        suggestion: 'Please ensure all required agent responses are provided and try again.',
+        technicalDetails: process.env.NODE_ENV === 'development' ? errorStack : undefined
       },
       { status: 500 }
     );
