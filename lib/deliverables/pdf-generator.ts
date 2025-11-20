@@ -139,7 +139,7 @@ export function generateInvestmentMemoPDF(
     doc.setTextColor(0, 0, 0);
 
     // Parse and render markdown content
-    const lines = parseMarkdownToPDFLines(doc, section.content, contentWidth);
+    const lines = parseMarkdownToPDFLines(doc, section.content);
 
     lines.forEach((line) => {
       if (currentY > pageHeight - 30) {
@@ -235,8 +235,7 @@ export function generateInvestmentMemoPDF(
  */
 function parseMarkdownToPDFLines(
   doc: jsPDF,
-  markdown: string,
-  maxWidth: number
+  markdown: string
 ): Array<{ type: string; text: string }> {
   const lines: Array<{ type: string; text: string }> = [];
   const rawLines = markdown.split('\n');

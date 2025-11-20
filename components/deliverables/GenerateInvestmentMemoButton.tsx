@@ -7,7 +7,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FiFileText, FiDownload, FiLoader, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
+import { FiFileText, FiLoader, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 
 interface GenerateInvestmentMemoButtonProps {
   agentResponses: {

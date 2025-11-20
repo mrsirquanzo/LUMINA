@@ -5,7 +5,7 @@
  * that meet the standards of top-tier firms (McKinsey, BCG, Goldman Sachs, etc.)
  */
 
-import { DeliverableTemplate, DeliverableSection } from '../types';
+import { DeliverableTemplate } from '../types';
 
 export const INVESTMENT_MEMO_PROMPT = `You are an expert investment analyst tasked with creating institutional-grade investment memos that meet the standards of top-tier firms including McKinsey, BCG, JP Morgan, Goldman Sachs, Barclays, and leading VC/PE firms.
 
