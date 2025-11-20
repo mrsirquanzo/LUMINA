@@ -24,7 +24,8 @@ export default function InvestmentToolsPage() {
       description: 'Generate comprehensive 15-25 page institutional-grade investment memos with executive summary, market analysis, financial modeling, risk assessment, and IC-ready recommendations.',
       icon: FiFileText,
       color: 'blue',
-      status: 'available',
+      status: 'beta',
+      betaNotice: 'Currently in beta testing. Features are functional but undergoing active refinement and improvements.',
       features: [
         '16 professional sections (Executive Summary, Company Overview, Market Analysis, etc.)',
         'Institutional quality suitable for IC presentation',
@@ -152,11 +153,8 @@ export default function InvestmentToolsPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Investment Workflow Tools
           </h1>
-          <p className="text-xl text-gray-700 mb-4">
-            Institutional-grade deliverable generators that transform AI analysis into professional investment documents
-          </p>
-          <p className="text-lg text-gray-600">
-            Automated workflows that save 10-20 hours per deal while maintaining McKinsey/Goldman Sachs quality standards
+          <p className="text-xl text-gray-700">
+            Professional-grade deliverables that transform biotech analysis into institutional investment documents
           </p>
         </div>
       </Section>
@@ -170,7 +168,7 @@ export default function InvestmentToolsPage() {
             <p className="text-gray-600 text-center mb-8">Start using these tools today</p>
 
             <div className="grid grid-cols-1 gap-8">
-              {tools.filter(tool => tool.status === 'available').map((tool) => {
+              {tools.filter(tool => tool.status === 'available' || tool.status === 'beta').map((tool) => {
                 const colors = colorMap[tool.color];
                 const IconComponent = tool.icon;
 
@@ -189,12 +187,31 @@ export default function InvestmentToolsPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
                           <h3 className="text-2xl font-bold text-gray-900">{tool.title}</h3>
-                          <span className={`text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700`}>
-                            ✓ Available
-                          </span>
+                          {tool.status === 'beta' ? (
+                            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-700">
+                              🧪 Beta - Launching Soon
+                            </span>
+                          ) : (
+                            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700">
+                              ✓ Available
+                            </span>
+                          )}
                         </div>
 
                         <p className="text-gray-700 mb-4 text-lg">{tool.description}</p>
+
+                        {/* Beta Notice */}
+                        {tool.status === 'beta' && 'betaNotice' in tool && (
+                          <div className="mb-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                            <div className="flex items-start gap-3">
+                              <div className="text-blue-600 text-xl">ℹ️</div>
+                              <div>
+                                <h4 className="font-semibold text-blue-900 mb-1">Beta Release</h4>
+                                <p className="text-sm text-blue-800">{tool.betaNotice}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
 
                         {/* Features */}
                         <div className="mb-4">
@@ -239,9 +256,13 @@ export default function InvestmentToolsPage() {
                         {tool.demoUrl && (
                           <Link
                             href={tool.demoUrl}
-                            className={`inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors`}
+                            className={`inline-flex items-center gap-2 px-6 py-3 ${
+                              tool.status === 'beta'
+                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'bg-blue-600 text-white hover:bg-blue-700'
+                            } font-semibold rounded-lg transition-colors`}
                           >
-                            Try It Now
+                            {tool.status === 'beta' ? 'Try Beta Version' : 'Try It Now'}
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                             </svg>
