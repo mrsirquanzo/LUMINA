@@ -9,6 +9,7 @@ import { saveAnalysisToHistory } from '@/lib/analysisHistory';
 import ExportButton from '@/components/shared/ExportButton';
 import { ChatMessage } from '@/lib/pdfExport';
 import { CitedMarkdown } from '@/components/shared/CitedMarkdown';
+import { GenerateInvestmentMemoButton } from '@/components/deliverables/GenerateInvestmentMemoButton';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -760,37 +761,56 @@ ${synthesis}
           </div>
 
           {/* Export Actions */}
-          <div className="mb-4 flex items-center gap-2 flex-wrap">
-            <ExportButton
-              messages={[
-                { role: 'user', content: query, timestamp: new Date() },
-                { role: 'assistant', content: synthesis, timestamp: new Date(), cost }
-              ] as ChatMessage[]}
-              agentName="Sonny Multi-Agent Analysis"
-            />
-            <button
-              onClick={handleCopyToClipboard}
-              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
-            >
-              {copied ? (
-                <>
-                  <FiCheck className="w-4 h-4 text-green-600" />
-                  <span className="text-green-600">Copied!</span>
-                </>
-              ) : (
-                <>
-                  <FiCopy className="w-4 h-4" />
-                  <span>Copy to Clipboard</span>
-                </>
-              )}
-            </button>
-            <button
-              onClick={handleDownloadMarkdown}
-              className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
-            >
-              <FiDownload className="w-4 h-4" />
-              <span>Download Markdown</span>
-            </button>
+          <div className="mb-4 space-y-3">
+            {/* Investment Memo Generator - Primary Action */}
+            {!isDemo && (
+              <GenerateInvestmentMemoButton
+                agentResponses={{
+                  clinical: agentActivities.get('Clinical Data Analyst')?.response,
+                  patent: agentActivities.get('Patent Expert')?.response,
+                  financial: agentActivities.get('Financial Analyst')?.response,
+                  market: agentActivities.get('Market Research Analyst')?.response,
+                  regulatory: agentActivities.get('Regulatory Expert')?.response,
+                  synthesis: synthesis
+                }}
+                companyName={query.split(/\b(?:analyze|about|for)\b/i)[1]?.trim().split(/\s+/).slice(0, 3).join(' ')}
+                analysisId={`analysis-${Date.now()}`}
+              />
+            )}
+
+            {/* Standard Export Options */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <ExportButton
+                messages={[
+                  { role: 'user', content: query, timestamp: new Date() },
+                  { role: 'assistant', content: synthesis, timestamp: new Date(), cost }
+                ] as ChatMessage[]}
+                agentName="Sonny Multi-Agent Analysis"
+              />
+              <button
+                onClick={handleCopyToClipboard}
+                className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
+              >
+                {copied ? (
+                  <>
+                    <FiCheck className="w-4 h-4 text-green-600" />
+                    <span className="text-green-600">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <FiCopy className="w-4 h-4" />
+                    <span>Copy to Clipboard</span>
+                  </>
+                )}
+              </button>
+              <button
+                onClick={handleDownloadMarkdown}
+                className="px-3 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium shadow-sm"
+              >
+                <FiDownload className="w-4 h-4" />
+                <span>Download Markdown</span>
+              </button>
+            </div>
           </div>
 
           <div className="bg-white p-8 rounded-xl shadow-md border border-gray-200">
