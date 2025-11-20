@@ -101,13 +101,14 @@ export async function generateInvestmentMemo(
   let totalWords = 0;
 
   console.log('Starting investment memo generation...');
+  console.log(`Processing ${template.sections.length} sections in parallel...`);
 
-  // Extract each section sequentially
-  for (const section of template.sections) {
+  // Create array of extraction promises for parallel processing
+  const extractionPromises = template.sections.map(async (section) => {
     // Skip optional sections if agent response is not available
     if (!section.required && !agentResponses[section.sourceAgent]) {
       console.log(`Skipping optional section: ${section.title} (${section.sourceAgent} agent response not available)`);
-      continue;
+      return null;
     }
 
     const sourceResponse = agentResponses[section.sourceAgent] || '';
@@ -115,14 +116,13 @@ export async function generateInvestmentMemo(
     if (!sourceResponse && section.required) {
       console.warn(`Warning: Required section "${section.title}" has no source data from ${section.sourceAgent} agent`);
       // Create placeholder
-      sections[section.id] = {
+      return {
         sectionId: section.id,
         title: section.title,
         content: `*[Section requires ${section.sourceAgent} agent analysis - not available in current analysis]*`,
         wordCount: 0,
         citations: []
       };
-      continue;
     }
 
     console.log(`Extracting section: ${section.title} (from ${section.sourceAgent} agent)...`);
@@ -134,14 +134,12 @@ export async function generateInvestmentMemo(
         options.companyName
       );
 
-      sections[section.id] = extractedSection;
-      totalWords += extractedSection.wordCount;
-
       console.log(`✓ Extracted ${section.title}: ${extractedSection.wordCount} words`);
+      return extractedSection;
     } catch (error) {
       console.error(`Failed to extract section ${section.title}:`, error);
       // Create error placeholder
-      sections[section.id] = {
+      return {
         sectionId: section.id,
         title: section.title,
         content: `*[Error extracting this section - please review source data]*`,
@@ -149,9 +147,17 @@ export async function generateInvestmentMemo(
         citations: []
       };
     }
+  });
 
-    // Add small delay to respect rate limits
-    await new Promise(resolve => setTimeout(resolve, 500));
+  // Wait for all extractions to complete in parallel
+  const extractedSections = await Promise.all(extractionPromises);
+
+  // Build sections object and calculate total words
+  for (const section of extractedSections) {
+    if (section) {
+      sections[section.sectionId] = section;
+      totalWords += section.wordCount;
+    }
   }
 
   // Calculate estimated pages (assuming ~500 words per page for dense professional content)
