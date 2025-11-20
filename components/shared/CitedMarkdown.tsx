@@ -52,7 +52,7 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
   // Custom component to render inline citations with tooltips and clickable links
   const components = {
     // Render links properly with proper styling
-    a: ({ node, href, children, ...props }: any) => (
+    a: ({ href, children, ...props }: any) => (
       <a
         href={href}
         target="_blank"

@@ -67,12 +67,12 @@ export function GenerateInvestmentMemoButton({
         try {
           const errorData = await response.json();
           errorMessage = errorData.details || errorData.error || errorMessage;
-        } catch (jsonError) {
+        } catch {
           // Response is not JSON, try to read as text
           try {
             const errorText = await response.text();
             errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
-          } catch (textError) {
+          } catch {
             errorMessage = `HTTP ${response.status}: ${response.statusText}`;
           }
         }

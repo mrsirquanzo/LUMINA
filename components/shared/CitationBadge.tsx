@@ -98,7 +98,7 @@ export function SourcesReferencedSection({ sources }: SourcesReferencedSectionPr
                 <div className="flex-1 text-sm text-gray-800 leading-relaxed prose prose-sm max-w-none prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline">
                   <ReactMarkdown
                     components={{
-                      a: ({ node, href, children, ...props }) => (
+                      a: ({ href, children, ...props }) => (
                         <a
                           href={href}
                           target="_blank"
