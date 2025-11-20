@@ -7,6 +7,8 @@ import LoginModal from '@/components/shared/LoginModal';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import ExportButton from '@/components/shared/ExportButton';
 import { FINANCIAL_ANALYST_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
+import { ModelBadge } from '@/components/shared/ModelBadge';
+import { AgentSpecsCard, type AgentSpecs } from '@/components/shared/AgentSpecsCard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -32,6 +34,64 @@ const SAMPLE_QUERIES = [
   "Value a preclinical biotech with promising CAR-T data. What multiples should I use?",
   "Compare the M&A premiums for recent ADC acquisitions. What are buyers paying per asset?",
 ];
+
+const FINANCIAL_ANALYST_SPECS: AgentSpecs = {
+  agentName: 'Financial Analyst',
+  model: {
+    provider: 'Google',
+    modelName: 'gemini-2.0-flash-exp',
+    optimizedFor: 'Large context window for financial documents, cost-effective analysis, and rapid processing',
+    maxTokens: 4096,
+    temperature: 1.0,
+  },
+  apiConnections: [
+    {
+      name: 'SEC Edgar API',
+      status: 'connected',
+      description: 'Real-time access to 10-K, 10-Q, 8-K filings, and financial statements',
+    },
+    {
+      name: 'Vision API (Document Analysis)',
+      status: 'connected',
+      description: 'Extract tables, charts, and financial data from PDF reports and presentations',
+    },
+  ],
+  dataSources: [
+    {
+      name: 'SEC Edgar Database',
+      type: 'real-time',
+      description: 'Public company filings, financial statements, and M&A disclosures',
+    },
+    {
+      name: 'Market Data & Comparables',
+      type: 'cached',
+      description: 'Biotech valuations, deal multiples, and industry benchmarks',
+    },
+    {
+      name: 'Uploaded Financial Documents',
+      type: 'on-demand',
+      description: 'Excel models, investor presentations, and confidential financial reports',
+    },
+  ],
+  mcpServer: {
+    available: true,
+    enabled: process.env.MCP_ENABLED === 'true',
+    tools: [
+      {
+        name: 'get_company_financials',
+        description: 'Retrieve financial statements and key metrics from SEC filings',
+      },
+      {
+        name: 'search_sec_filings',
+        description: 'Search and analyze SEC Edgar filings by company, form type, or date',
+      },
+      {
+        name: 'analyze_comparables',
+        description: 'Compare financial metrics and valuations across peer companies',
+      },
+    ],
+  },
+};
 
 export default function FinancialAnalystAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
@@ -212,9 +272,12 @@ export default function FinancialAnalystAgent() {
     <div className="max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Financial Analyst Agent
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900">
+            Financial Analyst Agent
+          </h1>
+          <ModelBadge provider="Google" modelName="Gemini 2.0 Flash" />
+        </div>
         <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-6">
           AI-powered analyst for biotech biotech valuations and investment analysis
         </p>
@@ -467,6 +530,11 @@ export default function FinancialAnalystAgent() {
           </div>
         </div>
       )}
+
+      {/* Technical Specifications */}
+      <div className="mt-8">
+        <AgentSpecsCard specs={FINANCIAL_ANALYST_SPECS} />
+      </div>
 
       {/* Behind the Scenes */}
       <div className="mt-8">

@@ -6,6 +6,8 @@ import remarkGfm from 'remark-gfm';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import LoginModal from '@/components/shared/LoginModal';
 import ExportButton from '@/components/shared/ExportButton';
+import { ModelBadge } from '@/components/shared/ModelBadge';
+import { AgentSpecsCard, type AgentSpecs } from '@/components/shared/AgentSpecsCard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -136,6 +138,64 @@ const DEMO_RESPONSES = [
 **Pursue BTD** based on preliminary Phase 1 data showing >30% ORR in refractory solid tumor population. Target accelerated approval with ORR endpoint, commit to confirmatory trial. Budget for intensive FDA interactions and manufacturing development.`,
   },
 ];
+
+const REGULATORY_EXPERT_SPECS: AgentSpecs = {
+  agentName: 'Regulatory Expert',
+  model: {
+    provider: 'Anthropic',
+    modelName: 'claude-sonnet-4-20250514',
+    optimizedFor: 'Superior reasoning for complex regulatory pathways, CMC requirements, and strategic planning',
+    maxTokens: 4096,
+    temperature: 1.0,
+  },
+  apiConnections: [
+    {
+      name: 'FDA & EMA Databases',
+      status: 'connected',
+      description: 'Real-time access to FDA guidance documents, approval letters, and regulatory precedents',
+    },
+    {
+      name: 'Vision API (Document Analysis)',
+      status: 'connected',
+      description: 'Extract regulatory requirements and guidance from FDA/EMA documents',
+    },
+  ],
+  dataSources: [
+    {
+      name: 'FDA Guidance & Approvals',
+      type: 'real-time',
+      description: 'FDA guidance documents, drug approvals, breakthrough designations, and regulatory precedents',
+    },
+    {
+      name: 'EMA Regulatory Database',
+      type: 'real-time',
+      description: 'European regulatory requirements, CHMP opinions, and centralized approvals',
+    },
+    {
+      name: 'Uploaded Regulatory Documents',
+      type: 'on-demand',
+      description: 'IND submissions, regulatory correspondence, and clinical development plans',
+    },
+  ],
+  mcpServer: {
+    available: true,
+    enabled: process.env.MCP_ENABLED === 'true',
+    tools: [
+      {
+        name: 'search_fda_guidance',
+        description: 'Search FDA guidance documents and regulatory requirements',
+      },
+      {
+        name: 'get_drug_approval',
+        description: 'Retrieve FDA drug approval details and regulatory history',
+      },
+      {
+        name: 'analyze_regulatory_pathway',
+        description: 'Analyze optimal regulatory pathways and strategic options',
+      },
+    ],
+  },
+};
 
 export default function RegulatoryExpertAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
@@ -296,9 +356,12 @@ export default function RegulatoryExpertAgent() {
         <div className="inline-block px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium mb-4">
           📋 Regulatory Expert
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Regulatory Strategy Agent
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900">
+            Regulatory Strategy Agent
+          </h1>
+          <ModelBadge provider="Anthropic" modelName="Sonnet 4" />
+        </div>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           Get expert regulatory guidance on FDA/EMA pathways, accelerated approval programs,
           CMC requirements, and strategic regulatory planning for biotech products.
@@ -546,6 +609,11 @@ export default function RegulatoryExpertAgent() {
           </div>
         </div>
       )}
+
+      {/* Technical Specifications */}
+      <div className="mt-8">
+        <AgentSpecsCard specs={REGULATORY_EXPERT_SPECS} />
+      </div>
 
       {/* Behind the Scenes */}
       <div className="mt-8">

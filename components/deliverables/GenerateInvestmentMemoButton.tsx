@@ -47,75 +47,108 @@ export function GenerateInvestmentMemoButton({
       console.log('Company:', companyName);
       console.log('Available agents:', Object.keys(agentResponses));
 
-      const response = await fetch('/api/deliverables/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          agentResponses,
-          companyName,
-          analysisId,
-          generatedBy: 'Sonny: Multi-Agent System',
-          format
-        })
-      });
+      // Create AbortController with 5-minute timeout (matches server maxDuration)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutes
 
-      if (!response.ok) {
-        // Try to parse error as JSON, but handle plain text errors gracefully
-        let errorMessage = 'Failed to generate memo';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.details || errorData.error || errorMessage;
-        } catch {
-          // Response is not JSON, try to read as text
+      try {
+        const response = await fetch('/api/deliverables/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            agentResponses,
+            companyName,
+            analysisId,
+            generatedBy: 'Sonny: Multi-Agent System',
+            format
+          }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          // Try to parse error as JSON, but handle plain text errors gracefully
+          let errorMessage = 'Failed to generate memo';
           try {
-            const errorText = await response.text();
-            errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+            const errorData = await response.json();
+            errorMessage = errorData.details || errorData.error || errorMessage;
           } catch {
-            errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+            // Response is not JSON, try to read as text
+            try {
+              const errorText = await response.text();
+              errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`;
+            } catch {
+              errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+            }
+          }
+          throw new Error(errorMessage);
+        }
+
+        // Extract metadata from headers
+        const totalWords = response.headers.get('X-Total-Words');
+        const totalSections = response.headers.get('X-Total-Sections');
+
+        if (totalWords && totalSections) {
+          setGenerationStats({
+            totalWords: parseInt(totalWords),
+            totalSections: parseInt(totalSections)
+          });
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        // Download file
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = companyName
+          ? `investment-memo-${companyName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.${format === 'pdf' ? 'pdf' : 'md'}`
+          : `investment-memo-${Date.now()}.${format === 'pdf' ? 'pdf' : 'md'}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        setStatus('success');
+        console.log('Investment memo generated successfully!');
+
+        // Reset to idle after 5 seconds
+        setTimeout(() => {
+          setStatus('idle');
+          setIsGenerating(false);
+        }, 5000);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+
+        // Handle specific fetch errors
+        if (fetchError instanceof Error) {
+          if (fetchError.name === 'AbortError') {
+            throw new Error('Request timeout: Memo generation took longer than 5 minutes. Please try again with a smaller analysis or contact support.');
+          } else if (fetchError.message.includes('Failed to fetch') || fetchError.message.includes('network')) {
+            throw new Error('Network error: Connection lost during memo generation. Please check your internet connection and try again.');
           }
         }
-        throw new Error(errorMessage);
+        throw fetchError;
       }
-
-      // Extract metadata from headers
-      const totalWords = response.headers.get('X-Total-Words');
-      const totalSections = response.headers.get('X-Total-Sections');
-
-      if (totalWords && totalSections) {
-        setGenerationStats({
-          totalWords: parseInt(totalWords),
-          totalSections: parseInt(totalSections)
-        });
-      }
-
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
-      // Download file
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = companyName
-        ? `investment-memo-${companyName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.${format === 'pdf' ? 'pdf' : 'md'}`
-        : `investment-memo-${Date.now()}.${format === 'pdf' ? 'pdf' : 'md'}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      setStatus('success');
-      console.log('Investment memo generated successfully!');
-
-      // Reset to idle after 5 seconds
-      setTimeout(() => {
-        setStatus('idle');
-        setIsGenerating(false);
-      }, 5000);
     } catch (error) {
       console.error('Error generating memo:', error);
       setStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'An unknown error occurred');
+
+      // Provide user-friendly error messages
+      let userMessage = 'An unknown error occurred';
+      if (error instanceof Error) {
+        userMessage = error.message;
+
+        // Handle specific error types
+        if (error.message.includes('Failed to fetch') || error.message.includes('ERR_NETWORK_IO_SUSPENDED')) {
+          userMessage = 'Network connection lost during generation. Please ensure your device stays active and try again.';
+        }
+      }
+
+      setErrorMessage(userMessage);
       setIsGenerating(false);
     }
   };
@@ -211,6 +244,9 @@ export function GenerateInvestmentMemoButton({
           <div className="text-xs text-blue-700 bg-blue-50 px-3 py-2 rounded space-y-1">
             <p className="font-semibold">⏳ Generating your investment memo...</p>
             <p>This may take 2-3 minutes as we extract and synthesize all sections.</p>
+            <p className="text-amber-700 font-medium mt-1">
+              ⚠️ Please keep this tab active and your device awake during generation.
+            </p>
             <div className="flex items-center gap-2 mt-2">
               <div className="h-1 flex-1 bg-blue-200 rounded-full overflow-hidden">
                 <div className="h-full bg-blue-600 rounded-full animate-pulse" style={{ width: '60%' }}></div>

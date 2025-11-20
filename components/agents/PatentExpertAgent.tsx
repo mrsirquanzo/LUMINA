@@ -7,6 +7,8 @@ import LoginModal from '@/components/shared/LoginModal';
 import FileUpload, { UploadedFile } from '@/components/shared/FileUpload';
 import ExportButton from '@/components/shared/ExportButton';
 import { PATENT_EXPERT_DEMOS, type MockConversation } from '@/lib/mockAgentResponses';
+import { ModelBadge } from '@/components/shared/ModelBadge';
+import { AgentSpecsCard, type AgentSpecs } from '@/components/shared/AgentSpecsCard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -32,6 +34,64 @@ const SAMPLE_QUERIES = [
   "What's the patent strategy behind Moderna's mRNA vaccine platform? What are their blocking patents?",
   "Compare the ADC patent portfolios of Daiichi Sankyo, AstraZeneca, and Seagen. Who has the strongest position?",
 ];
+
+const PATENT_EXPERT_SPECS: AgentSpecs = {
+  agentName: 'Patent Expert',
+  model: {
+    provider: 'Perplexity',
+    modelName: 'sonar-pro',
+    optimizedFor: 'Real-time patent database searches with deep retrieval and competitive intelligence',
+    maxTokens: 4096,
+    temperature: 0.7,
+  },
+  apiConnections: [
+    {
+      name: 'Perplexity Real-Time Search',
+      status: 'connected',
+      description: 'Live patent database queries with citation tracking and deep web retrieval',
+    },
+    {
+      name: 'Vision API (Document Analysis)',
+      status: 'connected',
+      description: 'Extract patent diagrams, claims, and figures from PDF documents',
+    },
+  ],
+  dataSources: [
+    {
+      name: 'USPTO & Google Patents',
+      type: 'real-time',
+      description: 'Real-time patent searches across US and international patent databases',
+    },
+    {
+      name: 'Patent Literature & Case Law',
+      type: 'real-time',
+      description: 'Patent litigation, examiner decisions, and patent family analysis',
+    },
+    {
+      name: 'Uploaded Patent Documents',
+      type: 'on-demand',
+      description: 'PDF patent filings, prosecution histories, and competitive landscape reports',
+    },
+  ],
+  mcpServer: {
+    available: true,
+    enabled: process.env.MCP_ENABLED === 'true',
+    tools: [
+      {
+        name: 'search_patents',
+        description: 'Search USPTO and Google Patents for patent applications and grants',
+      },
+      {
+        name: 'get_patent_details',
+        description: 'Retrieve detailed patent information including claims, citations, and family',
+      },
+      {
+        name: 'analyze_patent_landscape',
+        description: 'Analyze patent portfolios and competitive IP positions',
+      },
+    ],
+  },
+};
 
 export default function PatentExpertAgent() {
   const [mode, setMode] = useState<AgentMode>('demo');
@@ -212,9 +272,12 @@ export default function PatentExpertAgent() {
     <div className="max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Patent Expert Agent
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900">
+            Patent Expert Agent
+          </h1>
+          <ModelBadge provider="Perplexity" modelName="Sonar Pro" />
+        </div>
         <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-6">
           AI-powered analyst for biotech biotech IP strategy and competitive intelligence
         </p>
@@ -467,6 +530,11 @@ export default function PatentExpertAgent() {
           </div>
         </div>
       )}
+
+      {/* Technical Specifications */}
+      <div className="mt-8">
+        <AgentSpecsCard specs={PATENT_EXPERT_SPECS} />
+      </div>
 
       {/* Behind the Scenes */}
       <div className="mt-8">
