@@ -243,9 +243,9 @@ export function GenerateInvestmentMemoButton({
         {status === 'generating' && (
           <div className="text-xs text-blue-700 bg-blue-50 px-3 py-2 rounded space-y-1">
             <p className="font-semibold">⏳ Generating your investment memo...</p>
-            <p>This may take 2-3 minutes as we extract and synthesize all sections.</p>
+            <p>Processing 16 sections in parallel. This typically takes 30-60 seconds.</p>
             <p className="text-amber-700 font-medium mt-1">
-              ⚠️ Please keep this tab active and your device awake during generation.
+              ⚠️ Please keep this tab active during generation.
             </p>
             <div className="flex items-center gap-2 mt-2">
               <div className="h-1 flex-1 bg-blue-200 rounded-full overflow-hidden">
