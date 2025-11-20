@@ -39,14 +39,18 @@ Follow the Citation Protocol (lib/citationProtocol.md) for ALL factual claims:
 3. **Citation Format for Clinical Sources:**
    \`\`\`
    [1] Author(s). "Article Title." Journal Name. Year. DOI: [DOI] | PMID: [PMID]
-       URL: https://pubmed.ncbi.nlm.nih.gov/[PMID]/
+       [View PubMed →](https://pubmed.ncbi.nlm.nih.gov/[PMID]/)
 
    [2] ClinicalTrials.gov. NCT[number]. "[Trial Title]." Last Updated: [Date].
-       URL: https://clinicaltrials.gov/study/NCT[number]
+       [View Trial →](https://clinicaltrials.gov/study/NCT[number])
 
    [3] FDA. [Document Type]. [Drug Name]. [Date].
-       URL: https://www.accessdata.fda.gov/[path]
+       [View FDA Document →](https://www.accessdata.fda.gov/[path])
    \`\`\`
+
+   **CRITICAL: Use descriptive link text, NEVER duplicate the URL in brackets and parentheses**
+   ✅ CORRECT: \`[View PubMed →](https://pubmed.ncbi.nlm.nih.gov/12345/)\`
+   ❌ WRONG: \`[https://pubmed.ncbi.nlm.nih.gov/12345/](https://pubmed.ncbi.nlm.nih.gov/12345/)\`
 
 4. **Verification Checklist (Complete for EVERY citation):**
    - ✓ Source exists and is accessible (verified on PubMed/ClinicalTrials.gov)
@@ -73,10 +77,10 @@ The CodeBreaK 100 trial demonstrated an ORR of 36% (95% CI: 28%-45%) in KRAS G12
 
 [1] Hong DS, et al. "KRAS G12C Inhibition with Sotorasib in Advanced Solid Tumors."
     NEJM. 2020. DOI: 10.1056/NEJMoa1917239 | PMID: 32955176
-    [https://pubmed.ncbi.nlm.nih.gov/32955176/](https://pubmed.ncbi.nlm.nih.gov/32955176/)
+    [View PubMed →](https://pubmed.ncbi.nlm.nih.gov/32955176/)
 
 [2] FDA. Approval Letter. Sotorasib (LUMAKRAS) for KRAS G12C-mutated NSCLC. May 28, 2021.
-    [https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2021/214665Orig1s000ltr.pdf](https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2021/214665Orig1s000ltr.pdf)
+    [View FDA Document →](https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2021/214665Orig1s000ltr.pdf)
 \`\`\`
 
 **Prohibited Practices:**
@@ -113,8 +117,12 @@ Follow the Citation Protocol (lib/citationProtocol.md) for ALL patent citations:
    \`\`\`
    [1] Patent [Number]. Inventor(s). "[Title]."
        Assignee: [Company]. Filed: [YYYY-MM-DD]. Granted: [YYYY-MM-DD].
-       URL: https://patents.google.com/patent/[Number]
+       [View Patent →](https://patents.google.com/patent/[Number])
    \`\`\`
+
+   **CRITICAL: Use descriptive link text, NEVER duplicate the URL in brackets and parentheses**
+   ✅ CORRECT: \`[View Patent →](https://patents.google.com/patent/US12345678)\`
+   ❌ WRONG: \`[https://patents.google.com/...](https://patents.google.com/...)\`
 
 4. **CRITICAL Patent Number Formatting:**
    - ✓ Correct: US10808039B2, US10808039, EP3456789A1
@@ -146,11 +154,11 @@ Amgen's KRAS G12C patent portfolio includes composition of matter protection thr
 
 [1] Patent US10808039B2. Ostrem JM, Shokat KM. "KRAS G12C Inhibitors."
     Assignee: Amgen Inc. Filed: 2016-03-04. Granted: 2020-10-20. Expires: 2037-03-04.
-    [https://patents.google.com/patent/US10808039B2](https://patents.google.com/patent/US10808039B2)
+    [View Patent →](https://patents.google.com/patent/US10808039B2)
 
 [2] Patent US11117892B2. Ostrem JM, et al. "Methods for Treating Cancer with KRAS Inhibitors."
     Assignee: Amgen Inc. Filed: 2017-11-01. Granted: 2021-09-14. Expires: 2038-11-01.
-    [https://patents.google.com/patent/US11117892B2](https://patents.google.com/patent/US11117892B2)
+    [View Patent →](https://patents.google.com/patent/US11117892B2)
 \`\`\`
 
 **Prohibited Practices:**
@@ -192,8 +200,12 @@ Follow the Citation Protocol (lib/citationProtocol.md) for ALL financial data:
 3. **Financial Citation Format:**
    \`\`\`
    [1] [Company Name]. [Filing Type]. Filed: [YYYY-MM-DD]. [Section].
-       URL: https://www.sec.gov/[path]
+       [View SEC Filing →](https://www.sec.gov/[path])
    \`\`\`
+
+   **CRITICAL: Use descriptive link text, NEVER duplicate the URL in brackets and parentheses**
+   ✅ CORRECT: \`[View SEC Filing →](https://www.sec.gov/Archives/edgar/...)\`
+   ❌ WRONG: \`[https://www.sec.gov/...](https://www.sec.gov/...)\`
 
 4. **Financial Data Verification Checklist:**
    - ✓ Source is official SEC filing or company IR
@@ -219,11 +231,11 @@ Amgen reported Q3 2024 revenue of $8.5 billion (GAAP), representing 4% year-over
 
 [1] Amgen Inc. Form 10-Q (Q3 2024). Filed: November 1, 2024. Item 1: Financial Statements.
     Revenue: $8.5B (GAAP).
-    [https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000318154&type=10-Q](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000318154&type=10-Q)
+    [View SEC Filing →](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000318154&type=10-Q)
 
 [2] Amgen Inc. Form 10-Q (Q3 2024). Filed: November 1, 2024. Condensed Consolidated Balance Sheet.
     Cash and equivalents: $10.2B.
-    [https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000318154&type=10-Q](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000318154&type=10-Q)
+    [View SEC Filing →](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000318154&type=10-Q)
 \`\`\`
 
 **Prohibited Practices:**
@@ -259,8 +271,12 @@ Follow the Citation Protocol (lib/citationProtocol.md) for ALL market data:
 3. **Market Data Citation Format:**
    \`\`\`
    [1] [Firm/Publisher]. "[Title]." [Date]. [Page if applicable].
-       URL: [direct link]
+       [View Report →](direct_link) or [View Source →](direct_link)
    \`\`\`
+
+   **CRITICAL: Use descriptive link text, NEVER duplicate the URL in brackets and parentheses**
+   ✅ CORRECT: \`[View Report →](https://www.evaluate.com/article/123)\`
+   ❌ WRONG: \`[https://www.evaluate.com/...](https://www.evaluate.com/...)\`
 
 4. **Market Data Verification Checklist:**
    - ✓ Source is reputable (known research firm or official company source)
@@ -286,11 +302,11 @@ The global KRAS inhibitor market is projected to reach $2.8 billion by 2028, gro
 
 [1] EvaluatePharma. "KRAS Inhibitors Market Forecast 2024-2028." June 2024. p. 23.
     Global market projection: $2.8B by 2028, 42.3% CAGR.
-    [https://www.evaluate.com/vantage/articles/analysis/spotlight/kras-market-2024](https://www.evaluate.com/vantage/articles/analysis/spotlight/kras-market-2024)
+    [View Report →](https://www.evaluate.com/vantage/articles/analysis/spotlight/kras-market-2024)
 
 [2] Amgen Inc. Q3 2024 Earnings Call Transcript. October 30, 2024.
     LUMAKRAS sales: $58M (Q3 2024), 45% QoQ growth.
-    [https://investors.amgen.com/](https://investors.amgen.com/)
+    [View Source →](https://investors.amgen.com/)
 \`\`\`
 
 **Prohibited Practices:**
@@ -325,8 +341,12 @@ Follow the Citation Protocol (lib/citationProtocol.md) for ALL regulatory inform
 3. **Regulatory Citation Format:**
    \`\`\`
    [1] FDA. [Document Type]. [Title/Drug Name]. [Date].
-       URL: [direct link to FDA.gov]
+       [View FDA Document →](direct_link_to_FDA.gov)
    \`\`\`
+
+   **CRITICAL: Use descriptive link text, NEVER duplicate the URL in brackets and parentheses**
+   ✅ CORRECT: \`[View FDA Guidance →](https://www.fda.gov/guidance/...)\`
+   ❌ WRONG: \`[https://www.fda.gov/...](https://www.fda.gov/...)\`
 
 4. **Regulatory Verification Checklist:**
    - ✓ Guidance document exists on official FDA/EMA website
@@ -352,11 +372,11 @@ Sotorasib received FDA accelerated approval under BLA 761168 on May 28, 2021, fo
 
 [1] FDA. Approval Letter. Sotorasib (LUMAKRAS) BLA 761168. May 28, 2021.
     Indication: KRAS G12C-mutated locally advanced or metastatic NSCLC.
-    [https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2021/214665Orig1s000ltr.pdf](https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2021/214665Orig1s000ltr.pdf)
+    [View FDA Letter →](https://www.accessdata.fda.gov/drugsatfda_docs/appletter/2021/214665Orig1s000ltr.pdf)
 
 [2] FDA. Guidance for Industry. Accelerated Approval Program. December 2020.
     Endpoint requirements for accelerated approval.
-    [https://www.fda.gov/regulatory-information/search-fda-guidance-documents/accelerated-approval-program](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/accelerated-approval-program)
+    [View FDA Guidance →](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/accelerated-approval-program)
 \`\`\`
 
 **Prohibited Practices:**

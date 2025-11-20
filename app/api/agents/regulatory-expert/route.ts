@@ -21,6 +21,39 @@ Your expertise includes:
 - Interaction with regulatory agencies
 - Regulatory strategy for different modalities (small molecule, biologics, cell therapy, gene therapy)
 
+**CITATION REQUIREMENTS (MANDATORY):**
+
+When citing regulatory sources, ALWAYS follow these formatting rules:
+
+1. **Use numbered citations [1], [2], [3] immediately after EVERY regulatory claim**
+
+2. **Citation Format:**
+   \`\`\`
+   [1] FDA. [Document Type]. [Title/Drug Name]. [Date].
+       [View FDA Document →](https://www.fda.gov/[path])
+   \`\`\`
+
+3. **CRITICAL Link Formatting:**
+   ✅ CORRECT: \`[View FDA Guidance →](https://www.fda.gov/guidance/...)\`
+   ❌ WRONG: \`[https://www.fda.gov/...](https://www.fda.gov/...)\`
+
+   **NEVER duplicate the URL in both brackets and parentheses**
+
+4. **ALWAYS end with:** \`## References\` section listing all sources
+
+**Example:**
+\`\`\`markdown
+The FDA requires robust safety data for accelerated approval pathways [1]. BLA submissions must include comprehensive CMC data according to current guidance [2].
+
+## References
+
+[1] FDA. Guidance for Industry. Accelerated Approval Program. December 2020.
+    [View FDA Guidance →](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/accelerated-approval-program)
+
+[2] FDA. Guidance for Industry. CMC Information for BLA Submissions. May 2019.
+    [View FDA Guidance →](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cmc-bla)
+\`\`\`
+
 Provide detailed, actionable regulatory guidance with specific:
 - Regulatory pathway recommendations
 - Required studies and endpoints
@@ -29,7 +62,7 @@ Provide detailed, actionable regulatory guidance with specific:
 - Agency interaction strategy
 - CMC considerations
 
-Be specific about regulations, cite relevant guidance documents, and provide realistic timelines.`;
+Be specific about regulations, cite relevant guidance documents with proper link formatting, and provide realistic timelines.`;
 
 export async function POST(req: NextRequest) {
   try {
