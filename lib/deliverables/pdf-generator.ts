@@ -84,15 +84,16 @@ export async function generateInvestmentMemoPDF(
   const cleanedMarkdown = cleanMarkdown(markdownContent);
   const htmlContent = await marked.parse(cleanedMarkdown);
 
-  // Build complete HTML document
+  // Build complete HTML document with quiet luxury design
   const htmlDocument = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Investment Memo - ${metadata.companyName || 'Analysis'}</title>
+  <title>Investment Memorandum - ${metadata.companyName || 'Analysis'}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500&display=swap');
 
     * {
       margin: 0;
@@ -101,79 +102,113 @@ export async function generateInvestmentMemoPDF(
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
       font-size: 11pt;
-      line-height: 1.7;
-      color: #1f2937;
-      background: white;
+      font-weight: 300;
+      line-height: 1.6;
+      color: #2C2C2C;
+      background: #FAF9F6;
     }
 
+    /* Quiet Luxury Cover Page */
     .cover-page {
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
+      background: #FAF9F6;
+      color: #1B2B3A;
       page-break-after: always;
       position: relative;
+      padding: 1.5in;
     }
 
     .cover-page h1 {
-      font-size: 48pt;
-      font-weight: 700;
-      margin-bottom: 32px;
-      letter-spacing: -0.02em;
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+      font-size: 36pt;
+      font-weight: 400;
+      margin-bottom: 0.5in;
+      letter-spacing: 0.02em;
+      text-align: center;
+      color: #1B2B3A;
     }
 
     .cover-page h2 {
-      font-size: 32pt;
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+      font-size: 18pt;
       font-weight: 400;
-      margin-bottom: 48px;
-      opacity: 0.95;
+      margin-bottom: 0.5in;
+      color: #2C2C2C;
+      text-align: center;
+    }
+
+    .cover-page .divider {
+      width: 3in;
+      height: 1pt;
+      background: #B8956A;
+      margin: 0.5in auto;
     }
 
     .cover-page .meta {
-      font-size: 14pt;
-      opacity: 0.9;
+      font-size: 12pt;
       text-align: center;
-      line-height: 2;
+      line-height: 1.8;
+      color: #2C2C2C;
+      margin-top: 0.5in;
     }
 
     .cover-page .footer {
       position: absolute;
-      bottom: 60px;
-      left: 60px;
-      right: 60px;
+      bottom: 1in;
+      left: 1.25in;
+      right: 1.25in;
       text-align: center;
-      font-size: 10pt;
-      opacity: 0.8;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+      font-size: 8pt;
+      font-weight: 300;
+      color: #2C2C2C;
+      line-height: 1.4;
     }
 
     .content {
-      padding: 0.75in;
+      padding: 1.25in;
       max-width: 8.5in;
     }
 
+    /* Typography - Quiet Luxury */
     h1, h2, h3, h4, h5, h6 {
       font-weight: 600;
-      color: #1e40af;
-      margin-top: 32px;
+      color: #1B2B3A;
+      margin-top: 0.5in;
       margin-bottom: 16px;
       line-height: 1.3;
+      page-break-after: avoid;
     }
 
-    h1 { font-size: 24pt; }
-    h2 { font-size: 18pt; }
-    h3 { font-size: 14pt; }
+    h1 {
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+      font-size: 18pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    h2 {
+      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 14pt;
+      font-weight: 500;
+    }
+
+    h3 {
+      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 12pt;
+      font-weight: 500;
+    }
 
     p {
       margin-bottom: 12px;
-      text-align: justify;
+      text-align: left;
+      line-height: 1.6;
     }
 
     ul, ol {
@@ -183,19 +218,20 @@ export async function generateInvestmentMemoPDF(
 
     li {
       margin-bottom: 8px;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     strong {
-      font-weight: 600;
-      color: #1f2937;
+      font-weight: 500;
+      color: #2C2C2C;
     }
 
     em {
       font-style: italic;
-      color: #4b5563;
+      color: #2C2C2C;
     }
 
+    /* Tables - Navy Headers with White Text */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -205,39 +241,54 @@ export async function generateInvestmentMemoPDF(
     }
 
     thead {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      background: #1B2B3A;
       color: white;
     }
 
     th {
-      padding: 12px;
+      padding: 8px 12px;
       text-align: left;
-      font-weight: 600;
-      border: 1px solid #2563eb;
+      font-weight: 500;
+      font-size: 10pt;
+      border: 1px solid #E5E5E5;
+      color: white;
     }
 
     td {
-      padding: 10px 12px;
-      border: 1px solid #e5e7eb;
+      padding: 8px 12px;
+      border: 1px solid #E5E5E5;
+      vertical-align: top;
     }
 
     tbody tr:nth-child(even) {
-      background-color: #f9fafb;
+      background-color: #F5F5F5;
     }
 
-    tbody tr:hover {
-      background-color: #f3f4f6;
+    tbody tr:nth-child(odd) {
+      background-color: white;
     }
 
     hr {
       border: none;
-      border-top: 2px solid #e5e7eb;
-      margin: 32px 0;
+      border-top: 1px solid #E5E5E5;
+      margin: 0.5in 0;
       page-break-after: avoid;
     }
 
     .page-break {
       page-break-before: always;
+    }
+
+    /* Page numbering */
+    @page {
+      margin: 0.5in 1.25in;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        font-size: 9pt;
+        font-weight: 300;
+        color: #2C2C2C;
+      }
     }
 
     @media print {
@@ -261,14 +312,17 @@ export async function generateInvestmentMemoPDF(
 </head>
 <body>
   <div class="cover-page">
-    <h1>INVESTMENT MEMO</h1>
+    <h1>INVESTMENT MEMORANDUM</h1>
     ${metadata.companyName ? `<h2>${metadata.companyName}</h2>` : ''}
+    <div class="divider"></div>
     <div class="meta">
       <div>Generated: ${date}</div>
       ${metadata.generatedBy ? `<div>Prepared by: ${metadata.generatedBy}</div>` : ''}
+      <div style="margin-top: 0.3in;">Investment Committee</div>
     </div>
     <div class="footer">
-      <strong>CONFIDENTIAL:</strong> This document contains proprietary information and is intended solely
+      CONFIDENTIAL AND PROPRIETARY<br>
+      This document contains proprietary information and is intended solely
       for the use of the designated recipient(s). Unauthorized distribution or disclosure is prohibited.
     </div>
   </div>
@@ -295,11 +349,19 @@ export async function generateInvestmentMemoPDF(
     const pdfBuffer = await page.pdf({
       format: 'Letter',
       printBackground: true,
+      displayHeaderFooter: true,
+      headerTemplate: '<div></div>',
+      footerTemplate: `
+        <div style="font-size: 9pt; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    color: #2C2C2C; text-align: right; width: 100%; padding-right: 1.25in; margin-top: 0.25in;">
+          <span class="pageNumber"></span>
+        </div>
+      `,
       margin: {
-        top: '0.5in',
-        right: '0.75in',
-        bottom: '0.5in',
-        left: '0.75in'
+        top: '1.25in',
+        right: '1.25in',
+        bottom: '1.25in',
+        left: '1.25in'
       }
     });
 
@@ -315,7 +377,7 @@ export async function generateInvestmentMemoPDF(
 }
 
 /**
- * Generate markdown export (alternative to PDF)
+ * Generate markdown export (alternative to PDF) - Institutional format
  */
 export function generateInvestmentMemoMarkdown(
   sections: Record<string, ExtractedSection>,
@@ -327,20 +389,23 @@ export function generateInvestmentMemoMarkdown(
     day: 'numeric'
   });
 
-  let markdown = `# INVESTMENT MEMO\n\n`;
+  let markdown = `# INVESTMENT MEMORANDUM\n\n`;
 
   if (metadata.companyName) {
     markdown += `## ${metadata.companyName}\n\n`;
   }
 
+  markdown += `---\n\n`;
+
   markdown += `**Generated:** ${date}\n`;
   if (metadata.generatedBy) {
     markdown += `**Prepared by:** ${metadata.generatedBy}\n`;
   }
-  markdown += `**Word Count:** ${metadata.totalWords.toLocaleString()}\n\n`;
+  markdown += `**Investment Committee**\n\n`;
 
   markdown += `---\n\n`;
-  markdown += `*CONFIDENTIAL: This document contains proprietary information and is intended solely for the use of the designated recipient(s).*\n\n`;
+  markdown += `**CONFIDENTIAL AND PROPRIETARY**\n\n`;
+  markdown += `*This document contains proprietary information and is intended solely for the use of the designated recipient(s). Unauthorized distribution or disclosure is prohibited.*\n\n`;
   markdown += `---\n\n`;
 
   // Table of Contents
@@ -357,16 +422,20 @@ export function generateInvestmentMemoMarkdown(
     markdown += `\n\n---\n\n`;
   });
 
-  // Metadata
-  markdown += `## APPENDIX: DOCUMENT METADATA\n\n`;
+  // Appendix
+  markdown += `## APPENDIX A: DOCUMENT METADATA\n\n`;
   markdown += `| Field | Value |\n`;
   markdown += `|-------|-------|\n`;
   markdown += `| Analysis ID | ${metadata.analysisId || 'N/A'} |\n`;
   markdown += `| Company Name | ${metadata.companyName || 'N/A'} |\n`;
   markdown += `| Generated Date | ${date} |\n`;
-  markdown += `| Generated By | ${metadata.generatedBy || 'AI Agent System'} |\n`;
+  markdown += `| Generated By | ${metadata.generatedBy || 'Multi-Agent Analysis System'} |\n`;
   markdown += `| Total Word Count | ${metadata.totalWords.toLocaleString()} |\n`;
-  markdown += `| Number of Sections | ${Object.keys(sections).length} |\n`;
+  markdown += `| Estimated Pages | ${metadata.totalPages} |\n`;
+  markdown += `| Number of Sections | ${Object.keys(sections).length} |\n\n`;
+
+  markdown += `---\n\n`;
+  markdown += `*End of Investment Memorandum*\n`;
 
   return markdown;
 }
