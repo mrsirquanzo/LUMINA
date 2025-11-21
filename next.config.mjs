@@ -11,6 +11,30 @@ const nextConfig = {
     domains: [],
   },
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+
+  // Webpack configuration for puppeteer
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Mark puppeteer packages as external for server builds
+      config.externals = [...(config.externals || []), 'puppeteer-core', '@sparticuz/chromium'];
+    } else {
+      // Prevent puppeteer from being bundled in client builds
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        'puppeteer-core': false,
+        '@sparticuz/chromium': false,
+      };
+    }
+    return config;
+  },
+
+  // Experimental features for serverless deployment
+  experimental: {
+    outputFileTracingIncludes: {
+      '/api/export-chat': ['./node_modules/@sparticuz/chromium/**/*'],
+      '/api/deliverables/generate': ['./node_modules/@sparticuz/chromium/**/*'],
+    },
+  },
 };
 
 const withMDX = createMDX({

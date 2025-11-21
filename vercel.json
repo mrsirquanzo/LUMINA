@@ -4,6 +4,16 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "outputDirectory": ".next",
+  "functions": {
+    "app/api/deliverables/generate/route.ts": {
+      "memory": 3008,
+      "maxDuration": 60
+    },
+    "app/api/export-chat/route.ts": {
+      "memory": 3008,
+      "maxDuration": 60
+    }
+  },
   "headers": [
     {
       "source": "/api/(.*)",

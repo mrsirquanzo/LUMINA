@@ -2,10 +2,12 @@
  * Professional PDF Generator for Investment Memos
  *
  * Creates institutional-grade PDFs suitable for IC presentations
+ * Uses puppeteer + marked for proper markdown rendering
  */
 
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { marked } from 'marked';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import { ExtractedSection } from './types';
 
 export interface PDFGeneratorOptions {
@@ -17,260 +19,299 @@ export interface PDFGeneratorOptions {
   totalPages: number;
 }
 
+// Configure marked for GitHub Flavored Markdown
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+});
+
+/**
+ * Clean markdown content - remove cost displays and fix symbols
+ */
+function cleanMarkdown(markdown: string): string {
+  return markdown
+    .replace(/Cost estimate:?\s*\$[\d.]+/gi, '')
+    .replace(/Analysis (cost|completed).*?\$[\d.]+/gi, '')
+    .replace(/Total cost:?\s*\$[\d.]+/gi, '')
+    .replace(/\$\d+\.\d{4}/g, '')
+    .replace(/• '/g, '✓')
+    .replace(/▌/g, '★')
+    .trim();
+}
+
 /**
  * Generate professional investment memo PDF
  */
-export function generateInvestmentMemoPDF(
+export async function generateInvestmentMemoPDF(
   sections: Record<string, ExtractedSection>,
   metadata: PDFGeneratorOptions
-): Blob {
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'letter'
-  });
-
-  let currentY = 20;
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 20;
-  const contentWidth = pageWidth - (2 * margin);
-
-  // Helper function to add page numbers and footer
-  const addFooter = (pageNum: number, totalPages: number) => {
-    doc.setFontSize(8);
-    doc.setTextColor(128, 128, 128);
-    doc.text('CONFIDENTIAL - FOR INTERNAL USE ONLY', pageWidth / 2, pageHeight - 10, { align: 'center' });
-    doc.text(`Page ${pageNum} of ${totalPages}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
-  };
-
-  // COVER PAGE
-  doc.setFillColor(15, 118, 110); // Teal color
-  doc.rect(0, 0, pageWidth, pageHeight, 'F');
-
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(36);
-  doc.setFont('helvetica', 'bold');
-  doc.text('INVESTMENT MEMO', pageWidth / 2, 80, { align: 'center' });
-
-  if (metadata.companyName) {
-    doc.setFontSize(24);
-    doc.setFont('helvetica', 'normal');
-    doc.text(metadata.companyName, pageWidth / 2, 100, { align: 'center' });
-  }
-
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
+): Promise<Blob> {
   const date = new Date(metadata.generatedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
-  doc.text(`Generated: ${date}`, pageWidth / 2, 120, { align: 'center' });
 
-  if (metadata.generatedBy) {
-    doc.text(`Prepared by: ${metadata.generatedBy}`, pageWidth / 2, 130, { align: 'center' });
-  }
+  // Build markdown content
+  let markdownContent = '';
 
-  // Disclaimer box at bottom
-  doc.setFillColor(255, 255, 255, 0.1);
-  doc.rect(margin, pageHeight - 60, contentWidth, 40, 'F');
-  doc.setFontSize(8);
-  doc.setTextColor(255, 255, 255);
-  const disclaimer = 'CONFIDENTIAL: This document contains proprietary information and is intended solely for the use of the designated recipient(s). Unauthorized distribution or disclosure is prohibited.';
-  const disclaimerLines = doc.splitTextToSize(disclaimer, contentWidth - 10);
-  doc.text(disclaimerLines, pageWidth / 2, pageHeight - 50, { align: 'center' });
+  // Table of contents
+  markdownContent += '## TABLE OF CONTENTS\n\n';
+  Object.values(sections).forEach((section, index) => {
+    markdownContent += `${index + 1}. ${section.title}\n`;
+  });
+  markdownContent += '\n---\n\n';
 
-  // TABLE OF CONTENTS
-  doc.addPage();
-  currentY = margin;
-
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  doc.text('TABLE OF CONTENTS', margin, currentY);
-  currentY += 15;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-
-  const tocEntries = Object.values(sections).map((section, index) => ({
-    number: index + 1,
-    title: section.title,
-    page: 3 + index // Approximate - will be corrected in production version
-  }));
-
-  tocEntries.forEach((entry) => {
-    if (currentY > pageHeight - 30) {
-      doc.addPage();
-      currentY = margin;
-    }
-
-    doc.text(`${entry.number}.`, margin, currentY);
-    doc.text(entry.title, margin + 10, currentY);
-    doc.text(entry.page.toString(), pageWidth - margin, currentY, { align: 'right' });
-    currentY += 7;
+  // Sections
+  Object.values(sections).forEach((section, index) => {
+    markdownContent += `## ${index + 1}. ${section.title.toUpperCase()}\n\n`;
+    markdownContent += section.content;
+    markdownContent += '\n\n---\n\n';
   });
 
-  addFooter(2, metadata.totalPages + 2); // +2 for cover and TOC
+  // Appendix
+  markdownContent += '## APPENDIX: DOCUMENT METADATA\n\n';
+  markdownContent += '| Field | Value |\n';
+  markdownContent += '|-------|-------|\n';
+  markdownContent += `| Analysis ID | ${metadata.analysisId || 'N/A'} |\n`;
+  markdownContent += `| Company Name | ${metadata.companyName || 'N/A'} |\n`;
+  markdownContent += `| Generated Date | ${date} |\n`;
+  markdownContent += `| Generated By | ${metadata.generatedBy || 'AI Agent System'} |\n`;
+  markdownContent += `| Total Word Count | ${metadata.totalWords.toLocaleString()} |\n`;
+  markdownContent += `| Number of Sections | ${Object.keys(sections).length} |\n`;
 
-  // SECTION PAGES
-  let sectionNumber = 1;
+  // Clean and parse markdown to HTML
+  const cleanedMarkdown = cleanMarkdown(markdownContent);
+  const htmlContent = await marked.parse(cleanedMarkdown);
 
-  Object.values(sections).forEach((section) => {
-    // New page for each major section
-    doc.addPage();
-    currentY = margin;
+  // Build complete HTML document
+  const htmlDocument = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Investment Memo - ${metadata.companyName || 'Analysis'}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    // Section header
-    doc.setFillColor(240, 240, 240);
-    doc.rect(margin, currentY, contentWidth, 12, 'F');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(15, 118, 110);
-    doc.text(`${sectionNumber}. ${section.title.toUpperCase()}`, margin + 5, currentY + 8);
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 11pt;
+      line-height: 1.7;
+      color: #1f2937;
+      background: white;
+    }
 
-    currentY += 18;
+    .cover-page {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      page-break-after: always;
+      position: relative;
+    }
 
-    // Section content
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(0, 0, 0);
+    .cover-page h1 {
+      font-size: 48pt;
+      font-weight: 700;
+      margin-bottom: 32px;
+      letter-spacing: -0.02em;
+    }
 
-    // Parse and render markdown content
-    const lines = parseMarkdownToPDFLines(doc, section.content);
+    .cover-page h2 {
+      font-size: 32pt;
+      font-weight: 400;
+      margin-bottom: 48px;
+      opacity: 0.95;
+    }
 
-    lines.forEach((line) => {
-      if (currentY > pageHeight - 30) {
-        addFooter(doc.getNumberOfPages(), metadata.totalPages + 2);
-        doc.addPage();
-        currentY = margin;
+    .cover-page .meta {
+      font-size: 14pt;
+      opacity: 0.9;
+      text-align: center;
+      line-height: 2;
+    }
+
+    .cover-page .footer {
+      position: absolute;
+      bottom: 60px;
+      left: 60px;
+      right: 60px;
+      text-align: center;
+      font-size: 10pt;
+      opacity: 0.8;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
+
+    .content {
+      padding: 0.75in;
+      max-width: 8.5in;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      color: #1e40af;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+
+    h1 { font-size: 24pt; }
+    h2 { font-size: 18pt; }
+    h3 { font-size: 14pt; }
+
+    p {
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.7;
+    }
+
+    strong {
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    em {
+      font-style: italic;
+      color: #4b5563;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      border: 1px solid #2563eb;
+    }
+
+    td {
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tbody tr:hover {
+      background-color: #f3f4f6;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid #e5e7eb;
+      margin: 32px 0;
+      page-break-after: avoid;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    @media print {
+      .cover-page {
+        page-break-after: always;
       }
 
-      // Apply formatting based on line type
-      if (line.type === 'header') {
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        currentY += 5; // Extra space before headers
-      } else if (line.type === 'subheader') {
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'bold');
-        currentY += 3;
-      } else if (line.type === 'bullet') {
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-        doc.text('•', margin + 2, currentY);
-        const bulletLines = doc.splitTextToSize(line.text, contentWidth - 10);
-        bulletLines.forEach((bLine: string, idx: number) => {
-          doc.text(bLine, margin + 8, currentY);
-          if (idx < bulletLines.length - 1) {
-            currentY += 5;
-          }
-        });
-        currentY += 5;
-        return; // Skip the normal text rendering
-      } else {
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
+      h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
       }
 
-      const textLines = doc.splitTextToSize(line.text, contentWidth);
-      textLines.forEach((tLine: string) => {
-        if (currentY > pageHeight - 30) {
-          addFooter(doc.getNumberOfPages(), metadata.totalPages + 2);
-          doc.addPage();
-          currentY = margin;
-        }
-        doc.text(tLine, margin, currentY);
-        currentY += 5;
-      });
+      table, figure, img {
+        page-break-inside: avoid;
+      }
 
-      currentY += 2; // Small gap between paragraphs
+      ul, ol {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="cover-page">
+    <h1>INVESTMENT MEMO</h1>
+    ${metadata.companyName ? `<h2>${metadata.companyName}</h2>` : ''}
+    <div class="meta">
+      <div>Generated: ${date}</div>
+      ${metadata.generatedBy ? `<div>Prepared by: ${metadata.generatedBy}</div>` : ''}
+    </div>
+    <div class="footer">
+      <strong>CONFIDENTIAL:</strong> This document contains proprietary information and is intended solely
+      for the use of the designated recipient(s). Unauthorized distribution or disclosure is prohibited.
+    </div>
+  </div>
+
+  <div class="content">
+    ${htmlContent}
+  </div>
+</body>
+</html>
+  `;
+
+  // Generate PDF using puppeteer
+  let browser;
+  try {
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
     });
 
-    addFooter(doc.getNumberOfPages(), metadata.totalPages + 2);
-    sectionNumber++;
-  });
+    const page = await browser.newPage();
+    await page.setContent(htmlDocument, { waitUntil: 'networkidle0' });
 
-  // APPENDIX PAGE (Metadata)
-  doc.addPage();
-  currentY = margin;
+    const pdfBuffer = await page.pdf({
+      format: 'Letter',
+      printBackground: true,
+      margin: {
+        top: '0.5in',
+        right: '0.75in',
+        bottom: '0.5in',
+        left: '0.75in'
+      }
+    });
 
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(15, 118, 110);
-  doc.text('APPENDIX: DOCUMENT METADATA', margin, currentY);
-  currentY += 15;
+    await browser.close();
 
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(0, 0, 0);
-
-  const metadataTable = [
-    ['Analysis ID', metadata.analysisId || 'N/A'],
-    ['Company Name', metadata.companyName || 'N/A'],
-    ['Generated Date', date],
-    ['Generated By', metadata.generatedBy || 'AI Agent System'],
-    ['Total Word Count', metadata.totalWords.toLocaleString()],
-    ['Number of Sections', Object.keys(sections).length.toString()],
-  ];
-
-  autoTable(doc, {
-    startY: currentY,
-    head: [['Field', 'Value']],
-    body: metadataTable,
-    theme: 'grid',
-    headStyles: { fillColor: [15, 118, 110], textColor: [255, 255, 255] },
-    margin: { left: margin, right: margin }
-  });
-
-  addFooter(doc.getNumberOfPages(), metadata.totalPages + 2);
-
-  return doc.output('blob');
-}
-
-/**
- * Parse markdown content into PDF-renderable lines with formatting
- */
-function parseMarkdownToPDFLines(
-  doc: jsPDF,
-  markdown: string
-): Array<{ type: string; text: string }> {
-  const lines: Array<{ type: string; text: string }> = [];
-  const rawLines = markdown.split('\n');
-
-  rawLines.forEach((line) => {
-    const trimmed = line.trim();
-
-    if (!trimmed) {
-      // Skip empty lines
-      return;
+    return new Blob([Buffer.from(pdfBuffer)], { type: 'application/pdf' });
+  } catch (error) {
+    if (browser) {
+      await browser.close();
     }
-
-    // Headers
-    if (trimmed.startsWith('### ')) {
-      lines.push({ type: 'subheader', text: trimmed.replace('### ', '') });
-    } else if (trimmed.startsWith('## ')) {
-      lines.push({ type: 'header', text: trimmed.replace('## ', '') });
-    } else if (trimmed.startsWith('# ')) {
-      lines.push({ type: 'header', text: trimmed.replace('# ', '') });
-    }
-    // Bullets
-    else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-      lines.push({ type: 'bullet', text: trimmed.substring(2) });
-    }
-    // Bold text (keep markers for now, jsPDF doesn't support inline formatting easily)
-    else if (trimmed.startsWith('**')) {
-      lines.push({ type: 'bold', text: trimmed.replace(/\*\*/g, '') });
-    }
-    // Regular text
-    else {
-      lines.push({ type: 'text', text: trimmed });
-    }
-  });
-
-  return lines;
+    throw error;
+  }
 }
 
 /**
