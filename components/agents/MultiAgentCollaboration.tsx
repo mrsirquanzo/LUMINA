@@ -18,6 +18,7 @@ interface MultiAgentCollaborationProps {
   isDemo?: boolean;
   demoScenarioId?: string;
   customAgents?: AgentType[];
+  mcpEnabled?: boolean;
   onComplete?: (synthesis: string, cost: number) => void;
 }
 
@@ -47,6 +48,7 @@ export default function MultiAgentCollaboration({
   isDemo = false,
   demoScenarioId,
   customAgents,
+  mcpEnabled = false,
   onComplete,
 }: MultiAgentCollaborationProps) {
   const [isRunning, setIsRunning] = useState(false);
@@ -133,6 +135,7 @@ export default function MultiAgentCollaboration({
       isDemo,
       demoScenarioId,
       customAgents,
+      mcpEnabled,
     };
 
     console.log('[MultiAgentCollaboration] Sending request to orchestrator:', requestPayload);
