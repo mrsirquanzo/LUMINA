@@ -84,7 +84,7 @@ export async function generateInvestmentMemoPDF(
   const cleanedMarkdown = cleanMarkdown(markdownContent);
   const htmlContent = await marked.parse(cleanedMarkdown);
 
-  // Build complete HTML document with quiet luxury design
+  // Build complete HTML document with modern minimalist design
   const htmlDocument = `
 <!DOCTYPE html>
 <html>
@@ -92,186 +92,230 @@ export async function generateInvestmentMemoPDF(
   <meta charset="utf-8">
   <title>Investment Memorandum - ${metadata.companyName || 'Analysis'}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500&display=swap');
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-      font-size: 11pt;
-      font-weight: 300;
-      line-height: 1.6;
-      color: #2C2C2C;
-      background: #FAF9F6;
+    @page {
+      size: letter;
+      margin: 0.75in;
     }
 
-    /* Quiet Luxury Cover Page */
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #1E293B;
+      background-color: white;
+    }
+
+    /* Modern Minimalist Cover Page */
     .cover-page {
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: #FAF9F6;
-      color: #1B2B3A;
+      background: white;
       page-break-after: always;
       position: relative;
       padding: 1.5in;
     }
 
     .cover-page h1 {
-      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
-      font-size: 36pt;
-      font-weight: 400;
+      font-family: Arial, sans-serif;
+      font-size: 48pt;
+      font-weight: 700;
       margin-bottom: 0.5in;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.05em;
       text-align: center;
-      color: #1B2B3A;
+      color: #1E293B;
+      line-height: 1.2;
     }
 
     .cover-page h2 {
-      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+      font-family: Arial, sans-serif;
       font-size: 18pt;
       font-weight: 400;
       margin-bottom: 0.5in;
-      color: #2C2C2C;
+      color: #64748B;
       text-align: center;
     }
 
     .cover-page .divider {
       width: 3in;
-      height: 1pt;
-      background: #B8956A;
+      height: 3px;
+      background: linear-gradient(to right, #3B82F6, transparent);
       margin: 0.5in auto;
     }
 
     .cover-page .meta {
-      font-size: 12pt;
+      font-size: 11pt;
       text-align: center;
       line-height: 1.8;
-      color: #2C2C2C;
-      margin-top: 0.5in;
+      color: #64748B;
+      margin-top: 2em;
     }
 
     .cover-page .footer {
       position: absolute;
-      bottom: 1in;
-      left: 1.25in;
-      right: 1.25in;
+      bottom: 2em;
+      left: 0;
+      right: 0;
+      padding: 1.5em;
+      background-color: #F8FAFC;
+      border-top: 2px solid #3B82F6;
       text-align: center;
-      font-size: 8pt;
-      font-weight: 300;
-      color: #2C2C2C;
+      font-size: 9pt;
+      font-weight: 400;
+      color: #64748B;
       line-height: 1.4;
     }
 
     .content {
-      padding: 1.25in;
-      max-width: 8.5in;
+      padding: 0;
+      max-width: 100%;
     }
 
-    /* Typography - Quiet Luxury */
+    /* Typography - Modern Minimalist */
     h1, h2, h3, h4, h5, h6 {
-      font-weight: 600;
-      color: #1B2B3A;
-      margin-top: 0.5in;
-      margin-bottom: 16px;
+      font-family: Arial, sans-serif;
+      color: #1E293B;
+      margin-top: 1.5em;
+      margin-bottom: 1em;
       line-height: 1.3;
       page-break-after: avoid;
     }
 
     h1 {
-      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
-      font-size: 18pt;
+      font-size: 24pt;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: #1E293B;
+      border-bottom: 3px solid transparent;
+      border-image: linear-gradient(to right, #3B82F6, transparent) 1;
+      padding-bottom: 0.5em;
     }
 
     h2 {
-      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-      font-size: 14pt;
-      font-weight: 500;
+      font-size: 18pt;
+      font-weight: 700;
+      color: #3B82F6;
     }
 
     h3 {
-      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-      font-size: 12pt;
-      font-weight: 500;
+      font-size: 14pt;
+      font-weight: 700;
+      color: #3B82F6;
     }
 
     p {
-      margin-bottom: 12px;
+      margin-bottom: 1.2em;
       text-align: left;
       line-height: 1.6;
+      font-weight: 400;
     }
 
     ul, ol {
-      margin: 16px 0;
-      padding-left: 24px;
+      margin: 1em 0;
+      padding-left: 1.5em;
+      list-style-type: none;
     }
 
     li {
-      margin-bottom: 8px;
+      margin-bottom: 0.75em;
       line-height: 1.6;
+      position: relative;
+      padding-left: 1.5em;
+      font-weight: 400;
+    }
+
+    li:before {
+      content: "▸";
+      color: #3B82F6;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
     }
 
     strong {
-      font-weight: 500;
-      color: #2C2C2C;
+      font-weight: 700;
+      color: inherit;
     }
 
     em {
       font-style: italic;
-      color: #2C2C2C;
+      color: inherit;
     }
 
-    /* Tables - Navy Headers with White Text */
+    .highlight {
+      color: #3B82F6;
+      font-weight: 600;
+    }
+
+    /* Tables - Modern Minimalist with Accent Blue Headers */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 24px 0;
+      margin: 1.5em 0;
       font-size: 10pt;
       page-break-inside: avoid;
     }
 
     thead {
-      background: #1B2B3A;
+      background-color: #3B82F6;
       color: white;
     }
 
     th {
-      padding: 8px 12px;
+      padding: 12px;
       text-align: left;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 10pt;
-      border: 1px solid #E5E5E5;
+      border-bottom: 2px solid #2563EB;
       color: white;
     }
 
     td {
-      padding: 8px 12px;
-      border: 1px solid #E5E5E5;
+      padding: 10px 12px;
+      border-bottom: 1px solid #E2E8F0;
       vertical-align: top;
+      font-weight: 400;
     }
 
     tbody tr:nth-child(even) {
-      background-color: #F5F5F5;
+      background-color: #F8FAFC;
     }
 
     tbody tr:nth-child(odd) {
       background-color: white;
     }
 
+    /* Callout Boxes */
+    .callout-box {
+      background-color: #F8FAFC;
+      border-left: 4px solid #3B82F6;
+      padding: 1.5em;
+      margin: 2em 0;
+      border-radius: 4px;
+      page-break-inside: avoid;
+    }
+
+    .callout-box h4 {
+      margin-top: 0;
+      margin-bottom: 0.75em;
+      color: #3B82F6;
+      font-weight: 600;
+      font-size: 12pt;
+    }
+
     hr {
       border: none;
-      border-top: 1px solid #E5E5E5;
-      margin: 0.5in 0;
+      height: 3px;
+      background: linear-gradient(to right, #3B82F6, transparent);
+      margin: 0.5em 0 1.5em 0;
       page-break-after: avoid;
     }
 
@@ -279,19 +323,12 @@ export async function generateInvestmentMemoPDF(
       page-break-before: always;
     }
 
-    /* Page numbering */
-    @page {
-      margin: 0.5in 1.25in;
-      @bottom-right {
-        content: counter(page);
-        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-        font-size: 9pt;
-        font-weight: 300;
-        color: #2C2C2C;
-      }
-    }
-
     @media print {
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
       .cover-page {
         page-break-after: always;
       }
@@ -300,7 +337,7 @@ export async function generateInvestmentMemoPDF(
         page-break-after: avoid;
       }
 
-      table, figure, img {
+      table, figure, img, .callout-box {
         page-break-inside: avoid;
       }
 
@@ -352,17 +389,19 @@ export async function generateInvestmentMemoPDF(
       displayHeaderFooter: true,
       headerTemplate: '<div></div>',
       footerTemplate: `
-        <div style="font-size: 9pt; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                    color: #2C2C2C; text-align: right; width: 100%; padding-right: 1.25in; margin-top: 0.25in;">
-          <span class="pageNumber"></span>
+        <div style="font-size: 9pt; font-family: Arial, sans-serif; color: #64748B;
+                    width: 100%; display: flex; justify-content: space-between; padding: 0 0.75in;">
+          <span>Confidential Investment Memorandum</span>
+          <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
         </div>
       `,
       margin: {
-        top: '1.25in',
-        right: '1.25in',
-        bottom: '1.25in',
-        left: '1.25in'
-      }
+        top: '0.75in',
+        right: '0.75in',
+        bottom: '0.75in',
+        left: '0.75in'
+      },
+      preferCSSPageSize: false
     });
 
     await browser.close();
