@@ -2,6 +2,10 @@ import Anthropic from '@anthropic-ai/sdk';
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from '@/lib/auth';
 
+// Force Node.js runtime for proper environment variable access
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,

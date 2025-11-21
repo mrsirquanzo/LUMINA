@@ -4,6 +4,10 @@ import { createLLMClient } from '@/lib/llm/clientFactory';
 import { AGENT_MODEL_CONFIG } from '@/lib/llm/agentConfig';
 import { AGENT_PROMPTS } from '@/lib/agentPrompts';
 
+// Force Node.js runtime for proper environment variable access
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     // Check authentication
