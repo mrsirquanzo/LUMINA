@@ -187,12 +187,45 @@ MARKET_DATA_API_KEY=your_news_api_key
 
 ## Common Issues
 
-### Issue 1: "Authentication required" error
+### Issue 1: "API configuration error" on individual agents but multi-agent works ⭐ NEW
+
+**Symptom:** Multi-agent orchestrator works fine, but individual agents (Patent Expert, Market Research, Financial Analyst) fail with "API configuration error. Please contact support."
+
+**Cause:** Missing Next.js runtime configuration causing Edge runtime or caching issues
+
+**Solution:** ✅ **FIXED IN LATEST VERSION**
+
+All individual agent routes now include:
+```typescript
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+```
+
+**If you still see this issue after updating:**
+1. **Pull latest changes:** `git pull origin main`
+2. **Clear Next.js cache:** `rm -rf .next`
+3. **Restart server:** `npm run dev`
+
+**Technical Details:**
+- Without explicit runtime config, Next.js may use Edge runtime
+- Edge runtime has limited `process.env` access for security
+- Cached responses may return stale "no API key" errors
+- Now all routes explicitly use Node.js runtime with dynamic rendering
+- This ensures consistent behavior between orchestrator and individual agents
+
+**Fixed Routes:**
+- ✅ `app/api/agents/patent-expert/route.ts`
+- ✅ `app/api/agents/market-research/route.ts`
+- ✅ `app/api/agents/financial-analyst/route.ts`
+- ✅ `app/api/agents/data-analyst/route.ts`
+- ✅ `app/api/agents/regulatory-expert/route.ts` (already had config)
+
+### Issue 2: "Authentication required" error
 
 **Cause:** Not logged in to Live Mode
 **Solution:** Click "🚀 Live AI Agent" button and enter password (default: `demo2024`)
 
-### Issue 2: "API configuration error" persists after adding keys
+### Issue 3: "API configuration error" persists after adding keys
 
 **Cause:** Server not restarted after `.env.local` changes
 **Solution:** Restart Next.js dev server:
@@ -201,7 +234,7 @@ MARKET_DATA_API_KEY=your_news_api_key
 npm run dev
 ```
 
-### Issue 3: "Invalid API key" error
+### Issue 4: "Invalid API key" error
 
 **Cause:** API key is incorrect or expired
 **Solution:**
@@ -209,7 +242,7 @@ npm run dev
 2. Check for extra spaces or line breaks
 3. Regenerate key from provider console
 
-### Issue 4: "Rate limit exceeded" error
+### Issue 5: "Rate limit exceeded" error
 
 **Cause:** Too many requests in short time period
 **Solution:**
