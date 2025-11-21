@@ -14,6 +14,42 @@ const anthropic = new Anthropic({
 });
 
 /**
+ * Language transformation rules for institutional tone
+ */
+const LANGUAGE_TRANSFORMATION_RULES = `
+## CRITICAL LANGUAGE TRANSFORMATION RULES
+
+**REMOVE/REPLACE promotional language:**
+- "STRONG BUY" → "Recommend approval"
+- "HIGH CONVICTION" → "with confidence based on" or remove
+- "exceptional" (overused) → vary: "strong", "notable", "significant", "differentiated"
+- "superior" (overused) → vary: "differentiated", "competitive", "leading"
+- "best-in-class" → "leading" or "differentiated"
+- "guaranteed" → "estimated" or "anticipated"
+- "will achieve" → "projected to achieve" or "expected to achieve"
+- "amazing", "incredible", "outstanding" → remove or use "strong", "notable"
+
+**USE institutional language:**
+- "Analysis supports..."
+- "Data indicates..."
+- "Projected to..."
+- "Expected to..."
+- "Estimated..."
+- "Based on available evidence..."
+
+**HEDGE APPROPRIATELY:**
+Every projection MUST include hedging language:
+- "projected", "estimated", "expected", "anticipated", "subject to"
+- Never state outcomes as certain unless they are regulatory/legal facts
+
+**TONE:**
+- Professional, not promotional
+- Balanced, acknowledging both strengths and concerns
+- Data-driven with specific numbers
+- Appropriately cautious about future projections
+`;
+
+/**
  * Extract a single section from agent response using LLM
  */
 export async function extractSection(
@@ -30,6 +66,8 @@ export async function extractSection(
         role: 'user',
         content: `${INVESTMENT_MEMO_PROMPT}
 
+${LANGUAGE_TRANSFORMATION_RULES}
+
 You are extracting the following section for an investment memo${companyName ? ` about ${companyName}` : ''}.
 
 ## SECTION TO EXTRACT: ${section.title}
@@ -40,15 +78,25 @@ ${section.extractionPrompt}
 
 ${agentResponse}
 
-## INSTRUCTIONS:
+## CRITICAL INSTRUCTIONS:
 
-1. Extract and synthesize ONLY the content relevant to this specific section
-2. Maintain institutional quality and professional tone
-3. Include specific metrics, data points, and citations from the source
-4. ${section.wordCount ? `Target length: ${section.wordCount.min}-${section.wordCount.max} words` : 'Be comprehensive but concise'}
-5. Use markdown formatting (headers, bullets, tables where appropriate)
-6. If the source data doesn't contain enough information for this section, indicate what's missing
-7. Do NOT include any preamble like "Here is the section..." - just return the section content directly
+1. **Parse Multi-Agent Output**: Extract and synthesize ONLY content relevant to this specific section
+2. **Apply Language Transformation**: Remove ALL promotional language and replace with institutional tone
+3. **Include Specific Data**: Metrics, percentages, dates, dollar amounts with proper formatting ($5.2B not $5.2 billion)
+4. **Appropriate Hedging**: Every projection must include "projected", "estimated", "expected"
+5. **Target Length**: ${section.wordCount ? `${section.wordCount.min}-${section.wordCount.max} words` : 'Be comprehensive but concise'}
+6. **Markdown Formatting**: Use headers (##, ###), bullets, tables where appropriate
+7. **Handle Missing Data**: If source lacks information, note as "pending" or "TBD" - NEVER invent data
+8. **Comparative Analysis**: If multiple assets mentioned, create comparison tables
+9. **Management Section**: If no management data provided, use "PENDING DILIGENCE" language from template
+10. **NO PREAMBLE**: Return ONLY the section content, not "Here is the section..."
+
+**TABLE FORMATTING (when creating tables):**
+- Use markdown table format
+- Keep tables concise and data-dense
+- Currency: $5.2B format (not $5.2 billion)
+- Percentages: 45% format
+- Years: 2025E for estimates
 
 Return ONLY the section content in markdown format, ready to be included in the final memo.`
       }]
@@ -160,10 +208,10 @@ export async function generateInvestmentMemo(
     }
   }
 
-  // Calculate estimated pages (assuming ~500 words per page for dense professional content)
-  const totalPages = Math.ceil(totalWords / 500);
+  // Calculate estimated pages (assuming ~400 words per page for institutional memos with tables and white space)
+  const totalPages = Math.ceil(totalWords / 400);
 
-  console.log(`✓ Memo generation complete: ${totalWords} words across ${Object.keys(sections).length} sections`);
+  console.log(`✓ Memo generation complete: ${totalWords} words across ${Object.keys(sections).length} sections (estimated ${totalPages} pages)`);
 
   return {
     sections,
