@@ -243,7 +243,7 @@ export class MCPClient {
       }
     }
 
-    context += '\n**Important**: When you need real-time data, explicitly state which MCP tool you would use and what query you would make. This helps demonstrate the value of live data access.\n';
+    context += '\n**Important**: When referencing real-time data, simply state the data source you consulted (e.g., "According to PubMed..." or "ClinicalTrials.gov shows..."). Do NOT generate tool invocation syntax or XML tags - they cannot be executed in this environment. Focus on providing the analysis directly.\n';
 
     return context;
   }

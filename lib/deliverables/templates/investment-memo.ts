@@ -17,7 +17,7 @@ INPUT: You will receive RAW TEXT OUTPUT from a multi-agent analysis system conta
 - Synthesized investment analysis
 - May be structured markdown, JSON, or free-form text
 
-OUTPUT: Generate professional investment memorandum with quiet luxury design aesthetic
+OUTPUT: Generate professional investment memorandum with modern minimalist design aesthetic
 
 ## PARSING REQUIREMENTS
 
@@ -44,12 +44,67 @@ Extract from multi-agent outputs:
 - **Balanced Analysis**: Acknowledge uncertainties and risks prominently
 - **No Promotional Language**: Remove/replace "exceptional" (overused), "superior" (overused), "guaranteed"
 - **Vary Descriptors**: "strong", "notable", "significant", "differentiated", "competitive", "leading"
+- **Consistent Text Weight**: Use normal font-weight throughout body text. DO NOT use bold mid-sentence.
+- **Emphasis Through Color**: Highlight important figures using HTML: <span class="highlight">$10B</span>
+
+## CRITICAL FORMATTING REQUIREMENTS
+
+### Font & Typography
+- **ALL TEXT**: Uses Arial font (CSS handles this automatically)
+- **Text Weight**: Keep all body text at normal weight (400) - NO bold mid-sentence
+- **Headers Only**: Use bold for section headers (automatically styled)
+
+### Tables - ALWAYS USE HTML FORMAT
+**NEVER use markdown table syntax with pipes (| |)**
+**ALWAYS use HTML tables with proper classes**
+
+Example:
+\`\`\`html
+<table>
+<thead>
+<tr>
+  <th>Metric</th>
+  <th>Asset 1</th>
+  <th>Asset 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Revenue 2025E</strong></td>
+  <td><span class="highlight">$3.7B</span></td>
+  <td>$1.2B</td>
+</tr>
+</tbody>
+</table>
+\`\`\`
+
+### Callout Boxes
+Use HTML for important insights:
+\`\`\`html
+<div class="callout-box">
+<h4>Investment Recommendation</h4>
+<p>Recommend approval for equity investment of $X-Y based on strong clinical differentiation and extended patent protection through 2031.</p>
+</div>
+\`\`\`
+
+### Lists with Custom Bullets
+Lists will automatically use blue arrow bullets (▸) - just use standard markdown lists:
+\`\`\`markdown
+- Clinical differentiation with 61% ORR
+- Patent protection through 2031
+- Market opportunity of $25-30B
+\`\`\`
+
+### Highlighting Numbers
+Wrap important figures in highlight span:
+- Revenue projection: <span class="highlight">$8-10B</span> by 2027
+- Market opportunity: <span class="highlight">$25-30B</span>
 
 ## CRITICAL DATA HANDLING
 
 - **NEVER INVENT DATA**: If data is missing, explicitly note as "pending" or "TBD"
 - **Management Assessment**: If no management data provided, use "PENDING DILIGENCE" language
-- **Comparative Analysis**: Create comparison matrices for multiple assets
+- **Comparative Analysis**: Create comparison matrices for multiple assets using HTML tables
 - **Patent Cliff**: Highlight patent expiry dates prominently in timeline analysis`;
 
 export const investmentMemoTemplate: DeliverableTemplate = {
@@ -65,15 +120,21 @@ export const investmentMemoTemplate: DeliverableTemplate = {
 
 **PAGE 1 STRUCTURE:**
 
-Create **Investment Overview Table**:
-| Field | Details |
-| Company | [Extract from input] |
-| Sector/Industry | [Market agent] |
-| Proposed Investment | [Financial agent or TBD] |
-| Target Ownership | [Calculate from investment/valuation] |
-| Current Valuation | [Financial agent] |
-| Entry Multiple | [Calculate from revenue projections] |
-| Investment Horizon | [Extract or default 5-7 years] |
+Create **Investment Overview Table** using HTML format:
+<table>
+<thead>
+<tr><th>Field</th><th>Details</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Company</strong></td><td>[Extract from input]</td></tr>
+<tr><td><strong>Sector/Industry</strong></td><td>[Market agent]</td></tr>
+<tr><td><strong>Proposed Investment</strong></td><td>[Financial agent or TBD]</td></tr>
+<tr><td><strong>Target Ownership</strong></td><td>[Calculate from investment/valuation]</td></tr>
+<tr><td><strong>Current Valuation</strong></td><td><span class="highlight">[Financial agent]</span></td></tr>
+<tr><td><strong>Entry Multiple</strong></td><td>[Calculate from revenue projections]</td></tr>
+<tr><td><strong>Investment Horizon</strong></td><td>[Extract or default 5-7 years]</td></tr>
+</tbody>
+</table>
 
 **Investment Thesis** (4-5 bullets synthesized from agents):
 - [Patent/IP advantage - from patent agent]
@@ -83,20 +144,32 @@ Create **Investment Overview Table**:
 - [Market timing - from market/regulatory agents]
 
 If comparing multiple assets, create **Key Metrics Snapshot Table**:
-| Metric | Asset 1 | Asset 2 | Asset 3 |
-| Revenue (2025E) | [Extract] | [Extract] | [Extract] |
-| Peak Sales | [Extract] | [Extract] | [Extract] |
-| Patent Expiry | [Patent agent] | [Patent agent] | [Patent agent] |
-| FDA Approvals | [Regulatory] | [Regulatory] | [Regulatory] |
-| Growth Rate | [Calculate] | [Calculate] | [Calculate] |
+<table>
+<thead>
+<tr><th>Metric</th><th>Asset 1</th><th>Asset 2</th><th>Asset 3</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Revenue (2025E)</strong></td><td><span class="highlight">[Extract]</span></td><td>[Extract]</td><td>[Extract]</td></tr>
+<tr><td><strong>Peak Sales</strong></td><td><span class="highlight">[Extract]</span></td><td>[Extract]</td><td>[Extract]</td></tr>
+<tr><td><strong>Patent Expiry</strong></td><td>[Patent agent]</td><td>[Patent agent]</td><td>[Patent agent]</td></tr>
+<tr><td><strong>FDA Approvals</strong></td><td>[Regulatory]</td><td>[Regulatory]</td><td>[Regulatory]</td></tr>
+<tr><td><strong>Growth Rate</strong></td><td>[Calculate]</td><td>[Calculate]</td><td>[Calculate]</td></tr>
+</tbody>
+</table>
 
 **PAGE 2 STRUCTURE:**
 
 **Expected Returns** - Create table from financial agent:
-| Scenario | Probability | IRR | MOIC | Key Assumptions |
-| Base Case | [Extract] | [Extract] | [Extract] | [From financial agent] |
-| Upside | [Extract] | [Extract] | [Extract] | [From financial agent] |
-| Downside | [Extract] | [Extract] | [Extract] | [From financial agent] |
+<table>
+<thead>
+<tr><th>Scenario</th><th>Probability</th><th>IRR</th><th>MOIC</th><th>Key Assumptions</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Base Case</strong></td><td>60%</td><td><span class="highlight">[Extract]</span></td><td><span class="highlight">[Extract]</span></td><td>[From financial agent]</td></tr>
+<tr><td><strong>Upside</strong></td><td>25%</td><td>[Extract]</td><td>[Extract]</td><td>[From financial agent]</td></tr>
+<tr><td><strong>Downside</strong></td><td>15%</td><td>[Extract]</td><td>[Extract]</td><td>[From financial agent]</td></tr>
+</tbody>
+</table>
 
 [1 paragraph explaining return scenarios]
 
@@ -108,12 +181,15 @@ If comparing multiple assets, create **Key Metrics Snapshot Table**:
 - [Risk 5 - regulatory]
 
 **Recommendation** (institutional language):
-Recommend approval for [investment action] of $[X]-[Y] in [company], subject to:
-1. [Condition 1 - often management assessment]
-2. [Condition 2 - from patent/clinical if issues]
-3. [Condition 3 - standard governance/terms]
 
-Timeline: [Extract or "Complete diligence within 60 days, target closing Q2 2025"]
+<div class="callout-box">
+<h4>Investment Recommendation</h4>
+<p>Recommend approval for [investment action] of <span class="highlight">$[X]-[Y]</span> in [company], subject to:</p>
+<p>1. [Condition 1 - often management assessment]<br>
+2. [Condition 2 - from patent/clinical if issues]<br>
+3. [Condition 3 - standard governance/terms]</p>
+<p><strong>Timeline:</strong> [Extract or "Complete diligence within 60 days, target closing Q2 2025"]</p>
+</div>
 
 CRITICAL: Must be EXACTLY 2 pages. Use institutional language only.`,
       required: true,
@@ -249,12 +325,18 @@ Market Growth Rate: [X]% CAGR [2024-2030]
 
 [If COMPARATIVE analysis of multiple assets, create:]
 **Competitive Positioning Matrix**:
-| Parameter | Asset 1 | Asset 2 | Asset 3 | [Company] |
-| Efficacy | [Clinical agent data] | [Data] | [Data] | [Data] |
-| Safety Profile | [Clinical agent data] | [Data] | [Data] | [Data] |
-| Patent Expiry | [Patent agent data] | [Data] | [Data] | [Data] |
-| Market Share | [Market agent data] | [Data] | [Data] | [Data] |
-| Price Point | [Market agent data] | [Data] | [Data] | [Data] |
+<table>
+<thead>
+<tr><th>Parameter</th><th>Asset 1</th><th>Asset 2</th><th>Asset 3</th><th>[Company]</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Efficacy</strong></td><td>[Clinical agent data]</td><td>[Data]</td><td>[Data]</td><td><span class="highlight">[Data]</span></td></tr>
+<tr><td><strong>Safety Profile</strong></td><td>[Clinical agent data]</td><td>[Data]</td><td>[Data]</td><td>[Data]</td></tr>
+<tr><td><strong>Patent Expiry</strong></td><td>[Patent agent data]</td><td>[Data]</td><td>[Data]</td><td><span class="highlight">[Data]</span></td></tr>
+<tr><td><strong>Market Share</strong></td><td>[Market agent data]</td><td>[Data]</td><td>[Data]</td><td>[Data]</td></tr>
+<tr><td><strong>Price Point</strong></td><td>[Market agent data]</td><td>[Data]</td><td>[Data]</td><td>[Data]</td></tr>
+</tbody>
+</table>
 
 [If SINGLE asset, create competitor overview:]
 Key Competitors:
@@ -337,12 +419,18 @@ NEVER invent management information. If not provided, use pending language.`,
       extractionPrompt: `Generate comprehensive Risk Analysis (3-4 pages) synthesizing from ALL AGENT OUTPUTS:
 
 **Risk Matrix Table** (create from ALL agents):
-| Risk Category | Probability | Impact | Mitigation | Source Agent |
-| [Patent Cliff Risk] | [High/Med/Low] | [High/Med/Low] | [Mitigation strategy] | Patent Agent |
-| [Clinical/Safety Risk] | [High/Med/Low] | [High/Med/Low] | [Mitigation strategy] | Clinical Agent |
-| [Market Competition Risk] | [High/Med/Low] | [High/Med/Low] | [Mitigation strategy] | Market Agent |
-| [Revenue/Financial Risk] | [High/Med/Low] | [High/Med/Low] | [Mitigation strategy] | Financial Agent |
-| [Regulatory Risk] | [High/Med/Low] | [High/Med/Low] | [Mitigation strategy] | Regulatory Agent |
+<table>
+<thead>
+<tr><th>Risk Category</th><th>Probability</th><th>Impact</th><th>Mitigation</th><th>Source Agent</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Patent Cliff Risk</strong></td><td>[High/Med/Low]</td><td>[High/Med/Low]</td><td>[Mitigation strategy]</td><td>Patent Agent</td></tr>
+<tr><td><strong>Clinical/Safety Risk</strong></td><td>[High/Med/Low]</td><td>[High/Med/Low]</td><td>[Mitigation strategy]</td><td>Clinical Agent</td></tr>
+<tr><td><strong>Market Competition Risk</strong></td><td>[High/Med/Low]</td><td>[High/Med/Low]</td><td>[Mitigation strategy]</td><td>Market Agent</td></tr>
+<tr><td><strong>Revenue/Financial Risk</strong></td><td>[High/Med/Low]</td><td>[High/Med/Low]</td><td>[Mitigation strategy]</td><td>Financial Agent</td></tr>
+<tr><td><strong>Regulatory Risk</strong></td><td>[High/Med/Low]</td><td>[High/Med/Low]</td><td>[Mitigation strategy]</td><td>Regulatory Agent</td></tr>
+</tbody>
+</table>
 
 **Detailed Risk Discussion**
 
