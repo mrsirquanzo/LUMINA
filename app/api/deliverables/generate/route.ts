@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     // Generate output in requested format
     if (format === 'pdf') {
-      const pdfBlob = generateInvestmentMemoPDF(sections, metadata);
+      const pdfBlob = await generateInvestmentMemoPDF(sections, metadata);
       const buffer = Buffer.from(await pdfBlob.arrayBuffer());
 
       const filename = companyName

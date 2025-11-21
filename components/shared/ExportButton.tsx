@@ -21,7 +21,7 @@ export default function ExportButton({ messages, agentName, className = '' }: Ex
     try {
       switch (format) {
         case 'pdf':
-          exportToPDF(messages, agentName);
+          await exportToPDF(messages, agentName);
           break;
         case 'csv':
           exportToCSV(messages, agentName);
