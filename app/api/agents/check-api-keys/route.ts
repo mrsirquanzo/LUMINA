@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 
+// Force Node.js runtime for proper environment variable access
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const hasAnthropicKey = !!process.env.ANTHROPIC_API_KEY;
   const hasGoogleKey = !!process.env.GOOGLE_API_KEY;
