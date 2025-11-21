@@ -1,6 +1,7 @@
 /**
- * Export utilities for chat conversations
- * PDF export uses server-side API for professional formatting
+ * Modern PDF Export System for Agent Conversations
+ *
+ * Client-side export handlers that call server-side API for PDF generation
  */
 
 // Message interface for chat exports
@@ -12,11 +13,13 @@ export interface ChatMessage {
 }
 
 /**
- * Export chat to professional PDF via server-side API
+ * Export to PDF - calls server-side API for proper markdown rendering
  */
 export async function exportToPDF(messages: ChatMessage[], agentName: string): Promise<void> {
+  console.log('[PDF Export] Generating modern PDF with markdown rendering...');
+
   try {
-    // Convert timestamps to ISO strings for JSON serialization
+    // Convert messages to serializable format
     const serializableMessages = messages.map(msg => ({
       role: msg.role,
       content: msg.content,
@@ -24,9 +27,7 @@ export async function exportToPDF(messages: ChatMessage[], agentName: string): P
       cost: msg.cost
     }));
 
-    console.log('[PDF Export] Sending request to server...');
-
-    // Call server-side API for PDF generation
+    // Call server-side API to generate PDF
     const response = await fetch('/api/export-chat', {
       method: 'POST',
       headers: {
@@ -39,20 +40,27 @@ export async function exportToPDF(messages: ChatMessage[], agentName: string): P
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to generate PDF');
+      const error = await response.json();
+      throw new Error(error.details || 'Failed to generate PDF');
     }
 
-    console.log('[PDF Export] PDF generated successfully');
-
-    // Get the PDF blob and trigger download
+    // Get PDF blob from response
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
 
-    const timestamp = new Date().toISOString().split('T')[0];
-    const sanitizedName = agentName.replace(/[^a-zA-Z0-9-]/g, '-');
-    link.download = `${sanitizedName}_report_${timestamp}.pdf`;
+    // Extract filename from response headers or generate one
+    const contentDisposition = response.headers.get('Content-Disposition');
+    let filename = `${agentName.replace(/[^a-zA-Z0-9-]/g, '-')}_chat_${new Date().toISOString().split('T')[0]}.pdf`;
+
+    if (contentDisposition) {
+      const matches = /filename="([^"]+)"/.exec(contentDisposition);
+      if (matches && matches[1]) {
+        filename = matches[1];
+      }
+    }
+
+    link.download = filename;
     link.href = url;
 
     document.body.appendChild(link);
@@ -60,7 +68,7 @@ export async function exportToPDF(messages: ChatMessage[], agentName: string): P
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    console.log('[PDF Export] Download complete');
+    console.log('[PDF Export] PDF generated successfully!');
   } catch (error) {
     console.error('[PDF Export] Failed:', error);
     throw error;
@@ -68,7 +76,7 @@ export async function exportToPDF(messages: ChatMessage[], agentName: string): P
 }
 
 /**
- * Export chat to CSV
+ * Export to CSV
  */
 export function exportToCSV(messages: ChatMessage[], agentName: string): void {
   const headers = ['Timestamp', 'Role', 'Content', 'Cost'];
@@ -76,7 +84,7 @@ export function exportToCSV(messages: ChatMessage[], agentName: string): void {
     msg.timestamp.toISOString(),
     msg.role,
     msg.content.replace(/"/g, '""'), // Escape quotes
-    msg.cost?.toFixed(2) || ''
+    msg.cost?.toFixed(4) || ''
   ]);
 
   const csvContent = [
@@ -100,7 +108,7 @@ export function exportToCSV(messages: ChatMessage[], agentName: string): void {
 }
 
 /**
- * Export chat to text/markdown
+ * Export to text/markdown
  */
 export function exportToText(messages: ChatMessage[], agentName: string): void {
   const date = new Date().toLocaleDateString('en-US', {
@@ -109,29 +117,40 @@ export function exportToText(messages: ChatMessage[], agentName: string): void {
     year: 'numeric'
   });
 
-  let content = `# ${agentName} - Chat Export\n\n`;
-  content += `**Exported:** ${date}\n\n`;
-  content += `---\n\n`;
+  const totalCost = messages.reduce((sum, msg) => sum + (msg.cost || 0), 0);
 
-  messages.forEach((msg, index) => {
-    const timestamp = msg.timestamp.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  const content = [
+    `# ${agentName}`,
+    `Conversation Export • ${date}`,
+    `${messages.length} messages`,
+    totalCost > 0 ? `Total Cost: $${totalCost.toFixed(4)}` : '',
+    '',
+    '---',
+    '',
+    ...messages.flatMap(msg => {
+      const timestamp = msg.timestamp.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
 
-    content += `### ${msg.role.toUpperCase()} (${timestamp})\n\n`;
-    content += `${msg.content}\n\n`;
+      const lines = [
+        `## ${msg.role.charAt(0).toUpperCase() + msg.role.slice(1)}`,
+        `*${timestamp}*`,
+        ''
+      ];
 
-    if (msg.cost) {
-      content += `*Cost: $${msg.cost.toFixed(4)}*\n\n`;
-    }
+      if (msg.cost && msg.cost > 0) {
+        lines.push(`*Cost: $${msg.cost.toFixed(4)}*`, '');
+      }
 
-    if (index < messages.length - 1) {
-      content += `---\n\n`;
-    }
-  });
+      lines.push(msg.content, '', '---', '');
+
+      return lines;
+    })
+  ].join('\n');
 
   const blob = new Blob([content], { type: 'text/markdown;charset=utf-8;' });
   const url = URL.createObjectURL(blob);

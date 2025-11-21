@@ -1,8 +1,8 @@
 /**
- * API Route: Export Chat to Professional PDF
+ * API Route: Export Agent Analysis to Professional PDF Report
  *
- * Transforms agent conversations into professional business intelligence reports
- * Removes chat UI elements and applies institutional-grade styling
+ * Server-side endpoint for generating professional business intelligence reports
+ * NO chat UI elements - pure business report format
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -12,89 +12,29 @@ import chromium from '@sparticuz/chromium';
 
 export const maxDuration = 60; // 1 minute for PDF generation
 
-// Configure marked for GitHub Flavored Markdown
+// Message interface
+interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: string; // ISO string from client
+  cost?: number;
+}
+
+/**
+ * Configure marked for proper markdown rendering
+ */
 marked.setOptions({
   gfm: true,
   breaks: true,
 });
 
-interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  timestamp: string;
-  cost?: number;
-}
-
 /**
- * Clean markdown content - remove cost displays and fix symbols
- */
-function cleanMarkdown(markdown: string): string {
-  return markdown
-    .replace(/Cost estimate:?\s*\$[\d.]+/gi, '')
-    .replace(/Analysis (cost|completed).*?\$[\d.]+/gi, '')
-    .replace(/Total cost:?\s*\$[\d.]+/gi, '')
-    .replace(/\$\d+\.\d{4}/g, '')
-    .replace(/• '/g, '✓')
-    .replace(/▌/g, '★')
-    .replace(/Cost:?\s*\$[\d.]+/gi, '')
-    .replace(/Estimated cost:?\s*\$[\d.]+/gi, '')
-    .trim();
-}
-
-/**
- * Enhance comparison tables with winner cell highlighting
- */
-function enhanceComparisonTable(html: string): string {
-  let enhanced = html;
-
-  // Pattern matches for typical winner values in comparison tables
-  const winnerPatterns = [
-    />\s*(79\.7%|80%|81%|[7-8]\d\.\d+%)\s*</g,
-    />\s*(28\.8\s*mo|29\s*mo|30\s*mo|2[89]\.\d+\s*mo)\s*</g,
-    />\s*(\$3\.\d+B|\$[34]\.\d+B)\s*</g,
-    />\s*(★|⭐)\s*</g,
-  ];
-
-  winnerPatterns.forEach(pattern => {
-    enhanced = enhanced.replace(pattern, (match, value) => {
-      return `><span class="winner-cell">${value} <span class="winner-badge">★</span></span><`;
-    });
-  });
-
-  return enhanced;
-}
-
-/**
- * Enhance recommendations with colored boxes
- */
-function enhanceRecommendations(html: string): string {
-  let enhanced = html;
-
-  // Wrap STRONG BUY, BUY, HOLD, SELL in colored boxes
-  const ratingPatterns = [
-    { pattern: /(STRONG BUY)/g, class: 'strong-buy' },
-    { pattern: /(BUY)(?!\s*recommendation)/gi, class: 'buy' },
-    { pattern: /(HOLD)/g, class: 'hold' },
-    { pattern: /(SELL)/g, class: 'sell' },
-  ];
-
-  ratingPatterns.forEach(({ pattern, class: cssClass }) => {
-    enhanced = enhanced.replace(pattern, (match) => {
-      return `<div class="recommendation-box ${cssClass}">
-        <div class="recommendation-header">${match}</div>
-      </div>`;
-    });
-  });
-
-  return enhanced;
-}
-
-/**
- * Get professional report CSS styles
+ * Professional CSS styles for business intelligence reports
+ * NO chat elements - clean professional document
  */
 function getProfessionalReportStyles(): string {
   return `
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
     * {
       margin: 0;
@@ -102,317 +42,502 @@ function getProfessionalReportStyles(): string {
       box-sizing: border-box;
     }
 
+    @page {
+      size: Letter;
+      margin: 0.75in 1in;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 11pt;
-      line-height: 1.7;
-      color: #1f2937;
-      background: white;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #ffffff;
     }
 
-    .cover-page {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      page-break-after: always;
-      position: relative;
+    /* Title Page */
+    .title-page {
+      text-align: center;
+      padding: 2in 1in;
     }
 
-    .cover-page h1 {
-      font-size: 48pt;
+    .report-title {
+      font-size: 32pt;
       font-weight: 700;
-      margin-bottom: 32px;
-      letter-spacing: -0.02em;
+      color: #2563eb;
+      margin-bottom: 18pt;
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 12pt;
     }
 
-    .cover-page h2 {
-      font-size: 28pt;
-      font-weight: 400;
-      margin-bottom: 24px;
-      opacity: 0.95;
-    }
-
-    .cover-page .meta {
+    .report-subtitle {
       font-size: 14pt;
-      opacity: 0.9;
-      text-align: center;
-      line-height: 2;
+      color: #64748b;
+      font-weight: 400;
+      margin-bottom: 48pt;
     }
 
-    .cover-page .footer {
-      position: absolute;
-      bottom: 60px;
-      left: 60px;
-      right: 60px;
-      text-align: center;
-      font-size: 10pt;
-      opacity: 0.8;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+    .report-date {
+      font-size: 11pt;
+      color: #64748b;
+      margin-bottom: 12pt;
     }
 
-    .content {
-      padding: 0.75in;
-      max-width: 8.5in;
+    .confidential-notice {
+      font-size: 9pt;
+      color: #64748b;
+      margin-top: 72pt;
+      font-style: italic;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: 600;
-      color: #1e40af;
-      margin-top: 32px;
-      margin-bottom: 16px;
-      line-height: 1.4;
+    /* Section Headers */
+    h1 {
+      font-size: 24pt;
+      font-weight: 700;
+      color: #2563eb;
+      margin: 32pt 0 16pt 0;
+      padding-bottom: 8pt;
+      border-bottom: 2px solid #e5e7eb;
       page-break-after: avoid;
     }
 
-    h1 { font-size: 24pt; margin-top: 40px; }
-    h2 { font-size: 18pt; margin-top: 36px; }
-    h3 { font-size: 14pt; margin-top: 28px; }
+    h2 {
+      font-size: 18pt;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 24pt 0 12pt 0;
+      page-break-after: avoid;
+    }
 
+    h3 {
+      font-size: 14pt;
+      font-weight: 600;
+      color: #374151;
+      margin: 18pt 0 10pt 0;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #4b5563;
+      margin: 14pt 0 8pt 0;
+      page-break-after: avoid;
+    }
+
+    /* First h1 after title page */
+    .content-section h1:first-of-type {
+      margin-top: 0;
+    }
+
+    /* Body Text */
     p {
-      margin-bottom: 14px;
-      line-height: 1.7;
+      margin: 0 0 12pt 0;
       text-align: justify;
     }
 
+    /* Strong emphasis */
+    strong, b {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    em, i {
+      font-style: italic;
+      color: #374151;
+    }
+
+    /* Lists */
     ul, ol {
-      margin: 18px 0;
-      padding-left: 28px;
+      margin: 12pt 0 16pt 24pt;
+      padding: 0;
     }
 
     li {
-      margin-bottom: 10px;
-      line-height: 1.7;
+      margin-bottom: 8pt;
+      line-height: 1.6;
     }
 
-    strong {
-      font-weight: 600;
-      color: #1f2937;
+    ul ul, ol ol, ul ol, ol ul {
+      margin: 6pt 0 6pt 18pt;
     }
 
-    em {
-      font-style: italic;
-      color: #4b5563;
-    }
-
+    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 24px 0;
+      margin: 20pt 0;
       font-size: 10pt;
       page-break-inside: avoid;
     }
 
     thead {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
     }
 
     th {
-      padding: 12px;
-      text-align: left;
+      color: white;
       font-weight: 600;
-      border: 1px solid #2563eb;
+      padding: 12pt;
+      text-align: left;
+      border: 1px solid #1e40af;
     }
 
     td {
-      padding: 10px 12px;
+      padding: 10pt 12pt;
       border: 1px solid #e5e7eb;
+      vertical-align: top;
     }
 
     tbody tr:nth-child(even) {
       background-color: #f9fafb;
     }
 
-    tbody tr:hover {
-      background-color: #f3f4f6;
+    tbody tr:nth-child(odd) {
+      background-color: #ffffff;
     }
 
-    /* Winner cell styling */
-    .winner-cell {
-      background-color: #dbeafe !important;
-      font-weight: 700;
-      color: #1e40af;
-      padding: 6px 12px;
-      border-radius: 4px;
-      display: inline-block;
+    /* Numeric columns right-align */
+    td:last-child:not(:first-child),
+    th:last-child:not(:first-child) {
+      text-align: right;
     }
 
-    .winner-badge {
-      color: #f59e0b;
-      margin-left: 4px;
-      font-size: 12pt;
+    /* Code Blocks */
+    code {
+      background: #f1f5f9;
+      padding: 2pt 6pt;
+      border-radius: 3pt;
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 10pt;
+      color: #dc2626;
     }
 
-    /* Recommendation boxes */
-    .recommendation-box {
-      margin: 24px 0;
-      padding: 20px;
-      border-radius: 8px;
+    pre {
+      background: #0f172a;
+      color: #f1f5f9;
+      padding: 12pt;
+      border-radius: 6pt;
+      overflow-x: auto;
+      margin: 16pt 0;
+      font-size: 9pt;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    /* Blockquotes */
+    blockquote {
+      border-left: 4px solid #2563eb;
+      padding-left: 16pt;
+      margin: 16pt 0;
+      font-style: italic;
+      color: #4b5563;
+    }
+
+    /* Horizontal Rules */
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #cbd5e1, transparent);
+      margin: 24pt 0;
+    }
+
+    /* Links */
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    /* Callout Boxes */
+    .callout {
+      background-color: #eff6ff;
+      border-left: 4px solid #2563eb;
+      padding: 16pt;
+      margin: 16pt 0;
       page-break-inside: avoid;
     }
 
-    .recommendation-box .recommendation-header {
-      font-size: 16pt;
+    .callout-title {
+      font-weight: 600;
+      color: #1e40af;
+      margin-bottom: 8pt;
+      font-size: 12pt;
+    }
+
+    /* Recommendation Boxes */
+    .recommendation {
+      margin: 16pt 0;
+      padding: 16pt;
+      border-left: 4px solid #10b981;
+      page-break-inside: avoid;
+    }
+
+    .recommendation.buy {
+      border-left-color: #10b981;
+      background-color: #f0fdf4;
+    }
+
+    .recommendation.strong-buy {
+      border-left-color: #059669;
+      background-color: #ecfdf5;
+    }
+
+    .recommendation.hold {
+      border-left-color: #f59e0b;
+      background-color: #fffbeb;
+    }
+
+    .recommendation.sell {
+      border-left-color: #ef4444;
+      background-color: #fef2f2;
+    }
+
+    .recommendation-title {
+      font-size: 14pt;
       font-weight: 700;
-      padding: 12px 20px;
-      border-radius: 6px;
-      text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 8pt;
     }
 
-    .recommendation-box.strong-buy .recommendation-header {
-      background: linear-gradient(135deg, #059669 0%, #047857 100%);
-      color: white;
+    /* Page Breaks */
+    .page-break {
+      page-break-after: always;
     }
 
-    .recommendation-box.buy .recommendation-header {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
+    .avoid-break {
+      page-break-inside: avoid;
     }
 
-    .recommendation-box.hold .recommendation-header {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      color: white;
+    /* Content Sections */
+    .content-section {
+      margin-bottom: 24pt;
     }
 
-    .recommendation-box.sell .recommendation-header {
-      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-      color: white;
+    .section-divider {
+      margin: 32pt 0;
+      border-top: 1px solid #e5e7eb;
     }
 
-    hr {
-      border: none;
-      border-top: 2px solid #e5e7eb;
-      margin: 36px 0;
-      page-break-after: avoid;
+    /* Analysis Request Box */
+    .analysis-request {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6pt;
+      padding: 16pt;
+      margin: 20pt 0;
+      page-break-inside: avoid;
     }
 
+    .analysis-request-label {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5pt;
+      margin-bottom: 8pt;
+    }
+
+    .analysis-request-content {
+      font-size: 11pt;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Print Optimization */
     @media print {
-      .cover-page {
-        page-break-after: always;
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
       }
 
       h1, h2, h3, h4, h5, h6 {
         page-break-after: avoid;
       }
 
-      table, figure, img {
+      table, figure, .callout, .recommendation, .analysis-request {
         page-break-inside: avoid;
       }
 
-      ul, ol {
-        page-break-inside: avoid;
-      }
-
-      .recommendation-box {
-        page-break-inside: avoid;
+      a {
+        color: #2563eb;
+        text-decoration: underline;
       }
     }
   `;
 }
 
+/**
+ * Generate professional business report HTML
+ * NO chat UI elements - structured as business intelligence report
+ */
+function generateProfessionalReportHTML(messages: ChatMessage[], agentName: string): string {
+  const date = new Date().toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  // Separate user queries and assistant responses
+  const userMessages = messages.filter(m => m.role === 'user');
+  const assistantMessages = messages.filter(m => m.role === 'assistant');
+
+  // Extract the main analysis request (first user message)
+  const analysisRequest = userMessages.length > 0 ? userMessages[0].content : '';
+
+  // Combine all assistant responses into structured sections
+  const analysisContent = assistantMessages.map(msg => marked.parse(msg.content)).join('\n\n');
+
+  return `
+    <!-- Title Page -->
+    <div class="title-page">
+      <h1 class="report-title">${agentName}</h1>
+      <p class="report-subtitle">Business Intelligence Report</p>
+      <p class="report-date">${date}</p>
+      <div class="confidential-notice">
+        <p>CONFIDENTIAL</p>
+        <p>This report contains proprietary analysis and is intended solely for authorized recipients.</p>
+        <p>Unauthorized distribution or disclosure is prohibited.</p>
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Main Content -->
+    <div class="content-section">
+
+      ${analysisRequest ? `
+        <div class="analysis-request">
+          <div class="analysis-request-label">Analysis Objective</div>
+          <div class="analysis-request-content">${analysisRequest}</div>
+        </div>
+      ` : ''}
+
+      ${analysisContent}
+
+    </div>
+  `;
+}
+
+/**
+ * POST handler - generate professional business report PDF
+ */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { messages, agentName } = body as {
-      messages: ChatMessage[];
-      agentName: string;
-    };
+    const { messages, agentName } = await req.json();
 
-    if (!messages || messages.length === 0) {
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json(
-        { error: 'No messages provided' },
+        { error: 'Messages array is required' },
         { status: 400 }
       );
     }
 
-    // Transform chat messages into professional report content
-    // Combine all assistant responses into flowing content, skip user messages
-    let reportContent = '';
+    if (!agentName) {
+      return NextResponse.json(
+        { error: 'Agent name is required' },
+        { status: 400 }
+      );
+    }
 
-    messages.forEach((msg) => {
-      if (msg.role === 'assistant') {
-        reportContent += msg.content + '\n\n';
-      }
-    });
+    console.log(`[Export Report] Generating professional report for ${agentName}...`);
 
-    // Clean and parse markdown to HTML
-    const cleanedMarkdown = cleanMarkdown(reportContent);
-    let htmlContent = await marked.parse(cleanedMarkdown);
+    // Generate professional report HTML
+    const bodyHTML = generateProfessionalReportHTML(messages, agentName);
 
-    // Apply enhancements
-    htmlContent = enhanceComparisonTable(htmlContent);
-    htmlContent = enhanceRecommendations(htmlContent);
-
-    // Build complete HTML document
-    const timestamp = new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-
-    const htmlDocument = `
+    // Create complete HTML document
+    const styledHTML = `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${agentName} - Business Intelligence Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     ${getProfessionalReportStyles()}
   </style>
 </head>
 <body>
-  <div class="cover-page">
-    <h1>BUSINESS INTELLIGENCE REPORT</h1>
-    <h2>${agentName}</h2>
-    <div class="meta">
-      <div>Generated: ${timestamp}</div>
-    </div>
-    <div class="footer">
-      <strong>CONFIDENTIAL:</strong> This document contains proprietary information and is intended solely
-      for the use of the designated recipient(s). Unauthorized distribution or disclosure is prohibited.
-    </div>
-  </div>
-
-  <div class="content">
-    ${htmlContent}
-  </div>
+  ${bodyHTML}
 </body>
 </html>
     `;
 
-    // Generate PDF using puppeteer
+    // Generate PDF with Puppeteer
     let browser;
     try {
-      browser = await puppeteer.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: true,
-      });
+      const isServerless = process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.VERCEL;
+
+      if (isServerless) {
+        browser = await puppeteer.launch({
+          args: chromium.args,
+          executablePath: await chromium.executablePath(),
+          headless: true,
+        });
+      } else {
+        browser = await puppeteer.launch({
+          headless: true,
+          args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu'
+          ]
+        });
+      }
 
       const page = await browser.newPage();
-      await page.setContent(htmlDocument, { waitUntil: 'networkidle0' });
+
+      await page.setViewport({
+        width: 1200,
+        height: 1600,
+        deviceScaleFactor: 2
+      });
+
+      await page.setContent(styledHTML, {
+        waitUntil: 'networkidle0',
+        timeout: 30000
+      });
+
+      await page.evaluateHandle('document.fonts.ready');
 
       const pdfBuffer = await page.pdf({
         format: 'Letter',
         printBackground: true,
+        preferCSSPageSize: false,
         margin: {
-          top: '0.5in',
-          right: '0.75in',
-          bottom: '0.5in',
-          left: '0.75in'
-        }
+          top: '0.75in',
+          right: '1in',
+          bottom: '0.75in',
+          left: '1in'
+        },
+        displayHeaderFooter: true,
+        headerTemplate: `
+          <div style="font-size: 9pt; color: #64748b; width: 100%; text-align: right; padding: 0 1in 0 0; font-family: Inter, sans-serif;">
+            <span style="font-weight: 600;">${agentName}</span> <span style="opacity: 0.6;">| Business Intelligence Report</span>
+          </div>
+        `,
+        footerTemplate: `
+          <div style="font-size: 9pt; color: #64748b; width: 100%; display: flex; justify-content: space-between; padding: 0 1in; font-family: Inter, sans-serif;">
+            <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+            <span style="opacity: 0.6;">CONFIDENTIAL</span>
+          </div>
+        `
       });
 
       await browser.close();
 
-      const filename = `${agentName.toLowerCase().replace(/\s+/g, '-')}-report-${Date.now()}.pdf`;
+      console.log(`[Export Report] Professional report generated successfully (${pdfBuffer.length} bytes)`);
+
+      // Return PDF as response
+      const sanitizedName = agentName.replace(/[^a-zA-Z0-9-]/g, '-');
+      const dateStamp = new Date().toISOString().split('T')[0];
+      const filename = `${sanitizedName}_Business-Report_${dateStamp}.pdf`;
 
       return new NextResponse(Buffer.from(pdfBuffer), {
         headers: {
@@ -427,14 +552,11 @@ export async function POST(req: NextRequest) {
       throw error;
     }
   } catch (error) {
-    console.error('[Export Chat] PDF generation failed:', error);
-
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-
+    console.error('[Export Report] PDF generation failed:', error);
     return NextResponse.json(
       {
-        error: 'Failed to generate PDF',
-        details: errorMessage,
+        error: 'Failed to generate professional report',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
