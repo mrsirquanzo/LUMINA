@@ -69,6 +69,7 @@ export interface ConversationState {
   complete: boolean;
   synthesis?: string;
   totalCost: number;
+  mcpEnabled?: boolean;
 }
 
 export interface CostEstimate {

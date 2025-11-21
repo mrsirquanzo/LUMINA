@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     // Parse request body first to check if it's demo mode
-    const { query, documents, mode, isDemo, demoScenarioId, customAgents } = await req.json();
+    const { query, documents, mode, isDemo, demoScenarioId, customAgents, mcpEnabled } = await req.json();
 
     console.log('[Sonny Orchestrator API] Received request:', {
       query: query?.substring(0, 50) + '...',
@@ -81,7 +81,8 @@ export async function POST(req: NextRequest) {
             sendEvent,
             isDemo,
             demoScenarioId,
-            customAgents
+            customAgents,
+            mcpEnabled
           );
 
           controller.close();

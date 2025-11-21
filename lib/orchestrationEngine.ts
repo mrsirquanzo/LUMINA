@@ -23,7 +23,8 @@ export async function runOrchestration(
   sendEvent: (event: SSEEvent) => void,
   isDemo?: boolean,
   demoScenarioId?: string,
-  customAgents?: AgentType[]
+  customAgents?: AgentType[],
+  mcpEnabled?: boolean
 ): Promise<void> {
   // If demo mode, play pre-recorded scenario
   if (isDemo && demoScenarioId) {
@@ -67,6 +68,7 @@ export async function runOrchestration(
     iteration: 0,
     complete: false,
     totalCost: 0,
+    mcpEnabled: mcpEnabled || false,
   };
 
   // Send plan created event
@@ -200,7 +202,8 @@ async function answerAgentQuestion(
   fromAgent: AgentType,
   context: string,
   query: string,
-  documents: ProcessedDocument[]
+  documents: ProcessedDocument[],
+  mcpEnabled?: boolean
 ): Promise<string> {
   // Validate agent types
   if (!AGENT_MODEL_CONFIG[targetAgent]) {
@@ -211,7 +214,7 @@ async function answerAgentQuestion(
   }
 
   // Get MCP client and context
-  const mcpClient = getMCPClient();
+  const mcpClient = getMCPClient(mcpEnabled);
   const mcpContext = await mcpClient.getContextForAgent(targetAgent);
 
   const userMessage = `You are being consulted by the ${getAgentName(fromAgent)} with a specific question.
@@ -266,7 +269,9 @@ async function executeFastMode(
       step.agent,
       state.query,
       state.documents,
-      []
+      [],
+      undefined,
+      state.mcpEnabled
     );
 
     sendEvent({
@@ -333,7 +338,8 @@ async function executeThoroughMode(
       state.query,
       state.documents,
       [],
-      context.join('\n\n')
+      context.join('\n\n'),
+      state.mcpEnabled
     );
 
     agentResponses.set(step.agent, response);
@@ -377,7 +383,8 @@ async function executeThoroughMode(
           step.agent,
           agentResponses.get(step.agent) || '',
           state.query,
-          state.documents
+          state.documents,
+          state.mcpEnabled
         );
 
         // Store the Q&A for the target agent to see later
@@ -439,7 +446,8 @@ async function callAgent(
   query: string,
   documents: ProcessedDocument[],
   messages: AgentMessage[],
-  additionalContext?: string
+  additionalContext?: string,
+  mcpEnabled?: boolean
 ): Promise<{ response: string; usage?: { inputTokens: number; outputTokens: number } }> {
   // Validate agent type
   if (!AGENT_MODEL_CONFIG[agent]) {
@@ -450,7 +458,7 @@ async function callAgent(
   }
 
   // Get MCP client and context
-  const mcpClient = getMCPClient();
+  const mcpClient = getMCPClient(mcpEnabled);
   const mcpContext = await mcpClient.getContextForAgent(agent);
 
   // Build user message with MCP context

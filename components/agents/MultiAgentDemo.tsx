@@ -75,6 +75,7 @@ interface ProcessedDocument {
 export default function MultiAgentDemo() {
   const [mode, setMode] = useState<ExecutionMode>('thorough');
   const [isDemo, setIsDemo] = useState(true);
+  const [isMCPEnabled, setIsMCPEnabled] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>('competitive-analysis');
   const [processedDocuments, setProcessedDocuments] = useState<ProcessedDocument[]>([]);
@@ -256,6 +257,7 @@ export default function MultiAgentDemo() {
             isDemo={isDemo}
             demoScenarioId={isDemo ? selectedScenarioId : undefined}
             customAgents={selectedCustomTeam?.agents}
+            mcpEnabled={isMCPEnabled}
           />
         </div>
       </div>
@@ -328,7 +330,7 @@ export default function MultiAgentDemo() {
         <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Configuration</h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
             {/* Analysis Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Mode</label>
@@ -352,6 +354,36 @@ export default function MultiAgentDemo() {
                   }`}
                 >
                   {isCheckingAuth ? '...' : 'Live'}
+                </button>
+              </div>
+            </div>
+
+            {/* MCP Toggle */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                MCP
+                <span className="ml-1 text-xs text-gray-500">(Real-time Data)</span>
+              </label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setIsMCPEnabled(false)}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm ${
+                    !isMCPEnabled
+                      ? 'bg-gray-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Off
+                </button>
+                <button
+                  onClick={() => setIsMCPEnabled(true)}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-sm ${
+                    isMCPEnabled
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  On
                 </button>
               </div>
             </div>
@@ -444,6 +476,11 @@ export default function MultiAgentDemo() {
                   Log In to Continue
                 </a>
               </div>
+            )}
+            {isMCPEnabled && (
+              <p className="text-sm text-green-700 mt-2 bg-green-50 px-3 py-2 rounded-md border border-green-200">
+                <strong>✓ MCP Enabled:</strong> Agents can access real-time data from patent databases, clinical trials, FDA records, and market intelligence.
+              </p>
             )}
             {mode === 'fast' && (
               <p className="text-sm text-gray-600 mt-2">
