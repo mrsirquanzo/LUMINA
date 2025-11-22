@@ -599,7 +599,7 @@ ${synthesis}
                   <div className="flex items-start gap-3 flex-1">
                     <div className="text-3xl">{getAgentIcon(activity.agent)}</div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
                         <h4 className={`font-bold text-lg ${getAgentTextColor(activity.agent)}`}>
                           {activity.agent}
                         </h4>
@@ -610,6 +610,27 @@ ${synthesis}
                         )}
                         {activity.status === 'complete' && (
                           <FiCheck className="w-5 h-5 text-green-600" />
+                        )}
+                        {/* Export button for individual agent */}
+                        {activity.status === 'complete' && activity.response && (
+                          <div className="ml-auto">
+                            <ExportButton
+                              messages={[
+                                {
+                                  role: 'user',
+                                  content: query,
+                                  timestamp: new Date()
+                                },
+                                {
+                                  role: 'assistant',
+                                  content: activity.response,
+                                  timestamp: new Date()
+                                }
+                              ] as ChatMessage[]}
+                              agentName={activity.agent}
+                              className="scale-90"
+                            />
+                          </div>
                         )}
                       </div>
 
