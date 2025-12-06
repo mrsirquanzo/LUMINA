@@ -1,7 +1,7 @@
 "use client";
 
 import { Company } from '@/lib/lumina/types';
-import { Dna, Code, FileText } from 'lucide-react';
+import { Dna, Code } from 'lucide-react';
 
 interface SequenceViewerProps {
   company: Company;

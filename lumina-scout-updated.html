@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMINA - Scout View (Updated)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #020617;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .persona-toggle-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toggle-container {
+            display: flex;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.375rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .keyboard-hint {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Smart Views Tabs */
+        .smart-views {
+            background: rgba(15, 23, 42, 0.3);
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .smart-views-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .smart-view-tab {
+            padding: 0.875rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .smart-view-tab:hover {
+            color: #e2e8f0;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .smart-view-tab.active {
+            color: #60a5fa;
+            border-bottom-color: #60a5fa;
+        }
+
+        .tab-badge {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            max-width: 1920px;
+            margin: 0 auto;
+            display: flex;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Faceted Sidebar */
+        .faceted-sidebar {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.5);
+            border-right: 1px solid #1e293b;
+            padding: 1.5rem 1rem;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .sidebar-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .clear-filters {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .clear-filters:hover {
+            text-decoration: underline;
+        }
+
+        .facet-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .facet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .facet-header:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 0.375rem;
+        }
+
+        .facet-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .facet-icon {
+            font-size: 1rem;
+        }
+
+        .facet-arrow {
+            color: #64748b;
+            transition: transform 0.2s;
+        }
+
+        .facet-section.collapsed .facet-arrow {
+            transform: rotate(-90deg);
+        }
+
+        .facet-options {
+            padding: 0.5rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .facet-section.collapsed .facet-options {
+            display: none;
+        }
+
+        .facet-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+
+        .facet-option:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .facet-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #475569;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .facet-option input[type="checkbox"] {
+            display: none;
+        }
+
+        .facet-option input[type="checkbox"]:checked + .facet-checkbox {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .facet-option input[type="checkbox"]:checked + .facet-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 0.75rem;
+        }
+
+        .facet-label {
+            flex: 1;
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+
+        .facet-count {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Company Grid */
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Company Card */
+        .company-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .company-card:hover {
+            border-color: #334155;
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .company-info h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .badge.private {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+        }
+
+        .score-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid #22c55e;
+            color: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Landscape Position (NEW) */
+        .landscape-position {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .landscape-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .landscape-label {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lifecycle-track {
+            position: relative;
+            height: 60px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .track-line {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            right: 1rem;
+            height: 2px;
+            background: linear-gradient(90deg, #475569 0%, #3b82f6 50%, #22c55e 100%);
+        }
+
+        .stage-markers {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .stage-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stage-dot {
+            width: 12px;
+            height: 12px;
+            background: #475569;
+            border: 2px solid #1e293b;
+            border-radius: 50%;
+        }
+
+        .stage-marker.current .stage-dot {
+            width: 16px;
+            height: 16px;
+            background: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .stage-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            white-space: nowrap;
+        }
+
+        .stage-marker.current .stage-label {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .competitor-dots {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            right: 1rem;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .competitor-cluster {
+            position: absolute;
+            display: flex;
+            gap: 2px;
+            transform: translateX(-50%);
+        }
+
+        .competitor-dot {
+            width: 6px;
+            height: 6px;
+            background: #64748b;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .target-company {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border: 3px solid #1e293b;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+            z-index: 10;
+        }
+
+        .landscape-summary {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            text-align: center;
+        }
+
+        .landscape-summary strong {
+            color: #60a5fa;
+        }
+
+        /* Key Milestones (NEW - replaces Catalyst Calendar) */
+        .key-milestones {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .milestones-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .milestones-label {
+            font-size: 0.75rem;
+            color: #4ade80;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .company-type-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            border-radius: 0.25rem;
+        }
+
+        .milestone-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .milestone-event {
+            display: flex;
+            gap: 0.75rem;
+            align-items: start;
+        }
+
+        .milestone-icon {
+            width: 32px;
+            height: 32px;
+            background: #1e293b;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .milestone-content {
+            flex: 1;
+        }
+
+        .milestone-date {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .milestone-title {
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .milestone-description {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        /* Momentum Card (NEW - for private companies) */
+        .momentum-card {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .momentum-header {
+            font-size: 0.75rem;
+            color: #fbbf24;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .momentum-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .momentum-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 0.375rem;
+        }
+
+        .metric-label-with-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .metric-value {
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metric-indicator {
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .metric-indicator.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .metric-indicator.moderate {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fbbf24;
+        }
+
+        /* News Pulse */
+        .news-pulse {
+            margin: 1rem 0;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.5rem;
+        }
+
+        .pulse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .pulse-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .pulse-trend {
+            font-size: 0.75rem;
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .sparkline-container {
+            position: relative;
+            height: 32px;
+            display: flex;
+            align-items: end;
+            gap: 2px;
+        }
+
+        .sparkline-bar {
+            flex: 1;
+            background: rgba(96, 165, 250, 0.3);
+            border-radius: 2px 2px 0 0;
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sparkline-bar:hover {
+            background: #60a5fa;
+        }
+
+        .sparkline-bar.spike {
+            background: rgba(34, 197, 94, 0.6);
+        }
+
+        /* Red Flags */
+        .red-flags {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .red-flags-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .red-flags-title {
+            font-size: 0.75rem;
+            color: #ef4444;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .red-flags-count {
+            font-size: 0.75rem;
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .red-flag-item {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(239, 68, 68, 0.05);
+            border-radius: 0.375rem;
+        }
+
+        .red-flag-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .red-flag-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .red-flag-text {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        /* Evidence Locker */
+        .evidence-trigger-container {
+            position: relative;
+            margin-top: 0.75rem;
+        }
+
+        .btn-evidence {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px dashed #334155;
+            color: #94a3b8;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-evidence:hover {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: #60a5fa;
+            color: #60a5fa;
+        }
+
+        .evidence-locker {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            z-index: 50;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0.5rem;
+            transform: translateY(10px);
+            transition: all 0.2s;
+        }
+
+        .evidence-trigger-container:hover .evidence-locker {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .evidence-link {
+            display: flex;
+            gap: 0.75rem;
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+
+        .evidence-link:hover {
+            background: rgba(96, 165, 250, 0.05);
+        }
+
+        .evidence-icon {
+            width: 32px;
+            height: 32px;
+            background: #1e293b;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .evidence-source {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.125rem;
+        }
+
+        .evidence-description {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            line-height: 1.3;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.625rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .faceted-sidebar {
+                display: none;
+            }
+            
+            .company-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">💡</div>
+                <div class="logo-text">LUMINA</div>
+            </div>
+            
+            <div class="persona-toggle-header">
+                <div class="toggle-container">
+                    <button class="toggle-btn active">S Scout</button>
+                    <button class="toggle-btn">V VC</button>
+                </div>
+                <span class="keyboard-hint">Press S/V to toggle</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Smart Views Tabs -->
+    <div class="smart-views">
+        <div class="smart-views-container">
+            <button class="smart-view-tab active">
+                <span>📊</span>
+                <span>All Assets</span>
+                <span class="tab-badge">47</span>
+            </button>
+            <button class="smart-view-tab">
+                <span>⭐</span>
+                <span>My Watchlist</span>
+                <span class="tab-badge">8</span>
+            </button>
+            <button class="smart-view-tab">
+                <span>📈</span>
+                <span>Recent Movers</span>
+                <span class="tab-badge">12</span>
+            </button>
+            <button class="smart-view-tab">
+                <span>🎯</span>
+                <span>Deal Candidates</span>
+                <span class="tab-badge">5</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Faceted Sidebar -->
+        <aside class="faceted-sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Filters</span>
+                <button class="clear-filters">Clear All</button>
+            </div>
+
+            <!-- Modality Facet -->
+            <div class="facet-section">
+                <div class="facet-header">
+                    <div class="facet-title">
+                        <span class="facet-icon">🧬</span>
+                        <span>Modality</span>
+                    </div>
+                    <span class="facet-arrow">▼</span>
+                </div>
+                <div class="facet-options">
+                    <label class="facet-option">
+                        <input type="checkbox" checked>
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">ADC</span>
+                        <span class="facet-count">12</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Radioligand</span>
+                        <span class="facet-count">8</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Gene Therapy</span>
+                        <span class="facet-count">5</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Bispecifics</span>
+                        <span class="facet-count">7</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">RNAi</span>
+                        <span class="facet-count">4</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Cell Therapy</span>
+                        <span class="facet-count">6</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">mRNA</span>
+                        <span class="facet-count">3</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Stage Facet -->
+            <div class="facet-section">
+                <div class="facet-header">
+                    <div class="facet-title">
+                        <span class="facet-icon">🔬</span>
+                        <span>Stage</span>
+                    </div>
+                    <span class="facet-arrow">▼</span>
+                </div>
+                <div class="facet-options">
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Pre-clinical</span>
+                        <span class="facet-count">15</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Phase 1</span>
+                        <span class="facet-count">22</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox" checked>
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Phase 2</span>
+                        <span class="facet-count">18</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Phase 3</span>
+                        <span class="facet-count">9</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Marketed</span>
+                        <span class="facet-count">6</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Therapeutic Area Facet -->
+            <div class="facet-section">
+                <div class="facet-header">
+                    <div class="facet-title">
+                        <span class="facet-icon">🏥</span>
+                        <span>Therapeutic Area</span>
+                    </div>
+                    <span class="facet-arrow">▼</span>
+                </div>
+                <div class="facet-options">
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Oncology</span>
+                        <span class="facet-count">45</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Neurology</span>
+                        <span class="facet-count">12</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Immunology</span>
+                        <span class="facet-count">8</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Rare Disease</span>
+                        <span class="facet-count">5</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Cardiovascular</span>
+                        <span class="facet-count">3</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Company Type Facet -->
+            <div class="facet-section">
+                <div class="facet-header">
+                    <div class="facet-title">
+                        <span class="facet-icon">🏢</span>
+                        <span>Company Type</span>
+                    </div>
+                    <span class="facet-arrow">▼</span>
+                </div>
+                <div class="facet-options">
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Public</span>
+                        <span class="facet-count">28</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Private</span>
+                        <span class="facet-count">19</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-content">
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Total Assets</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-content">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">High Priority</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🔬</div>
+                    <div class="stat-content">
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Phase 2+</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🤝</div>
+                    <div class="stat-content">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Deal-Ready</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Grid -->
+            <div class="company-grid">
+                <!-- Company Card 1: Private Company Example -->
+                <div class="company-card">
+                    <div class="card-header">
+                        <div class="company-info">
+                            <h3>Bicycle Therapeutics</h3>
+                            <div class="badges">
+                                <span class="badge private">Private</span>
+                                <span class="badge">ADC Platform</span>
+                                <span class="badge">Phase 2</span>
+                            </div>
+                        </div>
+                        <div class="score-circle">92</div>
+                    </div>
+
+                    <!-- Landscape Position (NEW) -->
+                    <div class="landscape-position">
+                        <div class="landscape-header">
+                            <span class="landscape-label">🏃 Competitive Landscape</span>
+                        </div>
+                        
+                        <div class="lifecycle-track">
+                            <div class="track-line"></div>
+                            
+                            <!-- Stage Markers -->
+                            <div class="stage-markers">
+                                <div class="stage-marker">
+                                    <div class="stage-dot"></div>
+                                    <div class="stage-label">Pre-clin</div>
+                                </div>
+                                <div class="stage-marker">
+                                    <div class="stage-dot"></div>
+                                    <div class="stage-label">Ph1</div>
+                                </div>
+                                <div class="stage-marker current">
+                                    <div class="stage-dot"></div>
+                                    <div class="stage-label">Ph2</div>
+                                </div>
+                                <div class="stage-marker">
+                                    <div class="stage-dot"></div>
+                                    <div class="stage-label">Ph3</div>
+                                </div>
+                                <div class="stage-marker">
+                                    <div class="stage-dot"></div>
+                                    <div class="stage-label">Market</div>
+                                </div>
+                            </div>
+
+                            <!-- Competitor Dots -->
+                            <div class="competitor-cluster" style="left: 65%;">
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                            </div>
+                            
+                            <div class="competitor-cluster" style="left: 80%;">
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                            </div>
+
+                            <div class="competitor-cluster" style="left: 30%;">
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                                <div class="competitor-dot"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="landscape-summary">
+                            <strong>6 Competitors Ahead</strong> (Ph3/Market), <strong>8 Behind</strong> (Ph1/Pre-clin)
+                        </div>
+                    </div>
+
+                    <!-- Key Milestones (NEW - Private Company) -->
+                    <div class="key-milestones">
+                        <div class="milestones-header">
+                            <span class="milestones-label">🗓️ Key Milestones</span>
+                            <span class="company-type-badge">Private Co.</span>
+                        </div>
+                        
+                        <div class="milestone-timeline">
+                            <div class="milestone-event">
+                                <div class="milestone-icon">💰</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-date">Est. Q3 2025</div>
+                                    <div class="milestone-title">Funding Runway</div>
+                                    <div class="milestone-description">Series C raise needed (~$80M, 14 mo. runway)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="milestone-event">
+                                <div class="milestone-icon">🔬</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-date">Nov 2025</div>
+                                    <div class="milestone-title">Trial Completion</div>
+                                    <div class="milestone-description">Ph2 BT8009 primary completion date</div>
+                                </div>
+                            </div>
+                            
+                            <div class="milestone-event">
+                                <div class="milestone-icon">⚖️</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-date">Jun 2025</div>
+                                    <div class="milestone-title">Patent Publication</div>
+                                    <div class="milestone-description">PCT filing 18-month publication due</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Momentum Card (NEW - Private Company) -->
+                    <div class="momentum-card">
+                        <div class="momentum-header">📈 Momentum Indicators</div>
+                        
+                        <div class="momentum-metrics">
+                            <div class="momentum-metric">
+                                <div class="metric-label-with-icon">
+                                    <span>💰</span>
+                                    <span>Total Raised</span>
+                                </div>
+                                <div class="metric-value">$420M</div>
+                            </div>
+                            
+                            <div class="momentum-metric">
+                                <div class="metric-label-with-icon">
+                                    <span>📅</span>
+                                    <span>Last Round</span>
+                                </div>
+                                <div class="metric-value">Series B · $120M</div>
+                            </div>
+                            
+                            <div class="momentum-metric">
+                                <div class="metric-label-with-icon">
+                                    <span>⭐</span>
+                                    <span>Lead Investor</span>
+                                </div>
+                                <div class="metric-value">Atlas Venture</div>
+                            </div>
+                            
+                            <div class="momentum-metric">
+                                <div class="metric-label-with-icon">
+                                    <span>👥</span>
+                                    <span>Headcount Growth</span>
+                                </div>
+                                <div class="metric-value">
+                                    +22% (6mo)
+                                    <span class="metric-indicator good">Hiring</span>
+                                </div>
+                            </div>
+                            
+                            <div class="momentum-metric">
+                                <div class="metric-label-with-icon">
+                                    <span>📰</span>
+                                    <span>Last News</span>
+                                </div>
+                                <div class="metric-value">2 weeks ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- News Pulse -->
+                    <div class="news-pulse">
+                        <div class="pulse-header">
+                            <span class="pulse-label">📰 News Momentum</span>
+                            <span class="pulse-trend">↑ 340% vs 6mo avg</span>
+                        </div>
+                        <div class="sparkline-container">
+                            <div class="sparkline-bar" style="height: 30%;"></div>
+                            <div class="sparkline-bar" style="height: 25%;"></div>
+                            <div class="sparkline-bar" style="height: 35%;"></div>
+                            <div class="sparkline-bar" style="height: 40%;"></div>
+                            <div class="sparkline-bar spike" style="height: 85%;"></div>
+                            <div class="sparkline-bar spike" style="height: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Red Flags -->
+                    <div class="red-flags">
+                        <div class="red-flags-header">
+                            <span class="red-flags-title">⚠️ AI Risk Assessment</span>
+                            <span class="red-flags-count">2 flags</span>
+                        </div>
+                        
+                        <div class="red-flag-item">
+                            <span class="red-flag-icon">🚩</span>
+                            <span class="red-flag-text"><strong>Funding Runway:</strong> Burns $28M/quarter, needs Series C by Q3 2025</span>
+                        </div>
+                        
+                        <div class="red-flag-item">
+                            <span class="red-flag-icon">🚩</span>
+                            <span class="red-flag-text"><strong>The Talent Drain:</strong> CMO departed 2 months after CFO (both within 90 days)</span>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Locker -->
+                    <div class="evidence-trigger-container">
+                        <button class="btn-evidence">
+                            <span>📄</span>
+                            <span>View Key Evidence (3)</span>
+                        </button>
+
+                        <div class="evidence-locker">
+                            <a href="#" class="evidence-link">
+                                <div class="evidence-icon">🧬</div>
+                                <div>
+                                    <div class="evidence-source" style="color: #60a5fa;">Nature (2019)</div>
+                                    <div class="evidence-description">Bicyclic peptides: A new modality for drug discovery</div>
+                                </div>
+                            </a>
+
+                            <a href="#" class="evidence-link">
+                                <div class="evidence-icon">🏥</div>
+                                <div>
+                                    <div class="evidence-source" style="color: #22c55e;">NCT04561362</div>
+                                    <div class="evidence-description">Phase 1/2 BT8009 Monotherapy in Solid Tumors</div>
+                                </div>
+                            </a>
+
+                            <a href="#" class="evidence-link">
+                                <div class="evidence-icon">⚖️</div>
+                                <div>
+                                    <div class="evidence-source" style="color: #eab308;">US Patent 10,123,456</div>
+                                    <div class="evidence-description">Composition of Matter (Expires 2039)</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn btn-primary">
+                            Deep Dive →
+                        </button>
+                        <button class="btn btn-secondary">
+                            💬 Chat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Additional cards would go here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Facet section collapse/expand
+        document.querySelectorAll('.facet-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('collapsed');
+            });
+        });
+
+        // Smart view tabs
+        document.querySelectorAll('.smart-view-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.smart-view-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,7 +1,6 @@
 "use client";
 
 import { Company, EvidenceItem } from '@/lib/lumina/types';
-import { cn } from '@/lib/utils';
 import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 interface EvidenceMatrixProps {

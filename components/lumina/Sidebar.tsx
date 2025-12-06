@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useLuminaStore } from '@/lib/lumina/store';
 import { ViewMode } from '@/lib/lumina/types';
 import {
@@ -10,7 +10,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
 import {
   Dna,
   Target,
@@ -23,9 +22,11 @@ import {
   TrendingUp,
   List,
   Star,
-  Bell,
+  AlertCircle,
+  ArrowUp,
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
+import { companies } from '@/lib/lumina/mock-data';
 
 interface FilterOption {
   label: string;
@@ -40,35 +41,55 @@ interface FilterSection {
 }
 
 function getFiltersForView(view: ViewMode): FilterSection[] {
+  // Calculate actual counts from companies
+  const modalityCounts = companies.reduce((acc, company) => {
+    acc[company.mechanism] = (acc[company.mechanism] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const targetCounts = companies.reduce((acc, company) => {
+    if (company.target) {
+      acc[company.target] = (acc[company.target] || 0) + 1;
+    }
+    return acc;
+  }, {} as Record<string, number>);
+
+  const stageCounts = companies.reduce((acc, company) => {
+    acc[company.stage] = (acc[company.stage] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Get unique values
+  const uniqueModalities = Array.from(new Set(companies.map((c) => c.mechanism))).filter(Boolean) as string[];
+  const uniqueTargets = Array.from(new Set(companies.map((c) => c.target).filter(Boolean))) as string[];
+  const uniqueStages = Array.from(new Set(companies.map((c) => c.stage))).filter(Boolean) as string[];
+
   switch (view) {
     case 'scientist':
       return [
         {
           icon: Dna,
           label: 'Modality',
-          options: [
-            { label: 'ADC', count: 12, checked: true },
-            { label: 'Radioligand', count: 8 },
-          ],
+          options: uniqueModalities.map((modality) => ({
+            label: modality,
+            count: modalityCounts[modality] || 0,
+          })),
         },
         {
           icon: Target,
           label: 'Target Class',
-          options: [
-            { label: 'Nectin-4', count: 5 },
-            { label: 'HER2', count: 8 },
-          ],
+          options: uniqueTargets.map((target) => ({
+            label: target,
+            count: targetCounts[target] || 0,
+          })),
         },
         {
           icon: FlaskConical,
           label: 'Dev Stage',
-          options: [
-            { label: 'Pre-clinical', count: 15 },
-            { label: 'Phase 1', count: 22 },
-            { label: 'Phase 2', count: 18, checked: true },
-            { label: 'Phase 3', count: 9 },
-            { label: 'Marketed', count: 6 },
-          ],
+          options: uniqueStages.map((stage) => ({
+            label: stage,
+            count: stageCounts[stage] || 0,
+          })),
         },
       ];
     case 'scout':
@@ -174,46 +195,72 @@ function getThemeClasses(view: ViewMode) {
 }
 
 export default function Sidebar() {
-  const { activeView } = useLuminaStore();
+  const {
+    activeView,
+    activeSmartView,
+    setActiveSmartView,
+    selectedModalities,
+    toggleModality,
+    selectedTargets,
+    toggleTarget,
+    selectedStages,
+    toggleStage,
+    clearAllFilters,
+  } = useLuminaStore();
   const filters = getFiltersForView(activeView);
   const theme = getThemeClasses(activeView);
-  
-  // Track checkbox states
-  const [checkedStates, setCheckedStates] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
-    filters.forEach((filter) => {
-      filter.options.forEach((option) => {
-        const key = `${filter.label}-${option.label}`;
-        initial[key] = option.checked ?? false;
-      });
-    });
-    return initial;
-  });
 
-  const handleCheckboxChange = (filterLabel: string, optionLabel: string) => {
-    const key = `${filterLabel}-${optionLabel}`;
-    setCheckedStates((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+  const handleSmartViewClick = (viewId: string) => {
+    if (viewId === 'all') {
+      setActiveSmartView('all');
+      clearAllFilters();
+    } else {
+      setActiveSmartView(viewId as any);
+    }
   };
 
-  // Reset checkbox states when view changes
-  useEffect(() => {
-    const currentFilters = getFiltersForView(activeView);
-    const initial: Record<string, boolean> = {};
-    currentFilters.forEach((filter) => {
-      filter.options.forEach((option) => {
-        const key = `${filter.label}-${option.label}`;
-        initial[key] = option.checked ?? false;
-      });
-    });
-    setCheckedStates(initial);
-  }, [activeView]);
+  const handleFilterChange = (filterLabel: string, optionLabel: string) => {
+    if (filterLabel === 'Modality') {
+      toggleModality(optionLabel);
+    } else if (filterLabel === 'Target Class') {
+      toggleTarget(optionLabel);
+    } else if (filterLabel === 'Dev Stage') {
+      toggleStage(optionLabel);
+    }
+  };
+
+  const isFilterChecked = (filterLabel: string, optionLabel: string): boolean => {
+    if (filterLabel === 'Modality') {
+      return selectedModalities.includes(optionLabel);
+    } else if (filterLabel === 'Target Class') {
+      return selectedTargets.includes(optionLabel);
+    } else if (filterLabel === 'Dev Stage') {
+      return selectedStages.includes(optionLabel);
+    }
+    return false;
+  };
+
+  // Calculate smart view counts
+  const smartViewCounts = useMemo(() => {
+    const watchlistCount = companies.filter((c) => c.isWatchlisted).length;
+    const highConvictionCount = companies.filter((c) => c.scores?.validation && c.scores.validation >= 80).length;
+    const needsReviewCount = companies.filter((c) => c.status === 'review').length;
+    const trendingUpCount = companies.filter((c) => c.trend?.direction === 'up').length;
+    return {
+      all: companies.length,
+      watchlist: watchlistCount,
+      highConviction: highConvictionCount,
+      needsReview: needsReviewCount,
+      trendingUp: trendingUpCount,
+    };
+  }, []);
 
   const smartViews = [
-    { label: 'All Assets', href: '#', icon: List },
-    { label: 'My Watchlist', href: '#', icon: Star, badge: 12 },
+    { id: 'all', label: 'All Assets', icon: List, count: smartViewCounts.all },
+    { id: 'watchlist', label: 'My Watchlist', icon: Star, count: smartViewCounts.watchlist },
+    { id: 'high-conviction', label: 'High Conviction', icon: Target, count: smartViewCounts.highConviction },
+    { id: 'needs-review', label: 'Needs Review', icon: AlertCircle, count: smartViewCounts.needsReview },
+    { id: 'trending-up', label: 'Trending Up', icon: ArrowUp, count: smartViewCounts.trendingUp },
   ];
 
   return (
@@ -231,32 +278,35 @@ export default function Sidebar() {
             Smart Views
           </h3>
           <div className="space-y-1">
-            {smartViews.map((view) => (
-              <Link
-                key={view.label}
-                href={view.href}
-                className={cn(
-                  'flex items-center justify-between px-3 py-2 rounded-lg',
-                  'transition-colors hover:bg-slate-800/50',
-                  theme.text
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <view.icon className="w-4 h-4" />
-                  <span className="text-sm font-medium">{view.label}</span>
-                </div>
-                {view.badge && (
+            {smartViews.map((view) => {
+              const isActive = activeSmartView === view.id;
+              return (
+                <button
+                  key={view.id}
+                  onClick={() => handleSmartViewClick(view.id)}
+                  className={cn(
+                    'w-full flex items-center justify-between px-3 py-2 rounded-lg',
+                    'transition-colors',
+                    isActive
+                      ? 'bg-scientist-primary-500/20 text-white border border-scientist-primary-500/30'
+                      : 'hover:bg-slate-800/50 text-slate-200'
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <view.icon className="w-4 h-4" />
+                    <span className="text-sm font-medium">{view.label}</span>
+                  </div>
                   <span
                     className={cn(
                       'px-2 py-0.5 rounded-full text-xs font-medium text-white',
-                      theme.primary
+                      isActive ? 'bg-scientist-primary-500' : theme.primary
                     )}
                   >
-                    {view.badge}
+                    {view.count}
                   </span>
-                )}
-              </Link>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -267,6 +317,7 @@ export default function Sidebar() {
               Filters
             </h3>
             <button
+              onClick={clearAllFilters}
               className={cn(
                 'text-xs font-medium hover:underline',
                 theme.textMuted,
@@ -277,7 +328,7 @@ export default function Sidebar() {
             </button>
           </div>
 
-          <Accordion type="multiple" defaultValue={filters.map((_, i) => `filter-${i}`)}>
+          <Accordion type="multiple" defaultValue={[]}>
             {filters.map((filter, index) => (
               <AccordionItem
                 key={filter.label}
@@ -298,8 +349,7 @@ export default function Sidebar() {
                 <AccordionContent className="px-2 pb-2">
                   <div className="space-y-1">
                     {filter.options.map((option) => {
-                      const key = `${filter.label}-${option.label}`;
-                      const isChecked = checkedStates[key] ?? option.checked ?? false;
+                      const isChecked = isFilterChecked(filter.label, option.label);
                       return (
                         <label
                           key={option.label}
@@ -312,7 +362,7 @@ export default function Sidebar() {
                           <input
                             type="checkbox"
                             checked={isChecked}
-                            onChange={() => handleCheckboxChange(filter.label, option.label)}
+                            onChange={() => handleFilterChange(filter.label, option.label)}
                             className="sr-only"
                           />
                           <div

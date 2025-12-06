@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMINA - Conversational Agent View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #020617;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .company-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+        }
+
+        .company-name {
+            font-weight: 600;
+            color: white;
+        }
+
+        .company-score {
+            font-size: 0.875rem;
+            color: #4ade80;
+            font-weight: 700;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 0.5rem;
+            color: #60a5fa;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            height: calc(100vh - 73px);
+        }
+
+        /* Agent Sidebar */
+        .agent-sidebar {
+            width: 300px;
+            background: rgba(15, 23, 42, 0.5);
+            border-right: 1px solid #1e293b;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .sidebar-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .sonny-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .sonny-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .sonny-details {
+            flex: 1;
+        }
+
+        .sonny-name {
+            font-weight: 600;
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .sonny-role {
+            font-size: 0.75rem;
+            color: #60a5fa;
+        }
+
+        .agent-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .agent-card {
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .agent-card:hover {
+            border-color: #334155;
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .agent-card.active {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .agent-card.complete {
+            border-color: #22c55e;
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-avatar {
+            width: 32px;
+            height: 32px;
+            background: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .agent-role {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-dot.queued {
+            background: #64748b;
+        }
+
+        .status-dot.analyzing {
+            background: #3b82f6;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.complete {
+            background: #22c55e;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .agent-confidence {
+            margin-top: 0.5rem;
+        }
+
+        .confidence-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .confidence-bar {
+            height: 4px;
+            background: #1e293b;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e 0%, #4ade80 100%);
+            transition: width 0.5s;
+        }
+
+        /* Export Menu */
+        .export-menu {
+            padding: 1rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        .export-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #3b82f6;
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .export-button:hover {
+            background: #2563eb;
+        }
+
+        .export-dropdown {
+            margin-top: 0.5rem;
+        }
+
+        .export-option {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            color: #cbd5e1;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.375rem;
+            text-align: left;
+        }
+
+        .export-option:hover {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: #60a5fa;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        .chat-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .chat-header h2 {
+            font-size: 1.25rem;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-header p {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        /* Messages Area */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            max-width: 800px;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: rgba(139, 92, 246, 0.2);
+            border: 2px solid #8b5cf6;
+        }
+
+        .message.assistant .message-avatar {
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-sender {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .agent-badge {
+            padding: 0.125rem 0.5rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .confidence-badge {
+            padding: 0.125rem 0.5rem;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .message-text {
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            color: #e2e8f0;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .message.user .message-text {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .message-action-btn {
+            padding: 0.375rem 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 0.375rem;
+            color: #60a5fa;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .message-action-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .sources {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.5rem;
+        }
+
+        .sources-title {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .source-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem;
+            color: #60a5fa;
+            font-size: 0.75rem;
+            text-decoration: none;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .source-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .routing-message {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.75rem;
+            max-width: 400px;
+        }
+
+        .routing-avatar {
+            width: 32px;
+            height: 32px;
+            background: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .routing-text {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+
+        .dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #60a5fa;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #1e293b;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            color: #e2e8f0;
+            font-size: 0.875rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 56px;
+            max-height: 150px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .chat-input::placeholder {
+            color: #64748b;
+        }
+
+        .send-button {
+            padding: 1rem 1.5rem;
+            background: #3b82f6;
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover {
+            background: #2563eb;
+        }
+
+        .send-button:disabled {
+            background: #334155;
+            cursor: not-allowed;
+        }
+
+        .example-queries {
+            margin-top: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .example-query {
+            padding: 0.375rem 0.75rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-query:hover {
+            border-color: #60a5fa;
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">💡</div>
+                <div class="logo-text">LUMINA</div>
+            </div>
+            
+            <div class="company-badge">
+                <span class="company-name">Bicycle Therapeutics</span>
+                <span class="company-score">Score: 92</span>
+            </div>
+
+            <button class="back-button">
+                <span>←</span>
+                <span>Back to Dashboard</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="layout">
+        <!-- Agent Sidebar -->
+        <aside class="agent-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Coordinator</div>
+                <div class="sonny-info">
+                    <div class="sonny-avatar">🧠</div>
+                    <div class="sonny-details">
+                        <div class="sonny-name">Sonny</div>
+                        <div class="sonny-role">AI Coordinator</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agent-list">
+                <div class="sidebar-title" style="padding: 0 0 0.5rem 0;">Specialized Agents</div>
+
+                <!-- Clinical Expert -->
+                <div class="agent-card complete">
+                    <div class="agent-header">
+                        <div class="agent-avatar">🧬</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Clinical Expert</div>
+                            <div class="agent-role">Phase 1-3 Trial Analysis</div>
+                        </div>
+                        <div class="agent-status">
+                            <div class="status-dot complete"></div>
+                            <span style="color: #4ade80;">Complete</span>
+                        </div>
+                    </div>
+                    <div class="agent-confidence">
+                        <div class="confidence-label">
+                            <span>Confidence</span>
+                            <span style="color: #4ade80; font-weight: 600;">95%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patent Expert -->
+                <div class="agent-card complete">
+                    <div class="agent-header">
+                        <div class="agent-avatar">⚖️</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Patent Expert</div>
+                            <div class="agent-role">IP & Patent Landscape</div>
+                        </div>
+                        <div class="agent-status">
+                            <div class="status-dot complete"></div>
+                            <span style="color: #4ade80;">Complete</span>
+                        </div>
+                    </div>
+                    <div class="agent-confidence">
+                        <div class="confidence-label">
+                            <span>Confidence</span>
+                            <span style="color: #4ade80; font-weight: 600;">88%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Analyst -->
+                <div class="agent-card active">
+                    <div class="agent-header">
+                        <div class="agent-avatar">💰</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Financial Analyst</div>
+                            <div class="agent-role">Valuation & Market Analysis</div>
+                        </div>
+                        <div class="agent-status">
+                            <div class="status-dot analyzing"></div>
+                            <span style="color: #60a5fa;">Analyzing</span>
+                        </div>
+                    </div>
+                    <div class="agent-confidence">
+                        <div class="confidence-label">
+                            <span>Confidence</span>
+                            <span style="color: #60a5fa; font-weight: 600;">62%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 62%; background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Research -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">📊</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Market Research</div>
+                            <div class="agent-role">Competitive Intelligence</div>
+                        </div>
+                        <div class="agent-status">
+                            <div class="status-dot queued"></div>
+                            <span style="color: #64748b;">Queued</span>
+                        </div>
+                    </div>
+                    <div class="agent-confidence">
+                        <div class="confidence-label">
+                            <span>Confidence</span>
+                            <span style="color: #64748b; font-weight: 600;">0%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regulatory Expert -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">📋</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Regulatory Expert</div>
+                            <div class="agent-role">FDA & Approval Pathways</div>
+                        </div>
+                        <div class="agent-status">
+                            <div class="status-dot queued"></div>
+                            <span style="color: #64748b;">Queued</span>
+                        </div>
+                    </div>
+                    <div class="agent-confidence">
+                        <div class="confidence-label">
+                            <span>Confidence</span>
+                            <span style="color: #64748b; font-weight: 600;">0%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Menu -->
+            <div class="export-menu">
+                <button class="export-button">
+                    <span>📄</span>
+                    <span>Export Reports</span>
+                </button>
+                
+                <div class="export-dropdown">
+                    <button class="export-option">
+                        <span>📊</span>
+                        <span>Full Dossier (All Agents)</span>
+                    </button>
+                    <button class="export-option">
+                        <span>🧬</span>
+                        <span>Clinical Brief</span>
+                    </button>
+                    <button class="export-option">
+                        <span>⚖️</span>
+                        <span>Patent Brief</span>
+                    </button>
+                    <button class="export-option">
+                        <span>💰</span>
+                        <span>Financial Brief</span>
+                    </button>
+                    <button class="export-option">
+                        <span>💬</span>
+                        <span>Q&A Transcript</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>💬 Ask Sonny</h2>
+                <p>Ask anything about Bicycle Therapeutics. Sonny will route your question to the right expert.</p>
+            </div>
+
+            <div class="messages-area">
+                <!-- User Message -->
+                <div class="message user">
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            Does this company have freedom to operate in Europe?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Routing Indicator -->
+                <div class="message assistant">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-content">
+                        <div class="routing-message">
+                            <div class="routing-avatar">⚖️</div>
+                            <div class="routing-text">Asking Patent Expert...</div>
+                            <div class="dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assistant Response -->
+                <div class="message assistant">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">Sonny</span>
+                            <span class="agent-badge">via Patent Expert</span>
+                            <span class="confidence-badge">88% confidence</span>
+                        </div>
+                        <div class="message-text">
+                            Based on the Patent Expert's analysis, Bicycle Therapeutics has <strong>limited freedom to operate in Europe</strong>. Here's why:
+                            <br><br>
+                            The Patent Expert identified <strong>2 blocking patents</strong> in the EU territory:
+                            <br><br>
+                            1. <strong>EP3421499</strong> - Covers bicyclic peptide conjugates (owned by AstraZeneca, expires 2035)
+                            <br>
+                            2. <strong>EP2912175</strong> - Nectin-4 targeting ADCs (owned by Seattle Genetics/Astellas, expires 2032)
+                            <br><br>
+                            <strong>Recommendation:</strong> Bicycle would likely need to negotiate licenses or pursue partnerships with these patent holders for European commercialization. The US market remains unencumbered.
+                        </div>
+
+                        <div class="sources">
+                            <div class="sources-title">Sources Referenced:</div>
+                            <a href="#" class="source-link">
+                                <span>📄</span>
+                                <span>European Patent Office - EP3421499</span>
+                            </a>
+                            <a href="#" class="source-link">
+                                <span>📄</span>
+                                <span>European Patent Office - EP2912175</span>
+                            </a>
+                            <a href="#" class="source-link">
+                                <span>🔗</span>
+                                <span>Bicycle Therapeutics Patent Portfolio (2024)</span>
+                            </a>
+                        </div>
+
+                        <div class="message-actions">
+                            <button class="message-action-btn">
+                                <span>📄</span>
+                                <span>Add to PDF Report</span>
+                            </button>
+                            <button class="message-action-btn">
+                                <span>🔍</span>
+                                <span>Deep Dive on Patents</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Another User Message -->
+                <div class="message user">
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            What's their cash burn rate compared to runway?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Routing to Financial Analyst -->
+                <div class="message assistant">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-content">
+                        <div class="routing-message">
+                            <div class="routing-avatar">💰</div>
+                            <div class="routing-text">Asking Financial Analyst...</div>
+                            <div class="dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea 
+                        class="chat-input" 
+                        placeholder="Ask Sonny anything about this company..."
+                        rows="1"
+                    ></textarea>
+                    <button class="send-button">
+                        Send →
+                    </button>
+                </div>
+
+                <div class="example-queries">
+                    <button class="example-query">What's the competitive landscape?</button>
+                    <button class="example-query">Summarize Phase 2 results</button>
+                    <button class="example-query">What are the biggest risks?</button>
+                    <button class="example-query">Compare to Padcev</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-resize textarea
+        const textarea = document.querySelector('.chat-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+        });
+
+        // Example query buttons
+        document.querySelectorAll('.example-query').forEach(button => {
+            button.addEventListener('click', () => {
+                textarea.value = button.textContent;
+                textarea.focus();
+            });
+        });
+
+        // Send button
+        document.querySelector('.send-button').addEventListener('click', () => {
+            if (textarea.value.trim()) {
+                console.log('Sending:', textarea.value);
+                textarea.value = '';
+                textarea.style.height = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { cn } from '@/lib/utils';
 import { Calendar, Dna } from 'lucide-react';
 
 interface TargetBiologyProfileProps {

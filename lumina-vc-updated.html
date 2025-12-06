@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMINA - VC View (Updated)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #020617;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #60A5FA 0%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .persona-toggle-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toggle-container {
+            display: flex;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.375rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .keyboard-hint {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Smart Views Tabs */
+        .smart-views {
+            background: rgba(15, 23, 42, 0.3);
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .smart-views-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .smart-view-tab {
+            padding: 0.875rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .smart-view-tab.active {
+            color: #fbbf24;
+            border-bottom-color: #fbbf24;
+        }
+
+        .tab-badge {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            max-width: 1920px;
+            margin: 0 auto;
+            display: flex;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Faceted Sidebar (same as Scout) */
+        .faceted-sidebar {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.5);
+            border-right: 1px solid #1e293b;
+            padding: 1.5rem 1rem;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .sidebar-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .clear-filters {
+            font-size: 0.75rem;
+            color: #fbbf24;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Company Grid */
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Company Card */
+        .company-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .company-card:hover {
+            border-color: #334155;
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 20px 50px rgba(245, 158, 11, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .company-info h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .badge.public {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+        }
+
+        .score-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid #f59e0b;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Financial Metrics (Public Companies) */
+        .financial-metrics {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .financial-header {
+            font-size: 0.75rem;
+            color: #4ade80;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .financial-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .financial-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 0.375rem;
+        }
+
+        .financial-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .financial-value {
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .financial-indicator {
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .financial-indicator.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .financial-indicator.warning {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .financial-indicator.roi {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        /* Syndicate Signal (NEW) */
+        .syndicate-signal {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .syndicate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .syndicate-label {
+            font-size: 0.75rem;
+            color: #fbbf24;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .smart-money-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .score-badge {
+            background: rgba(245, 158, 11, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .coinvestor-network {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .network-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #475569 50%, transparent 100%);
+            position: relative;
+        }
+
+        .investor-avatars {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .investor-avatar {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border: 2px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fbbf24;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .investor-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+        }
+
+        .investor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .investor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 0.375rem;
+        }
+
+        .investor-name {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .investor-tier {
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .investor-tier.tier1 {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .investor-tier.tier2 {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        /* Key Milestones (Public Company version) */
+        .key-milestones {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .milestones-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .milestones-label {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .company-type-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            border-radius: 0.25rem;
+        }
+
+        .milestone-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .milestone-event {
+            display: flex;
+            gap: 0.75rem;
+            align-items: start;
+        }
+
+        .milestone-icon {
+            width: 32px;
+            height: 32px;
+            background: #1e293b;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .milestone-content {
+            flex: 1;
+        }
+
+        .milestone-date {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .milestone-title {
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .milestone-impact {
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        .milestone-impact.high {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .milestone-impact.medium {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fbbf24;
+        }
+
+        /* Cap Table Health */
+        .cap-table {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .cap-table-header {
+            font-size: 0.75rem;
+            color: #a78bfa;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .ownership-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .ownership-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .ownership-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+
+        .ownership-name {
+            color: #94a3b8;
+        }
+
+        .ownership-value {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .ownership-bar-container {
+            height: 6px;
+            background: #1e293b;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .ownership-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a78bfa 0%, #8b5cf6 100%);
+            border-radius: 3px;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.625rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(245, 158, 11, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">💡</div>
+                <div class="logo-text">LUMINA</div>
+            </div>
+            
+            <div class="persona-toggle-header">
+                <div class="toggle-container">
+                    <button class="toggle-btn">S Scout</button>
+                    <button class="toggle-btn active">V VC</button>
+                </div>
+                <span class="keyboard-hint">Press S/V to toggle</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Smart Views Tabs -->
+    <div class="smart-views">
+        <div class="smart-views-container">
+            <button class="smart-view-tab active">
+                <span>📊</span>
+                <span>All Assets</span>
+                <span class="tab-badge">47</span>
+            </button>
+            <button class="smart-view-tab">
+                <span>⭐</span>
+                <span>High Conviction</span>
+                <span class="tab-badge">3</span>
+            </button>
+            <button class="smart-view-tab">
+                <span>📈</span>
+                <span>Near Exit</span>
+                <span class="tab-badge">8</span>
+            </button>
+            <button class="smart-view-tab">
+                <span>🎯</span>
+                <span>Follow-On Ready</span>
+                <span class="tab-badge">12</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Faceted Sidebar -->
+        <aside class="faceted-sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Filters</span>
+                <button class="clear-filters">Clear All</button>
+            </div>
+
+            <!-- Investment Stage Facet -->
+            <div class="facet-section">
+                <div class="facet-header">
+                    <div class="facet-title">
+                        <span class="facet-icon">💰</span>
+                        <span>Investment Stage</span>
+                    </div>
+                    <span class="facet-arrow">▼</span>
+                </div>
+                <div class="facet-options">
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Seed</span>
+                        <span class="facet-count">8</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox" checked>
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Series A</span>
+                        <span class="facet-count">15</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Series B+</span>
+                        <span class="facet-count">12</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">Public</span>
+                        <span class="facet-count">12</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Exit Timeline Facet -->
+            <div class="facet-section">
+                <div class="facet-header">
+                    <div class="facet-title">
+                        <span class="facet-icon">⏱️</span>
+                        <span>Exit Timeline</span>
+                    </div>
+                    <span class="facet-arrow">▼</span>
+                </div>
+                <div class="facet-options">
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">0-12 months</span>
+                        <span class="facet-count">8</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">12-24 months</span>
+                        <span class="facet-count">15</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">24+ months</span>
+                        <span class="facet-count">24</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- ROI Potential Facet -->
+            <div class="facet-section">
+                <div class="facet-header">
+                    <div class="facet-title">
+                        <span class="facet-icon">📊</span>
+                        <span>ROI Potential</span>
+                    </div>
+                    <span class="facet-arrow">▼</span>
+                </div>
+                <div class="facet-options">
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">10x+</span>
+                        <span class="facet-count">5</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox" checked>
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">5-10x</span>
+                        <span class="facet-count">12</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">3-5x</span>
+                        <span class="facet-count">18</span>
+                    </label>
+                    <label class="facet-option">
+                        <input type="checkbox">
+                        <span class="facet-checkbox"></span>
+                        <span class="facet-label">2-3x</span>
+                        <span class="facet-count">12</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">💼</div>
+                    <div class="stat-content">
+                        <div class="stat-value">$8.2B</div>
+                        <div class="stat-label">Portfolio Value</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-value">4.2x</div>
+                        <div class="stat-label">Avg ROI Potential</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-content">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">High Conviction</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-content">
+                        <div class="stat-value">24mo</div>
+                        <div class="stat-label">Avg Exit Timeline</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Grid -->
+            <div class="company-grid">
+                <!-- Public Company Card -->
+                <div class="company-card">
+                    <div class="card-header">
+                        <div class="company-info">
+                            <h3>Lantheus Holdings</h3>
+                            <div class="badges">
+                                <span class="badge public">Public</span>
+                                <span class="badge">LNTH</span>
+                                <span class="badge">Radioligand</span>
+                                <span class="badge">Marketed</span>
+                            </div>
+                        </div>
+                        <div class="score-circle">88</div>
+                    </div>
+
+                    <!-- Financial Metrics (Public Company) -->
+                    <div class="financial-metrics">
+                        <div class="financial-header">💵 Financial Metrics</div>
+                        
+                        <div class="financial-rows">
+                            <div class="financial-row">
+                                <div class="financial-label">
+                                    <span>💰</span>
+                                    <span>Valuation</span>
+                                </div>
+                                <div class="financial-value">$4.2B</div>
+                            </div>
+                            
+                            <div class="financial-row">
+                                <div class="financial-label">
+                                    <span>🎯</span>
+                                    <span>Est. Exit</span>
+                                </div>
+                                <div class="financial-value">
+                                    $8.5B
+                                    <span class="financial-indicator roi">2.0x ROI</span>
+                                </div>
+                            </div>
+                            
+                            <div class="financial-row">
+                                <div class="financial-label">
+                                    <span>⏱️</span>
+                                    <span>Cash Runway</span>
+                                </div>
+                                <div class="financial-value">
+                                    48+ months
+                                    <span class="financial-indicator good">Healthy</span>
+                                </div>
+                            </div>
+                            
+                            <div class="financial-row">
+                                <div class="financial-label">
+                                    <span>🔥</span>
+                                    <span>Burn vs Market Cap</span>
+                                </div>
+                                <div class="financial-value">
+                                    0.8%
+                                    <span class="financial-indicator good">Strong</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Syndicate Signal (NEW) -->
+                    <div class="syndicate-signal">
+                        <div class="syndicate-header">
+                            <span class="syndicate-label">🤝 Syndicate Signal</span>
+                            <div class="smart-money-score">
+                                <span>Smart Money:</span>
+                                <span class="score-badge">94/100</span>
+                            </div>
+                        </div>
+
+                        <div class="coinvestor-network">
+                            <div class="network-line"></div>
+                            <div class="investor-avatars">
+                                <div class="investor-avatar" title="Orbimed">OM</div>
+                                <div class="investor-avatar" title="RA Capital">RC</div>
+                                <div class="investor-avatar" title="Perceptive">PX</div>
+                            </div>
+                            <div class="network-line"></div>
+                        </div>
+
+                        <div class="investor-list">
+                            <div class="investor-item">
+                                <span class="investor-name">Orbimed Advisors</span>
+                                <span class="investor-tier tier1">Tier 1</span>
+                            </div>
+                            
+                            <div class="investor-item">
+                                <span class="investor-name">RA Capital Management</span>
+                                <span class="investor-tier tier1">Tier 1</span>
+                            </div>
+                            
+                            <div class="investor-item">
+                                <span class="investor-name">Perceptive Advisors</span>
+                                <span class="investor-tier tier1">Tier 1</span>
+                            </div>
+
+                            <div class="investor-item">
+                                <span class="investor-name">Wellington Management</span>
+                                <span class="investor-tier tier2">Tier 2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Milestones (Public Company) -->
+                    <div class="key-milestones">
+                        <div class="milestones-header">
+                            <span class="milestones-label">🗓️ Key Milestones</span>
+                            <span class="company-type-badge">Public Co.</span>
+                        </div>
+                        
+                        <div class="milestone-timeline">
+                            <div class="milestone-event">
+                                <div class="milestone-icon">📊</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-date">Q4 2024</div>
+                                    <div class="milestone-title">Earnings Call</div>
+                                    <span class="milestone-impact high">High Impact</span>
+                                </div>
+                            </div>
+                            
+                            <div class="milestone-event">
+                                <div class="milestone-icon">✅</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-date">Feb 2025</div>
+                                    <div class="milestone-title">PDUFA Date (EU Approval)</div>
+                                    <span class="milestone-impact high">High Impact</span>
+                                </div>
+                            </div>
+                            
+                            <div class="milestone-event">
+                                <div class="milestone-icon">🎤</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-date">Jun 2025</div>
+                                    <div class="milestone-title">ASCO Presentation</div>
+                                    <span class="milestone-impact medium">Med Impact</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cap Table Health -->
+                    <div class="cap-table">
+                        <div class="cap-table-header">📈 Cap Table Health</div>
+                        
+                        <div class="ownership-bars">
+                            <div class="ownership-row">
+                                <div class="ownership-label">
+                                    <span class="ownership-name">Insider Ownership</span>
+                                    <span class="ownership-value">24%</span>
+                                </div>
+                                <div class="ownership-bar-container">
+                                    <div class="ownership-bar-fill" style="width: 24%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="ownership-row">
+                                <div class="ownership-label">
+                                    <span class="ownership-name">Institutional</span>
+                                    <span class="ownership-value">68%</span>
+                                </div>
+                                <div class="ownership-bar-container">
+                                    <div class="ownership-bar-fill" style="width: 68%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="ownership-row">
+                                <div class="ownership-label">
+                                    <span class="ownership-name">Smart Money (Top 3 VCs)</span>
+                                    <span class="ownership-value">42%</span>
+                                </div>
+                                <div class="ownership-bar-container">
+                                    <div class="ownership-bar-fill" style="width: 42%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn btn-primary">
+                            Investment Memo →
+                        </button>
+                        <button class="btn btn-secondary">
+                            💬 Chat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Facet section collapse/expand
+        document.querySelectorAll('.facet-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('collapsed');
+            });
+        });
+
+        // Smart view tabs
+        document.querySelectorAll('.smart-view-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.smart-view-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

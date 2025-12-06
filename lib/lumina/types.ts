@@ -63,6 +63,39 @@ export interface BiomarkerData {
   predictiveMarkers: string[];
 }
 
+// NEW: Score breakdown for home page cards
+export interface CompanyScores {
+  validation: number;      // 0-100 (maps to existing validationScore)
+  safety: number;          // 0-100 (new)
+  ip: number;              // 0-100 (new - Intellectual Property)
+}
+
+// NEW: Trend data for sparkline visualization
+export interface TrendData {
+  value: number;          // Current value
+  change: number;         // Change from previous period (e.g., +3 or -2)
+  direction: 'up' | 'down' | 'stable';
+  sparkline: number[];    // 30 data points for 30-day trend graph
+}
+
+// NEW: AI-generated insights
+export interface AIInsight {
+  summary: string;        // 1-2 sentence AI insight
+  confidence: 'high' | 'medium' | 'low';
+  generatedAt: string;    // ISO date string
+}
+
+// NEW: Asset status badges
+export type AssetStatus = 'new' | 'review' | 'stale' | 'watching';
+
+// NEW: Alert system for warnings and catalysts
+export interface Alert {
+  type: 'safety' | 'ip' | 'catalyst' | 'news';
+  message: string;
+  severity: 'high' | 'medium' | 'low';
+  date: string;           // ISO date string
+}
+
 export interface Company {
   id: string;
   name: string;
@@ -111,6 +144,14 @@ export interface Company {
   sequenceData?: SequenceData;
   // Biomarker data
   biomarkerData?: BiomarkerData;
+  // NEW FIELDS FOR HOME PAGE CARDS (all optional for backward compatibility)
+  scores?: CompanyScores;           // Score breakdown (validation, safety, IP)
+  trend?: TrendData;                 // Trend data with sparkline
+  aiInsight?: AIInsight;             // AI-generated insight text
+  status?: AssetStatus;              // Status badge (new/review/stale/watching)
+  alerts?: Alert[];                   // Array of alerts/warnings
+  lastUpdated?: string;              // ISO date string for "Updated X ago"
+  isWatchlisted?: boolean;           // Watchlist status
 }
 
 

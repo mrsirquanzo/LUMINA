@@ -1,7 +1,6 @@
 "use client";
 
-import { cn } from '@/lib/utils';
-import { Zap, Dna, Radio as RadioIcon } from 'lucide-react';
+import { Dna, Radio as RadioIcon } from 'lucide-react';
 
 interface Props {
   modality: string;
@@ -12,10 +11,6 @@ export function ConstructVisualizer({ modality, structure }: Props) {
   const isADC = modality.includes('ADC') || modality.includes('Peptide');
   const isRadioligand = modality.includes('Radio');
   const isGeneTherapy = modality.includes('Gene');
-  const isPeptide = modality.toLowerCase().includes('peptide') || 
-                    modality.toLowerCase().includes('bicycle') ||
-                    structure?.type?.toLowerCase().includes('peptide') ||
-                    structure?.type?.toLowerCase().includes('bicycle');
 
   // Detailed Y-Shape SVG for Antibody (IgG structure with Heavy and Light Chains)
   const YShapeSVG = () => (
@@ -73,39 +68,6 @@ export function ConstructVisualizer({ modality, structure }: Props) {
       <circle cx="105" cy="5" r="2.5" fill="#67e8f9" />
       {/* Base (Fc region bottom) */}
       <circle cx="60" cy="80" r="7" fill="#1e3a8a" />
-    </svg>
-  );
-
-  // Bicyclic Peptide Scaffold SVG
-  const BicyclicPeptideSVG = () => (
-    <svg width="96" height="96" viewBox="0 0 96 96" className="w-24 h-24">
-      {/* Central chemical core (hexagon) */}
-      <polygon
-        points="48,30 56,35 56,45 48,50 40,45 40,35"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        fill="currentColor"
-        fillOpacity="0.3"
-      />
-      {/* Top loop (oval extending from core) */}
-      <path
-        d="M 48 30 Q 30 20, 20 30 Q 20 40, 30 45 Q 40 50, 48 45 Q 56 50, 66 45 Q 76 40, 76 30 Q 66 20, 48 30"
-        stroke="currentColor"
-        strokeWidth="3"
-        fill="none"
-        strokeLinecap="round"
-      />
-      {/* Bottom loop (oval extending from core) */}
-      <path
-        d="M 48 50 Q 30 60, 20 50 Q 20 40, 30 35 Q 40 30, 48 35 Q 56 30, 66 35 Q 76 40, 76 50 Q 66 60, 48 50"
-        stroke="currentColor"
-        strokeWidth="3"
-        fill="none"
-        strokeLinecap="round"
-      />
-      {/* Connection points to core */}
-      <circle cx="48" cy="30" r="2" fill="currentColor" />
-      <circle cx="48" cy="50" r="2" fill="currentColor" />
     </svg>
   );
 
