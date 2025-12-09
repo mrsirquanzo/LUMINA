@@ -336,8 +336,6 @@ function extractAntibodiesFromSeqIds(text: string): AntibodySequence[] {
       };
     }
     antibodies.push(antibody);
-      confidence: 0.75,
-    });
   }
 
   return antibodies;
