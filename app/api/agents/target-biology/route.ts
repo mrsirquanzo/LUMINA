@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Get the last user message
-    const lastUserMessage = messages.filter((m: any) => m.role === 'user').pop();
+      const lastUserMessage = messages.filter((m: any) => m.role === 'user').pop();
     if (!lastUserMessage) {
       return NextResponse.json(
         { error: 'No user message found' },
@@ -145,7 +145,7 @@ Format your response with clear markdown sections (##, ###) for easy parsing.`;
     }
 
     return NextResponse.json(
-      {
+      { 
         error: error.message || 'Failed to process request',
         details: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },

@@ -102,7 +102,7 @@ export async function runOrchestration(
  * Create initial execution plan
  */
 function createInitialPlan(mode: ExecutionMode, customAgents?: AgentType[]): ExecutionPlan {
-  const validAgents: AgentType[] = ['clinical', 'patent', 'financial', 'market_research', 'regulatory'];
+  const validAgents: AgentType[] = ['clinical', 'patent', 'financial', 'market_research', 'regulatory', 'target_biology'];
 
   // Validate custom agents if provided
   if (customAgents) {
@@ -207,7 +207,7 @@ async function answerAgentQuestion(
 ): Promise<string> {
   // Validate agent types
   if (!AGENT_MODEL_CONFIG[targetAgent]) {
-    throw new Error(`Invalid target agent type: "${targetAgent}". Valid types: clinical, patent, financial, regulatory, market_research`);
+    throw new Error(`Invalid target agent type: "${targetAgent}". Valid types: clinical, patent, financial, regulatory, market_research, target_biology`);
   }
   if (!AGENT_PROMPTS[targetAgent]) {
     throw new Error(`Missing prompt for agent: "${targetAgent}"`);

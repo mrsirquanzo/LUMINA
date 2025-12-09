@@ -19,6 +19,7 @@ const AGENT_TO_MCP_PROVIDER: Record<AgentType, MCPProvider[]> = {
   financial: ['financial_db'],
   market_research: ['market_data'],
   regulatory: ['regulatory_db'],
+  target_biology: [], // Target Biology agent currently uses LLM-only (no MCP providers yet)
 };
 
 /**

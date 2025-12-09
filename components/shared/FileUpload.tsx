@@ -51,7 +51,7 @@ export default function FileUpload({
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   };
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = useCallback((file: File): string | null => {
     if (!acceptedTypes.includes(file.type)) {
       return `File type ${file.type} not supported`;
     }
@@ -59,40 +59,9 @@ export default function FileUpload({
       return `File size exceeds ${maxSizeMB}MB limit`;
     }
     return null;
-  };
+  }, [acceptedTypes, maxSizeMB]);
 
-  const processFiles = async (fileList: FileList) => {
-    const newFiles: UploadedFile[] = [];
-
-    for (let i = 0; i < fileList.length; i++) {
-      const file = fileList[i];
-      const error = validateFile(file);
-
-      const uploadedFile: UploadedFile = {
-        id: `${Date.now()}-${i}`,
-        file,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        status: error ? 'error' : 'pending',
-        error: error || undefined,
-      };
-
-      newFiles.push(uploadedFile);
-    }
-
-    if (files.length + newFiles.length > maxFiles) {
-      alert(`Maximum ${maxFiles} files allowed`);
-      return;
-    }
-
-    setFiles(prev => [...prev, ...newFiles]);
-
-    // Process files via API
-    await uploadAndProcessFiles(newFiles);
-  };
-
-  const uploadAndProcessFiles = async (filesToProcess: UploadedFile[]) => {
+  const uploadAndProcessFiles = useCallback(async (filesToProcess: UploadedFile[]) => {
     setIsProcessing(true);
 
     for (const uploadedFile of filesToProcess) {
@@ -168,7 +137,38 @@ export default function FileUpload({
     setIsProcessing(false);
     // Note: onFilesProcessed is called immediately after each file is processed
     // (see the setFiles callback above) to ensure fresh data is passed
-  };
+  }, [onFilesProcessed]);
+
+  const processFiles = useCallback(async (fileList: FileList) => {
+    const newFiles: UploadedFile[] = [];
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      const error = validateFile(file);
+
+      const uploadedFile: UploadedFile = {
+        id: `${Date.now()}-${i}`,
+        file,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        status: error ? 'error' : 'pending',
+        error: error || undefined,
+      };
+
+      newFiles.push(uploadedFile);
+    }
+
+    if (files.length + newFiles.length > maxFiles) {
+      alert(`Maximum ${maxFiles} files allowed`);
+      return;
+    }
+
+    setFiles(prev => [...prev, ...newFiles]);
+
+    // Process files via API
+    await uploadAndProcessFiles(newFiles);
+  }, [files, maxFiles, validateFile, uploadAndProcessFiles]);
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -196,7 +196,7 @@ export default function FileUpload({
     if (droppedFiles && droppedFiles.length > 0) {
       processFiles(droppedFiles);
     }
-  }, [files, maxFiles, processFiles]);
+  }, [processFiles]);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files: selectedFiles } = e.target;

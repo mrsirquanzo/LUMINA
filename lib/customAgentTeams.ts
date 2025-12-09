@@ -17,7 +17,7 @@ export const DEFAULT_TEAMS: CustomAgentTeam[] = [
   {
     id: 'full-diligence',
     name: 'Full Due Diligence',
-    description: 'All 5 agents for comprehensive analysis',
+    description: 'All 6 agents for comprehensive analysis',
     agents: ['clinical', 'patent', 'financial', 'regulatory', 'market_research'],
     mode: 'thorough',
     isDefault: true,
@@ -187,6 +187,12 @@ export const AGENT_INFO: Record<AgentType, { name: string; icon: string; descrip
     description: 'Market size, pricing, competitive landscape',
     color: 'teal',
   },
+  target_biology: {
+    name: 'Target Biology Expert',
+    icon: '🧬',
+    description: 'Genetic validation, druggability, mechanism of action',
+    color: 'indigo',
+  },
 };
 
 /**
@@ -197,8 +203,8 @@ export function validateTeam(agents: AgentType[]): { valid: boolean; error?: str
     return { valid: false, error: 'At least one agent must be selected' };
   }
 
-  if (agents.length > 5) {
-    return { valid: false, error: 'Maximum 5 agents allowed' };
+  if (agents.length > 6) {
+    return { valid: false, error: 'Maximum 6 agents allowed' };
   }
 
   const uniqueAgents = new Set(agents);
