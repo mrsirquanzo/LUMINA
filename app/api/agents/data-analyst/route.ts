@@ -125,11 +125,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Enhanced prompt for comprehensive analysis when documents are provided
+    let enhancedSystemPrompt = SYSTEM_PROMPT;
+    if (documents && documents.length > 0) {
+      enhancedSystemPrompt += `\n\n**COMPREHENSIVE ANALYSIS MODE**: When documents are provided, provide a structured, comprehensive analysis including:
+1. Executive Summary of key findings
+2. Data Extraction Summary (endpoints, statistics, safety signals)
+3. Comparative Analysis (if applicable)
+4. Risk Assessment
+5. Key Recommendations
+6. Data Quality Assessment
+
+Format your response with clear markdown sections (##, ###) for easy parsing.`;
+    }
+
     // Call Claude API
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
-      system: SYSTEM_PROMPT,
+      system: enhancedSystemPrompt,
       messages: processedMessages,
     });
 
@@ -152,6 +166,7 @@ export async function POST(req: NextRequest) {
         input_tokens: response.usage.input_tokens,
         output_tokens: response.usage.output_tokens,
       },
+      analysisType: documents && documents.length > 0 ? 'comprehensive' : 'conversational',
     });
 
   } catch (error: any) {

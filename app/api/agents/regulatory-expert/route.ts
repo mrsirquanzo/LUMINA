@@ -92,7 +92,20 @@ export async function POST(req: NextRequest) {
 
     // Build context from documents
     let documentContext = '';
+    let enhancedPrompt = REGULATORY_EXPERT_PROMPT;
+    
     if (documents && documents.length > 0) {
+      enhancedPrompt += `\n\n**COMPREHENSIVE ANALYSIS MODE**: When documents are provided, provide a structured, comprehensive regulatory analysis including:
+1. Executive Summary of regulatory pathway
+2. Required Studies and Endpoints
+3. Timeline Estimate with Key Milestones
+4. Risk Factors and Mitigation Strategies
+5. Agency Interaction Strategy
+6. CMC Considerations
+7. Regulatory Recommendations
+
+Format your response with clear markdown sections (##, ###) for easy parsing.`;
+
       documentContext = '\n\nDocuments provided:\n' + documents.map((doc: any) => {
         const text = doc.extractedText || doc.text || '';
         return `- ${doc.name}: ${text.substring(0, 1000) || 'No text content'}${text.length > 1000 ? '...' : ''}`;
@@ -108,7 +121,7 @@ export async function POST(req: NextRequest) {
       system: [
         {
           type: 'text',
-          text: REGULATORY_EXPERT_PROMPT,
+          text: enhancedPrompt,
           cache_control: { type: 'ephemeral' },
         },
       ],
@@ -138,6 +151,7 @@ export async function POST(req: NextRequest) {
           inputTokens,
           outputTokens,
         },
+        analysisType: documents && documents.length > 0 ? 'comprehensive' : 'conversational',
       }),
       {
         status: 200,

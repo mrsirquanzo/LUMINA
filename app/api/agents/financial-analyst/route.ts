@@ -44,7 +44,19 @@ export async function POST(req: NextRequest) {
       ? lastUserMessage.content
       : lastUserMessage.content.find((c: any) => c.type === 'text')?.text || '';
 
+    // Enhanced prompt for comprehensive analysis when documents are provided
+    let enhancedPrompt = AGENT_PROMPTS.financial;
     if (documents && documents.length > 0) {
+      enhancedPrompt += `\n\n**COMPREHENSIVE ANALYSIS MODE**: When documents are provided, provide a structured, comprehensive financial analysis including:
+1. Executive Summary with key financial metrics
+2. Valuation Analysis (if applicable)
+3. Market Opportunity Assessment
+4. Competitive Financial Positioning
+5. Risk Factors and Mitigation
+6. Investment Recommendations
+
+Format your response with clear markdown sections (##, ###) for easy parsing.`;
+
       const docContext = documents.map((doc: any) => {
         if (doc.text) {
           return `\n\n--- Document: ${doc.fileName} ---\n${doc.text}`;
@@ -68,7 +80,7 @@ export async function POST(req: NextRequest) {
 
     // Call LLM
     const response = await client.sendMessage(
-      AGENT_PROMPTS.financial,
+      enhancedPrompt,
       userMessage,
       { maxTokens: 4096 }
     );
@@ -87,6 +99,7 @@ export async function POST(req: NextRequest) {
       } : undefined,
       model: AGENT_MODEL_CONFIG.financial.model,
       provider: AGENT_MODEL_CONFIG.financial.provider,
+      analysisType: documents && documents.length > 0 ? 'comprehensive' : 'conversational',
     });
   } catch (error: any) {
     console.error('Financial Analyst Agent Error:', error);
