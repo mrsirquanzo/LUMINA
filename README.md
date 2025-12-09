@@ -1,147 +1,114 @@
-# Quan Ho - Biotech Investment Portfolio
+# LUMINA - Biotech Intelligence Dashboard
 
-Professional portfolio website showcasing deep scientific expertise in biotech investment analysis, due diligence, and technology assessment.
-
-## About
-
-This portfolio demonstrates the intersection of deep scientific knowledge and investment acumen, featuring comprehensive analyses of biotech companies, technology platforms, and investment opportunities.
-
-**Target Audience:** PE/VC investors, BD professionals, biotech hiring managers
+A modern biotech intelligence dashboard built with React, TypeScript, and Vite, following Apple's Human Interface Guidelines.
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
-- **Styling:** Tailwind CSS
-- **Language:** TypeScript
-- **Visualizations:** Recharts, Plotly.js
-- **Deployment:** Vercel
-
-## Project Structure
-
-```
-├── app/                      # Next.js app directory
-│   ├── about/               # About page
-│   ├── contact/             # Contact page
-│   ├── portfolio/           # Portfolio hub and dynamic project pages
-│   ├── layout.tsx           # Root layout
-│   ├── page.tsx             # Homepage
-│   └── globals.css          # Global styles
-├── components/              # React components
-│   ├── home/               # Homepage sections
-│   ├── layout/             # Header, Footer, SEO
-│   ├── portfolio/          # Project cards, TOC, navigation
-│   ├── shared/             # Reusable components
-│   └── visualizations/     # Chart components
-├── lib/                     # Utilities and data
-│   ├── projects.ts         # Project metadata
-│   └── types.ts            # TypeScript types
-└── public/                  # Static assets
-
-## Features
-
-### Core Pages
-- **Homepage:** Hero section, value propositions, featured projects
-- **About:** Personal journey from bench scientist to investor
-- **Portfolio:** Showcase of investment analyses
-- **Contact:** Professional contact information
-
-### Investment Analysis Projects
-1. **Absci Corporation Deep Dive** - AI-powered antibody discovery platform analysis
-2. **Multispecific Antibodies** - Technology landscape and investment implications
-3. **Immunocore Diligence** - Pre-investment memorandum with financial modeling
-
-### Technical Features
-- Responsive design (mobile-first)
-- Interactive data visualizations
-- SEO optimized with structured data
-- Table of contents navigation
-- Social sharing buttons
-- Fast page loads with static generation
+- **React 19** with TypeScript
+- **Vite** for build tooling
+- **React Router** for navigation
+- **Tailwind CSS** for styling
+- **TanStack Query** for data fetching
+- **Recharts** for data visualization
+- **Framer Motion** for animations
+- **Lucide React** for icons
+- **date-fns** for date formatting
 
 ## Design System
 
 ### Colors
-- **Primary (Blue):** Professional, trustworthy
-- **Accent (Teal):** Biotech, scientific
-- **Neutrals:** Clean, readable
+- **Background**: `#000000` (pure black)
+- **Surface**: `#1C1C1E` (dark gray)
+- **Surface Highlight**: `#2C2C2E`
+- **Surface Elevated**: `#3A3A3C`
+- **Primary**: CSS variable `--color-primary` (defaults to purple: `191 90 242`)
 
-### Typography
-- **Sans-serif:** System fonts for performance
-- **Serif:** Georgia for long-form content
-- **Monospace:** Code/data displays
+### Semantic Colors
+- **Success**: `#30D158`
+- **Warning**: `#FF9F0A`
+- **Danger**: `#FF453A`
+- **Info**: `#0A84FF`
+
+### Text Colors
+- **Primary**: `#F5F5F7`
+- **Secondary**: `#86868B`
+- **Tertiary**: `#636366`
+
+## Project Structure
+
+```
+src/
+├── types/
+│   └── index.ts          # TypeScript type definitions
+├── utils/
+│   └── scoring.ts        # Scoring algorithms
+├── App.tsx               # Main app component
+├── main.tsx              # Entry point
+└── index.css             # Global styles with Tailwind
+```
 
 ## Getting Started
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Installation
+### Install Dependencies
 
 ```bash
-# Install dependencies
 npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
 ```
 
-Visit `http://localhost:3000` to see the site.
+### Development Server
 
-## Development Roadmap
+```bash
+npm run dev
+```
 
-### Phase 1: Foundation (Completed)
-- [x] Next.js setup with TypeScript and Tailwind
-- [x] Core page structure (Home, About, Portfolio, Contact)
-- [x] Reusable components and layout
-- [x] Visualization components
+### Build for Production
 
-### Phase 2: Content (In Progress)
-- [ ] Absci Corporation deep dive analysis
-- [ ] Multispecific antibodies technology assessment
-- [ ] Immunocore diligence memorandum
-- [ ] SEO optimization (sitemap, robots.txt)
+```bash
+npm run build
+```
 
-### Phase 3: Polish & Deploy
-- [ ] Responsive design testing
-- [ ] Performance optimization
-- [ ] Domain configuration (QuanHo.io)
-- [ ] Analytics integration
-- [ ] PDF download functionality
+### Preview Production Build
 
-## Deployment
+```bash
+npm run preview
+```
 
-This site is designed to be deployed on Vercel:
+## Features
 
-1. Push to GitHub repository
-2. Import to Vercel
-3. Configure custom domain (QuanHo.io)
-4. Deploy automatically on push
+### Type System
+Comprehensive TypeScript types for:
+- Personas (Scientist, BD)
+- Scoring types (Validation, Druggability, Safety, etc.)
+- Data interfaces (GWAS, Clinical Trials, Patents, etc.)
 
-## Content Strategy
+### Scoring Algorithms
+Utility functions for calculating:
+- Overall scores with weighted components
+- Validation scores from genetic evidence
+- Therapeutic window from expression profiles
+- Druggability scores from target characteristics
 
-Each investment analysis follows a structured format:
-1. Executive Summary
-2. Context & Thesis
-3. Technical Deep Dive
-4. Market Analysis
-5. Financial Assessment
-6. Risk Analysis
-7. Investment Recommendation
+### Design Principles
+- Clean, minimal interface
+- Subtle glassmorphism effects
+- Custom scrollbar styling
+- Smooth animations and transitions
+- Accessibility-focused focus states
 
-## Contact
+## Customization
 
-**Quan Ho**
-- Location: Boston, MA
-- LinkedIn: [linkedin.com/in/quan-ho](https://www.linkedin.com/in/quan-ho)
-- Email: hoquan12@gmail.com
+### Primary Color
+Change the primary color by updating the CSS variable in `src/index.css`:
+
+```css
+:root {
+  --color-primary: 191 90 242; /* Purple (RGB values) */
+}
+```
+
+### Tailwind Configuration
+Edit `tailwind.config.js` to customize the theme, colors, and utilities.
 
 ## License
 
-© 2025 Quan Ho. All rights reserved.
+Private project

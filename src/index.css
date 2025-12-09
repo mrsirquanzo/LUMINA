@@ -1,0 +1,305 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary color - default to purple (can be overridden) */
+  --color-primary: 191 90 242;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #000000;
+  color: #F5F5F7;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar Styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* Modal Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--glow-color, rgb(var(--color-primary)));
+  }
+  50% {
+    box-shadow: 0 0 20px var(--glow-color, rgb(var(--color-primary)));
+  }
+}
+
+/* Gauge/Progress Animation Keyframes */
+@keyframes gauge-fill {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: var(--gauge-progress, 0);
+  }
+}
+
+@keyframes progress-shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Skeleton Loading Animation */
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.1) 40px,
+    rgba(255, 255, 255, 0.05) 80px
+  );
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.5s infinite linear;
+}
+
+/* Focus Ring Utilities */
+@layer utilities {
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black;
+    @apply focus:ring-primary focus:ring-opacity-50;
+  }
+
+  .focus-ring-success {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black;
+    @apply focus:ring-success focus:ring-opacity-50;
+  }
+
+  .focus-ring-warning {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black;
+    @apply focus:ring-warning focus:ring-opacity-50;
+  }
+
+  .focus-ring-danger {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black;
+    @apply focus:ring-danger focus:ring-opacity-50;
+  }
+
+  .focus-ring-info {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black;
+    @apply focus:ring-info focus:ring-opacity-50;
+  }
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+}
+
+/* Glassmorphism Effects */
+.glass {
+  background: rgba(28, 28, 30, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-elevated {
+  background: rgba(58, 58, 60, 0.8);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Utility Classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-modal-enter {
+  animation: modalEnter 0.2s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Focus states for accessibility */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(var(--color-primary) / 0.5),
+    0 0 0 4px rgb(var(--color-primary) / 0.2);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Micro-interactions */
+button:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.badge-hover:hover {
+  filter: brightness(1.1);
+  transition: filter 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  /* Mobile styles */
+  .mobile-hidden {
+    display: none;
+  }
+  
+  /* Compact padding on mobile */
+  .container-responsive {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  /* Tablet styles */
+}
+
+@media (min-width: 1024px) {
+  /* Desktop styles */
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: rgb(var(--color-primary));
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ARIA live region */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
