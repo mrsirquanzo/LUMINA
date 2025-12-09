@@ -3,7 +3,7 @@
 // Orchestrator Configuration
 export const ORCHESTRATOR_NAME = 'Sonny';
 
-export type AgentType = 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
+export type AgentType = 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research' | 'target_biology';
 export type ExecutionMode = 'fast' | 'thorough';
 export type StepStatus = 'pending' | 'running' | 'complete' | 'failed';
 

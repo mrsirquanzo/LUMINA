@@ -2,7 +2,7 @@
 
 import { LLMClientConfig, LLMProvider } from './types';
 
-export type AgentType = 'clinical' | 'patent' | 'financial' | 'market_research' | 'regulatory';
+export type AgentType = 'clinical' | 'patent' | 'financial' | 'market_research' | 'regulatory' | 'target_biology';
 
 /**
  * Model configurations for each agent
@@ -53,6 +53,15 @@ export const AGENT_MODEL_CONFIG: Record<AgentType, LLMClientConfig> = {
     temperature: 1.0,
     apiKey: process.env.ANTHROPIC_API_KEY,
   },
+
+  // Target Biology Agent - Claude Sonnet 4 (best reasoning for complex target biology and validation)
+  target_biology: {
+    provider: 'anthropic',
+    model: 'claude-sonnet-4-20250514',
+    maxTokens: 4096,
+    temperature: 1.0,
+    apiKey: process.env.ANTHROPIC_API_KEY,
+  },
 };
 
 /**
@@ -91,6 +100,7 @@ export function getAgentName(agent: AgentType): string {
     financial: 'Financial Analyst',
     market_research: 'Market Research Analyst',
     regulatory: 'Regulatory Specialist',
+    target_biology: 'Target Biology Expert',
   };
   return names[agent];
 }
