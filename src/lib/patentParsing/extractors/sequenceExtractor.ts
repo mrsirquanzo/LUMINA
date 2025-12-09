@@ -312,28 +312,30 @@ function extractAntibodiesFromSeqIds(text: string): AntibodySequence[] {
   const lightMatch = text.match(/light.*chain.*variable.*SEQ ID NO[:\s]+(\d+)/i);
 
   if (heavyMatch || lightMatch) {
-    antibodies.push({
+    const antibody: any = {
       name: 'Antibody from SEQ ID',
-      heavy_chain: heavyMatch
-        ? {
-            vh_full: {
-              sequence: '',
-              seq_id_no: parseInt(heavyMatch[1], 10),
-              numbering_system: 'unknown',
-              confidence: 0.8,
-            },
-          }
-        : undefined,
-      light_chain: lightMatch
-        ? {
-            vl_full: {
-              sequence: '',
-              seq_id_no: parseInt(lightMatch[1], 10),
-              numbering_system: 'unknown',
-              confidence: 0.8,
-            },
-          }
-        : undefined,
+    };
+    if (heavyMatch) {
+      antibody.heavy_chain = {
+        vh_full: {
+          sequence: '',
+          seq_id_no: parseInt(heavyMatch[1], 10),
+          numbering_system: 'unknown',
+          confidence: 0.8,
+        },
+      };
+    }
+    if (lightMatch) {
+      antibody.light_chain = {
+        vl_full: {
+          sequence: '',
+          seq_id_no: parseInt(lightMatch[1], 10),
+          numbering_system: 'unknown',
+          confidence: 0.8,
+        },
+      };
+    }
+    antibodies.push(antibody);
       confidence: 0.75,
     });
   }

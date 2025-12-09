@@ -929,12 +929,12 @@ export default function SonnySidePanel({
                       placeholder={
                         selectedAgent === 'sonny'
                           ? `Ask Sonny about ${targetName}...`
+                          : selectedAgent === 'target_biology'
+                          ? `Ask about biological mechanisms, genetics, or druggability...`
                           : selectedAgent === 'regulatory'
                           ? `Ask about FDA pathways, approval timelines, or compliance...`
                           : selectedAgent === 'market_research'
                           ? `Ask about market size, competitors, or pricing...`
-                          : selectedAgent === 'target_biology'
-                          ? `Ask about biological mechanisms, genetics, or druggability...`
                           : `Ask ${currentAgentInfo.name}...`
                       }
                       className={`w-full pl-12 pr-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-white/30 resize-none`}
@@ -1578,14 +1578,14 @@ export default function SonnySidePanel({
                               `What's the differentiation potential for these antibodies?`,
                               `Compare binding affinity to known PD-1 therapeutics`,
                             ]
-                          : selectedAgent === 'regulatory'
-                          ? [
-                              `What's the regulatory pathway for ${targetName}?`,
-                              `What are the FDA requirements for ${targetName}?`,
-                              `Compare ${targetName} approval timeline to competitors`,
-                              `What are the regulatory risks for ${targetName}?`,
-                            ]
                           : selectedAgent === 'target_biology'
+                          ? [
+                              `What's the biological mechanism of ${targetName}?`,
+                              `Assess the genetic validation for ${targetName}`,
+                              `What's the druggability profile of ${targetName}?`,
+                              `Evaluate safety concerns for ${targetName}`,
+                            ]
+                          : selectedAgent === 'regulatory'
                           ? [
                               `What's the biological mechanism of ${targetName}?`,
                               `What are the genetic associations with ${targetName}?`,

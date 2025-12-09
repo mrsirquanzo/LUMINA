@@ -64,7 +64,7 @@ export default function SequenceExtractionPanel({
     setTimeout(() => {
       setIsProcessing(false);
       // Extract sequences from patent data if available
-      if (patent?.molecular_data.sequences.antibodies.length > 0) {
+      if (patent?.molecular_data?.sequences?.antibodies?.length && patent.molecular_data.sequences.antibodies.length > 0) {
         const sequences: ExtractedSequence[] = [];
         patent.molecular_data.sequences.antibodies.forEach((ab, idx) => {
           if (ab.heavy_chain?.hcdr3) {
@@ -98,7 +98,7 @@ export default function SequenceExtractionPanel({
             extractedValue: lowConfSeq.sequence,
             confidence: lowConfSeq.confidence / 100,
             alternatives: [],
-            context: `Extracted from patent ${patent.document_info.patent_number}`,
+            context: `Extracted from patent ${patent?.document_info?.patent_number ?? 'unknown'}`,
             section: 'sequences',
           });
         }

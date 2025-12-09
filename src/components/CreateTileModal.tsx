@@ -180,14 +180,14 @@ export default function CreateTileModal({
                 >
                   <input
                     type="checkbox"
-                    checked={selectedWorkspaces.includes(workspace.id)}
-                    onChange={() => toggleWorkspace(workspace.id)}
+                    checked={selectedWorkspaces.includes(String(workspace.id))}
+                    onChange={() => toggleWorkspace(String(workspace.id))}
                     className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-gray-900">{workspace.name}</p>
                   </div>
-                  {selectedWorkspaces.includes(workspace.id) && (
+                  {selectedWorkspaces.includes(String(workspace.id)) && (
                     <CheckCircle2 className="w-5 h-5 text-purple-600" />
                   )}
                 </label>

@@ -124,7 +124,7 @@ function parseMarkushStructure(
     core_structure,
     variables,
     genus_scope,
-    confidence: variables.length > 0 ? 0.75 : 0.5,
+    confidence: (variables?.length ?? 0) > 0 ? 0.75 : 0.5,
   };
 }
 

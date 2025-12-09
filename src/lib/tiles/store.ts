@@ -99,7 +99,11 @@ export const useTileStore = create<TileStore>()((set, get) => ({
           agent: request.agent,
           source: request.source,
           data: request.data,
-          position: request.position || calculateDefaultPosition(get().tiles),
+          position: request.position ? {
+            row: request.position.row ?? 0,
+            col: request.position.col ?? 0,
+            size: request.position.size ?? 'large',
+          } : calculateDefaultPosition(get().tiles),
           workspaceIds: request.workspaceIds || [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

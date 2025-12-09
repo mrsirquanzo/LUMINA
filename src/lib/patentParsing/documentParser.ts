@@ -142,9 +142,9 @@ export async function parsePatentDocument(
   // Execute extractions in parallel
   const extractionResults = await Promise.all(extractionPromises);
   
-  let structures = { markush_structures: [], specific_compounds: [], extraction_confidence: 0 };
-  let sequences = { antibodies: [], nucleic_acids: [], extraction_confidence: 0 };
-  let biologicalData = { in_vitro: [], in_vivo: [], clinical: [], extraction_confidence: 0 };
+  let structures: { markush_structures: any[]; specific_compounds: any[]; extraction_confidence: number } = { markush_structures: [], specific_compounds: [], extraction_confidence: 0 };
+  let sequences: { antibodies: any[]; nucleic_acids: any[]; extraction_confidence: number } = { antibodies: [], nucleic_acids: [], extraction_confidence: 0 };
+  let biologicalData: { in_vitro: any[]; in_vivo: any[]; clinical: any[]; extraction_confidence: number } = { in_vitro: [], in_vivo: [], clinical: [], extraction_confidence: 0 };
   
   for (const result of extractionResults) {
     if (result.type === 'structures') {

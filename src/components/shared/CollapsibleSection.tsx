@@ -3,7 +3,7 @@
  * Reusable component for collapsible/expandable sections
  */
 
-import { useState, ReactNode, ComponentType } from 'react';
+import { useState, type ReactNode, type ComponentType } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

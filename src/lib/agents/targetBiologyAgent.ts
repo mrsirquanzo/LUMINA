@@ -441,7 +441,7 @@ Provide a concise, accurate answer with specific metrics and citations where rel
     score += Math.min(allEvidenceTypes.size * 0.1, 0.3);
 
     // Score based on constraint (inverted - high constraint = more validated but riskier)
-    if (constraint?.pli !== null) {
+    if (constraint?.pli !== null && constraint?.pli !== undefined) {
       score += constraint.pli * 0.2;
     }
 

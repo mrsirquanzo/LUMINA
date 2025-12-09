@@ -84,7 +84,7 @@ function checkCompleteness(result: PatentExtractionResult): {
 
   // Check if molecular data was extracted
   const hasStructures = result.molecular_data.sequences.small_molecules.length > 0 ||
-                        result.molecular_data.markush_structures?.length > 0;
+                        (result.molecular_data.markush_structures?.length ?? 0) > 0;
   const hasSequences = result.molecular_data.sequences.antibodies.length > 0 ||
                       result.molecular_data.sequences.nucleic_acids.length > 0;
 
