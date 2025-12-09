@@ -6,11 +6,9 @@
   "outputDirectory": ".next",
   "functions": {
     "app/api/deliverables/generate/route.ts": {
-      "memory": 3008,
       "maxDuration": 60
     },
     "app/api/export-chat/route.ts": {
-      "memory": 3008,
       "maxDuration": 60
     }
   },
