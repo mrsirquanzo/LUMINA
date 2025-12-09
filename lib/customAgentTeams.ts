@@ -1,5 +1,7 @@
 import { AgentType } from './multiAgentTypes';
 
+// Force deployment - all fixes applied
+
 export interface CustomAgentTeam {
   id: string;
   name: string;
