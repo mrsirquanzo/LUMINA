@@ -1570,34 +1570,39 @@ export default function SonnySidePanel({
                     {(() => {
                       // Context-aware examples
                       const hasPatentContext = agentContext?.patentData;
-                      const examples = 
-                        selectedAgent === 'target_biology' && hasPatentContext
-                          ? [
-                              `Evaluate PD-1 as a target based on ${agentContext.patentData.patentNumber}`,
-                              `Assess the ${agentContext.patentData.antibodiesCount} antibodies' mechanism vs pembrolizumab`,
-                              `What's the differentiation potential for these antibodies?`,
-                              `Compare binding affinity to known PD-1 therapeutics`,
-                            ]
-                          : selectedAgent === 'target_biology'
-                          ? [
-                              `What's the biological mechanism of ${targetName}?`,
-                              `Assess the genetic validation for ${targetName}`,
-                              `What's the druggability profile of ${targetName}?`,
-                              `Evaluate safety concerns for ${targetName}`,
-                            ]
-                          : selectedAgent === 'regulatory'
-                          ? [
-                              `What's the biological mechanism of ${targetName}?`,
-                              `What are the genetic associations with ${targetName}?`,
-                              `Compare ${targetName} to similar targets`,
-                              `What's the druggability of ${targetName}?`,
-                            ]
-                          : [
-                              `Compare ${targetName} to HER2`,
-                              `What are the key safety concerns for ${targetName}?`,
-                              `What patents exist related to ${targetName}?`,
-                              `What's the market opportunity for ${targetName}?`,
-                            ];
+                      let examples: string[];
+                      const agent = selectedAgent as AgentType | 'sonny';
+                      
+                      if (agent === 'regulatory') {
+                        examples = [
+                          `What's the regulatory pathway for ${targetName}?`,
+                          `What are the FDA requirements for ${targetName}?`,
+                          `Compare ${targetName} approval timeline to competitors`,
+                          `What are the regulatory risks for ${targetName}?`,
+                        ];
+                      } else if (agent === 'target_biology' && hasPatentContext) {
+                        examples = [
+                          `Evaluate PD-1 as a target based on ${agentContext.patentData.patentNumber}`,
+                          `Assess the ${agentContext.patentData.antibodiesCount} antibodies' mechanism vs pembrolizumab`,
+                          `What's the differentiation potential for these antibodies?`,
+                          `Compare binding affinity to known PD-1 therapeutics`,
+                        ];
+                      } else if (agent === 'target_biology') {
+                        examples = [
+                          `What's the biological mechanism of ${targetName}?`,
+                          `Assess the genetic validation for ${targetName}`,
+                          `What's the druggability profile of ${targetName}?`,
+                          `Evaluate safety concerns for ${targetName}`,
+                        ];
+                      } else {
+                        examples = [
+                          `Compare ${targetName} to HER2`,
+                          `What are the key safety concerns for ${targetName}?`,
+                          `What patents exist related to ${targetName}?`,
+                          `What's the market opportunity for ${targetName}?`,
+                        ];
+                      }
+                      
                       return examples.map((example, idx) => (
                         <button
                           key={idx}
