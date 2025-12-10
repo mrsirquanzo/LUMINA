@@ -8,6 +8,8 @@ import {
   FileDown,
   Presentation,
   File,
+  Search,
+  X,
 } from 'lucide-react';
 import type { Persona } from '../types';
 
@@ -40,7 +42,10 @@ export default function Header({
 }: HeaderProps) {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -89,6 +94,31 @@ export default function Header({
     }
   };
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      handleSearch(searchQuery);
+    }
+  };
+
+  const handleSearchClear = () => {
+    setSearchQuery('');
+    searchInputRef.current?.focus();
+  };
+
+  // Keyboard shortcut for search (Cmd/Ctrl + K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const getPersonaTitle = () => {
     if (persona === 'scientist') {
       return targetName;
@@ -102,7 +132,7 @@ export default function Header({
     <header className="sticky top-0 z-50 h-20 bg-surface/80 backdrop-blur-xl border-b border-white/5">
       <div className="h-full px-6 flex items-center justify-between gap-6">
         {/* Left Section - Simplified Context */}
-        <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="flex items-center gap-4 flex-shrink-0">
           <div className="min-w-0">
             <h1 className="text-lg font-semibold text-textPrimary truncate">{getPersonaTitle()}</h1>
           </div>
@@ -113,6 +143,40 @@ export default function Header({
               {indication}
             </span>
           </div>
+        </div>
+
+        {/* Center Section - Search Bar */}
+        <div className="flex-1 max-w-2xl mx-6">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${
+              isSearchFocused ? 'text-primary' : 'text-textTertiary'
+            }`} />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+              placeholder="Search targets, assets, companies..."
+              className="w-full pl-10 pr-10 py-2.5 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+            />
+            {searchQuery ? (
+              <button
+                type="button"
+                onClick={handleSearchClear}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-textTertiary hover:text-textPrimary transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            ) : (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1.5 text-xs text-textTertiary">
+                <kbd className="px-1.5 py-0.5 bg-surface border border-white/10 rounded text-textSecondary">⌘</kbd>
+                <kbd className="px-1.5 py-0.5 bg-surface border border-white/10 rounded text-textSecondary">K</kbd>
+              </div>
+            )}
+          </form>
         </div>
 
 
