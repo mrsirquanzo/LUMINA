@@ -145,7 +145,7 @@ export default function DealMemoPanel({ deal, onClose }: DealMemoPanelProps) {
       {/* Actions Footer */}
       <div className="p-4 border-t border-white/10 bg-surfaceElevated">
         <div className="flex gap-2">
-          <button className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg font-medium text-sm hover:bg-purple-600 transition-colors flex items-center justify-center gap-2">
+          <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <FileText size={16} />
             Export PDF
           </button>

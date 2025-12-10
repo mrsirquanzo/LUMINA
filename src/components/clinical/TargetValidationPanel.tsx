@@ -60,9 +60,9 @@ const CitationLink = ({ index, text, url }: { index: number; text: string; url: 
     rel="noopener noreferrer"
     className="flex items-start gap-2 p-2 hover:bg-surfaceElevated rounded-lg transition-colors group"
   >
-    <span className="text-xs font-medium text-purple-400">[{index}]</span>
-    <span className="text-sm text-textSecondary group-hover:text-purple-400 flex-1">{text}</span>
-    <ExternalLink size={14} className="text-textTertiary group-hover:text-purple-400 flex-shrink-0" />
+    <span className="text-xs font-medium text-blue-400">[{index}]</span>
+    <span className="text-sm text-textSecondary group-hover:text-blue-400 flex-1">{text}</span>
+    <ExternalLink size={14} className="text-textTertiary group-hover:text-blue-400 flex-shrink-0" />
   </a>
 );
 
@@ -200,7 +200,7 @@ export default function TargetValidationPanel({ target, onClose }: TargetValidat
       {/* Actions Footer */}
       <div className="p-4 border-t border-white/10 bg-surfaceElevated">
         <div className="flex gap-2">
-          <button className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg font-medium text-sm hover:bg-purple-600 transition-colors flex items-center justify-center gap-2">
+          <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <FileText size={16} />
             Full Report
           </button>

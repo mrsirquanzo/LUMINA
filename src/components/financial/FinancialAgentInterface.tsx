@@ -465,27 +465,23 @@ export default function FinancialAgentInterface({
           ) : (
             <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
               {[
-                { id: 'analyze' as const, label: 'Analyze', icon: BarChart3 },
-                { id: 'models' as const, label: 'Models', icon: Calculator },
-                { id: 'deals' as const, label: 'Deals', icon: Briefcase },
-                { id: 'monitor' as const, label: 'Monitor', icon: Activity },
-              ].map((tab) => {
-                const TabIcon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-lg text-xs font-medium transition-all whitespace-nowrap min-w-0 ${
-                      activeTab === tab.id
-                        ? 'bg-surface text-green-400 shadow-sm'
-                        : 'text-textSecondary hover:text-textPrimary'
-                    }`}
-                  >
-                    <TabIcon size={14} className="flex-shrink-0" />
-                    <span className="truncate">{tab.label}</span>
-                  </button>
-                );
-              })}
+                { id: 'analyze' as const, label: 'Analyze' },
+                { id: 'models' as const, label: 'Models' },
+                { id: 'deals' as const, label: 'Deals' },
+                { id: 'monitor' as const, label: 'Monitor' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-xs font-medium transition-all min-w-0 overflow-hidden ${
+                    activeTab === tab.id
+                      ? 'bg-green-600/20 text-green-400 shadow-sm border border-green-500/30'
+                      : 'text-textSecondary hover:text-textPrimary hover:bg-surfaceElevated'
+                  }`}
+                >
+                  <span className="truncate w-full text-center">{tab.label}</span>
+                </button>
+              ))}
             </div>
           )}
 
@@ -498,7 +494,6 @@ export default function FinancialAgentInterface({
                   title="Documents"
                   icon={Upload}
                   defaultOpen={true}
-                  count={uploadedFiles.length}
                 >
                   <div
                     ref={dropZoneRef}
@@ -602,7 +597,6 @@ export default function FinancialAgentInterface({
                   title="Valuation Analysis"
                   icon={Calculator}
                   defaultOpen={true}
-                  count={4}
                 >
                   <div className="space-y-2">
                     {valuationModules.map((module, i) => {
@@ -613,11 +607,6 @@ export default function FinancialAgentInterface({
                           onClick={module.onClick}
                           className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
-                          {module.isNew && (
-                            <span className="absolute top-2 right-2 px-2 py-0.5 bg-green-500 text-white text-xs font-medium rounded-full z-10">
-                              New
-                            </span>
-                          )}
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
                               <Icon size={20} className="text-green-400" />
@@ -648,7 +637,6 @@ export default function FinancialAgentInterface({
                   title="Deal Analysis"
                   icon={Briefcase}
                   defaultOpen={true}
-                  count={4}
                 >
                   <div className="space-y-2">
                     {dealModules.map((module, i) => {
@@ -658,11 +646,6 @@ export default function FinancialAgentInterface({
                           key={i}
                           className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
-                          {module.isPremium && (
-                            <span className="absolute top-2 right-2 px-2 py-0.5 bg-warning text-white text-xs font-medium rounded-full z-10 flex items-center gap-1">
-                              <Sparkles size={10} /> Pro
-                            </span>
-                          )}
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
                               <Icon size={20} className="text-green-400" />
@@ -693,7 +676,6 @@ export default function FinancialAgentInterface({
                   title="Financial Health"
                   icon={Activity}
                   defaultOpen={true}
-                  count={4}
                 >
                   <div className="space-y-2">
                     {financialHealthModules.map((module, i) => {
@@ -703,11 +685,6 @@ export default function FinancialAgentInterface({
                           key={i}
                           className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
-                          {module.isNew && (
-                            <span className="absolute top-2 right-2 px-2 py-0.5 bg-green-500 text-white text-xs font-medium rounded-full z-10">
-                              New
-                            </span>
-                          )}
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
                               <Icon size={20} className="text-green-400" />
@@ -738,7 +715,6 @@ export default function FinancialAgentInterface({
                   title="Advanced Analysis"
                   icon={Sparkles}
                   defaultOpen={false}
-                  count={4}
                 >
                   <div className="space-y-2">
                     {advancedModules.map((module, i) => {
@@ -748,11 +724,6 @@ export default function FinancialAgentInterface({
                           key={i}
                           className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
-                          {module.isPremium && (
-                            <span className="absolute top-2 right-2 px-2 py-0.5 bg-warning text-white text-xs font-medium rounded-full z-10 flex items-center gap-1">
-                              <Sparkles size={10} /> Pro
-                            </span>
-                          )}
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
                               <Icon size={20} className="text-green-400" />
@@ -822,11 +793,6 @@ export default function FinancialAgentInterface({
                           key={i}
                           className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
-                          {template.isNew && (
-                            <span className="absolute top-2 right-2 px-2 py-0.5 bg-green-500 text-white text-xs font-medium rounded-full z-10">
-                              New
-                            </span>
-                          )}
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
                               <Icon size={20} className="text-green-400" />
@@ -857,7 +823,6 @@ export default function FinancialAgentInterface({
                   title="My Models"
                   icon={Database}
                   defaultOpen={true}
-                  count={3}
                 >
                   <div className="space-y-2">
                     {[
@@ -991,7 +956,6 @@ export default function FinancialAgentInterface({
                   title="Recent Notable Deals"
                   icon={Briefcase}
                   defaultOpen={true}
-                  count={5}
                 >
                   <div className="space-y-2">
                     {[
@@ -1027,7 +991,6 @@ export default function FinancialAgentInterface({
                   title="Watchlist"
                   icon={Target}
                   defaultOpen={true}
-                  count={6}
                 >
                   <div className="space-y-2">
                     {[
@@ -1068,7 +1031,6 @@ export default function FinancialAgentInterface({
                   title="Active Alerts"
                   icon={AlertTriangle}
                   defaultOpen={true}
-                  count={3}
                 >
                   <div className="space-y-2">
                     {[
@@ -1160,7 +1122,7 @@ export default function FinancialAgentInterface({
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about valuations, deal structures, financial analysis..."
-                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-green-500/50 resize-none"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 resize-none transition-colors"
                 rows={3}
                 disabled={isProcessing}
               />
@@ -1168,7 +1130,7 @@ export default function FinancialAgentInterface({
             <button
               onClick={handleChatSend}
               disabled={!chatInput.trim() || isProcessing}
-              className="w-full py-3 bg-green-500 text-white rounded-lg font-semibold text-sm hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
             >
               <Sparkles className="w-5 h-5" />
               {isProcessing ? 'Processing...' : 'Send'}

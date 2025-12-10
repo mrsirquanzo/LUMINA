@@ -41,7 +41,7 @@ export default function ClinicalDataSourcesSection({
         {onConfigure && (
           <button
             onClick={onConfigure}
-            className="text-xs text-purple-400 hover:text-purple-300 font-medium transition-colors"
+            className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
           >
             Configure
           </button>

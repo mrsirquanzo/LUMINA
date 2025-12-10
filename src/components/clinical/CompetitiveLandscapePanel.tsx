@@ -114,7 +114,7 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
               <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10" />
               
               {/* Drug positions (simplified representation) */}
-              <div className="absolute top-[20%] left-[70%] w-3 h-3 bg-purple-500 rounded-full" title="Tirzepatide" />
+              <div className="absolute top-[20%] left-[70%] w-3 h-3 bg-blue-600 rounded-full" title="Tirzepatide" />
               <div className="absolute top-[25%] left-[35%] w-3 h-3 bg-blue-500 rounded-full" title="Retatrutide" />
               <div className="absolute top-[30%] left-[30%] w-3 h-3 bg-emerald-500 rounded-full" title="Cagrisema" />
               <div className="absolute top-[45%] left-[45%] w-3 h-3 bg-amber-500 rounded-full" title="Semaglutide" />
@@ -124,7 +124,7 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
             {/* Legend */}
             <div className="flex flex-wrap gap-3 mt-4 justify-center">
               <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-purple-500 rounded-full" />
+                <div className="w-2 h-2 bg-blue-600 rounded-full" />
                 <span className="text-xs text-textSecondary">Tirzepatide</span>
               </div>
               <div className="flex items-center gap-1">
@@ -151,9 +151,9 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
         <div>
           <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Key Insights</h3>
           <div className="space-y-2">
-            <div className="flex items-start gap-2 p-3 bg-purple-500/20 rounded-lg border border-purple-500/30">
-              <TrendingUp size={16} className="text-purple-400 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-purple-300">Triple agonists setting new efficacy bar (20%+ weight loss)</p>
+            <div className="flex items-start gap-2 p-3 bg-blue-600/20 rounded-lg border border-blue-500/30">
+              <TrendingUp size={16} className="text-blue-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-blue-300">Triple agonists setting new efficacy bar (20%+ weight loss)</p>
             </div>
             <div className="flex items-start gap-2 p-3 bg-blue-500/20 rounded-lg border border-blue-500/30">
               <Info size={16} className="text-blue-400 flex-shrink-0 mt-0.5" />
@@ -184,7 +184,7 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
       {/* Actions Footer */}
       <div className="p-4 border-t border-white/10 bg-surfaceElevated">
         <div className="flex gap-2">
-          <button className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg font-medium text-sm hover:bg-purple-600 transition-colors flex items-center justify-center gap-2">
+          <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <BarChart3 size={16} />
             Full Analysis
           </button>

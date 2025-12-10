@@ -34,7 +34,7 @@ const DesignQualityItem = ({ label, value, checked }: { label: string; value: st
 const TimelineMarker = ({ label, date, active = false, completed = false }: { label: string; date: string; active?: boolean; completed?: boolean }) => (
   <div className="flex flex-col items-center">
     <div className={`w-3 h-3 rounded-full ${
-      completed ? 'bg-emerald-500' : active ? 'bg-purple-500' : 'bg-textTertiary'
+      completed ? 'bg-emerald-500' : active ? 'bg-blue-600' : 'bg-textTertiary'
     }`} />
     <span className="text-xs font-medium text-textPrimary mt-1">{label}</span>
     <span className="text-xs text-textSecondary">{date}</span>
@@ -68,7 +68,7 @@ export default function TrialDetailPanel({ trial, onClose }: TrialDetailPanelPro
           <div>
             <h2 className="text-lg font-semibold text-textPrimary">{trialData.nctNumber}</h2>
             <div className="flex items-center gap-2 mt-1">
-              <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 text-xs font-medium rounded-full">
+              <span className="px-2 py-0.5 bg-blue-600/20 text-blue-400 text-xs font-medium rounded-full">
                 {trialData.phase}
               </span>
               <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-xs font-medium rounded-full">
@@ -148,8 +148,8 @@ export default function TrialDetailPanel({ trial, onClose }: TrialDetailPanelPro
         <div>
           <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Endpoints</h3>
           <div className="space-y-2">
-            <div className="p-3 bg-purple-500/20 rounded-lg border border-purple-500/30">
-              <p className="text-sm font-medium text-purple-400">Primary</p>
+            <div className="p-3 bg-blue-600/20 rounded-lg border border-blue-500/30">
+              <p className="text-sm font-medium text-blue-400">Primary</p>
               <p className="text-sm text-textSecondary mt-1">NASH resolution without worsening fibrosis (histologic)</p>
             </div>
             <div className="p-3 bg-surfaceElevated rounded-lg border border-white/10">
@@ -163,7 +163,7 @@ export default function TrialDetailPanel({ trial, onClose }: TrialDetailPanelPro
       {/* Actions Footer */}
       <div className="p-4 border-t border-white/10 bg-surfaceElevated">
         <div className="flex gap-2">
-          <button className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg font-medium text-sm hover:bg-purple-600 transition-colors flex items-center justify-center gap-2">
+          <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <BarChart3 size={16} />
             Full Analysis
           </button>

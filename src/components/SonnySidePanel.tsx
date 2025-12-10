@@ -1,5 +1,5 @@
-import { useState, useEffect, lazy, Suspense, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, lazy, Suspense, useRef, type ReactNode } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
   Loader2,
@@ -8,6 +8,7 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronLeft,
+  ChevronUp,
   FileText,
   Grid3X3,
   Shield,
@@ -20,6 +21,10 @@ import {
   BarChart3,
   Calculator,
   Activity,
+  Lightbulb,
+  AlertTriangle,
+  BookOpen,
+  TrendingUp,
 } from 'lucide-react';
 import type { ProcessedDocument, ExecutionMode } from '../lib/multiAgentTypes';
 import type { AgentType } from '../lib/llm/agentConfig';
@@ -40,6 +45,7 @@ import ClinicalDataSourcesSection from './clinical/ClinicalDataSourcesSection';
 import ClinicalGenerateReportSection from './clinical/ClinicalGenerateReportSection';
 import MarketResearchAgentInterface from './market/MarketResearchAgentInterface';
 import RegulatoryAgentInterface from './regulatory/RegulatoryAgentInterface';
+import TargetBiologyAgentInterface from './target-biology/TargetBiologyAgentInterface';
 import DataSourcesConfigModal from './patent/DataSourcesConfigModal';
 
 // Custom Panel Icon - Same as left sidebar
@@ -70,8 +76,8 @@ const COLLAPSED_WIDTH = 60;
 
 // Sonny orchestrator info
 const SONNY_INFO = {
-  name: 'Sonny (Orchestrator)',
-  icon: '🎭',
+  name: 'Sonny (Chief)',
+  icon: '🤖',
   description: 'Coordinates all agents for comprehensive analysis',
   color: 'primary',
 };
@@ -129,6 +135,7 @@ export default function SonnySidePanel({
   const [financialActiveTab, setFinancialActiveTab] = useState<'analyze' | 'models' | 'deals' | 'monitor'>('analyze');
   const [patentChatInput, setPatentChatInput] = useState('');
   const [isPatentProcessing, setIsPatentProcessing] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const panelRef = useRef<HTMLDivElement>(null);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -334,6 +341,9 @@ export default function SonnySidePanel({
   }, []);
 
   const handleAgentSelect = (agent: AgentType | 'sonny') => {
+    // Close dropdown immediately
+    setIsAgentDropdownOpen(false);
+    
     // Check if we have context from previous agent
     const hasContext = agentContext && agentContext.fromAgent !== agent;
     
@@ -341,14 +351,12 @@ export default function SonnySidePanel({
       // Show context summary before switching
       setAgentContext({ ...agentContext, targetAgent: agent });
       setShowContextSummary(true);
-      setIsAgentDropdownOpen(false);
       // Don't switch yet - wait for user decision
       return;
     }
     
     // Normal switch without context
     setSelectedAgent(agent);
-    setIsAgentDropdownOpen(false);
     setShowContextSummary(false);
     setAgentContext(null);
     // Reset query and analysis view when switching agents
@@ -402,62 +410,125 @@ export default function SonnySidePanel({
       bgHover: string;
       bgLight: string;
       borderLight: string;
+      gradient: string;
+      gradientFrom: string;
+      gradientTo: string;
+      chatFocus: string;
+      sendButton: string;
+      sendButtonHover: string;
+      tabActive: string;
     }> = {
+      // Sonny - Spectrum gradient scheme (coordination of all agents)
       primary: {
-        bg: 'bg-primary',
-        border: 'border-primary',
-        text: 'text-primary',
-        bgHover: 'hover:bg-primary/90',
-        bgLight: 'bg-primary/20',
-        borderLight: 'border-primary/20',
+        bg: 'bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500',
+        border: 'border-purple-500',
+        text: 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400',
+        bgHover: 'hover:from-purple-700 hover:via-blue-700 hover:to-cyan-600',
+        bgLight: 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20',
+        borderLight: 'border-purple-500/30',
+        gradient: 'from-purple-600 via-blue-600 to-cyan-500',
+        gradientFrom: 'from-purple-600',
+        gradientTo: 'to-cyan-500',
+        chatFocus: 'focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20',
+        sendButton: 'bg-gradient-to-r from-purple-600 to-cyan-500',
+        sendButtonHover: 'hover:from-purple-700 hover:to-cyan-600',
+        tabActive: 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400',
       },
+      // Clinical - Medical Blue
       blue: {
         bg: 'bg-blue-600',
-        border: 'border-blue-600',
-        text: 'text-blue-600',
+        border: 'border-blue-500',
+        text: 'text-blue-400',
         bgHover: 'hover:bg-blue-700',
         bgLight: 'bg-blue-600/20',
-        borderLight: 'border-blue-600/20',
+        borderLight: 'border-blue-500/30',
+        gradient: 'from-blue-600 to-blue-500',
+        gradientFrom: 'from-blue-600',
+        gradientTo: 'to-blue-500',
+        chatFocus: 'focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20',
+        sendButton: 'bg-blue-600',
+        sendButtonHover: 'hover:bg-blue-700',
+        tabActive: 'bg-blue-600/20 text-blue-400',
       },
+      // Patent - Intellectual Purple
       purple: {
         bg: 'bg-purple-600',
-        border: 'border-purple-600',
-        text: 'text-purple-600',
+        border: 'border-purple-500',
+        text: 'text-purple-400',
         bgHover: 'hover:bg-purple-700',
         bgLight: 'bg-purple-600/20',
-        borderLight: 'border-purple-600/20',
+        borderLight: 'border-purple-500/30',
+        gradient: 'from-purple-600 to-purple-500',
+        gradientFrom: 'from-purple-600',
+        gradientTo: 'to-purple-500',
+        chatFocus: 'focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20',
+        sendButton: 'bg-purple-600',
+        sendButtonHover: 'hover:bg-purple-700',
+        tabActive: 'bg-purple-600/20 text-purple-400',
       },
+      // Financial - Money Green
       green: {
         bg: 'bg-green-600',
-        border: 'border-green-600',
-        text: 'text-green-600',
+        border: 'border-green-500',
+        text: 'text-green-400',
         bgHover: 'hover:bg-green-700',
         bgLight: 'bg-green-600/20',
-        borderLight: 'border-green-600/20',
+        borderLight: 'border-green-500/30',
+        gradient: 'from-green-600 to-green-500',
+        gradientFrom: 'from-green-600',
+        gradientTo: 'to-green-500',
+        chatFocus: 'focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20',
+        sendButton: 'bg-green-600',
+        sendButtonHover: 'hover:bg-green-700',
+        tabActive: 'bg-green-600/20 text-green-400',
       },
+      // Regulatory - Compliance Orange
       orange: {
         bg: 'bg-orange-600',
-        border: 'border-orange-600',
-        text: 'text-orange-600',
+        border: 'border-orange-500',
+        text: 'text-orange-400',
         bgHover: 'hover:bg-orange-700',
         bgLight: 'bg-orange-600/20',
-        borderLight: 'border-orange-600/20',
+        borderLight: 'border-orange-500/30',
+        gradient: 'from-orange-600 to-orange-500',
+        gradientFrom: 'from-orange-600',
+        gradientTo: 'to-orange-500',
+        chatFocus: 'focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20',
+        sendButton: 'bg-orange-600',
+        sendButtonHover: 'hover:bg-orange-700',
+        tabActive: 'bg-orange-600/20 text-orange-400',
       },
+      // Market Research - Analytics Teal
       teal: {
         bg: 'bg-teal-600',
-        border: 'border-teal-600',
-        text: 'text-teal-600',
+        border: 'border-teal-500',
+        text: 'text-teal-400',
         bgHover: 'hover:bg-teal-700',
         bgLight: 'bg-teal-600/20',
-        borderLight: 'border-teal-600/20',
+        borderLight: 'border-teal-500/30',
+        gradient: 'from-teal-600 to-teal-500',
+        gradientFrom: 'from-teal-600',
+        gradientTo: 'to-teal-500',
+        chatFocus: 'focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20',
+        sendButton: 'bg-teal-600',
+        sendButtonHover: 'hover:bg-teal-700',
+        tabActive: 'bg-teal-600/20 text-teal-400',
       },
+      // Target Biology - Life Sciences Emerald
       emerald: {
         bg: 'bg-emerald-600',
-        border: 'border-emerald-600',
-        text: 'text-emerald-600',
+        border: 'border-emerald-500',
+        text: 'text-emerald-400',
         bgHover: 'hover:bg-emerald-700',
         bgLight: 'bg-emerald-600/20',
-        borderLight: 'border-emerald-600/20',
+        borderLight: 'border-emerald-500/30',
+        gradient: 'from-emerald-600 to-emerald-500',
+        gradientFrom: 'from-emerald-600',
+        gradientTo: 'to-emerald-500',
+        chatFocus: 'focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20',
+        sendButton: 'bg-emerald-600',
+        sendButtonHover: 'hover:bg-emerald-700',
+        tabActive: 'bg-emerald-600/20 text-emerald-400',
       },
     };
     return colorMap[color] || colorMap.primary;
@@ -504,8 +575,8 @@ export default function SonnySidePanel({
           role="separator"
           aria-orientation="vertical"
         >
-          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-primary/60 transition-colors" />
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-transparent group-hover:bg-primary/30 rounded-full transition-colors" />
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-gradient-to-b from-purple-500/60 via-blue-500/60 to-cyan-500/60 transition-colors" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-transparent group-hover:bg-gradient-to-b from-purple-500/30 via-blue-500/30 to-cyan-500/30 rounded-full transition-colors" />
         </div>
       )}
 
@@ -522,25 +593,26 @@ export default function SonnySidePanel({
          !(selectedAgent === 'clinical') &&
          !(selectedAgent === 'market_research') &&
          !(selectedAgent === 'regulatory') && (
-          <div className="px-6 pb-4 border-b border-white/10">
-            {/* Agent Selector Dropdown */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-textSecondary mb-2">
-                Talking to:
-              </label>
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                  className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
-                    isAgentDropdownOpen ? themeClasses.border : ''
-                  } hover:border-white/20`}
-                >
+          <div className="px-6 py-4 border-b border-white/10">
+            {/* Enhanced Agent Selector Header - Card-based design */}
+            <div className="bg-surfaceElevated border border-white/10 rounded-lg p-4 mb-4">
+              {/* Agent Name and Description */}
+              <div className="relative mb-4">
+                <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3">
                     <span className="text-lg">{currentAgentInfo.icon}</span>
-                    <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
+                    <div>
+                      <div className="text-textPrimary font-semibold text-base">{currentAgentInfo.name}</div>
+                      <div className="text-xs text-textSecondary mt-0.5">{currentAgentInfo.description}</div>
                   </div>
+                  </div>
+                  <button
+                    onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
+                    className="p-2 hover:bg-surface rounded-lg transition-colors"
+                  >
                   <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
+                </div>
                 
                 {isAgentDropdownOpen && (
                   <motion.div
@@ -584,9 +656,87 @@ export default function SonnySidePanel({
                   </motion.div>
                 )}
               </div>
-              <p className="text-xs text-textTertiary mt-2">
-                {currentAgentInfo.description}
-              </p>
+
+              {/* Inline Mode Controls - Only for Sonny */}
+              {selectedAgent === 'sonny' && (
+                <>
+                  <div className="h-px bg-white/10 my-3" />
+                  <div className="space-y-3">
+                    {/* Agent Mode: Demo/Live */}
+                    <div>
+                      <label className="block text-xs font-medium text-textSecondary mb-2">
+                        Agent Mode
+                      </label>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleToggleMode('demo')}
+                          disabled={isProcessing}
+                          className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                            isDemo
+                              ? `${themeClasses.bgLight} ${themeClasses.border} text-white`
+                              : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                          } disabled:opacity-50`}
+                        >
+                          <div className="flex items-center justify-center gap-1.5">
+                            <Zap className="w-3.5 h-3.5" />
+                            <span className="font-medium">Demo</span>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => handleToggleMode('live')}
+                          disabled={isProcessing}
+                          className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                            !isDemo
+                              ? `${themeClasses.bgLight} ${themeClasses.border} text-white`
+                              : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                          } disabled:opacity-50 relative`}
+                        >
+                          <div className="flex items-center justify-center gap-1.5">
+                            <Sparkles className="w-3.5 h-3.5" />
+                            <span className="font-medium">Live</span>
+                            {!isAuthenticated && (
+                              <Lock className="w-3 h-3 ml-1" />
+                            )}
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Execution Speed: Fast/Thorough - Only show in Live mode */}
+                    {!isDemo && (
+                      <div>
+                        <label className="block text-xs font-medium text-textSecondary mb-2">
+                          Execution Speed
+                        </label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setMode('fast')}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium ${
+                              mode === 'fast'
+                                ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            }`}
+                          >
+                            <span>Fast</span>
+                            <div className="text-xs mt-0.5 opacity-75">~30s</div>
+                          </button>
+                          <button
+                            onClick={() => setMode('thorough')}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium ${
+                              mode === 'thorough'
+                                ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            }`}
+                          >
+                            <span>Thorough</span>
+                            <div className="text-xs mt-0.5 opacity-75">~2-3min</div>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Context Summary - Show when switching agents with available context */}
@@ -692,7 +842,7 @@ export default function SonnySidePanel({
                   // Dispatch event to reset detail panels
                   window.dispatchEvent(new CustomEvent('reset-patent-interface'));
                 }}
-                className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 hover:bg-surface transition-colors text-sm text-textSecondary hover:text-textPrimary"
+                className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:border-green-500/50 hover:bg-surface transition-colors text-sm text-textSecondary hover:text-textPrimary"
               >
                 <ChevronLeft size={16} />
                 Back to Patent Expert
@@ -808,53 +958,7 @@ export default function SonnySidePanel({
           <div className="flex-1 flex flex-col p-6 overflow-y-auto">
             <div className="flex-1 flex flex-col max-w-full">
 
-              {/* Agent Mode Toggle - Only show for Sonny */}
-              {selectedAgent === 'sonny' && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-textSecondary mb-2">
-                    Agent Mode
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleToggleMode('demo')}
-                      disabled={isProcessing}
-                      className={`flex-1 px-3 py-2 rounded-lg border transition-colors text-sm ${
-                        isDemo
-                          ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
-                          : 'bg-surfaceElevated border-white/10 text-textSecondary hover:border-white/20'
-                      } disabled:opacity-50`}
-                    >
-                      <div className="font-medium flex items-center justify-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5" />
-                        Demo
-                      </div>
-                      <div className="text-xs mt-0.5">Pre-recorded</div>
-                    </button>
-                    <button
-                      onClick={() => handleToggleMode('live')}
-                      disabled={isProcessing}
-                      className={`flex-1 px-3 py-2 rounded-lg border transition-colors text-sm ${
-                        !isDemo
-                          ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
-                          : 'bg-surfaceElevated border-white/10 text-textSecondary hover:border-white/20'
-                      } disabled:opacity-50 relative`}
-                    >
-                      <div className="font-medium flex items-center justify-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Live
-                        {!isAuthenticated && (
-                          <Lock className="w-3 h-3 text-textTertiary" />
-                        )}
-                      </div>
-                      <div className="text-xs mt-0.5">
-                        {isAuthenticated ? 'Real-time AI' : 'Auth required'}
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Mode Info Banner - Only for Sonny */}
+              {/* Mode Info Banner - Only for Sonny, shown below header card */}
               {selectedAgent === 'sonny' && (
                 <>
                   {isDemo && (
@@ -883,45 +987,17 @@ export default function SonnySidePanel({
                 </>
               )}
 
-              {/* Execution Mode Selection (Fast/Thorough) - Only for Sonny */}
-              {selectedAgent === 'sonny' && !isDemo && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-textSecondary mb-2">
-                    Execution Speed
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setMode('fast')}
-                      className={`flex-1 px-3 py-2 rounded-lg border transition-colors text-sm ${
-                        mode === 'fast'
-                          ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
-                          : 'bg-surfaceElevated border-white/10 text-textSecondary hover:border-white/20'
-                      }`}
-                    >
-                      <div className="font-medium">Fast</div>
-                      <div className="text-xs mt-0.5">~30s</div>
-                    </button>
-                    <button
-                      onClick={() => setMode('thorough')}
-                      className={`flex-1 px-3 py-2 rounded-lg border transition-colors text-sm ${
-                        mode === 'thorough'
-                          ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
-                          : 'bg-surfaceElevated border-white/10 text-textSecondary hover:border-white/20'
-                      }`}
-                    >
-                      <div className="font-medium">Thorough</div>
-                      <div className="text-xs mt-0.5">~2-3min</div>
-                    </button>
-                  </div>
-                </div>
-              )}
 
-
-              {/* Query Input - Removed for Patent Agent, Financial Agent, Clinical Agent, and Market Research Agent (shown at bottom instead) */}
-              {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && (
+              {/* Enhanced Query Input Area - Removed for Patent Agent, Financial Agent, Clinical Agent, Market Research Agent, Regulatory Agent, and Target Biology Agent (shown at bottom instead) */}
+              {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
                 <div className="mb-4">
+                  {/* Query Input Card */}
+                  <div className="bg-surfaceElevated border border-white/10 rounded-lg p-4 mb-4">
+                    <label className="block text-sm font-semibold text-textPrimary mb-3">
+                      Ask {selectedAgent === 'sonny' ? 'Sonny' : currentAgentInfo.name}
+                    </label>
                   <div className="relative">
-                    <FileText className="absolute left-4 top-4 w-5 h-5 text-textTertiary pointer-events-none" />
+                      <FileText className="absolute left-3 top-3 w-5 h-5 text-textTertiary pointer-events-none" />
                     <textarea
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
@@ -937,17 +1013,17 @@ export default function SonnySidePanel({
                           ? `Ask about market size, competitors, or pricing...`
                           : `Ask ${currentAgentInfo.name}...`
                       }
-                      className={`w-full pl-12 pr-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-white/30 resize-none`}
-                      rows={6}
+                        className="w-full pl-11 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none transition-colors"
+                        rows={4}
                       disabled={isProcessing}
                     />
                   </div>
                   <p className="text-xs text-textTertiary mt-2">
                     Press ⌘+Enter or Ctrl+Enter to start analysis
                   </p>
+                  </div>
                 </div>
               )}
-
 
               {/* Clinical Agent - Tabbed Interface - Use full ClinicalAgentInterface component */}
               {selectedAgent === 'clinical' && (
@@ -1013,9 +1089,54 @@ export default function SonnySidePanel({
                         </motion.div>
                       )}
                     </div>
-                    <p className="text-xs text-textTertiary mt-2">
+                    <p className="text-xs text-textSecondary mt-2">
                       {currentAgentInfo.description}
                     </p>
+                  </div>
+
+                  {/* Agent Mode Controls */}
+                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Agent Mode: Demo/Live */}
+                      <div>
+                        <label className="block text-xs font-medium text-textPrimary mb-2">
+                          Agent Mode
+                        </label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleToggleMode('demo')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              isDemo
+                                ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Zap className="w-3.5 h-3.5" />
+                              <span className="font-medium">Demo</span>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleToggleMode('live')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              !isDemo
+                                ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50 relative`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span className="font-medium">Live</span>
+                              {!isAuthenticated && (
+                                <Lock className="w-3 h-3 ml-1" />
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   
                   {/* Render full ClinicalAgentInterface but without the back button */}
@@ -1093,6 +1214,51 @@ export default function SonnySidePanel({
                       {currentAgentInfo.description}
                     </p>
                   </div>
+
+                  {/* Agent Mode Controls */}
+                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Agent Mode: Demo/Live */}
+                      <div>
+                        <label className="block text-xs font-medium text-textPrimary mb-2">
+                          Agent Mode
+                        </label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleToggleMode('demo')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              isDemo
+                                ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Zap className="w-3.5 h-3.5" />
+                              <span className="font-medium">Demo</span>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleToggleMode('live')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              !isDemo
+                                ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50 relative`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span className="font-medium">Live</span>
+                              {!isAuthenticated && (
+                                <Lock className="w-3 h-3 ml-1" />
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   
                   {/* Render full FinancialAgentInterface but without the back button */}
                   <FinancialAgentInterface 
@@ -1135,35 +1301,84 @@ export default function SonnySidePanel({
                             onClick={() => handleAgentSelect('sonny')}
                             className="w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3"
                           >
-                            <span className="text-lg">🤖</span>
+                            <span className="text-lg">{SONNY_INFO.icon}</span>
                             <div className="flex-1">
-                              <div className="font-medium text-textPrimary">Sonny</div>
-                              <div className="text-xs text-textSecondary">General AI assistant</div>
+                              <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
+                              <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
                             </div>
                           </button>
                           
-                          {/* Other Agent Options */}
-                          {Object.entries(AGENT_INFO).map(([key, info]) => (
+                          {/* Individual Agent Options */}
+                          {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
+                            const agentInfo = AGENT_INFO[agent];
+                            const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
+                            return (
                             <button
-                              key={key}
-                              onClick={() => handleAgentSelect(key as AgentType)}
-                              className={`w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3 ${
-                                selectedAgent === key ? 'bg-surface' : ''
-                              }`}
-                            >
-                              <span className="text-lg">{info.icon}</span>
+                                key={agent}
+                                onClick={() => handleAgentSelect(agent)}
+                                className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
+                                  selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
+                                }`}
+                              >
+                                <span className="text-lg">{agentInfo.icon}</span>
                               <div className="flex-1">
-                                <div className="font-medium text-textPrimary">{info.name}</div>
-                                <div className="text-xs text-textSecondary">{info.description}</div>
+                                  <div className="text-textPrimary font-medium">{agentInfo.name}</div>
+                                  <div className="text-xs text-textSecondary">{agentInfo.description}</div>
                               </div>
                             </button>
-                          ))}
+                            );
+                          })}
                         </motion.div>
                       )}
                     </div>
-                    <p className="text-xs text-textTertiary mt-2">
+                    <p className="text-xs text-textSecondary mt-2">
                       {currentAgentInfo.description}
                     </p>
+                  </div>
+
+                  {/* Agent Mode Controls */}
+                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Agent Mode: Demo/Live */}
+                      <div>
+                        <label className="block text-xs font-medium text-textPrimary mb-2">
+                          Agent Mode
+                        </label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleToggleMode('demo')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              isDemo
+                                ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Zap className="w-3.5 h-3.5" />
+                              <span className="font-medium">Demo</span>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleToggleMode('live')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              !isDemo
+                                ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50 relative`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span className="font-medium">Live</span>
+                              {!isAuthenticated && (
+                                <Lock className="w-3 h-3 ml-1" />
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Render full MarketResearchAgentInterface but without the back button */}
@@ -1207,35 +1422,84 @@ export default function SonnySidePanel({
                             onClick={() => handleAgentSelect('sonny')}
                             className="w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3"
                           >
-                            <span className="text-lg">🤖</span>
+                            <span className="text-lg">{SONNY_INFO.icon}</span>
                             <div className="flex-1">
-                              <div className="font-medium text-textPrimary">Sonny</div>
-                              <div className="text-xs text-textSecondary">General AI assistant</div>
+                              <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
+                              <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
                             </div>
                           </button>
                           
-                          {/* Other Agent Options */}
-                          {Object.entries(AGENT_INFO).map(([key, info]) => (
+                          {/* Individual Agent Options */}
+                          {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
+                            const agentInfo = AGENT_INFO[agent];
+                            const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
+                            return (
                             <button
-                              key={key}
-                              onClick={() => handleAgentSelect(key as AgentType)}
-                              className={`w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3 ${
-                                selectedAgent === key ? 'bg-surface' : ''
-                              }`}
-                            >
-                              <span className="text-lg">{info.icon}</span>
+                                key={agent}
+                                onClick={() => handleAgentSelect(agent)}
+                                className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
+                                  selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
+                                }`}
+                              >
+                                <span className="text-lg">{agentInfo.icon}</span>
                               <div className="flex-1">
-                                <div className="font-medium text-textPrimary">{info.name}</div>
-                                <div className="text-xs text-textSecondary">{info.description}</div>
+                                  <div className="text-textPrimary font-medium">{agentInfo.name}</div>
+                                  <div className="text-xs text-textSecondary">{agentInfo.description}</div>
                               </div>
                             </button>
-                          ))}
+                            );
+                          })}
                         </motion.div>
                       )}
                     </div>
-                    <p className="text-xs text-textTertiary mt-2">
+                    <p className="text-xs text-textSecondary mt-2">
                       {currentAgentInfo.description}
                     </p>
+                  </div>
+
+                  {/* Agent Mode Controls */}
+                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Agent Mode: Demo/Live */}
+                      <div>
+                        <label className="block text-xs font-medium text-textPrimary mb-2">
+                          Agent Mode
+                        </label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleToggleMode('demo')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              isDemo
+                                ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Zap className="w-3.5 h-3.5" />
+                              <span className="font-medium">Demo</span>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleToggleMode('live')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              !isDemo
+                                ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50 relative`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span className="font-medium">Live</span>
+                              {!isAuthenticated && (
+                                <Lock className="w-3 h-3 ml-1" />
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Render full RegulatoryAgentInterface but without the back button */}
@@ -1245,33 +1509,129 @@ export default function SonnySidePanel({
                 </>
               )}
 
-              {/* Patent Agent - Tabbed Interface */}
-              {selectedAgent === 'patent' && (
+              {/* Target Biology Agent - Tabbed Interface - Use full TargetBiologyAgentInterface component */}
+              {selectedAgent === 'target_biology' && (
                 <>
-                  {/* Tabs - Match Financial Agent styling exactly (no agent selector here, it's in the main section) */}
+                  {/* Agent Mode Controls */}
+                  <div className="mb-4 px-6 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Agent Mode: Demo/Live */}
+                      <div>
+                        <label className="block text-xs font-medium text-textSecondary mb-2">
+                          Agent Mode
+                        </label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleToggleMode('demo')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              isDemo
+                                ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Zap className="w-3.5 h-3.5" />
+                              <span className="font-medium">Demo</span>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleToggleMode('live')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              !isDemo
+                                ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50 relative`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span className="font-medium">Live</span>
+                              {!isAuthenticated && (
+                                <Lock className="w-3 h-3 ml-1" />
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <TargetBiologyAgentInterface 
+                    onBackToChat={undefined}
+                    targetSymbol={targetName}
+                  />
+                </>
+              )}
+
+              {/* Patent Agent - Tabbed Interface */}
+              {selectedAgent === 'patent' && !showPatentAnalysis && (
+                <>
+                  {/* Agent Mode Controls */}
+                  <div className="mb-4 px-6 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Agent Mode: Demo/Live */}
+                      <div>
+                        <label className="block text-xs font-medium text-textSecondary mb-2">
+                          Agent Mode
+                        </label>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleToggleMode('demo')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              isDemo
+                                ? `${getThemeClasses('purple').bgLight} ${getThemeClasses('purple').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Zap className="w-3.5 h-3.5" />
+                              <span className="font-medium">Demo</span>
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleToggleMode('live')}
+                            disabled={isProcessing}
+                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                              !isDemo
+                                ? `${getThemeClasses('purple').bgLight} ${getThemeClasses('purple').border} text-white`
+                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                            } disabled:opacity-50 relative`}
+                          >
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span className="font-medium">Live</span>
+                              {!isAuthenticated && (
+                                <Lock className="w-3 h-3 ml-1" />
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tabs - Match Financial Agent styling exactly */}
                   <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
                     {[
-                      { id: 'analyze' as const, label: 'Analyze', icon: FileText },
-                      { id: 'landscape' as const, label: 'Landscape', icon: Grid3X3 },
-                      { id: 'fto' as const, label: 'FTO', icon: Shield },
-                      { id: 'portfolio' as const, label: 'Portfolio', icon: Briefcase },
-                    ].map((tab) => {
-                      const TabIcon = tab.icon;
-                      return (
+                      { id: 'analyze' as const, label: 'Analyze' },
+                      { id: 'landscape' as const, label: 'Landscape' },
+                      { id: 'fto' as const, label: 'FTO' },
+                      { id: 'portfolio' as const, label: 'Portfolio' },
+                    ].map((tab) => (
                         <button
                           key={tab.id}
                           onClick={() => setPatentActiveTab(tab.id)}
-                          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-lg text-xs font-medium transition-all whitespace-nowrap min-w-0 ${
+                        className={`flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-xs font-medium transition-all min-w-0 overflow-hidden ${
                             patentActiveTab === tab.id
-                              ? 'bg-surface text-primary shadow-sm'
-                              : 'text-textSecondary hover:text-textPrimary'
+                            ? 'bg-purple-600/20 text-purple-400 shadow-sm border border-purple-500/30'
+                            : 'text-textSecondary hover:text-textPrimary hover:bg-surfaceElevated'
                           }`}
                         >
-                          <TabIcon size={14} className="flex-shrink-0" />
-                          <span className="truncate">{tab.label}</span>
+                        <span className="truncate w-full text-center">{tab.label}</span>
                         </button>
-                      );
-                    })}
+                    ))}
                   </div>
 
                   {/* Tab Content - Match Financial Agent spacing exactly */}
@@ -1293,16 +1653,16 @@ export default function SonnySidePanel({
                                 window.dispatchEvent(new CustomEvent('show-claims-extraction'));
                               }, 100);
                             }}
-                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-primary/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                           >
                             <div className="flex items-start gap-3">
-                              <div className="p-2 bg-primary/20 rounded-lg group-hover:bg-primary/30 transition-colors">
-                                <FileText size={20} className="text-primary" />
+                              <div className="p-2 bg-purple-600/20 rounded-lg group-hover:bg-purple-600/30 transition-colors">
+                                <FileText size={20} className="text-purple-400" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between">
                                   <h4 className="font-semibold text-textPrimary text-sm">Claims Extraction & Parsing</h4>
-                                  <ChevronRight size={16} className="text-textSecondary group-hover:text-primary transition-colors" />
+                                  <ChevronRight size={16} className="text-textSecondary group-hover:text-purple-400 transition-colors" />
                                 </div>
                                 <p className="text-xs text-textSecondary mt-1 line-clamp-2">
                                   Extract and structure independent/dependent claims with element mapping
@@ -1323,16 +1683,16 @@ export default function SonnySidePanel({
                                 window.dispatchEvent(new CustomEvent('show-sequence-extraction'));
                               }, 100);
                             }}
-                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-primary/50 hover:shadow-md transition-all text-left group relative"
+                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative"
                           >
                             <div className="flex items-start gap-3">
-                              <div className="p-2 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors">
+                              <div className="p-2 bg-purple-600/20 rounded-lg group-hover:bg-purple-600/30 transition-colors">
                                 <Dna size={20} className="text-purple-400" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between">
                                   <h4 className="font-semibold text-textPrimary text-sm">Sequence Extraction</h4>
-                                  <ChevronRight size={16} className="text-textSecondary group-hover:text-primary transition-colors" />
+                                  <ChevronRight size={16} className="text-textSecondary group-hover:text-purple-400 transition-colors" />
                                 </div>
                                 <p className="text-xs text-textSecondary mt-1 line-clamp-2">
                                   Extract antibody CDRs, nucleic acids, and protein sequences with validation
@@ -1350,7 +1710,7 @@ export default function SonnySidePanel({
                               setShowPatentAnalysis(true);
                               // TODO: Navigate to FTO analysis
                             }}
-                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-primary/50 hover:shadow-md transition-all text-left group relative"
+                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative"
                           >
                             <div className="flex items-start gap-3">
                               <div className="p-2 bg-amber-500/20 rounded-lg group-hover:bg-amber-500/30 transition-colors">
@@ -1359,7 +1719,7 @@ export default function SonnySidePanel({
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between">
                                   <h4 className="font-semibold text-textPrimary text-sm">Freedom-to-Operate Analysis</h4>
-                                  <ChevronRight size={16} className="text-textSecondary group-hover:text-primary transition-colors" />
+                                  <ChevronRight size={16} className="text-textSecondary group-hover:text-purple-400 transition-colors" />
                                 </div>
                                 <p className="text-xs text-textSecondary mt-1 line-clamp-2">
                                   Assess claim coverage, infringement risk, and design-around options
@@ -1418,7 +1778,7 @@ export default function SonnySidePanel({
                               <option>WO</option>
                             </select>
                           </div>
-                          <button className="w-full py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                          <button className="w-full py-2 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 text-white rounded-lg text-sm font-medium hover:from-purple-700 hover:via-blue-700 hover:to-cyan-600 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                             <Search size={14} />
                             Search Patent Databases
                           </button>
@@ -1468,7 +1828,7 @@ export default function SonnySidePanel({
                             </div>
                             <div className="p-3 bg-surfaceElevated border border-white/10 rounded-lg">
                               <p className="text-xs text-textSecondary mb-1">Portfolio Score</p>
-                              <p className="text-2xl font-bold text-primary">0</p>
+                              <p className="text-2xl font-bold text-purple-400">0</p>
                             </div>
                           </div>
                         </div>
@@ -1509,7 +1869,7 @@ export default function SonnySidePanel({
                         }}
                         placeholder="Ask about patents, IP strength, FTO analysis, or patent landscape..."
                         rows={3}
-                        className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
+                        className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none transition-colors"
                         disabled={isPatentProcessing}
                       />
                     </div>
@@ -1541,7 +1901,7 @@ export default function SonnySidePanel({
                         }
                       }}
                       disabled={!patentChatInput.trim() || isPatentProcessing}
-                      className="w-full py-3 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                     >
                       {isPatentProcessing ? (
                         <>
@@ -1562,44 +1922,66 @@ export default function SonnySidePanel({
                 </>
               )}
 
-              {/* Example Queries - Agent-specific (context-aware) - Hide for Patent, Financial, Clinical, Market Research, and Regulatory Agent (they use their own interfaces) */}
-              {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && (
-                <div>
-                  <p className="text-sm text-textSecondary mb-2">Try asking:</p>
-                  <div className="space-y-2">
+              {/* Enhanced Example Queries - Collapsible with icons - Hide for Patent, Financial, Clinical, Market Research, Regulatory, and Target Biology Agent (they use their own interfaces) */}
+              {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
+                <div className="mb-4">
+                  <button
+                    onClick={() => setShowSuggestions(!showSuggestions)}
+                    className="flex items-center justify-between w-full mb-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Lightbulb className="w-4 h-4" />
+                      <span>Suggested Questions</span>
+                    </div>
+                    {showSuggestions ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+                  
+                  <AnimatePresence>
+                    {showSuggestions && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-2"
+                      >
                     {(() => {
-                      // Context-aware examples
+                        // Context-aware examples with icons
                       const hasPatentContext = agentContext?.patentData;
-                      let examples: string[];
+                        let examples: Array<{ text: string; icon: ReactNode }>;
                       const agent = selectedAgent as AgentType | 'sonny';
                       
                       if (agent === 'regulatory') {
                         examples = [
-                          `What's the regulatory pathway for ${targetName}?`,
-                          `What are the FDA requirements for ${targetName}?`,
-                          `Compare ${targetName} approval timeline to competitors`,
-                          `What are the regulatory risks for ${targetName}?`,
+                            { text: `What's the regulatory pathway for ${targetName}?`, icon: <Shield className="w-4 h-4" /> },
+                            { text: `What are the FDA requirements for ${targetName}?`, icon: <FileText className="w-4 h-4" /> },
+                            { text: `Compare ${targetName} approval timeline to competitors`, icon: <TrendingUp className="w-4 h-4" /> },
+                            { text: `What are the regulatory risks for ${targetName}?`, icon: <AlertTriangle className="w-4 h-4" /> },
                         ];
                       } else if (agent === 'target_biology' && hasPatentContext) {
                         examples = [
-                          `Evaluate PD-1 as a target based on ${agentContext.patentData.patentNumber}`,
-                          `Assess the ${agentContext.patentData.antibodiesCount} antibodies' mechanism vs pembrolizumab`,
-                          `What's the differentiation potential for these antibodies?`,
-                          `Compare binding affinity to known PD-1 therapeutics`,
+                            { text: `Evaluate PD-1 as a target based on ${agentContext.patentData.patentNumber}`, icon: <Dna className="w-4 h-4" /> },
+                            { text: `Assess the ${agentContext.patentData.antibodiesCount} antibodies' mechanism vs pembrolizumab`, icon: <Activity className="w-4 h-4" /> },
+                            { text: `What's the differentiation potential for these antibodies?`, icon: <TrendingUp className="w-4 h-4" /> },
+                            { text: `Compare binding affinity to known PD-1 therapeutics`, icon: <BarChart3 className="w-4 h-4" /> },
                         ];
                       } else if (agent === 'target_biology') {
                         examples = [
-                          `What's the biological mechanism of ${targetName}?`,
-                          `Assess the genetic validation for ${targetName}`,
-                          `What's the druggability profile of ${targetName}?`,
-                          `Evaluate safety concerns for ${targetName}`,
+                            { text: `What's the biological mechanism of ${targetName}?`, icon: <Dna className="w-4 h-4" /> },
+                            { text: `Assess the genetic validation for ${targetName}`, icon: <Activity className="w-4 h-4" /> },
+                            { text: `What's the druggability profile of ${targetName}?`, icon: <BarChart3 className="w-4 h-4" /> },
+                            { text: `Evaluate safety concerns for ${targetName}`, icon: <AlertTriangle className="w-4 h-4" /> },
                         ];
                       } else {
                         examples = [
-                          `Compare ${targetName} to HER2`,
-                          `What are the key safety concerns for ${targetName}?`,
-                          `What patents exist related to ${targetName}?`,
-                          `What's the market opportunity for ${targetName}?`,
+                            { text: `Compare ${targetName} to HER2`, icon: <BarChart3 className="w-4 h-4" /> },
+                            { text: `What are the key safety concerns for ${targetName}?`, icon: <AlertTriangle className="w-4 h-4" /> },
+                            { text: `What patents exist related to ${targetName}?`, icon: <FileText className="w-4 h-4" /> },
+                            { text: `What's the market opportunity for ${targetName}?`, icon: <TrendingUp className="w-4 h-4" /> },
                         ];
                       }
                       
@@ -1607,42 +1989,54 @@ export default function SonnySidePanel({
                         <button
                           key={idx}
                           onClick={() => {
-                            setQuery(example.replace(/^[📄🧬⚖️📊🔬💰📋📊🧬] /, ''));
+                              setQuery(example.text.replace(/^[📄🧬⚖️📊🔬💰📋📊🧬] /, ''));
                             if (selectedAgent === 'sonny') {
                               setTimeout(() => handleStartAnalysis(), 100);
                             }
                           }}
                           disabled={isProcessing}
-                          className={`w-full text-left px-3 py-2 text-sm text-textSecondary bg-surfaceElevated border border-white/10 rounded-lg hover:border-white/20 hover:text-textPrimary transition-colors disabled:opacity-50`}
+                            className="w-full text-left px-3 py-2.5 text-sm text-textSecondary bg-surfaceElevated border border-white/10 rounded-lg hover:border-purple-500/50 hover:text-textPrimary hover:bg-surface transition-all disabled:opacity-50 flex items-center gap-3 group"
                         >
-                          {example}
+                            <span className="text-textTertiary group-hover:text-purple-400 transition-colors">
+                              {example.icon}
+                            </span>
+                            <span className="flex-1">{example.text}</span>
                         </button>
                       ));
                     })()}
-                  </div>
-                </div>
+                      </motion.div>
               )}
+                  </AnimatePresence>
             </div>
+              )}
 
-                {/* Start Button - Hide for Patent Agent, Financial Agent, Clinical Agent, and Market Research Agent (they use their own interfaces) */}
-                {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && (
-                  <div className="mt-6 pt-4 border-t border-white/10">
+              {/* Enhanced Start Button - Card-style with context - Hide for Patent Agent, Financial Agent, Clinical Agent, Market Research Agent, Regulatory Agent, and Target Biology Agent (they use their own interfaces) */}
+              {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
+                <div className="mt-4">
                     <button
                       onClick={handleStartAnalysis}
                       disabled={!query.trim() || isProcessing}
-                      className={`w-full px-4 py-3 ${themeClasses.bg} text-white rounded-lg ${themeClasses.bgHover} disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center gap-2`}
-                    >
+                    className={`w-full px-4 py-4 ${
+                      selectedAgent === 'sonny' 
+                        ? 'bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-600' 
+                        : `${themeClasses.bg} ${themeClasses.bgHover}`
+                    } text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex flex-col items-center gap-2 shadow-lg hover:shadow-xl`}
+                  >
+                    <div className="flex items-center gap-2">
                       <Sparkles className="w-5 h-5" />
-                      {isProcessing ? 'Processing...' : 'Start Analysis'}
+                      <span className="text-base">{isProcessing ? 'Processing...' : 'Start Analysis'}</span>
+                    </div>
+                    {selectedAgent === 'sonny' && !isProcessing && (
+                      <div className="text-xs opacity-90 font-normal">
+                        {isDemo ? 'Multi-agent collaboration • Demo mode' : `Multi-agent collaboration • ${mode === 'fast' ? '~30s' : '~2-3min'}`}
+                      </div>
+                    )}
                     </button>
                   </div>
                 )}
-
-
-
+            </div>
           </div>
         ) : (
-          // Analysis View
           <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="p-4 border-b border-white/10 bg-surfaceElevated flex items-center justify-between sticky top-0 z-10">
               <div className="flex items-center gap-3">
@@ -1659,7 +2053,7 @@ export default function SonnySidePanel({
               </div>
               {isProcessing && (
                 <div className="flex items-center gap-2 text-sm text-textSecondary">
-                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
                   <span>Analyzing...</span>
                 </div>
               )}
@@ -1668,7 +2062,7 @@ export default function SonnySidePanel({
             <div className="flex-1 p-4">
               <Suspense fallback={
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
                 </div>
               }>
                 <MultiAgentCollaboration

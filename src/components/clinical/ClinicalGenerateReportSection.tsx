@@ -71,10 +71,10 @@ export default function ClinicalGenerateReportSection({
                   console.error('Report generation error:', err);
                 }
               }}
-              className="flex flex-col items-center gap-1 p-3 bg-purple-500/20 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors"
+              className="flex flex-col items-center gap-1 p-3 bg-blue-600/20 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 transition-colors"
             >
-              <Icon size={20} className="text-purple-400" />
-              <span className="text-xs text-purple-400 font-medium text-center">{report.label}</span>
+              <Icon size={20} className="text-blue-400" />
+              <span className="text-xs text-blue-400 font-medium text-center">{report.label}</span>
             </button>
           );
         })}

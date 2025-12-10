@@ -322,27 +322,23 @@ export default function MarketResearchAgentInterface({
           ) : (
             <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
               {[
-                { id: 'analyze' as const, label: 'Analyze', icon: Search },
-                { id: 'market' as const, label: 'Market', icon: BarChart3 },
-                { id: 'competitive' as const, label: 'Competitive', icon: Target },
-                { id: 'deal-intel' as const, label: 'Deal Intel', icon: Briefcase },
-              ].map((tab) => {
-                const TabIcon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-lg text-xs font-medium transition-all whitespace-nowrap min-w-0 ${
-                      activeTab === tab.id
-                        ? 'bg-surface text-teal-400 shadow-sm'
-                        : 'text-textSecondary hover:text-textPrimary'
-                    }`}
-                  >
-                    <TabIcon size={14} className="flex-shrink-0" />
-                    <span className="truncate">{tab.label}</span>
-                  </button>
-                );
-              })}
+                { id: 'analyze' as const, label: 'Analyze' },
+                { id: 'market' as const, label: 'Market' },
+                { id: 'competitive' as const, label: 'Competitive' },
+                { id: 'deal-intel' as const, label: 'Deal Intel' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-xs font-medium transition-all min-w-0 overflow-hidden ${
+                    activeTab === tab.id
+                      ? 'bg-teal-600/20 text-teal-400 shadow-sm border border-teal-500/30'
+                      : 'text-textSecondary hover:text-textPrimary hover:bg-surfaceElevated'
+                  }`}
+                >
+                  <span className="truncate w-full text-center">{tab.label}</span>
+                </button>
+              ))}
             </div>
           )}
 
@@ -546,7 +542,6 @@ export default function MarketResearchAgentInterface({
                     title="Loaded Assets"
                     icon={FileText}
                     defaultOpen={true}
-                    count={loadedAssets.length}
                   >
                     <div className="space-y-2">
                       {loadedAssets.map((asset, i) => (
@@ -577,7 +572,6 @@ export default function MarketResearchAgentInterface({
                   title="Recent Searches"
                   icon={Clock}
                   defaultOpen={false}
-                  count={recentSearches.length}
                 >
                   <div className="space-y-2">
                     {recentSearches.map((search, i) => (
@@ -790,7 +784,6 @@ export default function MarketResearchAgentInterface({
                   title="PD-1/PD-L1 Landscape"
                   icon={FileText}
                   defaultOpen={false}
-                  count={8}
                 >
                   <div className="p-2 space-y-1">
                     <button
@@ -805,7 +798,6 @@ export default function MarketResearchAgentInterface({
                   title="GLP-1 RA Landscape"
                   icon={FileText}
                   defaultOpen={false}
-                  count={12}
                 >
                   <div className="p-2 space-y-1">
                     <button
@@ -940,14 +932,14 @@ export default function MarketResearchAgentInterface({
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about market sizing, competitive positioning, pricing strategy, revenue forecasts..."
                 rows={3}
-                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-teal-500/50 resize-none"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 resize-none transition-colors"
                 disabled={isProcessing}
               />
             </div>
             <button
               onClick={handleChatSend}
               disabled={!chatInput.trim() || isProcessing}
-              className="w-full py-3 bg-teal-500 text-white rounded-lg font-semibold text-sm hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 bg-teal-600 text-white rounded-lg font-semibold text-sm hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
             >
               {isProcessing ? (
                 <>

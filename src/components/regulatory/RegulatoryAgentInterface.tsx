@@ -285,51 +285,43 @@ export default function RegulatoryAgentInterface({
             <div className="px-6 pt-4">
               <div className="mb-4 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
                 {[
-                  { id: 'overview' as const, label: 'Overview', icon: FileText },
-                  { id: 'timeline' as const, label: 'Timeline', icon: Calendar },
-                  { id: 'risks' as const, label: 'Risks', icon: AlertTriangle },
-                ].map((tab) => {
-                  const TabIcon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-lg text-xs font-medium transition-all whitespace-nowrap min-w-0 ${
-                        activeTab === tab.id
-                          ? 'bg-surface text-orange-400 shadow-sm'
-                          : 'text-textSecondary hover:text-textPrimary'
-                      }`}
-                    >
-                      <TabIcon size={14} className="flex-shrink-0" />
-                      <span className="truncate">{tab.label}</span>
-                    </button>
-                  );
-                })}
+                  { id: 'overview' as const, label: 'Overview' },
+                  { id: 'timeline' as const, label: 'Timeline' },
+                  { id: 'risks' as const, label: 'Risks' },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-xs font-medium transition-all min-w-0 overflow-hidden ${
+                      activeTab === tab.id
+                        ? 'bg-orange-600/20 text-orange-400 shadow-sm border border-orange-500/30'
+                        : 'text-textSecondary hover:text-textPrimary hover:bg-surfaceElevated'
+                    }`}
+                  >
+                    <span className="truncate w-full text-center">{tab.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
           ) : (
             <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
               {[
-                { id: 'overview' as const, label: 'Overview', icon: FileText },
-                { id: 'timeline' as const, label: 'Timeline', icon: Calendar },
-                { id: 'risks' as const, label: 'Risks', icon: AlertTriangle },
-              ].map((tab) => {
-                const TabIcon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-lg text-xs font-medium transition-all whitespace-nowrap min-w-0 ${
-                      activeTab === tab.id
-                        ? 'bg-surface text-orange-400 shadow-sm'
-                        : 'text-textSecondary hover:text-textPrimary'
-                    }`}
-                  >
-                    <TabIcon size={14} className="flex-shrink-0" />
-                    <span className="truncate">{tab.label}</span>
-                  </button>
-                );
-              })}
+                { id: 'overview' as const, label: 'Overview' },
+                { id: 'timeline' as const, label: 'Timeline' },
+                { id: 'risks' as const, label: 'Risks' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
+                    activeTab === tab.id
+                      ? 'bg-surface text-orange-400 shadow-sm'
+                      : 'text-textSecondary hover:text-textPrimary'
+                  }`}
+                >
+                  <span className="truncate">{tab.label}</span>
+                </button>
+              ))}
             </div>
           )}
 
@@ -552,7 +544,7 @@ export default function RegulatoryAgentInterface({
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about regulatory pathways, approval timelines, or compliance..."
-                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-orange-500/50 resize-none"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 resize-none transition-colors"
                 rows={3}
                 disabled={isProcessing}
               />
@@ -560,7 +552,7 @@ export default function RegulatoryAgentInterface({
             <button
               onClick={handleChatSend}
               disabled={!chatInput.trim() || isProcessing}
-              className="w-full py-3 bg-orange-500 text-white rounded-lg font-semibold text-sm hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 bg-orange-600 text-white rounded-lg font-semibold text-sm hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
             >
               {isProcessing ? (
                 <>
