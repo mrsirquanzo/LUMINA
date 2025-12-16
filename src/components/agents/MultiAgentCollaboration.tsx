@@ -12,6 +12,7 @@ import { CitedMarkdown } from '@/components/shared/CitedMarkdown';
 import { GenerateInvestmentMemoButton } from '@/components/deliverables/GenerateInvestmentMemoButton';
 import { useOrchestrationTiles } from '@/hooks/useOrchestrationTiles';
 import { getAgentTheme, getAgentThemeFromLabel } from '@/lib/agents/theme';
+import { runOrchestration } from '@/lib/orchestrationEngine';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -162,6 +163,30 @@ function MultiAgentCollaboration({
     });
 
     try {
+      // Demo mode should not depend on serverless `/api` streaming.
+      // Instead, replay the pre-recorded scenario locally (no network calls).
+      if (isDemo) {
+        const sendEvent = (event: SSEEvent) => {
+          handleSSEEvent(event);
+          setSseEvents(prev => [...prev, event]);
+          setLastActivityTime(Date.now());
+          setTimeoutWarning(false);
+        };
+
+        await runOrchestration(
+          query,
+          documents,
+          mode,
+          sendEvent,
+          true,
+          demoScenarioId,
+          customAgents,
+          mcpEnabled
+        );
+
+        return;
+      }
+
       // Create SSE connection
       const response = await fetch('/api/agents/orchestrator', {
         method: 'POST',
