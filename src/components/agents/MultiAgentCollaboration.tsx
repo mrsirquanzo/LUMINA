@@ -12,7 +12,7 @@ import { CitedMarkdown } from '@/components/shared/CitedMarkdown';
 import { GenerateInvestmentMemoButton } from '@/components/deliverables/GenerateInvestmentMemoButton';
 import { useOrchestrationTiles } from '@/hooks/useOrchestrationTiles';
 import { getAgentTheme, getAgentThemeFromLabel } from '@/lib/agents/theme';
-import { runOrchestration } from '@/lib/orchestrationEngine';
+import { getDemoScenario, matchQueryToScenario, playDemoScenario } from '@/lib/demoMultiAgentScenarios';
 
 interface MultiAgentCollaborationProps {
   query: string;
@@ -173,16 +173,21 @@ function MultiAgentCollaboration({
           setTimeoutWarning(false);
         };
 
-        await runOrchestration(
-          query,
-          documents,
-          mode,
-          sendEvent,
-          true,
-          demoScenarioId,
-          customAgents,
-          mcpEnabled
-        );
+        const scenarioId = demoScenarioId || matchQueryToScenario(query);
+        const scenario = scenarioId ? getDemoScenario(scenarioId) : undefined;
+
+        if (!scenario) {
+          sendEvent({
+            type: 'error',
+            data: {
+              message:
+                'Demo mode requires a pre-recorded scenario. Please use a demo scenario from the demo interface or switch to Live mode for custom queries.',
+            },
+          });
+          return;
+        }
+
+        await playDemoScenario(scenario, sendEvent, 1.0);
 
         return;
       }
