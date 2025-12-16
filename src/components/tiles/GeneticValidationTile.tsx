@@ -75,20 +75,23 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
           <div className="space-y-6 pb-4">
             <p className="text-base leading-relaxed text-textPrimary break-words px-1">{data.validationSummary}</p>
 
-            <div className="grid grid-cols-3 gap-3 px-1">
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center">
+            {/* Metrics: keep values inside cards at narrow widths */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 px-1">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">pLI</p>
-                <p className="text-2xl font-bold text-textPrimary leading-tight">{data.constraintMetrics.pLI}</p>
+                <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-textPrimary leading-tight tracking-tight tabular-nums truncate">
+                  {data.constraintMetrics.pLI}
+                </p>
               </div>
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">LOEUF</p>
-                <p className="text-2xl font-bold text-textPrimary leading-tight">
+                <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-textPrimary leading-tight tracking-tight tabular-nums truncate">
                   {data.constraintMetrics.LOEUF}
                 </p>
               </div>
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">LoF Observed</p>
-                <p className="text-2xl font-bold text-textPrimary leading-tight">
+                <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-textPrimary leading-tight tracking-tight tabular-nums truncate">
                   {data.constraintMetrics.lofObserved ?? '—'}
                 </p>
               </div>
