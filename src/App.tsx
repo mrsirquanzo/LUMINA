@@ -172,6 +172,8 @@ function AppContent() {
   const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
   const getWorkspaceById = useWorkspaceStore((state) => state.getWorkspaceById);
   const tileActiveWorkspaceId = useTileStore((state) => state.activeWorkspace);
+  const isLobby = !tileActiveWorkspaceId && !activeWorkspaceId;
+  const lobbyLayoutAppliedRef = useRef(false);
 
   // Keep workspace store + tile store active workspace IDs in sync.
   // They both persist to the same localStorage key, but don't automatically notify each other.
@@ -188,6 +190,24 @@ function AppContent() {
       useTileStore.getState().setActiveWorkspace(activeWorkspaceId);
     }
   }, [tileActiveWorkspaceId, activeWorkspaceId]);
+
+  // Lobby layout preset: when we land in the lobby (no active workspace) after the intro,
+  // minimize side panels to match the intended first impression.
+  // We only apply this once per "lobby entry" so users can expand panels manually if they want.
+  useEffect(() => {
+    if (showLandingAnimation) return;
+
+    if (!isLobby) {
+      lobbyLayoutAppliedRef.current = false;
+      return;
+    }
+
+    if (lobbyLayoutAppliedRef.current) return;
+    lobbyLayoutAppliedRef.current = true;
+
+    setSidebarCollapsed(true);
+    setSonnyPanelCollapsed(true);
+  }, [isLobby, showLandingAnimation]);
   
   // Update currentTarget when active workspace changes
   useEffect(() => {
@@ -394,6 +414,10 @@ function AppContent() {
         useWorkspaceStore.getState().setActiveWorkspace(null);
         sessionStorage.removeItem('lumina-has-selected-target');
         sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
+
+        // Lobby should start with minimized side panels.
+        setSidebarCollapsed(true);
+        setSonnyPanelCollapsed(true);
       }
     }
     setShowLandingAnimation(false);
@@ -412,6 +436,10 @@ function AppContent() {
         useWorkspaceStore.getState().setActiveWorkspace(null);
         sessionStorage.removeItem('lumina-has-selected-target');
         sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
+
+        // Lobby should start with minimized side panels.
+        setSidebarCollapsed(true);
+        setSonnyPanelCollapsed(true);
       }
     }
     setShowLandingAnimation(false);
