@@ -19,6 +19,8 @@ import { formatTargetDisplayName } from '../../lib/targetNaming';
 import { usePersona } from '../../contexts/PersonaContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { getStoredAgentMode, onAgentModeUpdated } from '../../lib/agentMode';
+import { buildDemoFeedResponse, DEMO_FEED_PACKS } from '../../lib/intelligence/demoFeedPacks';
 
 type FeedItemType = 'publication' | 'deal' | 'regulatory' | 'news' | 'clinical';
 type RelevanceFilter = 'Target-specific' | 'Market' | 'Competitive' | 'All';
@@ -249,6 +251,8 @@ async function fetchJob(jobId: string) {
 export default function IntelligenceFeed() {
   const { currentTarget } = useTarget();
   const { activePersona } = usePersona();
+  const [agentMode, setAgentMode] = useState(() => getStoredAgentMode());
+  const isDemoMode = agentMode === 'demo';
 
   const [typeFilter, setTypeFilter] = useState<FeedItemType | 'All'>('All');
   const [relevanceFilter, setRelevanceFilter] = useState<RelevanceFilter>('All');
@@ -267,6 +271,8 @@ export default function IntelligenceFeed() {
   const [isDigestLoading, setIsDigestLoading] = useState(false);
   const [digestJobId, setDigestJobId] = useState<string>('');
   const [digestJobStatus, setDigestJobStatus] = useState<{ status: string; progress?: number; message?: string } | null>(null);
+
+  useEffect(() => onAgentModeUpdated(setAgentMode), []);
 
   const digestMarkdownLinked = useMemo(() => {
     if (!digestMarkdown) return '';
@@ -341,20 +347,22 @@ export default function IntelligenceFeed() {
   }, [requestParams.asset, requestParams.company, requestParams.indication, requestParams.target]);
 
   useEffect(() => {
+    if (isDemoMode) return;
     const saved = localStorage.getItem(jobStorageKey);
     if (saved && !digestJobId) setDigestJobId(saved);
-  }, [jobStorageKey, digestJobId]);
+  }, [isDemoMode, jobStorageKey, digestJobId]);
 
   useEffect(() => {
+    if (isDemoMode) return;
     if (!digestJobId) return;
     localStorage.setItem(jobStorageKey, digestJobId);
-  }, [digestJobId, jobStorageKey]);
+  }, [isDemoMode, digestJobId, jobStorageKey]);
 
   // Poll job status while running; if user leaves and comes back, polling resumes.
   const { data: jobData } = useQuery({
     queryKey: ['intelligence-digest-job', digestJobId],
     queryFn: () => fetchJob(digestJobId),
-    enabled: Boolean(digestJobId),
+    enabled: Boolean(digestJobId) && !isDemoMode,
     refetchInterval: (q) => {
       const s = (q.state.data as any)?.status;
       if (s === 'completed' || s === 'failed') return false;
@@ -398,10 +406,27 @@ export default function IntelligenceFeed() {
     isError,
     error,
   } = useQuery<IntelligenceFeedResponse, Error>({
-    queryKey: ['intelligence-feed', requestParams, refreshToken],
-    queryFn: () => fetchIntelligenceFeed(requestParams),
+    queryKey: ['intelligence-feed', requestParams, refreshToken, agentMode],
+    queryFn: async () => {
+      if (!isDemoMode) return await fetchIntelligenceFeed(requestParams);
+
+      const demo = buildDemoFeedResponse({
+        target: requestParams.target,
+        q: requestParams.q,
+        limit: requestParams.limit,
+        refreshToken,
+        mode: 'demo',
+      });
+
+      if (!demo) {
+        const available = DEMO_FEED_PACKS.map((p) => p.target).join(', ');
+        throw new Error(`Demo feed is available for: ${available}.`);
+      }
+
+      return demo as unknown as IntelligenceFeedResponse;
+    },
     enabled: Boolean(effectiveTopic),
-    refetchInterval: 5 * 60 * 1000, // keep it "live" without hammering sources
+    refetchInterval: isDemoMode ? false : 5 * 60 * 1000, // keep it "live" without hammering sources
   });
 
   const exportDigest = () => {
@@ -429,6 +454,7 @@ export default function IntelligenceFeed() {
 
   // Load last stored digest for this target context (Phase 3)
   useEffect(() => {
+    if (isDemoMode) return;
     const target = requestParams.target;
     if (!target) return;
     void (async () => {
@@ -446,6 +472,7 @@ export default function IntelligenceFeed() {
 
   // Phase 2: mark this feed context as "seen" when the view is loaded.
   useEffect(() => {
+    if (isDemoMode) return;
     if (!data || isFetching || isError) return;
     if (requestParams.q) return; // only track structured contexts for now
     void markIntelligenceSeen({
@@ -579,6 +606,45 @@ export default function IntelligenceFeed() {
     ];
   }, [feedItems]);
 
+  const buildDemoDigestMarkdown = useMemo(() => {
+    return (resp: IntelligenceFeedResponse, persona: string) => {
+      const now = new Date().toISOString();
+      const titleTarget = resp.queryPack.target || resp.query || 'Target';
+      const top = (resp.items || []).slice(0, 10);
+
+      const sourcesRows = top.map((it) => {
+        const sourceId = buildDigestSourceId({ url: it.url, kind: it.kind, source: it.source });
+        return { sourceId, name: it.source, kind: it.kind, url: it.url, title: it.title, date: it.publishedAt, snippet: it.summary };
+      });
+
+      const bullets = sourcesRows
+        .slice(0, 6)
+        .map((s) => `- **${s.kind.toUpperCase()}**: [${s.title}](${s.url}) — ${s.snippet} [source:${s.sourceId}]`)
+        .join('\n');
+
+      const sourcesTable = [
+        '### Sources',
+        '',
+        '| id | source | type | url |',
+        '|---|---|---|---|',
+        ...sourcesRows.map((s) => `| ${s.sourceId} | ${s.name} | ${s.kind.toUpperCase()} | ${s.url} |`),
+        '',
+      ].join('\n');
+
+      return [
+        `# Sonny Digest — ${titleTarget}`,
+        '',
+        `Generated: ${now}`,
+        `Persona: ${persona} (demo)`,
+        '',
+        '## Key updates',
+        bullets || '- No items available in this demo pack.',
+        '',
+        sourcesTable,
+      ].join('\n');
+    };
+  }, []);
+
   const relevanceOptions = useMemo(
     () =>
       [
@@ -604,6 +670,17 @@ export default function IntelligenceFeed() {
     try {
       const now = new Date().toISOString();
       const persona = activePersona === 'scientist' ? 'SCIENTIST' : activePersona === 'bd' ? 'SCOUT' : 'GENERAL';
+
+      // Demo mode: generate digest locally from curated feed items (no API calls).
+      if (isDemoMode) {
+        const markdown = buildDemoDigestMarkdown(data, persona);
+        setDigestMarkdown(markdown);
+        setDigestMeta({ generatedAt: now, persona: `${persona} (demo)` });
+        setIsDigestLoading(false);
+        setDigestJobStatus(null);
+        setDigestJobId('');
+        return;
+      }
 
       const targetContext = {
         target: data.queryPack.target ?? null,
@@ -651,6 +728,7 @@ export default function IntelligenceFeed() {
       setDigestMeta({ generatedAt: now, persona: isDemo ? `${persona} (demo)` : persona });
     } catch (e) {
       setDigestError(e instanceof Error ? e.message : 'Failed to generate digest');
+      setIsDigestLoading(false);
     } finally {
       // Keep loading state; background job will clear it when done.
     }
