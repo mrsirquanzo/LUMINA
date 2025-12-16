@@ -193,7 +193,7 @@ function MultiAgentCollaboration({
       }
 
       // Create SSE connection
-      const response = await fetch('/api/agents/orchestrator', {
+      const response = await fetch('/api/orchestrator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

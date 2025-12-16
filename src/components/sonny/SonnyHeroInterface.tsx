@@ -391,17 +391,20 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
     setChatMessage('');
 
     try {
-      // Use multi-agent orchestration endpoint
-      const response = await fetch('/api/agents/orchestrator', {
+      // Demo mode should not call serverless orchestration.
+      if (isDemo) return;
+
+      // Live: use serverless orchestrator endpoint
+      const response = await fetch('/api/orchestrator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           query: message,
-          target: targetName,
-          mode: isDemo ? 'demo' : 'live',
-          executionMode: 'fast',
+          documents: [],
+          mode: 'fast',
+          isDemo: false,
         }),
         credentials: 'include',
       });

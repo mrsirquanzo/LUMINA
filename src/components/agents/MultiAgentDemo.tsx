@@ -96,19 +96,14 @@ export default function MultiAgentDemo() {
 
     setIsEstimating(true);
     try {
-      const response = await fetch('/api/agents/orchestrator/estimate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query,
-          documents: processedDocuments,
-          mode,
-        }),
-      });
-
+      const response = await fetch('/api/orchestrator', { method: 'GET' });
       if (response.ok) {
         const data = await response.json();
-        setCostEstimate(data.estimate);
+        setCostEstimate({
+          estimate: null,
+          note: 'Cost estimate not supported on this deployment.',
+          liveKeysMissing: data?.liveKeysMissing || [],
+        });
       }
     } catch (error) {
       console.error('Failed to estimate cost:', error);
@@ -153,7 +148,7 @@ export default function MultiAgentDemo() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-      const response = await fetch('/api/auth/check', {
+      const response = await fetch('/api/auth-check', {
         signal: controller.signal
       });
       clearTimeout(timeoutId);
@@ -471,7 +466,7 @@ export default function MultiAgentDemo() {
                   You need to log in to use Live Analysis mode.
                 </p>
                 <a
-                  href="/api/auth/login"
+                  href="/api/auth-login"
                   className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
                 >
                   Log In to Continue

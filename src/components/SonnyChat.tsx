@@ -64,7 +64,7 @@ export default function SonnyChat({
 
     try {
       // Create SSE connection to orchestrator
-      const response = await fetch('/api/agents/orchestrator', {
+      const response = await fetch('/api/orchestrator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

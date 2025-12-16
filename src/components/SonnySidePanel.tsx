@@ -216,7 +216,7 @@ export default function SonnySidePanel({
     const checkAuth = async () => {
       setIsCheckingAuth(true);
       try {
-        const response = await fetch('/api/auth/check', {
+        const response = await fetch('/api/auth-check', {
           credentials: 'include',
         });
         

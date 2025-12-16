@@ -173,7 +173,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
     const checkAuth = async () => {
       setIsCheckingAuth(true);
       try {
-        const response = await fetch('/api/auth/check', {
+        const response = await fetch('/api/auth-check', {
           credentials: 'include',
         });
         const data = await response.json();

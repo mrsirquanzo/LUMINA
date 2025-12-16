@@ -108,7 +108,7 @@ export default function PatentExpertAgent() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch('/api/auth/check');
+      const response = await fetch('/api/auth-check');
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
       return data.authenticated;
@@ -344,7 +344,7 @@ export default function PatentExpertAgent() {
               You need to log in to use Live Mode. Please authenticate to access real AI capabilities with full document analysis.
             </p>
             <a
-              href="/api/auth/login"
+              href="/api/auth-login"
               className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
             >
               Log In to Continue
