@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import type { PatentExtractionResult } from '../../lib/patentParsing/types';
 import type { QualityAssessment } from '../../lib/patentParsing/qualityAssurance';
+import { downloadJsonFile, downloadTextFile, openPrintPreview } from '../../lib/reportExport';
 import CreateTileModal from '../CreateTileModal';
 import LoginModal from '../shared/LoginModal';
 import VerificationPrompt, { type VerificationItem } from './VerificationPrompt';
@@ -739,14 +740,14 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex-1 flex flex-col p-6 overflow-y-auto"
+            className="flex-1 flex flex-col p-4 overflow-y-auto"
           >
             <div className="flex-1 flex flex-col items-center justify-center gap-6">
               <div className="w-full max-w-md space-y-4">
                 {/* Upload Option */}
                 <button
                   onClick={() => setCurrentState('upload')}
-                  className="w-full p-6 bg-surfaceElevated border-2 border-dashed border-white/20 rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
+                  className="w-full p-4 bg-surfaceElevated border-2 border-dashed border-white/20 rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
                 >
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
@@ -768,7 +769,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 {/* Patent Number Entry Option */}
                 <button
                   onClick={() => setCurrentState('entry')}
-                  className="w-full p-6 bg-surfaceElevated border-2 border-dashed border-white/20 rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
+                  className="w-full p-4 bg-surfaceElevated border-2 border-dashed border-white/20 rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
                 >
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
@@ -820,7 +821,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="flex-1 flex flex-col p-6 overflow-y-auto"
+            className="flex-1 flex flex-col p-4 overflow-y-auto"
           >
             <div className="space-y-6">
               {/* Drag & Drop Area */}
@@ -999,7 +1000,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="flex-1 flex flex-col p-6 overflow-y-auto"
+            className="flex-1 flex flex-col p-4 overflow-y-auto"
           >
             <div className="space-y-6">
               <div>
@@ -1155,7 +1156,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="flex-1 flex flex-col p-6 overflow-y-auto"
+            className="flex-1 flex flex-col p-4 overflow-y-auto"
           >
             {/* Verification Prompts - Show during progress if needed */}
             {currentVerificationIndex !== null && verificationItems[currentVerificationIndex] && (
@@ -1311,11 +1312,11 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="flex-1 flex flex-col p-6 overflow-y-auto"
+            className="flex-1 flex flex-col p-4 overflow-y-auto"
           >
             <div className="space-y-6">
               {/* Summary Card */}
-              <div className="p-6 bg-surfaceElevated border border-white/10 rounded-xl">
+              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <h3 className="text-lg font-semibold text-textPrimary">📋 PATENT EXPERT</h3>
@@ -1368,8 +1369,54 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                         }));
                       }}
                       onExport={() => {
-                        // TODO: Implement export
-                        console.log('Export patent analysis');
+                        if (!parsedResult) return;
+                        const now = new Date();
+                        const dateStamp = now.toISOString().split('T')[0];
+                        const patentNumber = parsedResult.document_info.patent_number || 'patent';
+                        const safeBase = `patent-${patentNumber}-${dateStamp}`.replace(/[^a-zA-Z0-9-_]+/g, '-');
+                        const title = `Patent Analysis • ${patentNumber}`;
+
+                        const claimCounts = parsedResult.claims_analysis
+                          ? {
+                              total_claims: parsedResult.claims_analysis.total_claims,
+                              independent_claims: parsedResult.claims_analysis.independent_claims,
+                            }
+                          : undefined;
+
+                        const sequenceCounts = parsedResult.molecular_data?.sequences
+                          ? {
+                              antibodies: parsedResult.molecular_data.sequences.antibodies.length,
+                              nucleic_acids: parsedResult.molecular_data.sequences.nucleic_acids.length,
+                              small_molecules: parsedResult.molecular_data.sequences.small_molecules.length,
+                            }
+                          : undefined;
+
+                        const markdown = [
+                          `# ${title}`,
+                          '',
+                          `Generated: ${now.toLocaleString()}`,
+                          '',
+                          '## Document Info',
+                          '```json',
+                          JSON.stringify(parsedResult.document_info ?? {}, null, 2),
+                          '```',
+                          '',
+                          '## Highlights',
+                          '```json',
+                          JSON.stringify({ claimCounts, sequenceCounts, ftoRisk: ftoRiskData?.level }, null, 2),
+                          '```',
+                          '',
+                          '## Key Data (JSON)',
+                          '```json',
+                          JSON.stringify({ parsedResult, qualityAssessment, ftoRiskData }, null, 2),
+                          '```',
+                          '',
+                        ].join('\n');
+
+                        // Provide a practical set of exports: JSON download + print-to-PDF.
+                        downloadJsonFile(`${safeBase}.json`, { parsedResult, qualityAssessment, ftoRiskData });
+                        downloadTextFile(`${safeBase}.md`, markdown, 'text/markdown;charset=utf-8');
+                        openPrintPreview(title, markdown);
                       }}
                       onRemove={() => {
                         if (window.confirm('Remove this analysis?')) {
@@ -1548,7 +1595,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="flex-1 flex flex-col p-6 overflow-y-auto"
+            className="flex-1 flex flex-col p-4 overflow-y-auto"
           >
             {/* Back Button */}
             <button

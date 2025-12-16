@@ -122,12 +122,12 @@ const config: Config = {
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
-        'h1': ['3rem', { lineHeight: '1.3', fontWeight: '700' }],
-        'h2': ['2.25rem', { lineHeight: '1.3', fontWeight: '600' }],
-        'h3': ['1.5rem', { lineHeight: '1.3', fontWeight: '600' }],
-        'h4': ['1.25rem', { lineHeight: '1.3', fontWeight: '600' }],
-        'body': ['1.125rem', { lineHeight: '1.7' }],
-        'small': ['1rem', { lineHeight: '1.5' }],
+        'h1': ['2.7rem', { lineHeight: '1.3', fontWeight: '700' }], // Reduced by 10% from 3rem
+        'h2': ['2.025rem', { lineHeight: '1.3', fontWeight: '600' }], // Reduced by 10% from 2.25rem
+        'h3': ['1.35rem', { lineHeight: '1.3', fontWeight: '600' }], // Reduced by 10% from 1.5rem
+        'h4': ['1.125rem', { lineHeight: '1.3', fontWeight: '600' }], // Reduced by 10% from 1.25rem
+        'body': ['1.0125rem', { lineHeight: '1.7' }], // Reduced by 10% from 1.125rem
+        'small': ['0.9rem', { lineHeight: '1.5' }], // Reduced by 10% from 1rem
       },
       maxWidth: {
         'content': '800px',

@@ -8,6 +8,7 @@ import { ArrowLeft, X, FileText, Dna, AlertTriangle, Clock, Download, Send, Pape
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PatentExtractionResult } from '../../lib/patentParsing/types';
 import type { QualityAssessment } from '../../lib/patentParsing/qualityAssurance';
+import { downloadJsonFile, downloadTextFile, openPrintPreview } from '../../lib/reportExport';
 
 interface PatentFullAnalysisPanelProps {
   patentData: PatentExtractionResult;
@@ -905,8 +906,62 @@ function ExportTab({
   ftoRiskData?: PatentFullAnalysisPanelProps['ftoRiskData'];
 }) {
   const handleExport = useCallback(async (format: 'pdf' | 'json' | 'markdown') => {
-    // TODO: Implement export functionality
-    console.log(`Exporting as ${format}...`);
+    const now = new Date();
+    const dateStamp = now.toISOString().split('T')[0];
+    const patentNumber = patentData.document_info.patent_number || 'patent';
+    const safeBase = `patent-${patentNumber}-${dateStamp}`.replace(/[^a-zA-Z0-9-_]+/g, '-');
+    const title = `Patent Analysis • ${patentNumber}`;
+
+    if (format === 'json') {
+      downloadJsonFile(`${safeBase}.json`, { patentData, qualityData, ftoRiskData });
+      return;
+    }
+
+    const markdown = [
+      `# ${title}`,
+      '',
+      `Generated: ${now.toLocaleString()}`,
+      '',
+      '## Document Info',
+      '```json',
+      JSON.stringify(patentData.document_info, null, 2),
+      '```',
+      '',
+      '## Key Claims',
+      '```json',
+      JSON.stringify(
+        (patentData.claims_analysis?.claims ?? [])
+          .filter((c) => c.is_independent)
+          .slice(0, 5)
+          .map((c) => ({
+            claim_number: c.claim_number,
+            claim_type: c.claim_type,
+            key_limitations: c.key_limitations,
+            claim_text: c.claim_text,
+          })),
+        null,
+        2
+      ),
+      '```',
+      '',
+      '## FTO Risk',
+      '```json',
+      JSON.stringify(ftoRiskData ?? null, null, 2),
+      '```',
+      '',
+      '## Quality Assessment',
+      '```json',
+      JSON.stringify(qualityData ?? null, null, 2),
+      '```',
+      '',
+    ].join('\n');
+
+    if (format === 'markdown') {
+      downloadTextFile(`${safeBase}.md`, markdown, 'text/markdown;charset=utf-8');
+      return;
+    }
+
+    openPrintPreview(title, markdown);
   }, []);
 
   return (

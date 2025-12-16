@@ -1,21 +1,23 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Sparkles,
-  FileText,
   Grid,
   List,
-  Loader2,
-  FileDown,
-  Presentation,
-  File,
   Search,
   X,
+  Trash2,
+  Radio,
+  RotateCcw,
+  FolderPlus,
 } from 'lucide-react';
 import type { Persona } from '../types';
+import { useTileStore } from '../lib/tiles/store';
+import { useWorkspaceStore } from '../lib/workspaces/store';
+import { getStoredAgentMode, onAgentModeUpdated, requestAgentMode, type AgentMode } from '../lib/agentMode';
 
 interface HeaderProps {
   persona: Persona;
-  targetName: string;
+  targetName?: string; // Optional, will use active workspace if not provided
   indication?: string;
   dataFreshness?: string;
   onSearch?: (query: string) => void;
@@ -29,59 +31,65 @@ interface HeaderProps {
 
 export default function Header({
   persona,
-  targetName,
-  indication = 'Solid Tumors',
+  targetName: targetNameProp,
+  indication,
   dataFreshness = '2h ago',
   onSearch,
-  onExport,
   viewMode = 'grid',
   onViewModeChange,
   onOpenSonnyPanel,
   sonnyPanelCollapsed = false,
   onToggleSonnyPanel,
 }: HeaderProps) {
-  const [showExportMenu, setShowExportMenu] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const exportMenuRef = useRef<HTMLDivElement>(null);
+  const [agentMode, setAgentMode] = useState<AgentMode>(() => getStoredAgentMode());
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Escape to close menus
-      if (e.key === 'Escape') {
-        setShowExportMenu(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Close menus when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target as Node)) {
-        setShowExportMenu(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleExport = async (format: 'pdf' | 'pptx' | 'docx') => {
-    setIsExporting(true);
-    setShowExportMenu(false);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate export
-      onExport(format);
-    } finally {
-      setIsExporting(false);
+  const clearAllTiles = useTileStore((state) => state.clearAllTiles);
+  const tiles = useTileStore((state) => state.tiles);
+  const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
+  const getWorkspaceById = useWorkspaceStore((state) => state.getWorkspaceById);
+  
+  // Get current target from active workspace or use prop
+  // Return empty string if no target is selected (initial load)
+  const currentTarget = useMemo(() => {
+    if (targetNameProp) return targetNameProp;
+    if (activeWorkspaceId) {
+      const activeWorkspace = getWorkspaceById(activeWorkspaceId);
+      return activeWorkspace?.target || '';
     }
-  };
+    return ''; // Empty on initial load when no workspace is active
+  }, [targetNameProp, activeWorkspaceId, getWorkspaceById]);
+  
+  // Memoize visible tiles to prevent infinite loops
+  const visibleTiles = useMemo(() => {
+    if (!activeWorkspaceId) return tiles;
+    return tiles.filter((tile) => tile.workspaceIds.includes(activeWorkspaceId));
+  }, [tiles, activeWorkspaceId]);
+
+  const canSaveWorkspace = useMemo(() => {
+    if (!activeWorkspaceId) return false;
+    return visibleTiles.length > 0;
+  }, [activeWorkspaceId, visibleTiles.length]);
+  
+  // Check if there are any tiles to clear (either dynamic tiles or baseline tiles for TROP2)
+  const hasTilesToClear = useMemo(() => {
+    // Always show if there are any dynamic tiles
+    if (tiles.length > 0) return true;
+    
+    // For TROP2 workspace, also consider baseline tiles exist
+    if (activeWorkspaceId) {
+      const activeWorkspace = getWorkspaceById(activeWorkspaceId);
+      if (activeWorkspace?.target?.toUpperCase() === 'TROP2') {
+        return true; // TROP2 always has baseline tiles
+      }
+    }
+    
+    return false;
+  }, [tiles.length, activeWorkspaceId, getWorkspaceById]);
+
+  // Keep header toggle synced with Sonny panel mode
+  useEffect(() => onAgentModeUpdated(setAgentMode), []);
 
   const handleSearch = async (query: string) => {
     if (query.trim()) {
@@ -89,8 +97,10 @@ export default function Header({
       if (onOpenSonnyPanel) {
         onOpenSonnyPanel();
       }
-      // Also call onSearch if provided (for backwards compatibility)
+      // Pass query to Sonny via onSearch callback
       onSearch?.(query);
+      // Clear the search input after submitting
+      setSearchQuery('');
     }
   };
 
@@ -104,6 +114,29 @@ export default function Header({
   const handleSearchClear = () => {
     setSearchQuery('');
     searchInputRef.current?.focus();
+  };
+
+  const handleClearAllTiles = () => {
+    // Count tiles for current workspace, or all tiles if no workspace
+    const tileCount = visibleTiles.length;
+    if (tileCount === 0) {
+      return; // No tiles to clear
+    }
+    
+    const workspaceName = activeWorkspaceId 
+      ? getWorkspaceById(activeWorkspaceId)?.name || 'workspace'
+      : 'dashboard';
+    
+    if (window.confirm(`Are you sure you want to clear all ${tileCount} tile${tileCount > 1 ? 's' : ''} from ${workspaceName}? This action cannot be undone.`)) {
+      clearAllTiles();
+    }
+  };
+
+  const handleResetDemo = () => {
+    if (!window.confirm('Reset demo state?\n\nThis will clear generated tiles and reset analysis panels so you can rerun the investor flow cleanly.')) {
+      return;
+    }
+    window.dispatchEvent(new CustomEvent('reset-demo'));
   };
 
   // Keyboard shortcut for search (Cmd/Ctrl + K)
@@ -121,7 +154,7 @@ export default function Header({
 
   const getPersonaTitle = () => {
     if (persona === 'scientist') {
-      return targetName;
+      return currentTarget || ''; // Empty string when no target selected
     } else {
       return `TargetCo / TRX-101`; // Example BD format
     }
@@ -135,13 +168,6 @@ export default function Header({
         <div className="flex items-center gap-4 flex-shrink-0">
           <div className="min-w-0">
             <h1 className="text-lg font-semibold text-textPrimary truncate">{getPersonaTitle()}</h1>
-          </div>
-
-          {/* Status Badge - Only indication */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="px-2 py-1 text-xs font-medium bg-primary/20 text-primary rounded-md">
-              {indication}
-            </span>
           </div>
         </div>
 
@@ -182,6 +208,36 @@ export default function Header({
 
         {/* Right Section - Actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Demo/Live Toggle */}
+          <div className="hidden sm:flex items-center gap-1 p-1 bg-surface rounded-lg border border-white/10">
+            <button
+              type="button"
+              onClick={() => requestAgentMode('demo')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                agentMode === 'demo' ? 'bg-surfaceElevated text-textPrimary' : 'text-textSecondary hover:text-textPrimary'
+              }`}
+              aria-label="Use demo mode (no API calls)"
+            >
+              Demo
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onOpenSonnyPanel?.();
+                requestAgentMode('live');
+              }}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
+                agentMode === 'live'
+                  ? 'bg-success/20 text-success'
+                  : 'text-textSecondary hover:text-textPrimary'
+              }`}
+              aria-label="Use live mode (real agent APIs)"
+            >
+              <Radio className="w-3.5 h-3.5" />
+              Live
+            </button>
+          </div>
+
           {/* View Toggle */}
           {onViewModeChange && (
             <div className="flex items-center gap-1 p-1 bg-surface rounded-lg border border-white/10">
@@ -212,63 +268,49 @@ export default function Header({
 
           <div className="w-px h-6 bg-white/10" />
 
-          {/* Export Report */}
-          <div className="relative" ref={exportMenuRef}>
-            <button
-              onClick={() => setShowExportMenu(!showExportMenu)}
-              disabled={isExporting}
-              className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
-            >
-              {isExporting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="hidden md:inline">Exporting...</span>
-                </>
-              ) : (
-                <>
-                  <FileText className="w-4 h-4" />
-                  <span className="hidden md:inline">Export</span>
-                </>
+          {/* Clear All Tiles - Show in all workspaces if there are any tiles */}
+          {(tiles.length > 0 || activeWorkspaceId) && (
+            <>
+              {/* Save workspace (hidden in demo mode to keep investor flow clean) */}
+              {agentMode !== 'demo' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Ensure the modal host (Sonny panel) is mounted.
+                    onOpenSonnyPanel?.();
+                    // Dispatch after a short tick so the panel can mount its listener.
+                    setTimeout(() => window.dispatchEvent(new Event('open-save-workspace')), 50);
+                  }}
+                  disabled={!canSaveWorkspace}
+                  className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-white/10 rounded-lg hover:bg-surfaceElevated/70 hover:border-white/20 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={canSaveWorkspace ? 'Save this analysis as a workspace' : 'No workspace/tiles to save yet'}
+                >
+                  <FolderPlus className="w-4 h-4 text-textSecondary" />
+                  <span className="hidden md:inline">Save workspace</span>
+                </button>
               )}
-            </button>
-
-            {showExportMenu && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden z-50 animate-slide-up">
+              <button
+                onClick={handleClearAllTiles}
+                disabled={visibleTiles.length === 0}
+                className="flex items-center gap-2 px-3 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 hover:border-red-500/30 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                title={visibleTiles.length > 0 ? "Clear all tiles" : "No tiles to clear"}
+              >
+                <Trash2 className="w-4 h-4" />
+                <span className="hidden md:inline">Clear Tiles</span>
+              </button>
+              {agentMode === 'demo' && (
                 <button
-                  onClick={() => handleExport('pdf')}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-textPrimary hover:bg-surface transition-colors"
+                  onClick={handleResetDemo}
+                  className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-white/10 rounded-lg hover:bg-surfaceElevated/70 hover:border-white/20 transition-colors font-medium text-sm"
+                  title="Reset demo (clear generated tiles + analysis state)"
                 >
-                  <FileDown className="w-4 h-4 text-textTertiary" />
-                  <div>
-                    <p className="text-sm font-medium">Export as PDF</p>
-                    <p className="text-xs text-textTertiary">Portable document</p>
-                  </div>
+                  <RotateCcw className="w-4 h-4 text-textSecondary" />
+                  <span className="hidden md:inline">Reset Demo</span>
                 </button>
-                <button
-                  onClick={() => handleExport('pptx')}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-textPrimary hover:bg-surface transition-colors border-t border-white/5"
-                >
-                  <Presentation className="w-4 h-4 text-textTertiary" />
-                  <div>
-                    <p className="text-sm font-medium">Export as PowerPoint</p>
-                    <p className="text-xs text-textTertiary">Presentation deck</p>
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleExport('docx')}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-textPrimary hover:bg-surface transition-colors border-t border-white/5"
-                >
-                  <File className="w-4 h-4 text-textTertiary" />
-                  <div>
-                    <p className="text-sm font-medium">Export as Word</p>
-                    <p className="text-xs text-textTertiary">Document format</p>
-                  </div>
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="w-px h-6 bg-white/10" />
+              )}
+              <div className="w-px h-6 bg-white/10" />
+            </>
+          )}
 
           {/* Sonny Panel Toggle - Enhanced with glassmorphism and gradient */}
           {onToggleSonnyPanel && (

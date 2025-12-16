@@ -10,19 +10,26 @@ function generateSessionToken(): string {
 }
 
 // Check if user is authenticated (Express middleware)
+// Note: This middleware runs AFTER body parsing (express.json()), so req.body is available
 export function isAuthenticated(req: any, res: any, next: any): void {
   // Skip authentication for demo mode
-  if (req.body?.isDemo === true || req.query?.isDemo === 'true') {
+  // Check both body (POST) and query (GET) parameters
+  const isDemo = req.body?.isDemo === true || req.query?.isDemo === 'true';
+  
+  if (isDemo) {
+    console.log('[Auth] Demo mode detected, skipping authentication');
     return next();
   }
 
   const session = req.cookies?.[SESSION_COOKIE_NAME];
 
   if (!session) {
+    console.log('[Auth] No session found, requiring authentication');
     res.status(401).json({ error: 'Authentication required for live analysis' });
     return;
   }
 
+  console.log('[Auth] Session found, allowing request');
   // In a real app, verify the session token in a database
   // For simplicity, we're just checking if the cookie exists
   next();

@@ -4,9 +4,11 @@ import { FlaskConical, Star } from 'lucide-react';
 interface ScientificValidationTileProps {
   data: any;
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function ScientificValidationTile({ loading }: ScientificValidationTileProps) {
+export default function ScientificValidationTile({ data, loading, onAgentClick, extendedIntelligence }: ScientificValidationTileProps) {
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -24,7 +26,11 @@ export default function ScientificValidationTile({ loading }: ScientificValidati
       icon={<FlaskConical className="w-5 h-5" />}
       tileType="general"
       loading={loading}
-      className="h-[280px]"
+      className=""
+      agents={data?.agents}
+      primaryAgent={data?.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         {/* Star Ratings */}

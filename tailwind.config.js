@@ -19,8 +19,10 @@ export default {
         danger: '#FF453A',
         info: '#0A84FF',
         textPrimary: '#F5F5F7',
-        textSecondary: '#86868B',
-        textTertiary: '#636366',
+        // Improve legibility on dark surfaces (was too low-contrast for longform content).
+        // Keep primary very bright; lift secondary/tertiary toward Apple's dark-mode label tones.
+        textSecondary: '#AEAEB2',
+        textTertiary: '#8E8E93',
         border: 'rgba(255, 255, 255, 0.05)',
       },
       ringColor: {

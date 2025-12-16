@@ -12,9 +12,11 @@ import {
   Search,
 } from 'lucide-react';
 import { usePersona } from '../../contexts/PersonaContext';
-import { WORKSPACES } from '../../constants';
+import { useWorkspaceStore } from '../../lib/workspaces/store';
+import { useTileStore } from '../../lib/tiles/store';
 import type { Workspace } from '../Sidebar';
 import { format, parseISO } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'recent' | 'alphabetical' | 'status';
@@ -24,8 +26,49 @@ export default function Workspaces() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('recent');
   const [searchQuery, setSearchQuery] = useState('');
-
-  const workspaces: Workspace[] = WORKSPACES;
+  
+  // Get workspaces from store instead of constants
+  const allWorkspaces = useWorkspaceStore((state) => state.workspaces);
+  const tiles = useTileStore((state) => state.tiles);
+  const setActiveWorkspace = useWorkspaceStore((state) => state.setActiveWorkspace);
+  
+  // Filter to only show TROP2 and KRAS G12C workspaces
+  const workspaces: Workspace[] = useMemo(() => {
+    return allWorkspaces
+      .filter(ws => {
+        const targetLower = ws.target.toLowerCase();
+        const nameLower = ws.name.toLowerCase();
+        
+        // Include TROP2
+        if (targetLower === 'trop2') return true;
+        
+        // Include KRAS G12C (check both target and name)
+        if ((targetLower.includes('kras') || nameLower.includes('kras')) && 
+            (nameLower.includes('g12c') || targetLower.includes('g12c'))) {
+          return true;
+        }
+        
+        return false;
+      })
+      .map(ws => {
+        // Clean up workspace names
+        let cleanName = ws.name
+          .replace(/\s*-\s*[^-]*Analysis\s*$/i, '')
+          .replace(/\s*Analysis\s*$/i, '')
+          .trim();
+        
+        // Handle duplicate patterns like "KRAS G12C - KRAS G12C" -> "KRAS G12C"
+        const parts = cleanName.split(/\s*-\s*/);
+        if (parts.length === 2 && parts[0].trim().toLowerCase() === parts[1].trim().toLowerCase()) {
+          cleanName = parts[0].trim();
+        }
+        
+        return {
+          ...ws,
+          name: cleanName,
+        };
+      });
+  }, [allWorkspaces]);
   
   const primaryColor = activePersona === 'scientist' ? '#BF5AF2' : '#FF9F0A';
 
@@ -194,7 +237,9 @@ export default function Workspaces() {
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="bg-surfaceElevated rounded-lg p-2">
                     <p className="text-xs text-textTertiary mb-1">Tiles</p>
-                    <p className="text-sm font-semibold text-textPrimary">12</p>
+                    <p className="text-sm font-semibold text-textPrimary">
+                      {tiles.filter(t => t.workspaceIds.includes(String(workspace.id))).length}
+                    </p>
                   </div>
                   <div className="bg-surfaceElevated rounded-lg p-2">
                     <p className="text-xs text-textTertiary mb-1">Last Activity</p>
@@ -259,7 +304,15 @@ export default function Workspaces() {
                 </div>
 
                 {/* Open Button */}
-                <button className="w-full mt-4 px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-textPrimary text-sm font-medium">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveWorkspace(String(workspace.id));
+                    // Navigate to dashboard
+                    window.dispatchEvent(new CustomEvent('navigate-to-dashboard'));
+                  }}
+                  className="w-full mt-4 px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-textPrimary text-sm font-medium"
+                >
                   Open Workspace
                 </button>
               </div>
@@ -295,7 +348,10 @@ export default function Workspaces() {
                   <tr
                     key={workspace.id}
                     className="border-b border-white/5 hover:bg-surface/50 transition-colors cursor-pointer"
-                    onClick={() => console.log('Open workspace:', workspace.id)}
+                    onClick={() => {
+                      setActiveWorkspace(String(workspace.id));
+                      window.dispatchEvent(new CustomEvent('navigate-to-dashboard'));
+                    }}
                   >
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
@@ -342,9 +398,24 @@ export default function Workspaces() {
                       )}
                     </td>
                     <td className="px-4 py-4 text-right">
-                      <button className="p-2 rounded-lg hover:bg-surfaceElevated text-textTertiary hover:text-textPrimary transition-colors">
-                        <MoreVertical className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveWorkspace(String(workspace.id));
+                            window.dispatchEvent(new CustomEvent('navigate-to-dashboard'));
+                          }}
+                          className="px-3 py-1.5 text-sm bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-textPrimary font-medium"
+                        >
+                          Open
+                        </button>
+                        <button 
+                          onClick={(e) => e.stopPropagation()}
+                          className="p-2 rounded-lg hover:bg-surfaceElevated text-textTertiary hover:text-textPrimary transition-colors"
+                        >
+                          <MoreVertical className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

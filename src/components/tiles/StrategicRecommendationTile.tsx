@@ -23,13 +23,19 @@ interface StrategicRecommendationTileProps {
     dealConsiderations: string[];
     riskMitigation: string[];
     walkAwayCriteria: string[];
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
 export default function StrategicRecommendationTile({
   data,
   loading,
+  onAgentClick,
+  extendedIntelligence,
 }: StrategicRecommendationTileProps) {
   const [showWalkAway, setShowWalkAway] = useState(false);
 
@@ -52,7 +58,11 @@ export default function StrategicRecommendationTile({
       icon={<CheckCircle2 className="w-5 h-5" />}
       tileType="deal"
       loading={loading}
-      className="h-[220px]"
+      className=""
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
       headerRight={
         <div
           className={`px-5 py-2.5 rounded-xl border-2 text-base font-bold ${getRecommendationColor(

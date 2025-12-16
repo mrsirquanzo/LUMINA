@@ -14,6 +14,7 @@ import {
   Scatter,
 } from 'recharts';
 import type { ExpressionTissue, TumorExpression, TherapeuticWindow } from '../../types';
+import { formatTPM } from '../../utils/scoring';
 
 interface ExpressionBiologyTileProps {
   data: {
@@ -29,9 +30,11 @@ interface ExpressionBiologyTileProps {
     tcgaTumorExpression: TumorExpression[];
     foldChangeData: Array<{
       indication: string;
-      tumorTPM: number;
-      normalTPM: number;
+      tumorTPM: number | null;
+      normalTPM: number | null;
       foldChange: number;
+      citations?: string[];
+      pValue?: string | null;
     }>;
     genomicAlterations: {
       amplificationFrequency: Record<string, number>;
@@ -40,8 +43,12 @@ interface ExpressionBiologyTileProps {
       fusionEvents: string[];
       copyNumberGain: Record<string, number>;
     };
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
 const CustomTooltip = ({ active, payload, label, dataType }: any) => {
@@ -50,21 +57,21 @@ const CustomTooltip = ({ active, payload, label, dataType }: any) => {
       <div className="bg-surfaceElevated border border-white/10 p-3 rounded-xl shadow-2xl text-xs backdrop-blur-md">
         <p className="font-bold text-textPrimary mb-1">{label}</p>
         {dataType === 'tpm' && (
-          <p className="text-primary font-medium">{payload[0].value.toLocaleString()} TPM</p>
+          <p className="text-primary font-medium">{formatTPM(payload[0].value)} TPM</p>
         )}
         {dataType === 'foldChange' && (
           <>
-            <p className="text-primary font-medium">{payload[0].value.toFixed(2)}x fold-change</p>
-            {payload[0].payload.tumorTPM && (
+            <p className="text-primary font-medium">{payload[0].value.toFixed(1)}x fold-change</p>
+            {payload[0].payload.tumorTPM !== null && payload[0].payload.tumorTPM !== undefined && (
               <p className="text-textSecondary text-xs mt-1">
-                Tumor: {payload[0].payload.tumorTPM} TPM | Normal: {payload[0].payload.normalTPM} TPM
+                Tumor: {formatTPM(payload[0].payload.tumorTPM)} TPM | Normal: {formatTPM(payload[0].payload.normalTPM)} TPM
               </p>
             )}
           </>
         )}
         {payload[0].payload.sampleCount && (
           <p className="text-textSecondary text-sm mt-1 font-medium">
-            Samples: {payload[0].payload.sampleCount}
+            Samples: {payload[0].payload.sampleCount.toLocaleString()}
           </p>
         )}
         {payload[0].payload.category && (
@@ -183,7 +190,7 @@ const VerticalBarOnlyCursor = (props: any) => {
 };
 
 
-export default function ExpressionBiologyTile({ data, loading }: ExpressionBiologyTileProps) {
+export default function ExpressionBiologyTile({ data, loading, onAgentClick, extendedIntelligence }: ExpressionBiologyTileProps) {
   const [activeTab, setActiveTab] = useState<
     'summary' | 'normal' | 'tumor' | 'comparison' | 'genomic'
   >('summary');
@@ -214,8 +221,22 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
 
   // Get safety organs
   const safetyOrgans = useMemo(() => {
-    return data.gtexNormalTissues.filter((t) => t.isSafetyOrgan && t.tpm > 50);
+    return [...data.gtexNormalTissues]
+      .filter((t) => t.isSafetyOrgan)
+      .sort((a, b) => b.tpm - a.tpm)
+      .slice(0, 5);
   }, [data.gtexNormalTissues]);
+
+  const maxNormalTpm = useMemo(() => {
+    const tpms = data.gtexNormalTissues.map((t) => t.tpm).filter((n) => Number.isFinite(n));
+    return tpms.length > 0 ? Math.max(...tpms) : 0;
+  }, [data.gtexNormalTissues]);
+
+  const safetyHighThreshold = useMemo(() => {
+    if (!maxNormalTpm) return 100;
+    // Use relative threshold when the dataset is in low TPM range (common for GTEx medians).
+    return maxNormalTpm < 100 ? Math.max(10, Math.round(maxNormalTpm * 0.75 * 10) / 10) : 100;
+  }, [maxNormalTpm]);
 
   // Prepare chart data
   const normalChartData = useMemo(() => {
@@ -225,6 +246,7 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
       tpm: tissue.tpm,
       category: tissue.category,
       isSafetyOrgan: tissue.isSafetyOrgan,
+      implications: (tissue as any).implications,
     }));
   }, [filteredNormalTissues]);
 
@@ -246,11 +268,13 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
       foldChange: item.foldChange,
       tumorTPM: item.tumorTPM,
       normalTPM: item.normalTPM,
+      citations: item.citations,
+      pValue: item.pValue,
     }));
   }, [data.foldChangeData]);
 
   const getBarColor = (tissue: any) => {
-    if (tissue.isSafetyOrgan && tissue.tpm > 100) return '#FF453A';
+    if (tissue.isSafetyOrgan && tissue.tpm >= safetyHighThreshold) return '#FF453A';
     if (tissue.isSafetyOrgan) return '#FF9F0A';
     return '#636366';
   };
@@ -281,6 +305,16 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
         return 25;
     }
   };
+
+  function formatFoldChangeCompact(value: unknown): string {
+    const num = typeof value === 'number' ? value : Number(value);
+    if (!Number.isFinite(num)) return '—';
+    return `${Math.round(num).toLocaleString()}x`;
+  }
+
+  function isFiniteNumber(value: unknown): value is number {
+    return typeof value === 'number' && Number.isFinite(value);
+  }
 
   const handleExportCSV = (type: 'normal' | 'tumor' | 'comparison') => {
     let csv = '';
@@ -328,7 +362,11 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
       icon={<Activity className="w-5 h-5" />}
       tileType="expression"
       loading={loading}
-      className="h-[450px]"
+      className=""
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       {/* Tab Navigation */}
       <div className="flex gap-2 mb-4 border-b border-white/5 overflow-x-auto custom-scrollbar">
@@ -384,7 +422,7 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                     {data.bestIndication.name}
                   </p>
                   <p className="text-lg font-bold text-success mb-2">
-                    {data.bestIndication.foldChange}x
+                    {formatFoldChangeCompact(data.bestIndication.foldChange)}
                   </p>
                   <p className="text-base text-textPrimary font-medium">over normal tissue</p>
                 </div>
@@ -423,7 +461,7 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                     {safetyOrgans.slice(0, 3).map((organ, idx) => (
                       <div key={idx} className="flex items-center justify-between text-base">
                         <span className="text-textPrimary font-medium">{organ.name}</span>
-                        <span className="text-warning font-semibold">{organ.tpm} TPM</span>
+                        <span className="text-warning font-semibold">{formatTPM(organ.tpm)} TPM</span>
                       </div>
                     ))}
                   </div>
@@ -494,7 +532,7 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                     content={<CustomTooltip dataType="tpm" />}
                     cursor={<BarOnlyCursor />}
                   />
-                  <ReferenceLine x={100} stroke="#FF9F0A" strokeDasharray="3 3" />
+                  <ReferenceLine x={safetyHighThreshold} stroke="#FF9F0A" strokeDasharray="3 3" />
                   <Bar dataKey="tpm" radius={[0, 4, 4, 0]}>
                     {normalChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={getBarColor(entry)} />
@@ -505,7 +543,7 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
             </div>
 
             <div className="flex items-center justify-between mt-4 mb-4">
-              <p className="text-sm font-medium text-textSecondary">Safety threshold: 100 TPM</p>
+              <p className="text-sm font-medium text-textSecondary">Safety threshold: {formatTPM(safetyHighThreshold)} TPM</p>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowTable(!showTable)}
@@ -534,13 +572,14 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                         <th className="px-4 py-3 text-left text-textSecondary font-bold text-sm">TPM</th>
                         <th className="px-4 py-3 text-left text-textSecondary font-bold text-sm">Category</th>
                         <th className="px-4 py-3 text-left text-textSecondary font-bold text-sm">Safety</th>
+                        <th className="px-4 py-3 text-left text-textSecondary font-bold text-sm">Implications</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredNormalTissues.map((tissue, idx) => (
                         <tr key={idx} className="border-t border-white/5">
                           <td className="px-4 py-3 text-textPrimary font-medium align-middle text-base">{tissue.name}</td>
-                          <td className="px-4 py-3 text-textPrimary font-semibold align-middle text-base">{tissue.tpm}</td>
+                          <td className="px-4 py-3 text-textPrimary font-semibold align-middle text-base">{formatTPM(tissue.tpm)}</td>
                           <td className="px-4 py-3 text-textPrimary capitalize align-middle text-base font-medium">{tissue.category}</td>
                           <td className="px-4 py-3 align-middle">
                             {tissue.isSafetyOrgan ? (
@@ -548,6 +587,9 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                             ) : (
                               <span className="text-textSecondary text-base">—</span>
                             )}
+                          </td>
+                          <td className="px-4 py-3 text-textSecondary align-middle text-base">
+                            {(tissue as any).implications || '—'}
                           </td>
                         </tr>
                       ))}
@@ -637,7 +679,7 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                           <td className="px-4 py-3 text-textSecondary font-medium">{tumor.tumorType}</td>
                           <td className="px-4 py-3 text-textTertiary font-mono">{tumor.tcgaCode}</td>
                           <td className="px-4 py-3 text-textPrimary font-semibold">
-                            {tumor.medianTPM.toLocaleString()}
+                            {formatTPM(tumor.medianTPM)}
                           </td>
                           <td className="px-4 py-3">
                             <span
@@ -709,6 +751,11 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
             ) : (
               // Dot Plot
               <div className="h-80 mb-4">
+                {(() => {
+                  const dotData = foldChangeChartData.filter(
+                    (e) => isFiniteNumber(e.normalTPM) && isFiniteNumber(e.tumorTPM)
+                  );
+                  return (
                 <ResponsiveContainer width="100%" height="100%">
                   <ScatterChart margin={{ top: 20, right: 40, left: 50, bottom: 80 }}>
                     <XAxis
@@ -729,14 +776,15 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                       content={<CustomTooltip dataType="foldChange" />}
                       cursor={false}
                     />
-                    <ReferenceLine yAxisId={0} stroke="#636366" strokeDasharray="3 3" />
-                    <Scatter dataKey="tumorTPM" fill="#0A84FF">
-                      {foldChangeChartData.map((entry, index) => (
+                    <Scatter data={dotData} fill="#0A84FF">
+                      {dotData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={getFoldChangeColor(entry.foldChange)} />
                       ))}
                     </Scatter>
                   </ScatterChart>
                 </ResponsiveContainer>
+                  );
+                })()}
               </div>
             )}
 
@@ -763,9 +811,11 @@ export default function ExpressionBiologyTile({ data, loading }: ExpressionBiolo
                       >
                         <td className="px-4 py-3 text-textSecondary font-medium">{item.indication}</td>
                         <td className="px-4 py-3 text-textPrimary font-semibold">
-                          {item.tumorTPM.toLocaleString()}
+                          {formatTPM(item.tumorTPM)}
                         </td>
-                        <td className="px-4 py-3 text-textSecondary font-medium">{item.normalTPM.toLocaleString()}</td>
+                        <td className="px-4 py-3 text-textSecondary font-medium">
+                          {formatTPM(item.normalTPM)}
+                        </td>
                         <td className="px-4 py-3">
                           <span
                             className={`text-base font-bold ${

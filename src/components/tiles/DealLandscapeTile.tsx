@@ -20,11 +20,15 @@ interface DealLandscapeTileProps {
     valuationContext: string;
     potentialPartners: string[];
     dealStructureConsiderations: string[];
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function DealLandscapeTile({ data, loading }: DealLandscapeTileProps) {
+export default function DealLandscapeTile({ data, loading, onAgentClick, extendedIntelligence }: DealLandscapeTileProps) {
   const getActivityColor = (activity: DealActivity) => {
     switch (activity) {
       case 'Hot':
@@ -45,6 +49,10 @@ export default function DealLandscapeTile({ data, loading }: DealLandscapeTilePr
       tileType="deal"
       loading={loading}
       className="h-[320px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         <div

@@ -6,6 +6,43 @@ import type {
   ExpressionTissue,
 } from '../types';
 
+/**
+ * Format TPM values as whole numbers with locale separators
+ */
+export function formatTPM(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return '—';
+  return Math.round(value).toLocaleString();
+}
+
+/**
+ * Format fold-change values with 1 decimal place
+ */
+export function formatFoldChange(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return '—';
+  return value.toFixed(1);
+}
+
+/**
+ * Format percentages with 1 decimal place
+ */
+export function formatPercentage(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return '—';
+  return `${value.toFixed(1)}%`;
+}
+
+/**
+ * Strip markdown formatting from text (bold, italic, etc.)
+ */
+export function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*([^*]+)\*\*/g, '$1') // Bold **text**
+    .replace(/\*([^*]+)\*/g, '$1')     // Italic *text*
+    .replace(/__([^_]+)__/g, '$1')     // Bold __text__
+    .replace(/_([^_]+)_/g, '$1')       // Italic _text_
+    .replace(/`([^`]+)`/g, '$1')       // Code `text`
+    .trim();
+}
+
 export interface ScoringWeights {
   genetic: number;
   expression: number;

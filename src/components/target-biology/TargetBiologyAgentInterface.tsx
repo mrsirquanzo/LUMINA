@@ -228,7 +228,7 @@ export default function TargetBiologyAgentInterface({
   return (
     <div className={`flex flex-col h-full ${className}`}>
       {/* Tabs */}
-      <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+      <div className="mb-4 p-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
         {[
           { id: 'expression' as TabType, label: 'Expression' },
           { id: 'literature' as TabType, label: 'Literature' },
@@ -261,7 +261,7 @@ export default function TargetBiologyAgentInterface({
               exit={{ opacity: 0, y: -10 }}
               className="space-y-6"
             >
-              <div className="px-6 pt-6 flex items-center justify-between">
+              <div className="p-4 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-textPrimary">Expression Analysis</h3>
                 <div className="flex items-center gap-2 px-3 py-1 bg-surfaceElevated border border-white/10 rounded-lg">
                   <span className="text-xs text-textSecondary">Modality:</span>
@@ -279,7 +279,7 @@ export default function TargetBiologyAgentInterface({
 
               {/* Therapeutic Window Score */}
               {analysisResults && (
-                <div className="px-6 p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-textPrimary">
                       Therapeutic Window Score
@@ -297,7 +297,7 @@ export default function TargetBiologyAgentInterface({
               )}
 
               {/* Tumor vs Normal Heatmap */}
-              <div className="px-6 py-4 bg-surfaceElevated border-x-0 border-y border-white/10 rounded-none">
+              <div className="p-4 bg-surfaceElevated border-x-0 border-y border-white/10 rounded-none">
                 <h4 className="text-sm font-semibold text-textPrimary mb-4">
                   Tumor vs. Normal Heatmap
                 </h4>
@@ -352,7 +352,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Flags */}
-              <div className="px-6 py-4 bg-warning/10 border-x-0 border-y border-warning/20 rounded-none">
+              <div className="p-4 bg-warning/10 border-x-0 border-y border-warning/20 rounded-none">
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
                   <div>
@@ -365,7 +365,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Cell Surface Info */}
-              <div className="px-6 grid grid-cols-2 gap-4 pb-6">
+              <div className="p-4 grid grid-cols-2 gap-4">
                 <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle className="w-4 h-4 text-success" />
@@ -816,7 +816,7 @@ export default function TargetBiologyAgentInterface({
       <div className="border-t border-white/10 bg-surfaceElevated flex flex-col">
         {/* Chat Messages */}
         {chatMessages.length > 0 && (
-          <div className="flex-1 overflow-y-auto p-6 space-y-3 min-h-0">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
             {chatMessages.map((message, idx) => (
               <div
                 key={idx}
@@ -871,7 +871,7 @@ export default function TargetBiologyAgentInterface({
         )}
 
         {/* Chat Input - Full width at bottom */}
-        <div className="border-t border-white/10 p-6 space-y-3 pb-6">
+        <div className="border-t border-white/10 p-4 space-y-3">
           <textarea
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}

@@ -109,7 +109,7 @@ export default function ClinicalAgentInterface({
 
   // Recent analyses
   const recentAnalyses = [
-    { name: 'KRAS G12C Analysis', date: 'Today' },
+    { name: 'HER2 Safety Deep Dive', date: 'Today' },
     { name: 'PD-1 Competitive', date: 'Yesterday' },
     { name: 'MASH Target Review', date: '2 days ago' },
   ];
@@ -117,7 +117,7 @@ export default function ClinicalAgentInterface({
   // Upcoming catalysts
   const upcomingCatalysts = [
     { nctNumber: 'NCT04294810', description: 'Phase 3 readout', drug: 'Semaglutide NASH', date: 'Dec 2024', priority: 'high' as const },
-    { nctNumber: 'NCT05007106', description: 'Interim data', drug: 'KRAS G12C combo', date: 'Q1 2025', priority: 'medium' as const },
+    { nctNumber: 'NCT05007106', description: 'Interim data', drug: 'HER2 ADC combo', date: 'Q1 2025', priority: 'medium' as const },
     { nctNumber: 'NCT05432623', description: 'Phase 2 results', drug: 'CD19 CAR-T solid', date: 'Q2 2025', priority: 'low' as const },
   ];
 
@@ -161,7 +161,7 @@ export default function ClinicalAgentInterface({
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         // Extract target mentions from filename/content (simulated)
-        const targetMatches = file.name.match(/\b(TIGIT|KRAS|PD-1|PDL1|GLP-1|GLP1R|NASH|MASH)\b/gi);
+        const targetMatches = file.name.match(/\b(TIGIT|HER2|ERBB2|PD-1|PDL1|GLP-1|GLP1R|NASH|MASH)\b/gi);
         if (targetMatches && targetMatches.length > 0) {
           const targetName = targetMatches[0].toUpperCase();
           // Add to loaded targets if not already present
@@ -354,8 +354,8 @@ export default function ClinicalAgentInterface({
 
           {/* Tab Navigation - Match Patent/Financial Agent styling exactly */}
           {onBackToChat ? (
-            <div className="px-6 pt-4">
-              <div className="mb-4 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="p-4">
+              <div className="mb-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
                 {[
                   { id: 'analyze' as const, label: 'Analyze', icon: Search },
                   { id: 'trials' as const, label: 'Trials', icon: BarChart3 },
@@ -381,7 +381,7 @@ export default function ClinicalAgentInterface({
               </div>
             </div>
           ) : (
-            <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="mb-4 p-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
               {[
                 { id: 'analyze' as const, label: 'Analyze' },
                 { id: 'trials' as const, label: 'Trials' },
@@ -404,7 +404,7 @@ export default function ClinicalAgentInterface({
           )}
 
           {/* Tab Content - Match Patent/Financial Agent spacing */}
-          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'px-6 pb-4' : ''}`}>
+          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'p-4' : ''}`}>
             {activeTab === 'analyze' && (
               <>
                 {/* Target Input Section */}
@@ -496,7 +496,7 @@ export default function ClinicalAgentInterface({
                         type="text"
                         value={targetInput}
                         onChange={(e) => setTargetInput(e.target.value)}
-                        placeholder="Enter target (e.g., TIGIT, KRAS)"
+                        placeholder="Enter target (e.g., HER2, TIGIT)"
                         className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
                       />
                       <button
@@ -1062,7 +1062,7 @@ export default function ClinicalAgentInterface({
           </div>
 
           {/* Data Sources & Generate Report - Match Patent/Financial Agent spacing with dividers */}
-          <div className={`space-y-4 ${onBackToChat ? 'px-6' : ''}`}>
+          <div className={`space-y-4 ${onBackToChat ? 'p-4' : ''}`}>
             <ClinicalDataSourcesSection
               defaultOpen={false}
               onConfigure={() => {
@@ -1081,7 +1081,7 @@ export default function ClinicalAgentInterface({
 
           {/* Chat Messages Display */}
           {chatMessages.length > 0 && (
-            <div className={`border-t border-white/10 ${onBackToChat ? 'px-6 py-4' : 'px-6 py-4'}`}>
+            <div className={`border-t border-white/10 ${onBackToChat ? 'p-4' : 'p-4'}`}>
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {chatMessages.map((msg, i) => (
                   <div

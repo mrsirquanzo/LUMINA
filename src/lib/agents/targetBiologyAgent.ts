@@ -10,6 +10,7 @@ import { UniProtClient } from '../clients/biology/uniprotClient';
 import { PubMedClient } from '../clients/biology/pubmedClient';
 import { createLLMClient } from '../llm/clientFactory';
 import type { ILLMClient, LLMClientConfig } from '../llm/types';
+import { AGENT_PROMPTS } from '../agentPrompts';
 import type {
   TargetAssessmentReport,
   GeneticEvidence,
@@ -105,17 +106,25 @@ export class TargetBiologyAgent {
       return this.fallbackAnswerQuery(query, report);
     }
 
+    const sourcesBlock = this.buildSourcesReferencedBlock(report);
     const prompt = `You are a target biology expert. Answer the following question about ${report.targetSymbol} based on this assessment report:
 
 Question: ${query}
 
+STRICT CITATION REQUIREMENTS:
+- Use in-text numbered citations like [1] immediately after each factual claim.
+- Include a "## 📚 Sources Referenced" section at the end.
+- You may ONLY cite sources listed below. If you cannot support a claim from these sources, put it under "Needs verification" and explain what to check.
+
 Assessment Report:
 ${JSON.stringify(report, null, 2)}
 
-Provide a concise, accurate answer with specific metrics and citations where relevant.`;
+${sourcesBlock}
+
+Provide a concise, accurate answer with specific metrics and citations.`;
 
     const response = await this.llm.sendMessage(
-      'You are a target biology specialist. Provide accurate, cited answers based on the assessment data.',
+      AGENT_PROMPTS.target_biology,
       prompt,
       { maxTokens: 2048 }
     );
@@ -621,10 +630,19 @@ Disease associations: ${JSON.stringify(associations.slice(0, 5))}
 Constraint metrics: ${constraint?.interpretation ?? 'Not available'}
 Overall strength: ${strength}
 
+STRICT CITATION REQUIREMENTS:
+- Use in-text numbered citations like [1] after factual claims.
+- Include "## 📚 Sources Referenced" at the end.
+- If you cannot support a statement with the sources, put it under "Needs verification".
+
+SOURCES YOU MAY CITE:
+[1] Open Targets Platform. Gene/Disease associations. Accessed: ${new Date().toISOString().slice(0, 10)}. [View →](https://platform.opentargets.org/)
+[2] gnomAD. Gene constraint metrics. Accessed: ${new Date().toISOString().slice(0, 10)}. [View →](https://gnomad.broadinstitute.org/)
+
 Focus on: validation quality, key disease links, and constraint implications for druggability.`;
 
     const response = await this.llm.sendMessage(
-      'You are a target biology expert. Provide concise, accurate summaries.',
+      AGENT_PROMPTS.target_biology,
       prompt,
       { maxTokens: 512 }
     );
@@ -654,10 +672,20 @@ Tractability: ${tractabilityBucket}
 Existing compounds: ${JSON.stringify(existingCompounds.slice(0, 3))}
 Recommended modalities: ${recommendedModalities.join(', ')}
 
+STRICT CITATION REQUIREMENTS:
+- Use in-text numbered citations like [1] after factual claims.
+- Include "## 📚 Sources Referenced" at the end.
+- If you cannot support a statement with the sources, put it under "Needs verification".
+
+SOURCES YOU MAY CITE:
+[1] UniProt. Protein class and annotations. Accessed: ${new Date().toISOString().slice(0, 10)}. [View →](https://www.uniprot.org/)
+[2] ChEMBL. Existing compounds/activities. Accessed: ${new Date().toISOString().slice(0, 10)}. [View →](https://www.ebi.ac.uk/chembl/)
+[3] RCSB PDB. Structural entries (if present). Accessed: ${new Date().toISOString().slice(0, 10)}. [View →](https://www.rcsb.org/)
+
 Focus on: tractability, existing drug development efforts, and recommended approaches.`;
 
     const response = await this.llm.sendMessage(
-      'You are a target biology expert. Provide concise, accurate summaries.',
+      AGENT_PROMPTS.target_biology,
       prompt,
       { maxTokens: 512 }
     );
@@ -683,10 +711,18 @@ Focus on: tractability, existing drug development efforts, and recommended appro
 
 ${abstracts}
 
+STRICT CITATION REQUIREMENTS:
+- Use in-text numbered citations like [1] after factual claims.
+- Include "## 📚 Sources Referenced" at the end.
+- Cite using the PMID list below.
+
+SOURCES YOU MAY CITE:
+${this.buildPubMedSources(publications.slice(0, 5))}
+
 Provide a 3-4 sentence summary of: the target's biological function, disease relevance, and key mechanistic insights.`;
 
     const response = await this.llm.sendMessage(
-      'You are a target biology expert. Synthesize mechanistic understanding from literature.',
+      AGENT_PROMPTS.target_biology,
       prompt,
       { maxTokens: 1024 }
     );
@@ -703,10 +739,20 @@ Provide a 3-4 sentence summary of: the target's biological function, disease rel
       return `Limited preclinical evidence available for ${targetSymbol}.`;
     }
 
-    const prompt = `Summarize the preclinical evidence for targeting ${targetSymbol}${indication ? ` in ${indication}` : ''} in 2-3 sentences based on ${publications.length} publications. Focus on: animal models, efficacy signals, and translational potential.`;
+    const prompt = `Summarize the preclinical evidence for targeting ${targetSymbol}${indication ? ` in ${indication}` : ''} in 2-3 sentences based on ${publications.length} publications.
+
+STRICT CITATION REQUIREMENTS:
+- Use in-text numbered citations like [1] after factual claims.
+- Include "## 📚 Sources Referenced" at the end.
+- Cite using the PMID list below.
+
+SOURCES YOU MAY CITE:
+${this.buildPubMedSources(publications.slice(0, 6))}
+
+Focus on: animal models, efficacy signals, and translational potential.`;
 
     const response = await this.llm.sendMessage(
-      'You are a target biology expert. Summarize preclinical evidence.',
+      AGENT_PROMPTS.target_biology,
       prompt,
       { maxTokens: 512 }
     );
@@ -769,6 +815,20 @@ Provide a 3-4 sentence summary of: the target's biological function, disease rel
       return `Target Assessment for ${targetSymbol}${indication ? ` in ${indication}` : ''}: Genetic validation is ${genetic?.validationStrength ?? 'unknown'}. ${druggability?.druggabilitySummary ?? ''} ${safety?.safetySummary ?? ''}`;
     }
 
+    const reportForSources: TargetAssessmentReport = {
+      targetSymbol,
+      indication,
+      assessmentDate: new Date().toISOString(),
+      geneticEvidence: genetic,
+      druggability,
+      literature,
+      safety,
+      overallRecommendation: '',
+      keyRisks: [],
+      nextSteps: [],
+      executiveSummary: '',
+    };
+    const sourcesBlock = this.buildSourcesReferencedBlock(reportForSources);
     const prompt = `Generate a 2-3 paragraph executive summary for ${targetSymbol} as a therapeutic target${indication ? ` for ${indication}` : ''}.
 
 Genetic validation: ${genetic?.summary ?? 'Not assessed'}
@@ -776,15 +836,53 @@ Druggability: ${druggability?.druggabilitySummary ?? 'Not assessed'}
 Literature: ${literature?.mechanisticSummary ?? 'Not assessed'}
 Safety: ${safety?.safetySummary ?? 'Not assessed'}
 
+STRICT CITATION REQUIREMENTS:
+- Use in-text numbered citations like [1] immediately after each factual claim.
+- Include a "## 📚 Sources Referenced" section at the end.
+- You may ONLY cite sources listed below.
+
+${sourcesBlock}
+
 Structure as: (1) Overall assessment and recommendation, (2) Key strengths and supporting evidence, (3) Key risks and gaps to address.`;
 
     const response = await this.llm.sendMessage(
-      'You are a target biology expert. Generate executive summaries for biotech due diligence.',
+      AGENT_PROMPTS.target_biology,
       prompt,
       { maxTokens: 1024 }
     );
 
     return response.content;
+  }
+
+  private buildPubMedSources(publications: Publication[]): string {
+    const uniq = new Map<string, Publication>();
+    for (const p of publications) if (p?.pmid && !uniq.has(p.pmid)) uniq.set(p.pmid, p);
+    const list = Array.from(uniq.values()).slice(0, 10);
+    if (list.length === 0) return '[1] PubMed. No publications provided.';
+    return list
+      .map((p, i) => {
+        const n = i + 1;
+        const title = (p.title || '').replace(/\s+/g, ' ').trim();
+        const journal = (p.journal || '').trim();
+        const year = p.year ? String(p.year) : '';
+        const authors = (p.authors || '').trim() || 'Authors';
+        return `[${n}] ${authors}. "${title}"${journal ? ` ${journal}.` : ''}${year ? ` ${year}.` : ''} PMID: ${p.pmid}. [View →](https://pubmed.ncbi.nlm.nih.gov/${p.pmid}/)`;
+      })
+      .join('\n');
+  }
+
+  private buildSourcesReferencedBlock(report: TargetAssessmentReport): string {
+    const date = new Date().toISOString().slice(0, 10);
+    const pubs = report.literature?.keyPublications || [];
+    const pubSources = this.buildPubMedSources(pubs);
+    return `SOURCES YOU MAY CITE:
+[1] Open Targets Platform. Evidence summary. Accessed: ${date}. [View →](https://platform.opentargets.org/)
+[2] gnomAD. Gene constraint metrics. Accessed: ${date}. [View →](https://gnomad.broadinstitute.org/)
+[3] UniProt. Protein annotations. Accessed: ${date}. [View →](https://www.uniprot.org/)
+[4] ChEMBL. Bioactivity/compound data. Accessed: ${date}. [View →](https://www.ebi.ac.uk/chembl/)
+
+PubMed (key publications):
+${pubSources}`;
   }
 
   /**

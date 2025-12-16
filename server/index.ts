@@ -30,6 +30,13 @@ import authLoginRoutes from './api/auth/login';
 import authCheckRoutes from './api/auth/check';
 import targetBiologyRoutes from './api/agents/target-biology';
 import patentParsingRoutes from './api/patent-parsing';
+import intelligenceFeedRoutes from './api/intelligence/feed';
+import intelligenceUnreadRoutes from './api/intelligence/unread';
+import intelligenceMarkSeenRoutes from './api/intelligence/mark-seen';
+import intelligenceDigestRoutes from './api/intelligence/digest';
+import intelligenceDigestJobsRoutes from './api/intelligence/digest-jobs';
+import { startIntelligenceJobRunner } from './lib/intelligence/jobRunner';
+import { runDigestJob } from './lib/intelligence/digestWorker';
 
 // Routes
 app.use('/api/agents/orchestrator', orchestratorRoutes);
@@ -40,6 +47,11 @@ app.use('/api/fetch-url', fetchUrlRoutes);
 app.use('/api/auth/login', authLoginRoutes);
 app.use('/api/auth/check', authCheckRoutes);
 app.use('/api/patent-parsing', patentParsingRoutes);
+app.use('/api/intelligence/feed', intelligenceFeedRoutes);
+app.use('/api/intelligence/unread', intelligenceUnreadRoutes);
+app.use('/api/intelligence/mark-seen', intelligenceMarkSeenRoutes);
+app.use('/api/intelligence/digest', intelligenceDigestRoutes);
+app.use('/api/intelligence/digest-jobs', intelligenceDigestJobsRoutes);
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {
@@ -50,6 +62,11 @@ app.get('/api/health', (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`🚀 LUMINA Backend Server running on port ${PORT}`);
   console.log(`📡 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+
+  // Phase 3: resume queued/running digest jobs after restarts
+  startIntelligenceJobRunner(async (jobId, payload, entryKey) => {
+    await runDigestJob(jobId, payload, entryKey);
+  });
 });
 
 export default app;

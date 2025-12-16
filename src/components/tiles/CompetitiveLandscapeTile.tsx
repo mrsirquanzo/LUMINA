@@ -22,11 +22,15 @@ interface CompetitiveLandscapeTileProps {
       opportunity: string;
       rationale: string;
     }>;
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function CompetitiveLandscapeTile({ data, loading }: CompetitiveLandscapeTileProps) {
+export default function CompetitiveLandscapeTile({ data, loading, onAgentClick, extendedIntelligence }: CompetitiveLandscapeTileProps) {
   const [showTable] = useState(true);
 
   const getIntensityColor = (intensity: CompetitiveIntensity) => {
@@ -48,7 +52,11 @@ export default function CompetitiveLandscapeTile({ data, loading }: CompetitiveL
       icon={<Users className="w-5 h-5" />}
       tileType="market"
       loading={loading}
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
       className="h-[280px]"
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         <div

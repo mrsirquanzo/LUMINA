@@ -436,8 +436,8 @@ export default function FinancialAgentInterface({
 
           {/* Tab Navigation - Match Patent Agent styling exactly (no extra wrapper, direct in flow) */}
           {onBackToChat ? (
-            <div className="px-6 pt-4">
-              <div className="mb-4 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="p-4">
+              <div className="mb-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
                 {[
                   { id: 'analyze' as const, label: 'Analyze', icon: BarChart3 },
                   { id: 'models' as const, label: 'Models', icon: Calculator },
@@ -463,7 +463,7 @@ export default function FinancialAgentInterface({
               </div>
             </div>
           ) : (
-            <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="mb-4 p-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
               {[
                 { id: 'analyze' as const, label: 'Analyze' },
                 { id: 'models' as const, label: 'Models' },
@@ -485,8 +485,8 @@ export default function FinancialAgentInterface({
             </div>
           )}
 
-          {/* Tab Content - Match Patent Agent spacing (px-6 for content sections only when in analysis view) */}
-          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'px-6 pb-4' : ''}`}>
+          {/* Tab Content - Match Sonny MultiAgent padding (p-4 for consistent alignment) */}
+          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'p-4' : ''}`}>
             {activeTab === 'analyze' && (
               <>
                 {/* Documents Section */}
@@ -1094,7 +1094,7 @@ export default function FinancialAgentInterface({
           </div>
 
           {/* Data Sources & Generate Report - Match Patent Agent spacing with dividers */}
-          <div className={`space-y-4 ${onBackToChat ? 'px-6' : ''}`}>
+          <div className={`space-y-4 ${onBackToChat ? 'p-4' : ''}`}>
             <FinancialDataSourcesSection
               defaultOpen={false}
               onConfigure={() => {

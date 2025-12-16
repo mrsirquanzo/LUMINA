@@ -14,7 +14,10 @@ import {
   Bot,
 } from 'lucide-react';
 import type { Citation } from '../types';
+import type { AgentType } from '../lib/multiAgentTypes';
 import Skeleton from './Skeleton';
+import AgentBadge from './shared/AgentBadge';
+
 interface TileProps {
   title: string;
   subtitle?: string;
@@ -31,6 +34,10 @@ interface TileProps {
   extendedIntelligence?: React.ReactNode;
   methodology?: string;
   references?: Citation[];
+  onClick?: () => void;
+  agents?: readonly (AgentType | 'sonny')[];
+  primaryAgent?: AgentType | 'sonny';
+  onAgentClick?: (agent: AgentType | 'sonny', tileTitle: string, tileData?: any) => void;
 }
 
 interface ChatMessage {
@@ -61,6 +68,10 @@ const Tile = memo(function Tile({
   extendedIntelligence,
   methodology,
   references = [],
+  onClick,
+  agents,
+  primaryAgent,
+  onAgentClick,
 }: TileProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMethodologyOpen, setIsMethodologyOpen] = useState(false);
@@ -190,7 +201,7 @@ const Tile = memo(function Tile({
     // Try to extract from title (e.g., "Expression Biology - TROP2")
     const titleMatch = title.match(/\b([A-Z]{2,10})\b/);
     if (titleMatch) {
-      const commonGenes = ['EGFR', 'KRAS', 'BRAF', 'TP53', 'CD19', 'TROP2', 'HER2', 'PD1', 'PDL1', 'TIGIT'];
+      const commonGenes = ['EGFR', 'BRAF', 'TP53', 'CD19', 'TROP2', 'HER2', 'PD1', 'PDL1', 'TIGIT'];
       if (commonGenes.includes(titleMatch[1])) {
         return titleMatch[1];
       }
@@ -401,7 +412,9 @@ const Tile = memo(function Tile({
         variants={tileVariants}
         initial="hidden"
         animate="visible"
-        className={`group glass rounded-3xl p-6 border border-white/5 hover:border-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 relative card-hover overflow-hidden flex flex-col ${className}`}
+        data-ai-generated={aiGenerated ? 'true' : 'false'}
+        className={`group glass rounded-3xl p-6 border border-white/5 hover:border-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 relative card-hover overflow-hidden flex flex-col h-full ${onClick ? 'cursor-pointer' : ''} ${className}`}
+        onClick={onClick}
         aria-label={`${title} ${subtitle ? `- ${subtitle}` : ''}`}
       >
         {/* Header */}
@@ -421,12 +434,6 @@ const Tile = memo(function Tile({
                     aria-label="Verified"
                   />
                 )}
-                {aiGenerated && (
-                  <div className="flex items-center gap-1 text-xs text-textSecondary">
-                    <Sparkles className="w-3 h-3" />
-                    <span>AI</span>
-                  </div>
-                )}
               </div>
               {subtitle && (
                 <p className="text-sm font-medium text-textSecondary line-clamp-1 mt-1">{subtitle}</p>
@@ -434,6 +441,19 @@ const Tile = memo(function Tile({
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Agent badges */}
+            {agents && agents.length > 0 && (
+              <div className="flex items-center gap-1.5">
+                {agents.map((agent) => (
+                  <AgentBadge
+                    key={agent}
+                    agent={agent}
+                    size="sm"
+                    onClick={() => onAgentClick?.(agent, title, children)}
+                  />
+                ))}
+              </div>
+            )}
             {headerRight}
             {dataFreshness && (
               <div className="flex items-center gap-1 text-xs text-textTertiary">

@@ -1,4 +1,8 @@
 import { useState, useEffect, lazy, Suspense, useRef, type ReactNode } from 'react';
+import { useTileStore } from '../lib/tiles/store';
+import { useWorkspaceStore } from '../lib/workspaces/store';
+import { saveTilesToRecent } from '../lib/tiles/recentStorage';
+import WorkspaceSaveModal from './shared/WorkspaceSaveModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
@@ -41,14 +45,25 @@ import FinancialAgentInterface from './financial/FinancialAgentInterface';
 import FinancialDataSourcesSection from './financial/FinancialDataSourcesSection';
 import FinancialGenerateReportSection from './financial/FinancialGenerateReportSection';
 import ClinicalAgentInterface from './clinical/ClinicalAgentInterface';
+import ClinicalAgentInterfaceV2 from './clinical/ClinicalAgentInterfaceV2';
 import ClinicalDataSourcesSection from './clinical/ClinicalDataSourcesSection';
 import ClinicalGenerateReportSection from './clinical/ClinicalGenerateReportSection';
 import MarketResearchAgentInterface from './market/MarketResearchAgentInterface';
+import MarketResearchAgentInterfaceV2 from './market/MarketResearchAgentInterfaceV2';
 import RegulatoryAgentInterface from './regulatory/RegulatoryAgentInterface';
+import RegulatoryAgentInterfaceV2 from './regulatory/RegulatoryAgentInterfaceV2';
 import TargetBiologyAgentInterface from './target-biology/TargetBiologyAgentInterface';
+import TargetBiologyAgentInterfaceV2 from './target-biology/TargetBiologyAgentInterfaceV2';
+import PatentAgentInterfaceV2 from './patent/PatentAgentInterfaceV2';
+import FinancialAgentInterfaceV2 from './financial/FinancialAgentInterfaceV2';
+import { SonnyHeroInterface } from './sonny';
 import DataSourcesConfigModal from './patent/DataSourcesConfigModal';
+import { getStoredAgentMode, onAgentModeRequested, setStoredAgentMode } from '../lib/agentMode';
 
-// Custom Panel Icon - Same as left sidebar
+// Feature flag for Hero Skills redesign
+const USE_HERO_SKILLS = true;
+
+// Custom Panel Icon - Window with left sidebar (matches left sidebar)
 const PanelIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
@@ -58,10 +73,10 @@ const PanelIcon = ({ className }: { className?: string }) => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    {/* Left rectangle (wider) - represents the main panel */}
-    <rect x="1" y="1" width="11" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
-    {/* Right rectangle (narrower) - represents the sidebar */}
-    <rect x="13.5" y="1" width="5.5" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Outer window */}
+    <rect x="1" y="1" width="18" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Left sidebar strip */}
+    <rect x="2.5" y="2.5" width="3.5" height="11" rx="1" fill="currentColor" />
   </svg>
 );
 
@@ -76,7 +91,7 @@ const COLLAPSED_WIDTH = 60;
 
 // Sonny orchestrator info
 const SONNY_INFO = {
-  name: 'Sonny (Chief)',
+  name: 'Sonny',
   icon: '🤖',
   description: 'Coordinates all agents for comprehensive analysis',
   color: 'primary',
@@ -108,7 +123,7 @@ interface SonnySidePanelProps {
 export default function SonnySidePanel({
   isCollapsed,
   onToggleCollapse,
-  targetName = 'this target',
+  targetName = '',
   initialQuery,
   width,
   onWidthChange,
@@ -121,6 +136,7 @@ export default function SonnySidePanel({
   const [panelWidth, setPanelWidth] = useState(width || DEFAULT_WIDTH);
   const [isResizing, setIsResizing] = useState(false);
   const [isDemo, setIsDemo] = useState(true);
+  const [pendingModeRequest, setPendingModeRequest] = useState<'demo' | 'live' | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(false);
@@ -136,9 +152,35 @@ export default function SonnySidePanel({
   const [patentChatInput, setPatentChatInput] = useState('');
   const [isPatentProcessing, setIsPatentProcessing] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const [showSaveWorkspaceModal, setShowSaveWorkspaceModal] = useState(false);
+  const [showSaveNewWorkspaceModal, setShowSaveNewWorkspaceModal] = useState(false);
+  const [pendingQuery, setPendingQuery] = useState<string>('');
+  const previousWorkspaceRef = useRef<{ id: string; name: string; target: string } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Get tile store and workspace store
+  const tiles = useTileStore((state) => state.tiles);
+  const activeWorkspace = useTileStore((state) => state.activeWorkspace);
+  // Allow global header to open the "Save workspace" modal without placing the button in the side panel UI.
+  useEffect(() => {
+    const handleOpenSaveWorkspace = () => {
+      // In demo mode we don't want to prompt "save workspace" during investor flows.
+      if (isDemo) return;
+      const wsId = useTileStore.getState().activeWorkspace;
+      if (!wsId) return;
+      const allTiles = useTileStore.getState().tiles;
+      const tileCount = allTiles.filter((t) => t.workspaceIds.includes(wsId)).length;
+      if (tileCount === 0) return;
+      setShowSaveNewWorkspaceModal(true);
+    };
+
+    window.addEventListener('open-save-workspace', handleOpenSaveWorkspace as EventListener);
+    return () => window.removeEventListener('open-save-workspace', handleOpenSaveWorkspace as EventListener);
+  }, []);
+  const clearAllTiles = useTileStore((state) => state.clearAllTiles);
+  const getWorkspaceById = useWorkspaceStore((state) => state.getWorkspaceById);
 
   // Load selected agent from localStorage on mount
   useEffect(() => {
@@ -216,6 +258,58 @@ export default function SonnySidePanel({
     checkAuth();
   }, []);
 
+  // Initialize demo/live mode from localStorage (but do not force login on first load)
+  useEffect(() => {
+    const stored = getStoredAgentMode();
+    if (stored === 'demo') setIsDemo(true);
+    // If stored is live, we only switch once authenticated (handled below)
+  }, []);
+
+  // If user previously selected live and is authenticated, switch to live
+  useEffect(() => {
+    const stored = getStoredAgentMode();
+    if (stored === 'live' && isAuthenticated) {
+      setIsDemo(false);
+    }
+  }, [isAuthenticated]);
+
+  // If stored mode is live but the user is not authenticated, downgrade to demo for consistency
+  useEffect(() => {
+    if (isCheckingAuth) return;
+    const stored = getStoredAgentMode();
+    if (stored === 'live' && !isAuthenticated) {
+      setIsDemo(true);
+      setStoredAgentMode('demo');
+    }
+  }, [isCheckingAuth, isAuthenticated]);
+
+  // If the user requested live while auth was still checking, resolve it once we know auth state.
+  useEffect(() => {
+    if (pendingModeRequest !== 'live') return;
+    if (isCheckingAuth) return;
+
+    if (isAuthenticated) {
+      setIsDemo(false);
+      setStoredAgentMode('live');
+      setPendingModeRequest(null);
+      setShowLoginModal(false);
+      return;
+    }
+
+    // Not authenticated: prompt login (and keep demo until they log in).
+    setShowLoginModal(true);
+  }, [pendingModeRequest, isCheckingAuth, isAuthenticated]);
+
+  // Allow other UI (Header) to request demo/live changes
+  useEffect(() => {
+    return onAgentModeRequested(async (mode) => {
+      // Open panel if collapsed so user can see auth prompt/status
+      if (isCollapsed) onToggleCollapse();
+      await handleToggleMode(mode);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCollapsed, onToggleCollapse, isAuthenticated]);
+
   // Update panel width if prop changes
   useEffect(() => {
     if (width !== undefined) {
@@ -275,16 +369,45 @@ export default function SonnySidePanel({
     };
   }, [isResizing]);
 
-  // Auto-start if initial query is provided
+  // Auto-start if initial query is provided (no delay - using pre-recorded data)
   useEffect(() => {
     if (initialQuery && initialQuery.trim() && !showAnalysis && !isCollapsed) {
+      // Check if we need to save current workspace first
+      const visibleTiles = activeWorkspace 
+        ? tiles.filter(t => t.workspaceIds.includes(activeWorkspace))
+        : tiles;
+      
+      if (visibleTiles.length > 0 && activeWorkspace) {
+        // Save current tiles to recent before clearing
+        const currentWorkspace = getWorkspaceById(activeWorkspace);
+        if (currentWorkspace) {
+          saveTilesToRecent(
+            String(activeWorkspace),
+            currentWorkspace.name,
+            currentWorkspace.target,
+            visibleTiles
+          );
+          
+          // Store previous workspace info for save prompt
+          previousWorkspaceRef.current = {
+            id: String(activeWorkspace),
+            name: currentWorkspace.name,
+            target: currentWorkspace.target,
+          };
+          
+          // Prompt to save as workspace
+          setShowSaveWorkspaceModal(true);
+          setPendingQuery(initialQuery.trim());
+          return; // Don't start analysis yet
+        }
+      }
+      
+      // No existing tiles, proceed directly
       setQuery(initialQuery);
-      setTimeout(() => {
-        setShowAnalysis(true);
-        setIsProcessing(true);
-      }, 300);
+      setShowAnalysis(true);
+      setIsProcessing(true);
     }
-  }, [initialQuery, isCollapsed]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [initialQuery, isCollapsed, activeWorkspace, tiles, getWorkspaceById, clearAllTiles]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset when collapsed
   useEffect(() => {
@@ -293,29 +416,150 @@ export default function SonnySidePanel({
     }
   }, [isCollapsed, showAnalysis]);
 
+  // Listen for reset-demo event to reset panel state
+  useEffect(() => {
+    const handleResetDemo = () => {
+      setShowAnalysis(false);
+      setQuery('');
+      setIsProcessing(false);
+    };
+
+    window.addEventListener('reset-demo', handleResetDemo);
+    return () => window.removeEventListener('reset-demo', handleResetDemo);
+  }, []);
+
   const handleStartAnalysis = () => {
     if (query.trim() && !isProcessing) {
-      setIsProcessing(true);
-      setShowAnalysis(true);
+      // Check if there are existing tiles
+      const visibleTiles = activeWorkspace 
+        ? tiles.filter(t => t.workspaceIds.includes(activeWorkspace))
+        : tiles;
+      
+      if (visibleTiles.length > 0 && activeWorkspace) {
+        // Save current tiles to recent before clearing
+        const currentWorkspace = getWorkspaceById(activeWorkspace);
+        if (currentWorkspace) {
+          saveTilesToRecent(
+            String(activeWorkspace),
+            currentWorkspace.name,
+            currentWorkspace.target,
+            visibleTiles
+          );
+          
+          // Store previous workspace info for save prompt
+          previousWorkspaceRef.current = {
+            id: String(activeWorkspace),
+            name: currentWorkspace.name,
+            target: currentWorkspace.target,
+          };
+          
+          // Prompt to save as workspace
+          setShowSaveWorkspaceModal(true);
+          setPendingQuery(query.trim());
+          return; // Don't start analysis yet
+        }
+      }
+      
+      // No existing tiles, proceed directly
+      startNewAnalysis(query.trim());
     }
+  };
+
+  const startNewAnalysis = (analysisQuery: string) => {
+    // Start analysis
+    setIsProcessing(true);
+    setShowAnalysis(true);
+    setQuery(analysisQuery);
+    setShowSaveWorkspaceModal(false);
+  };
+
+  const handleSaveWorkspace = (workspaceName: string) => {
+    if (!workspaceName.trim() || !previousWorkspaceRef.current) {
+      startNewAnalysis(pendingQuery);
+      return;
+    }
+
+    const previousWorkspace = previousWorkspaceRef.current;
+    const workspaceId = previousWorkspace.id;
+
+    // Update the existing workspace with the new name
+    const workspace = getWorkspaceById(workspaceId);
+    if (workspace) {
+      useWorkspaceStore.getState().updateWorkspace(workspaceId, {
+        name: workspaceName.trim(),
+        lastModified: new Date().toISOString(),
+      });
+    } else {
+      // If workspace doesn't exist, create a new one
+      const newWorkspace = useWorkspaceStore.getState().addWorkspace({
+        name: workspaceName.trim(),
+        target: previousWorkspace.target,
+        persona: 'scientist',
+        createdDate: new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+        status: 'active',
+      });
+      
+      // Associate all tiles with the new workspace
+      const tilesToUpdate = tiles.filter(t => t.workspaceIds.includes(workspaceId));
+      tilesToUpdate.forEach(tile => {
+        useTileStore.getState().addTileToWorkspace(tile.id, String(newWorkspace.id));
+        // Remove from old workspace if it exists
+        if (tile.workspaceIds.includes(workspaceId)) {
+          useTileStore.getState().removeTileFromWorkspace(tile.id, workspaceId);
+        }
+      });
+
+      // Use the new workspace ID going forward
+      previousWorkspaceRef.current = {
+        id: String(newWorkspace.id),
+        name: newWorkspace.name,
+        target: newWorkspace.target,
+      };
+    }
+
+    // Set as active workspace
+    const nextWorkspaceId = previousWorkspaceRef.current?.id || workspaceId;
+    useWorkspaceStore.getState().setActiveWorkspace(nextWorkspaceId);
+    useTileStore.getState().setActiveWorkspace(nextWorkspaceId);
+
+    // Proceed with new analysis
+    startNewAnalysis(pendingQuery);
+  };
+
+  const handleSkipSave = () => {
+    // Skip saving, just proceed with new analysis
+    startNewAnalysis(pendingQuery);
   };
 
   const handleToggleMode = async (newMode: 'demo' | 'live') => {
     if (newMode === 'live') {
+      // If auth is still being determined, defer the switch until the check completes.
+      if (isCheckingAuth) {
+        setPendingModeRequest('live');
+        return;
+      }
       // Check authentication before enabling live mode
       if (!isAuthenticated) {
+        setPendingModeRequest('live');
         setShowLoginModal(true);
         return;
       }
       setIsDemo(false);
+      setStoredAgentMode('live');
+      setPendingModeRequest(null);
     } else {
       setIsDemo(true);
+      setStoredAgentMode('demo');
+      setPendingModeRequest(null);
     }
   };
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
     setIsDemo(false);
+    setStoredAgentMode('live');
+    setPendingModeRequest(null);
     setShowLoginModal(false);
   };
 
@@ -339,15 +583,73 @@ export default function SonnySidePanel({
       window.removeEventListener('switch-agent-with-context', handleSwitchWithContext as EventListener);
     };
   }, []);
+  
+  // Listen for tile click events to open agent panel
+  useEffect(() => {
+    const handleOpenAgentPanel = (event: CustomEvent) => {
+      const { agent, tileId, context } = event.detail;
+      
+      // Open panel if collapsed
+      if (isCollapsed) {
+        onToggleCollapse();
+        // Wait for panel to open before switching agent
+        setTimeout(() => {
+          // Switch to the selected agent (including sonny)
+          if (agent) {
+            setSelectedAgent(agent as AgentType | 'sonny');
+          }
+        }, 300);
+      } else {
+        // Switch to relevant agent immediately
+        if (agent) {
+          setSelectedAgent(agent as AgentType | 'sonny');
+        }
+      }
+      
+      // Pre-populate context if available
+      if (context) {
+        // Store full context for agent with tile information
+        setAgentContext({
+          ...context,
+          fromTile: true,
+          tileId: tileId || `tile-${Date.now()}`,
+          tileTitle: context.tileTitle,
+          fromAgent: agent,
+          targetAgent: agent,
+        });
+        
+        // Pre-populate query with context-aware prompt
+        if (context.target && context.tileTitle) {
+          const contextPrompt = `Based on the ${context.tileTitle || 'analysis'} for ${context.target}, `;
+          setQuery(contextPrompt);
+        }
+        
+        // Show suggested questions
+        if (context.suggestedQuestions && context.suggestedQuestions.length > 0) {
+          setShowSuggestions(true);
+        }
+
+        // Only show the "Context Available" card for contexts it can actually summarize (patent handoffs).
+        // Tile-origin context is still kept (for suggested questions + prompt prefill), but should not block agent navigation.
+        setShowContextSummary(Boolean((context as any)?.patentData));
+      }
+    };
+    
+    window.addEventListener('open-agent-panel', handleOpenAgentPanel as EventListener);
+    return () => window.removeEventListener('open-agent-panel', handleOpenAgentPanel as EventListener);
+  }, [isCollapsed, onToggleCollapse]);
 
   const handleAgentSelect = (agent: AgentType | 'sonny') => {
     // Close dropdown immediately
     setIsAgentDropdownOpen(false);
     
-    // Check if we have context from previous agent
+    const isTileContext = Boolean(agentContext?.fromTile);
+    // Check if we have context from previous agent (agent-to-agent handoff, not tile-origin)
     const hasContext = agentContext && agentContext.fromAgent !== agent;
-    
-    if (hasContext && agent !== 'sonny') {
+
+    // For non-tile contexts (e.g. Patent → another agent), keep the explicit handoff confirmation.
+    // For tile-origin context, switching agents should be immediate and non-blocking.
+    if (!isTileContext && hasContext && agent !== 'sonny') {
       // Show context summary before switching
       setAgentContext({ ...agentContext, targetAgent: agent });
       setShowContextSummary(true);
@@ -355,12 +657,21 @@ export default function SonnySidePanel({
       return;
     }
     
-    // Normal switch without context
+    // Switch agent
     setSelectedAgent(agent);
-    setShowContextSummary(false);
-    setAgentContext(null);
-    // Reset query and analysis view when switching agents
-    setQuery('');
+
+    if (isTileContext) {
+      // Preserve tile context + any prefilled query so users can freely browse agents
+      setAgentContext((prev: any) => (prev ? { ...prev, fromAgent: agent, targetAgent: agent } : prev));
+      setShowContextSummary(false);
+    } else {
+      // Normal switch without context
+      setShowContextSummary(false);
+      setAgentContext(null);
+      // Reset query and analysis view when switching agents
+      setQuery('');
+    }
+
     if (showAnalysis) {
       setShowAnalysis(false);
       setIsProcessing(false);
@@ -586,13 +897,17 @@ export default function SonnySidePanel({
         {/* Agent Selector - Always visible at top (except in multi-agent analysis or when in agent-specific analysis views) */}
         {/* Don't show top-level selector when in Financial/Patent/Clinical/Market Research analysis views - they have their own */}
         {/* Also don't show when Financial Agent, Clinical Agent, or Market Research Agent tabbed interface is active - they have their own */}
+        {/* Also don't show when Hero Skills V2 interfaces are active */}
         {!showAnalysis && 
          !(selectedAgent === 'patent' && showPatentAnalysis) && 
          !(selectedAgent === 'financial' && showFinancialAnalysis) && 
-         !(selectedAgent === 'financial' && !showFinancialAnalysis) &&
-         !(selectedAgent === 'clinical') &&
-         !(selectedAgent === 'market_research') &&
-         !(selectedAgent === 'regulatory') && (
+         !(USE_HERO_SKILLS && selectedAgent === 'financial' && !showFinancialAnalysis) &&
+         !(USE_HERO_SKILLS && selectedAgent === 'clinical') &&
+         !(USE_HERO_SKILLS && selectedAgent === 'market_research') &&
+         !(USE_HERO_SKILLS && selectedAgent === 'regulatory') &&
+         !(USE_HERO_SKILLS && selectedAgent === 'target_biology') &&
+         !(USE_HERO_SKILLS && selectedAgent === 'patent' && !showPatentAnalysis) &&
+         !(USE_HERO_SKILLS && selectedAgent === 'sonny') && (
           <div className="px-6 py-4 border-b border-white/10">
             {/* Enhanced Agent Selector Header - Card-based design */}
             <div className="bg-surfaceElevated border border-white/10 rounded-lg p-4 mb-4">
@@ -987,9 +1302,18 @@ export default function SonnySidePanel({
                 </>
               )}
 
+              {/* Sonny Hero Interface - V2 */}
+              {selectedAgent === 'sonny' && USE_HERO_SKILLS ? (
+                <SonnyHeroInterface
+                  targetName={targetName}
+                  isDemo={isDemo}
+                  currentAgent={selectedAgent}
+                  onAgentSelect={handleAgentSelect}
+                />
+              ) : null}
 
-              {/* Enhanced Query Input Area - Removed for Patent Agent, Financial Agent, Clinical Agent, Market Research Agent, Regulatory Agent, and Target Biology Agent (shown at bottom instead) */}
-              {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
+              {/* Enhanced Query Input Area - Removed for Patent Agent, Financial Agent, Clinical Agent, Market Research Agent, Regulatory Agent, and Target Biology Agent (shown at bottom instead) - Also hide when Hero Skills enabled */}
+              {!USE_HERO_SKILLS && selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
                 <div className="mb-4">
                   {/* Query Input Card */}
                   <div className="bg-surfaceElevated border border-white/10 rounded-lg p-4 mb-4">
@@ -1004,7 +1328,7 @@ export default function SonnySidePanel({
                       onKeyDown={handleKeyDown}
                       placeholder={
                         selectedAgent === 'sonny'
-                          ? `Ask Sonny about ${targetName}...`
+                          ? `Ask Sonny about ${targetName || 'a target'}...`
                           : selectedAgent === 'target_biology'
                           ? `Ask about biological mechanisms, genetics, or druggability...`
                           : selectedAgent === 'regulatory'
@@ -1025,548 +1349,595 @@ export default function SonnySidePanel({
                 </div>
               )}
 
-              {/* Clinical Agent - Tabbed Interface - Use full ClinicalAgentInterface component */}
+              {/* Clinical Agent - Hero Skills V2 or Tabbed Interface */}
               {selectedAgent === 'clinical' && (
-                <>
-                  {/* Agent Selector - Match Patent/Financial Agent structure exactly (same padding and width) */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-textSecondary mb-2">
-                      Talking to:
-                    </label>
-                    <div className="relative" ref={dropdownRef}>
-                      <button
-                        onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                        className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
-                          isAgentDropdownOpen ? getThemeClasses('blue').border : ''
-                        } hover:border-white/20`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">{currentAgentInfo.icon}</span>
-                          <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
-                        </div>
-                        <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      
-                      {isAgentDropdownOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                USE_HERO_SKILLS ? (
+                  <ClinicalAgentInterfaceV2
+                    targetName={targetName}
+                    currentAgent={selectedAgent}
+                    onAgentSelect={handleAgentSelect}
+                  />
+                ) : (
+                  <>
+                    {/* Agent Selector - Match Patent/Financial Agent structure exactly (same padding and width) */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-textSecondary mb-2">
+                        Talking to:
+                      </label>
+                      <div className="relative" ref={dropdownRef}>
+                        <button
+                          onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                            isAgentDropdownOpen ? getThemeClasses('blue').border : ''
+                          } hover:border-white/20`}
                         >
-                          {/* Sonny Option */}
-                          <button
-                            onClick={() => handleAgentSelect('sonny')}
-                            className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors"
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">{currentAgentInfo.icon}</span>
+                            <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
+                          </div>
+                          <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        
+                        {isAgentDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
                           >
-                            <span className="text-lg">{SONNY_INFO.icon}</span>
-                            <div className="flex-1">
-                              <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
-                              <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
-                            </div>
-                          </button>
-                          
-                          {/* Individual Agent Options */}
-                          {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
-                            const agentInfo = AGENT_INFO[agent];
-                            const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
-                            return (
-                              <button
-                                key={agent}
-                                onClick={() => handleAgentSelect(agent)}
-                                className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
-                                  selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
-                                }`}
-                              >
-                                <span className="text-lg">{agentInfo.icon}</span>
-                                <div className="flex-1">
-                                  <div className="text-textPrimary font-medium">{agentInfo.name}</div>
-                                  <div className="text-xs text-textSecondary">{agentInfo.description}</div>
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </motion.div>
-                      )}
+                            {/* Sonny Option */}
+                            <button
+                              onClick={() => handleAgentSelect('sonny')}
+                              className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors"
+                            >
+                              <span className="text-lg">{SONNY_INFO.icon}</span>
+                              <div className="flex-1">
+                                <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
+                                <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
+                              </div>
+                            </button>
+                            
+                            {/* Individual Agent Options */}
+                            {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
+                              const agentInfo = AGENT_INFO[agent];
+                              const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
+                              return (
+                                <button
+                                  key={agent}
+                                  onClick={() => handleAgentSelect(agent)}
+                                  className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
+                                    selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
+                                  }`}
+                                >
+                                  <span className="text-lg">{agentInfo.icon}</span>
+                                  <div className="flex-1">
+                                    <div className="text-textPrimary font-medium">{agentInfo.name}</div>
+                                    <div className="text-xs text-textSecondary">{agentInfo.description}</div>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </div>
+                      <p className="text-xs text-textSecondary mt-2">
+                        {currentAgentInfo.description}
+                      </p>
                     </div>
-                    <p className="text-xs text-textSecondary mt-2">
-                      {currentAgentInfo.description}
-                    </p>
-                  </div>
 
-                  {/* Agent Mode Controls */}
-                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
-                    <div className="space-y-3">
-                      {/* Agent Mode: Demo/Live */}
-                      <div>
-                        <label className="block text-xs font-medium text-textPrimary mb-2">
-                          Agent Mode
-                        </label>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleToggleMode('demo')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              isDemo
-                                ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Zap className="w-3.5 h-3.5" />
-                              <span className="font-medium">Demo</span>
-                            </div>
-                          </button>
-                          <button
-                            onClick={() => handleToggleMode('live')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              !isDemo
-                                ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50 relative`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span className="font-medium">Live</span>
-                              {!isAuthenticated && (
-                                <Lock className="w-3 h-3 ml-1" />
-                              )}
-                            </div>
-                          </button>
+                    {/* Agent Mode Controls */}
+                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                      <div className="space-y-3">
+                        {/* Agent Mode: Demo/Live */}
+                        <div>
+                          <label className="block text-xs font-medium text-textPrimary mb-2">
+                            Agent Mode
+                          </label>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleToggleMode('demo')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                isDemo
+                                  ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Zap className="w-3.5 h-3.5" />
+                                <span className="font-medium">Demo</span>
+                              </div>
+                            </button>
+                            <button
+                              onClick={() => handleToggleMode('live')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                !isDemo
+                                  ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50 relative`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span className="font-medium">Live</span>
+                                {!isAuthenticated && (
+                                  <Lock className="w-3 h-3 ml-1" />
+                                )}
+                              </div>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Render full ClinicalAgentInterface but without the back button */}
-                  <ClinicalAgentInterface 
-                    onBackToChat={undefined}
-                  />
-                </>
+                    
+                    {/* Render full ClinicalAgentInterface but without the back button */}
+                    <ClinicalAgentInterface 
+                      onBackToChat={undefined}
+                    />
+                  </>
+                )
               )}
 
-              {/* Financial Agent - Tabbed Interface - Use full FinancialAgentInterface component */}
+              {/* Financial Agent - Hero Skills V2 or Tabbed Interface */}
               {selectedAgent === 'financial' && !showFinancialAnalysis && (
-                <>
-                  {/* Agent Selector - Match Patent Agent structure exactly (same padding and width) */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-textSecondary mb-2">
-                      Talking to:
-                    </label>
-                    <div className="relative" ref={dropdownRef}>
-                      <button
-                        onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                        className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
-                          isAgentDropdownOpen ? getThemeClasses('green').border : ''
-                        } hover:border-white/20`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">{currentAgentInfo.icon}</span>
-                          <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
-                        </div>
-                        <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      
-                      {isAgentDropdownOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                USE_HERO_SKILLS ? (
+                  <FinancialAgentInterfaceV2
+                    targetName={targetName}
+                    currentAgent={selectedAgent}
+                    onAgentSelect={handleAgentSelect}
+                  />
+                ) : (
+                  <>
+                    {/* Agent Selector - Match Patent Agent structure exactly (same padding and width) */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-textSecondary mb-2">
+                        Talking to:
+                      </label>
+                      <div className="relative" ref={dropdownRef}>
+                        <button
+                          onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                            isAgentDropdownOpen ? getThemeClasses('green').border : ''
+                          } hover:border-white/20`}
                         >
-                          {/* Sonny Option */}
-                          <button
-                            onClick={() => handleAgentSelect('sonny')}
-                            className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors"
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">{currentAgentInfo.icon}</span>
+                            <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
+                          </div>
+                          <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        
+                        {isAgentDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
                           >
-                            <span className="text-lg">{SONNY_INFO.icon}</span>
-                            <div className="flex-1">
-                              <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
-                              <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
-                            </div>
-                          </button>
-                          
-                          {/* Individual Agent Options */}
-                          {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
-                            const agentInfo = AGENT_INFO[agent];
-                            const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
-                            return (
+                            {/* Sonny Option */}
+                            <button
+                              onClick={() => handleAgentSelect('sonny')}
+                              className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors"
+                            >
+                              <span className="text-lg">{SONNY_INFO.icon}</span>
+                              <div className="flex-1">
+                                <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
+                                <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
+                              </div>
+                            </button>
+                            
+                            {/* Individual Agent Options */}
+                            {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
+                              const agentInfo = AGENT_INFO[agent];
+                              const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
+                              return (
+                                <button
+                                  key={agent}
+                                  onClick={() => handleAgentSelect(agent)}
+                                  className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
+                                    selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
+                                  }`}
+                                >
+                                  <span className="text-lg">{agentInfo.icon}</span>
+                                  <div className="flex-1">
+                                    <div className="text-textPrimary font-medium">{agentInfo.name}</div>
+                                    <div className="text-xs text-textSecondary">{agentInfo.description}</div>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </div>
+                      <p className="text-xs text-textTertiary mt-2">
+                        {currentAgentInfo.description}
+                      </p>
+                    </div>
+
+                    {/* Agent Mode Controls */}
+                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                      <div className="space-y-3">
+                        {/* Agent Mode: Demo/Live */}
+                        <div>
+                          <label className="block text-xs font-medium text-textPrimary mb-2">
+                            Agent Mode
+                          </label>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleToggleMode('demo')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                isDemo
+                                  ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Zap className="w-3.5 h-3.5" />
+                                <span className="font-medium">Demo</span>
+                              </div>
+                            </button>
+                            <button
+                              onClick={() => handleToggleMode('live')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                !isDemo
+                                  ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50 relative`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span className="font-medium">Live</span>
+                                {!isAuthenticated && (
+                                  <Lock className="w-3 h-3 ml-1" />
+                                )}
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Render full FinancialAgentInterface but without the back button */}
+                    <FinancialAgentInterface 
+                      onBackToChat={undefined}
+                    />
+                  </>
+                )
+              )}
+
+              {/* Market Research Agent - Hero Skills V2 or Tabbed Interface */}
+              {selectedAgent === 'market_research' && (
+                USE_HERO_SKILLS ? (
+                  <MarketResearchAgentInterfaceV2
+                    targetName={targetName}
+                    currentAgent={selectedAgent}
+                    onAgentSelect={handleAgentSelect}
+                  />
+                ) : (
+                  <>
+                    {/* Agent Selector - Match Patent/Financial/Clinical Agent structure exactly (same padding and width) */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-textSecondary mb-2">
+                        Talking to:
+                      </label>
+                      <div className="relative" ref={dropdownRef}>
+                        <button
+                          onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                            isAgentDropdownOpen ? getThemeClasses('teal').border : ''
+                          } hover:border-white/20`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">{currentAgentInfo.icon}</span>
+                            <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
+                          </div>
+                          <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        
+                        {isAgentDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                          >
+                            {/* Sonny Option */}
+                            <button
+                              onClick={() => handleAgentSelect('sonny')}
+                              className="w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3"
+                            >
+                              <span className="text-lg">{SONNY_INFO.icon}</span>
+                              <div className="flex-1">
+                                <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
+                                <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
+                              </div>
+                            </button>
+                            
+                            {/* Individual Agent Options */}
+                            {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
+                              const agentInfo = AGENT_INFO[agent];
+                              const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
+                              return (
                               <button
-                                key={agent}
-                                onClick={() => handleAgentSelect(agent)}
-                                className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
-                                  selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
-                                }`}
-                              >
-                                <span className="text-lg">{agentInfo.icon}</span>
+                                  key={agent}
+                                  onClick={() => handleAgentSelect(agent)}
+                                  className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
+                                    selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
+                                  }`}
+                                >
+                                  <span className="text-lg">{agentInfo.icon}</span>
                                 <div className="flex-1">
-                                  <div className="text-textPrimary font-medium">{agentInfo.name}</div>
-                                  <div className="text-xs text-textSecondary">{agentInfo.description}</div>
+                                    <div className="text-textPrimary font-medium">{agentInfo.name}</div>
+                                    <div className="text-xs text-textSecondary">{agentInfo.description}</div>
                                 </div>
                               </button>
-                            );
-                          })}
-                        </motion.div>
-                      )}
-                    </div>
-                    <p className="text-xs text-textTertiary mt-2">
-                      {currentAgentInfo.description}
-                    </p>
-                  </div>
-
-                  {/* Agent Mode Controls */}
-                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
-                    <div className="space-y-3">
-                      {/* Agent Mode: Demo/Live */}
-                      <div>
-                        <label className="block text-xs font-medium text-textPrimary mb-2">
-                          Agent Mode
-                        </label>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleToggleMode('demo')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              isDemo
-                                ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Zap className="w-3.5 h-3.5" />
-                              <span className="font-medium">Demo</span>
-                            </div>
-                          </button>
-                          <button
-                            onClick={() => handleToggleMode('live')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              !isDemo
-                                ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50 relative`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span className="font-medium">Live</span>
-                              {!isAuthenticated && (
-                                <Lock className="w-3 h-3 ml-1" />
-                              )}
-                            </div>
-                          </button>
-                        </div>
+                              );
+                            })}
+                          </motion.div>
+                        )}
                       </div>
+                      <p className="text-xs text-textSecondary mt-2">
+                        {currentAgentInfo.description}
+                      </p>
                     </div>
-                  </div>
-                  
-                  {/* Render full FinancialAgentInterface but without the back button */}
-                  <FinancialAgentInterface 
-                    onBackToChat={undefined}
-                  />
-                </>
-              )}
 
-              {/* Market Research Agent - Tabbed Interface - Use full MarketResearchAgentInterface component */}
-              {selectedAgent === 'market_research' && (
-                <>
-                  {/* Agent Selector - Match Patent/Financial/Clinical Agent structure exactly (same padding and width) */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-textSecondary mb-2">
-                      Talking to:
-                    </label>
-                    <div className="relative" ref={dropdownRef}>
-                      <button
-                        onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                        className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
-                          isAgentDropdownOpen ? getThemeClasses('teal').border : ''
-                        } hover:border-white/20`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">{currentAgentInfo.icon}</span>
-                          <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
-                        </div>
-                        <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      
-                      {isAgentDropdownOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
-                        >
-                          {/* Sonny Option */}
-                          <button
-                            onClick={() => handleAgentSelect('sonny')}
-                            className="w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3"
-                          >
-                            <span className="text-lg">{SONNY_INFO.icon}</span>
-                            <div className="flex-1">
-                              <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
-                              <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
-                            </div>
-                          </button>
-                          
-                          {/* Individual Agent Options */}
-                          {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
-                            const agentInfo = AGENT_INFO[agent];
-                            const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
-                            return (
+                    {/* Agent Mode Controls */}
+                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                      <div className="space-y-3">
+                        {/* Agent Mode: Demo/Live */}
+                        <div>
+                          <label className="block text-xs font-medium text-textPrimary mb-2">
+                            Agent Mode
+                          </label>
+                          <div className="flex gap-2">
                             <button
-                                key={agent}
-                                onClick={() => handleAgentSelect(agent)}
-                                className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
-                                  selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
-                                }`}
-                              >
-                                <span className="text-lg">{agentInfo.icon}</span>
-                              <div className="flex-1">
-                                  <div className="text-textPrimary font-medium">{agentInfo.name}</div>
-                                  <div className="text-xs text-textSecondary">{agentInfo.description}</div>
+                              onClick={() => handleToggleMode('demo')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                isDemo
+                                  ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Zap className="w-3.5 h-3.5" />
+                                <span className="font-medium">Demo</span>
                               </div>
                             </button>
-                            );
-                          })}
-                        </motion.div>
-                      )}
-                    </div>
-                    <p className="text-xs text-textSecondary mt-2">
-                      {currentAgentInfo.description}
-                    </p>
-                  </div>
-
-                  {/* Agent Mode Controls */}
-                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
-                    <div className="space-y-3">
-                      {/* Agent Mode: Demo/Live */}
-                      <div>
-                        <label className="block text-xs font-medium text-textPrimary mb-2">
-                          Agent Mode
-                        </label>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleToggleMode('demo')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              isDemo
-                                ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Zap className="w-3.5 h-3.5" />
-                              <span className="font-medium">Demo</span>
-                            </div>
-                          </button>
-                          <button
-                            onClick={() => handleToggleMode('live')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              !isDemo
-                                ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50 relative`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span className="font-medium">Live</span>
-                              {!isAuthenticated && (
-                                <Lock className="w-3 h-3 ml-1" />
-                              )}
-                            </div>
-                          </button>
+                            <button
+                              onClick={() => handleToggleMode('live')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                !isDemo
+                                  ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50 relative`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span className="font-medium">Live</span>
+                                {!isAuthenticated && (
+                                  <Lock className="w-3 h-3 ml-1" />
+                                )}
+                              </div>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Render full MarketResearchAgentInterface but without the back button */}
-                  <MarketResearchAgentInterface
-                    onBackToChat={undefined}
-                  />
-                </>
+                    {/* Render full MarketResearchAgentInterface but without the back button */}
+                    <MarketResearchAgentInterface
+                      onBackToChat={undefined}
+                    />
+                  </>
+                )
               )}
 
-              {/* Regulatory Agent - Tabbed Interface - Use full RegulatoryAgentInterface component */}
+              {/* Regulatory Agent - Hero Skills V2 or Tabbed Interface */}
               {selectedAgent === 'regulatory' && (
-                <>
-                  {/* Agent Selector - Match Patent/Financial/Clinical/Market Agent structure exactly (same padding and width) */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-textSecondary mb-2">
-                      Talking to:
-                    </label>
-                    <div className="relative" ref={dropdownRef}>
-                      <button
-                        onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                        className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
-                          isAgentDropdownOpen ? getThemeClasses('orange').border : ''
-                        } hover:border-white/20`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">{currentAgentInfo.icon}</span>
-                          <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
-                        </div>
-                        <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      
-                      {isAgentDropdownOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                USE_HERO_SKILLS ? (
+                  <RegulatoryAgentInterfaceV2
+                    targetName={targetName}
+                    currentAgent={selectedAgent}
+                    onAgentSelect={handleAgentSelect}
+                  />
+                ) : (
+                  <>
+                    {/* Agent Selector - Match Patent/Financial/Clinical/Market Agent structure exactly (same padding and width) */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-textSecondary mb-2">
+                        Talking to:
+                      </label>
+                      <div className="relative" ref={dropdownRef}>
+                        <button
+                          onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                            isAgentDropdownOpen ? getThemeClasses('orange').border : ''
+                          } hover:border-white/20`}
                         >
-                          {/* Sonny Option */}
-                          <button
-                            onClick={() => handleAgentSelect('sonny')}
-                            className="w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3"
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">{currentAgentInfo.icon}</span>
+                            <span className="text-textPrimary font-medium">{currentAgentInfo.name}</span>
+                          </div>
+                          <ChevronDown className={`w-5 h-5 text-textSecondary transition-transform ${isAgentDropdownOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        
+                        {isAgentDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
                           >
-                            <span className="text-lg">{SONNY_INFO.icon}</span>
-                            <div className="flex-1">
-                              <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
-                              <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
-                            </div>
-                          </button>
-                          
-                          {/* Individual Agent Options */}
-                          {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
-                            const agentInfo = AGENT_INFO[agent];
-                            const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
-                            return (
+                            {/* Sonny Option */}
                             <button
-                                key={agent}
-                                onClick={() => handleAgentSelect(agent)}
-                                className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
-                                  selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
-                                }`}
-                              >
-                                <span className="text-lg">{agentInfo.icon}</span>
+                              onClick={() => handleAgentSelect('sonny')}
+                              className="w-full px-4 py-3 text-left hover:bg-surface transition-colors flex items-center gap-3"
+                            >
+                              <span className="text-lg">{SONNY_INFO.icon}</span>
                               <div className="flex-1">
-                                  <div className="text-textPrimary font-medium">{agentInfo.name}</div>
-                                  <div className="text-xs text-textSecondary">{agentInfo.description}</div>
+                                <div className="text-textPrimary font-medium">{SONNY_INFO.name}</div>
+                                <div className="text-xs text-textSecondary">{SONNY_INFO.description}</div>
                               </div>
                             </button>
-                            );
-                          })}
-                        </motion.div>
-                      )}
+                            
+                            {/* Individual Agent Options */}
+                            {(Object.keys(AGENT_INFO) as AgentType[]).map((agent) => {
+                              const agentInfo = AGENT_INFO[agent];
+                              const agentThemeClasses = getThemeClasses(AGENT_COLORS[agent]);
+                              return (
+                              <button
+                                  key={agent}
+                                  onClick={() => handleAgentSelect(agent)}
+                                  className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-surface transition-colors ${
+                                    selectedAgent === agent ? `${agentThemeClasses.bgLight} border-l-4 ${agentThemeClasses.border}` : ''
+                                  }`}
+                                >
+                                  <span className="text-lg">{agentInfo.icon}</span>
+                                <div className="flex-1">
+                                    <div className="text-textPrimary font-medium">{agentInfo.name}</div>
+                                    <div className="text-xs text-textSecondary">{agentInfo.description}</div>
+                                </div>
+                              </button>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </div>
+                      <p className="text-xs text-textSecondary mt-2">
+                        {currentAgentInfo.description}
+                      </p>
                     </div>
-                    <p className="text-xs text-textSecondary mt-2">
-                      {currentAgentInfo.description}
-                    </p>
-                  </div>
 
-                  {/* Agent Mode Controls */}
-                  <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
-                    <div className="space-y-3">
-                      {/* Agent Mode: Demo/Live */}
-                      <div>
-                        <label className="block text-xs font-medium text-textPrimary mb-2">
-                          Agent Mode
-                        </label>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleToggleMode('demo')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              isDemo
-                                ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Zap className="w-3.5 h-3.5" />
-                              <span className="font-medium">Demo</span>
-                            </div>
-                          </button>
-                          <button
-                            onClick={() => handleToggleMode('live')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              !isDemo
-                                ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50 relative`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span className="font-medium">Live</span>
-                              {!isAuthenticated && (
-                                <Lock className="w-3 h-3 ml-1" />
-                              )}
-                            </div>
-                          </button>
+                    {/* Agent Mode Controls */}
+                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                      <div className="space-y-3">
+                        {/* Agent Mode: Demo/Live */}
+                        <div>
+                          <label className="block text-xs font-medium text-textPrimary mb-2">
+                            Agent Mode
+                          </label>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleToggleMode('demo')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                isDemo
+                                  ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Zap className="w-3.5 h-3.5" />
+                                <span className="font-medium">Demo</span>
+                              </div>
+                            </button>
+                            <button
+                              onClick={() => handleToggleMode('live')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                !isDemo
+                                  ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50 relative`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span className="font-medium">Live</span>
+                                {!isAuthenticated && (
+                                  <Lock className="w-3 h-3 ml-1" />
+                                )}
+                              </div>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Render full RegulatoryAgentInterface but without the back button */}
-                  <RegulatoryAgentInterface
-                    onBackToChat={undefined}
-                  />
-                </>
+                    {/* Render full RegulatoryAgentInterface but without the back button */}
+                    <RegulatoryAgentInterface
+                      onBackToChat={undefined}
+                    />
+                  </>
+                )
               )}
 
-              {/* Target Biology Agent - Tabbed Interface - Use full TargetBiologyAgentInterface component */}
+              {/* Target Biology Agent - Hero Skills V2 or Tabbed Interface */}
               {selectedAgent === 'target_biology' && (
-                <>
-                  {/* Agent Mode Controls */}
-                  <div className="mb-4 px-6 bg-surfaceElevated border border-white/10 rounded-lg p-4">
-                    <div className="space-y-3">
-                      {/* Agent Mode: Demo/Live */}
-                      <div>
-                        <label className="block text-xs font-medium text-textSecondary mb-2">
-                          Agent Mode
-                        </label>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleToggleMode('demo')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              isDemo
-                                ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Zap className="w-3.5 h-3.5" />
-                              <span className="font-medium">Demo</span>
-                            </div>
-                          </button>
-                          <button
-                            onClick={() => handleToggleMode('live')}
-                            disabled={isProcessing}
-                            className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
-                              !isDemo
-                                ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
-                            } disabled:opacity-50 relative`}
-                          >
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span className="font-medium">Live</span>
-                              {!isAuthenticated && (
-                                <Lock className="w-3 h-3 ml-1" />
-                              )}
-                            </div>
-                          </button>
+                USE_HERO_SKILLS ? (
+                  <TargetBiologyAgentInterfaceV2
+                    targetName={targetName}
+                    currentAgent={selectedAgent}
+                    onAgentSelect={handleAgentSelect}
+                  />
+                ) : (
+                  <>
+                    {/* Agent Mode Controls */}
+                    <div className="mb-4 px-6 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                      <div className="space-y-3">
+                        {/* Agent Mode: Demo/Live */}
+                        <div>
+                          <label className="block text-xs font-medium text-textSecondary mb-2">
+                            Agent Mode
+                          </label>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleToggleMode('demo')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                isDemo
+                                  ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Zap className="w-3.5 h-3.5" />
+                                <span className="font-medium">Demo</span>
+                              </div>
+                            </button>
+                            <button
+                              onClick={() => handleToggleMode('live')}
+                              disabled={isProcessing}
+                              className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
+                                !isDemo
+                                  ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
+                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              } disabled:opacity-50 relative`}
+                            >
+                              <div className="flex items-center justify-center gap-1.5">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span className="font-medium">Live</span>
+                                {!isAuthenticated && (
+                                  <Lock className="w-3 h-3 ml-1" />
+                                )}
+                              </div>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <TargetBiologyAgentInterface 
-                    onBackToChat={undefined}
-                    targetSymbol={targetName}
-                  />
-                </>
+                    <TargetBiologyAgentInterface 
+                      onBackToChat={undefined}
+                      targetSymbol={targetName}
+                    />
+                  </>
+                )
               )}
 
-              {/* Patent Agent - Tabbed Interface */}
+              {/* Patent Agent - Hero Skills V2 or Tabbed Interface */}
               {selectedAgent === 'patent' && !showPatentAnalysis && (
-                <>
+                USE_HERO_SKILLS ? (
+                  <PatentAgentInterfaceV2
+                    targetName={targetName}
+                    currentAgent={selectedAgent}
+                    onAgentSelect={handleAgentSelect}
+                  />
+                ) : (
+                  <>
                   {/* Agent Mode Controls */}
                   <div className="mb-4 px-6 bg-surfaceElevated border border-white/10 rounded-lg p-4">
                     <div className="space-y-3">
@@ -1919,7 +2290,8 @@ export default function SonnySidePanel({
                       Press ⌘+Enter or Ctrl+Enter to send
                     </p>
                   </div>
-                </>
+                  </>
+                )
               )}
 
               {/* Enhanced Example Queries - Collapsible with icons - Hide for Patent, Financial, Clinical, Market Research, Regulatory, and Target Biology Agent (they use their own interfaces) */}
@@ -1929,10 +2301,10 @@ export default function SonnySidePanel({
                     onClick={() => setShowSuggestions(!showSuggestions)}
                     className="flex items-center justify-between w-full mb-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors"
                   >
-                    <div className="flex items-center gap-2">
-                      <Lightbulb className="w-4 h-4" />
+                    <span className="flex items-center gap-2">
+                      <Lightbulb className="w-4 h-4 shrink-0" />
                       <span>Suggested Questions</span>
-                    </div>
+                    </span>
                     {showSuggestions ? (
                       <ChevronUp className="w-4 h-4" />
                     ) : (
@@ -1950,6 +2322,22 @@ export default function SonnySidePanel({
                         className="space-y-2"
                       >
                     {(() => {
+                        // Use suggested questions from tile context if available
+                        if (agentContext?.suggestedQuestions && agentContext.suggestedQuestions.length > 0) {
+                          return agentContext.suggestedQuestions.map((question: string, idx: number) => (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                setQuery(question);
+                                setShowSuggestions(false);
+                              }}
+                              className="w-full text-left px-3 py-2 bg-surfaceElevated hover:bg-surface border border-white/10 rounded-lg transition-colors text-sm text-textSecondary hover:text-textPrimary"
+                            >
+                              <span className="flex-1">{question}</span>
+                            </button>
+                          ));
+                        }
+                        
                         // Context-aware examples with icons
                       const hasPatentContext = agentContext?.patentData;
                         let examples: Array<{ text: string; icon: ReactNode }>;
@@ -1971,17 +2359,17 @@ export default function SonnySidePanel({
                         ];
                       } else if (agent === 'target_biology') {
                         examples = [
-                            { text: `What's the biological mechanism of ${targetName}?`, icon: <Dna className="w-4 h-4" /> },
-                            { text: `Assess the genetic validation for ${targetName}`, icon: <Activity className="w-4 h-4" /> },
-                            { text: `What's the druggability profile of ${targetName}?`, icon: <BarChart3 className="w-4 h-4" /> },
-                            { text: `Evaluate safety concerns for ${targetName}`, icon: <AlertTriangle className="w-4 h-4" /> },
+                            { text: `What's the biological mechanism of ${targetName || 'this target'}?`, icon: <Dna className="w-4 h-4" /> },
+                            { text: `Assess the genetic validation for ${targetName || 'this target'}`, icon: <Activity className="w-4 h-4" /> },
+                            { text: `What's the druggability profile of ${targetName || 'this target'}?`, icon: <BarChart3 className="w-4 h-4" /> },
+                            { text: `Evaluate safety concerns for ${targetName || 'this target'}`, icon: <AlertTriangle className="w-4 h-4" /> },
                         ];
                       } else {
                         examples = [
-                            { text: `Compare ${targetName} to HER2`, icon: <BarChart3 className="w-4 h-4" /> },
-                            { text: `What are the key safety concerns for ${targetName}?`, icon: <AlertTriangle className="w-4 h-4" /> },
-                            { text: `What patents exist related to ${targetName}?`, icon: <FileText className="w-4 h-4" /> },
-                            { text: `What's the market opportunity for ${targetName}?`, icon: <TrendingUp className="w-4 h-4" /> },
+                            { text: `Compare ${targetName || 'this target'} to HER2`, icon: <BarChart3 className="w-4 h-4" /> },
+                            { text: `What are the key safety concerns for ${targetName || 'this target'}?`, icon: <AlertTriangle className="w-4 h-4" /> },
+                            { text: `What patents exist related to ${targetName || 'this target'}?`, icon: <FileText className="w-4 h-4" /> },
+                            { text: `What's the market opportunity for ${targetName || 'this target'}?`, icon: <TrendingUp className="w-4 h-4" /> },
                         ];
                       }
                       
@@ -1989,29 +2377,30 @@ export default function SonnySidePanel({
                         <button
                           key={idx}
                           onClick={() => {
-                              setQuery(example.text.replace(/^[📄🧬⚖️📊🔬💰📋📊🧬] /, ''));
+                              setQuery(example.text.replace(/^(?:📄|🧬|⚖️|📊|🔬|💰|📋|👩‍⚕️)\s/, ''));
                             if (selectedAgent === 'sonny') {
-                              setTimeout(() => handleStartAnalysis(), 100);
+                              // Start immediately - no delay needed for pre-recorded data
+                              handleStartAnalysis();
                             }
                           }}
                           disabled={isProcessing}
                             className="w-full text-left px-3 py-2.5 text-sm text-textSecondary bg-surfaceElevated border border-white/10 rounded-lg hover:border-purple-500/50 hover:text-textPrimary hover:bg-surface transition-all disabled:opacity-50 flex items-center gap-3 group"
                         >
-                            <span className="text-textTertiary group-hover:text-purple-400 transition-colors">
+                            <span className="flex items-center justify-center w-5 h-5 shrink-0 text-textTertiary group-hover:text-purple-400 transition-colors">
                               {example.icon}
                             </span>
-                            <span className="flex-1">{example.text}</span>
+                            <span className="flex-1 min-w-0">{example.text}</span>
                         </button>
                       ));
                     })()}
                       </motion.div>
-              )}
+                    )}
                   </AnimatePresence>
-            </div>
+                </div>
               )}
 
-              {/* Enhanced Start Button - Card-style with context - Hide for Patent Agent, Financial Agent, Clinical Agent, Market Research Agent, Regulatory Agent, and Target Biology Agent (they use their own interfaces) */}
-              {selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
+              {/* Enhanced Start Button - Card-style with context - Hide for Patent Agent, Financial Agent, Clinical Agent, Market Research Agent, Regulatory Agent, and Target Biology Agent (they use their own interfaces) - Also hide when Hero Skills enabled */}
+              {!USE_HERO_SKILLS && selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
                 <div className="mt-4">
                     <button
                       onClick={handleStartAnalysis}
@@ -2047,8 +2436,14 @@ export default function SonnySidePanel({
                   ← New Query
                 </button>
                 <div className="h-4 w-px bg-white/10" />
-                <span className="text-sm text-textSecondary">
-                  Mode: <span className="text-textPrimary font-medium">{isDemo ? 'Demo' : `${mode} (Live)`}</span>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full border text-xs font-semibold tracking-wide uppercase ${
+                    isDemo
+                      ? 'bg-warning/20 text-warning border-warning/30'
+                      : 'bg-success/20 text-success border-success/30'
+                  }`}
+                >
+                  {isDemo ? 'Demo' : 'Live'}
                 </span>
               </div>
               {isProcessing && (
@@ -2070,6 +2465,7 @@ export default function SonnySidePanel({
                   documents={processedDocuments}
                   mode={mode}
                   isDemo={isDemo}
+                  demoScenarioId={undefined} // Let orchestration engine match query to scenario
                   customAgents={undefined}
                   mcpEnabled={false}
                   onComplete={(synthesis: string, cost: number) => {
@@ -2104,6 +2500,38 @@ export default function SonnySidePanel({
           // TODO: Save data source configuration
           console.log('Data sources updated:', sources);
         }}
+      />
+
+      {/* Workspace Save Modal - Before starting new analysis */}
+      <WorkspaceSaveModal
+        isOpen={showSaveWorkspaceModal}
+        onClose={() => {
+          setShowSaveWorkspaceModal(false);
+          setPendingQuery('');
+        }}
+        onSave={handleSaveWorkspace}
+        onSkip={handleSkipSave}
+        workspaceName={previousWorkspaceRef.current?.name}
+        tileCount={previousWorkspaceRef.current ? tiles.filter(t => t.workspaceIds.includes(previousWorkspaceRef.current!.id)).length : 0}
+      />
+
+      {/* Workspace Save Modal - After analysis completes */}
+      <WorkspaceSaveModal
+        isOpen={showSaveNewWorkspaceModal}
+        onClose={() => setShowSaveNewWorkspaceModal(false)}
+        onSave={(workspaceName: string) => {
+          if (workspaceName.trim() && activeWorkspace) {
+            // Update workspace name
+            useWorkspaceStore.getState().updateWorkspace(activeWorkspace, {
+              name: workspaceName.trim(),
+              lastModified: new Date().toISOString(),
+            });
+          }
+          setShowSaveNewWorkspaceModal(false);
+        }}
+        onSkip={() => setShowSaveNewWorkspaceModal(false)}
+        workspaceName={activeWorkspace ? getWorkspaceById(activeWorkspace)?.name : undefined}
+        tileCount={tiles.filter(t => activeWorkspace ? t.workspaceIds.includes(activeWorkspace) : false).length}
       />
     </motion.aside>
   );

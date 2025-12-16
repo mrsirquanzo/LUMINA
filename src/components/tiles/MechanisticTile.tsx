@@ -4,9 +4,11 @@ import { TestTube, Sparkles } from 'lucide-react';
 interface MechanisticTileProps {
   data: any;
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function MechanisticTile({ data, loading }: MechanisticTileProps) {
+export default function MechanisticTile({ data, loading, onAgentClick, extendedIntelligence }: MechanisticTileProps) {
   return (
     <Tile
       title="Mechanistic Rationale"
@@ -14,6 +16,10 @@ export default function MechanisticTile({ data, loading }: MechanisticTileProps)
       tileType="general"
       loading={loading}
       className="h-[360px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         <div>

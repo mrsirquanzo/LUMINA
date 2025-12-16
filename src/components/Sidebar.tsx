@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import { useState, useEffect, useRef, memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   FlaskConical,
@@ -7,7 +7,6 @@ import {
   FolderOpen,
   History,
   Bell,
-  GitCompare,
   Settings,
   HelpCircle,
   User,
@@ -15,6 +14,10 @@ import {
   Target,
 } from 'lucide-react';
 import type { Persona, ViewState } from '../types';
+import { useWorkspaceStore } from '../lib/workspaces/store';
+import { useTileStore } from '../lib/tiles/store';
+import { formatTargetDisplayName, toTargetKey } from '../lib/targetNaming';
+import { useQuery } from '@tanstack/react-query';
 
 export interface Workspace {
   id: string | number;
@@ -25,6 +28,19 @@ export interface Workspace {
   lastModified: string;
   status: 'active' | 'completed' | 'archived';
   collaborators?: string[];
+  /**
+   * User-saved diligence flags for follow-up.
+   * Stored per-workspace so different users/sessions can track what matters to them.
+   */
+  flags?: Array<{
+    id: string;
+    contextKey: string; // e.g. "baseline-expression-biology" or tile id
+    title: string;
+    severity: 'high' | 'medium' | 'low';
+    note?: string;
+    createdAt: string;
+    updatedAt: string;
+  }>;
 }
 
 interface SidebarProps {
@@ -34,8 +50,9 @@ interface SidebarProps {
   onViewChange: (v: ViewState) => void;
   collapsed: boolean;
   setCollapsed: (c: boolean) => void;
-  currentTarget?: string;
-  recentWorkspaces?: Workspace[];
+  currentTarget?: string; // Optional override, will use active workspace if not provided
+  recentWorkspaces?: Workspace[]; // Deprecated - will use workspace store instead
+  onOpenSettings?: () => void;
 }
 
 const STORAGE_KEY = 'lumina-sidebar-collapsed';
@@ -45,7 +62,7 @@ const MAX_WIDTH = 500;
 const DEFAULT_WIDTH = 288;
 const COLLAPSED_WIDTH = 80;
 
-// Custom Panel Icon - Two rectangles (wider left, narrower right)
+// Custom Panel Icon - Window with left sidebar
 const PanelIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
@@ -55,10 +72,10 @@ const PanelIcon = ({ className }: { className?: string }) => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    {/* Left rectangle (wider) - represents the main panel */}
-    <rect x="1" y="1" width="11" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
-    {/* Right rectangle (narrower) - represents the sidebar */}
-    <rect x="13.5" y="1" width="5.5" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Outer window */}
+    <rect x="1" y="1" width="18" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Left sidebar strip */}
+    <rect x="2.5" y="2.5" width="3.5" height="11" rx="1" fill="currentColor" />
   </svg>
 );
 
@@ -69,8 +86,9 @@ const Sidebar = memo(function Sidebar({
   onViewChange,
   collapsed,
   setCollapsed,
-  currentTarget = 'TROP2',
-  recentWorkspaces = [],
+  currentTarget: currentTargetProp,
+  recentWorkspaces: recentWorkspacesProp,
+  onOpenSettings,
 }: SidebarProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_WIDTH);
@@ -78,6 +96,104 @@ const Sidebar = memo(function Sidebar({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
+  
+  // Get workspaces from store
+  const workspaces = useWorkspaceStore((state) => state.workspaces);
+  const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
+  const getWorkspaceById = useWorkspaceStore((state) => state.getWorkspaceById);
+  const setActiveWorkspace = useWorkspaceStore((state) => state.setActiveWorkspace);
+  
+  // Get current target from active workspace or use prop
+  // Return empty string if no target is selected (initial load)
+  const currentTarget = useMemo(() => {
+    if (currentTargetProp) return currentTargetProp;
+    if (activeWorkspaceId) {
+      const activeWorkspace = getWorkspaceById(activeWorkspaceId);
+      return activeWorkspace?.target ? formatTargetDisplayName(activeWorkspace.target) : '';
+    }
+    return ''; // Empty on initial load when no workspace is active
+  }, [currentTargetProp, activeWorkspaceId, getWorkspaceById]);
+
+  const { data: unreadData } = useQuery<{ unreadCount: number }>({
+    queryKey: ['intelligence-unread', currentTarget],
+    queryFn: async () => {
+      const url = new URL('/api/intelligence/unread', window.location.origin);
+      if (currentTarget) url.searchParams.set('target', currentTarget);
+      const res = await fetch(url.toString(), { method: 'GET' });
+      if (!res.ok) return { unreadCount: 0 };
+      return (await res.json()) as { unreadCount: number };
+    },
+    enabled: Boolean(currentTarget),
+    refetchInterval: 60 * 1000,
+    refetchOnWindowFocus: true,
+  });
+  const unreadCount = unreadData?.unreadCount ?? 0;
+  
+  // Get recent workspaces from store (sorted by lastModified, deduplicated, limit to 5)
+  const recentWorkspaces = useMemo(() => {
+    if (recentWorkspacesProp && recentWorkspacesProp.length > 0) {
+      return recentWorkspacesProp;
+    }
+    
+    // Deduplicate workspaces by target (keep most recent)
+    // For KRAS G12C, use a more specific key that includes the query
+    const workspaceMap = new Map<string, Workspace>();
+    workspaces.forEach(ws => {
+      // Create unique key: for KRAS G12C, use target + name; for others, just target
+      let key: string;
+      if (toTargetKey(ws.target) === 'kras' || ws.name.toLowerCase().includes('kras')) {
+        // For KRAS, use target + normalized name to distinguish G12C from other variants
+        const normalizedName = ws.name.toLowerCase().replace(/\s*analysis\s*$/i, '').trim();
+        key = `${toTargetKey(ws.target)}-${normalizedName}`;
+      } else {
+        // For other targets like TROP2, just use target
+        key = toTargetKey(ws.target);
+      }
+      
+      const existing = workspaceMap.get(key);
+      if (!existing || new Date(ws.lastModified) > new Date(existing.lastModified)) {
+        workspaceMap.set(key, ws);
+      }
+    });
+    
+    // Clean up workspace names (remove "Analysis" suffix and handle duplicate patterns)
+    const cleanedWorkspaces = Array.from(workspaceMap.values()).map(ws => {
+      let cleanName = ws.name
+        .replace(/\s*-\s*[^-]*Analysis\s*$/i, '') // Remove " - Analysis" suffix
+        .replace(/\s*Analysis\s*$/i, '') // Remove "Analysis" suffix
+        .trim();
+      
+      // Handle duplicate patterns like "KRAS G12C - KRAS G12C" -> "KRAS G12C"
+      const parts = cleanName.split(/\s*-\s*/);
+      if (parts.length === 2 && parts[0].trim().toLowerCase() === parts[1].trim().toLowerCase()) {
+        cleanName = parts[0].trim();
+      }
+      
+      return {
+        ...ws,
+        name: cleanName,
+      };
+    });
+    
+    // Filter to only show TROP2 and KRAS G12C workspaces
+    const filteredWorkspaces = cleanedWorkspaces.filter(ws => {
+      const targetKey = toTargetKey(ws.target);
+      const nameLower = ws.name.toLowerCase();
+      
+      // Include TROP2
+      if (targetKey === 'trop2') return true;
+      
+      // Include KRAS G12C (check both target and name)
+      if (targetKey.includes('kras') && nameLower.includes('g12c')) return true;
+      if (nameLower.includes('kras') && nameLower.includes('g12c')) return true;
+      
+      return false;
+    });
+    
+    return filteredWorkspaces
+      .sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
+      .slice(0, 5);
+  }, [workspaces, recentWorkspacesProp]);
 
   // Load collapsed state and width from localStorage on mount
   useEffect(() => {
@@ -170,7 +286,7 @@ const Sidebar = memo(function Sidebar({
       }
 
       const navItems: ViewState[] = ['dashboard', 'workspaces', 'feed'];
-      const allNavItems: ViewState[] = [...navItems, 'history', 'compare'];
+      const allNavItems: ViewState[] = [...navItems, 'history'];
       const currentIndex = allNavItems.indexOf(currentView);
 
       switch (e.key) {
@@ -192,7 +308,7 @@ const Sidebar = memo(function Sidebar({
           break;
         case 'End':
           e.preventDefault();
-          onViewChange('compare');
+          onViewChange('history');
           break;
       }
     };
@@ -216,15 +332,21 @@ const Sidebar = memo(function Sidebar({
     },
   };
 
-  const navItems = [
+  interface NavItem {
+    id: ViewState;
+    icon: typeof LayoutGrid;
+    label: string;
+    badge?: number;
+  }
+
+  const navItems: NavItem[] = [
     { id: 'dashboard' as ViewState, icon: LayoutGrid, label: 'Dashboard' },
     { id: 'workspaces' as ViewState, icon: FolderOpen, label: 'Workspaces' },
     { id: 'history' as ViewState, icon: History, label: 'Recent' },
   ];
 
-  const bottomNavItems = [
-    { id: 'feed' as ViewState, icon: Bell, label: 'Intelligence Feed', badge: 3 },
-    { id: 'compare' as ViewState, icon: GitCompare, label: 'Compare Mode' },
+  const bottomNavItems: NavItem[] = [
+    { id: 'feed' as ViewState, icon: Bell, label: 'Intelligence Feed', badge: unreadCount > 0 ? unreadCount : undefined },
   ];
 
   const getWorkspaceStatusColor = (status: Workspace['status']) => {
@@ -341,21 +463,16 @@ const Sidebar = memo(function Sidebar({
         </div>
       </div>
 
-      {/* Current Context - Notion Style */}
-      {!collapsed && currentTarget && (
-        <div className="px-3 py-3 border-b border-white/5">
-          <div className="flex items-center gap-2 mb-2.5 px-2">
-            <Target className="w-4 h-4 text-textTertiary" />
-            <span className="text-xs text-textTertiary font-medium tracking-wider uppercase">CURRENT TARGET</span>
-          </div>
-          <h3 className="text-lg font-semibold text-textPrimary mb-2.5 px-2 leading-tight">{currentTarget}</h3>
-          <div className="px-2">
-            <span className="px-2.5 py-1.5 text-sm font-medium bg-primary/20 text-primary rounded">
-              Oncology
-            </span>
-          </div>
-        </div>
-      )}
+          {/* Current Context - Notion Style */}
+          {!collapsed && currentTarget && (
+            <div className="px-3 py-3 border-b border-white/5">
+              <div className="flex items-center gap-2 mb-2.5 px-2">
+                <Target className="w-4 h-4 text-textTertiary" />
+                <span className="text-xs text-textTertiary font-medium tracking-wider uppercase">CURRENT TARGET</span>
+              </div>
+              <h3 className="text-lg font-semibold text-textPrimary mb-2.5 px-2 leading-tight">{currentTarget}</h3>
+            </div>
+          )}
 
       {/* Navigation Items - Notion Style */}
       <nav className="flex-1 overflow-y-auto custom-scrollbar py-1">
@@ -457,17 +574,28 @@ const Sidebar = memo(function Sidebar({
               <span className="text-xs text-textTertiary font-medium tracking-wider uppercase">WORKSPACES</span>
             </div>
             <div className="space-y-1">
-              {recentWorkspaces.slice(0, 5).map((workspace) => (
-                <button
-                  key={workspace.id}
-                  className="w-full flex items-center gap-2.5 px-2 py-2 rounded text-textSecondary hover:text-textPrimary hover:bg-surface/30 transition-colors group"
-                >
-                  <div className={`w-2 h-2 rounded-full ${getWorkspaceStatusColor(workspace.status)}`} />
-                  <div className="flex-1 min-w-0 text-left">
-                    <p className="text-base leading-relaxed truncate">{workspace.name}</p>
-                  </div>
-                </button>
-              ))}
+              {recentWorkspaces.map((workspace) => {
+                const isActive = String(workspace.id) === String(activeWorkspaceId);
+                return (
+                  <button
+                    key={workspace.id}
+                    onClick={() => {
+                      sessionStorage.setItem('lumina-has-selected-target', 'true');
+                      setActiveWorkspace(String(workspace.id));
+                    }}
+                    className={`w-full flex items-center gap-2.5 px-2 py-2 rounded transition-colors group ${
+                      isActive
+                        ? 'text-textPrimary bg-surface/50 border border-primary/20'
+                        : 'text-textSecondary hover:text-textPrimary hover:bg-surface/30'
+                    }`}
+                  >
+                    <div className={`w-2 h-2 rounded-full ${getWorkspaceStatusColor(workspace.status)}`} />
+                    <div className="flex-1 min-w-0 text-left">
+                      <p className="text-base leading-relaxed truncate">{workspace.name}</p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
@@ -480,31 +608,36 @@ const Sidebar = memo(function Sidebar({
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="w-full flex items-center gap-3 px-2 py-2 text-textSecondary hover:text-textPrimary hover:bg-surface/30 rounded transition-colors"
-            aria-label="Collapse sidebar"
+            aria-label="Close sidebar"
+            title="Close sidebar"
           >
             <PanelIcon className="w-5 h-5 flex-shrink-0" />
-            <span className="text-base leading-relaxed">Collapse</span>
+            <span className="text-base leading-relaxed">Close Sidebar</span>
           </button>
         )}
         {collapsed && (
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="w-full flex items-center justify-center p-2 text-textSecondary hover:text-textPrimary hover:bg-surface/30 rounded transition-colors"
-            aria-label="Expand sidebar"
-            title="Expand sidebar"
+            aria-label="Open sidebar"
+            title="Open sidebar"
           >
             <PanelIcon className="w-5 h-5" />
           </button>
         )}
 
         {!collapsed && (
-          <button className="w-full flex items-center gap-3 px-2 py-2 text-textSecondary hover:text-textPrimary hover:bg-surface/30 rounded transition-colors">
+          <button
+            onClick={onOpenSettings}
+            className="w-full flex items-center gap-3 px-2 py-2 text-textSecondary hover:text-textPrimary hover:bg-surface/30 rounded transition-colors"
+          >
             <Settings className="w-5 h-5 flex-shrink-0" />
             <span className="text-base leading-relaxed">Settings</span>
           </button>
         )}
         {collapsed && (
           <button
+            onClick={onOpenSettings}
             className="w-full flex items-center justify-center p-2 text-textSecondary hover:text-textPrimary hover:bg-surface/30 rounded transition-colors"
             title="Settings"
           >

@@ -17,16 +17,16 @@ export function CitationBadge({ number, inline = true, citation }: CitationBadge
   if (inline) {
     return (
       <sup className="relative group inline-block">
-        <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] mx-0.5 px-1 text-[10px] font-bold text-blue-700 bg-blue-100 border border-blue-300 rounded-sm hover:bg-blue-200 transition-colors cursor-help">
+        <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] mx-0.5 px-1 text-[10px] font-bold text-primary bg-primary/15 border border-primary/30 rounded-sm hover:bg-primary/25 transition-colors cursor-help">
           {number}
         </span>
 
         {/* Tooltip on hover */}
         {citation && (
-          <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl z-50 pointer-events-none">
-            <span className="font-semibold text-blue-300">[{number}]</span> {citation}
+          <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-3 bg-surfaceElevated text-textPrimary border border-white/10 text-xs rounded-lg shadow-xl z-50 pointer-events-none">
+            <span className="font-semibold text-primary">[{number}]</span> {citation}
             {/* Tooltip arrow */}
-            <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-gray-900"></span>
+            <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-surfaceElevated"></span>
           </span>
         )}
       </sup>
@@ -34,7 +34,7 @@ export function CitationBadge({ number, inline = true, citation }: CitationBadge
   }
 
   return (
-    <span className="inline-flex items-center justify-center min-w-[20px] h-[20px] px-1.5 text-xs font-bold text-blue-700 bg-blue-100 border border-blue-300 rounded hover:bg-blue-200 transition-colors">
+    <span className="inline-flex items-center justify-center min-w-[20px] h-[20px] px-1.5 text-xs font-bold text-primary bg-primary/15 border border-primary/30 rounded hover:bg-primary/25 transition-colors">
       {number}
     </span>
   );
@@ -57,18 +57,18 @@ export function SourcesReferencedSection({ sources }: SourcesReferencedSectionPr
   if (!sources || sources.length === 0) return null;
 
   return (
-    <div className="mt-6 pt-6 border-t-2 border-gray-300">
+    <div className="mt-6 pt-6 border-t border-white/10">
       {/* Clickable Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center gap-2 mb-4 hover:bg-gray-50 p-2 -m-2 rounded-lg transition-colors group"
+        className="w-full flex items-center gap-2 mb-4 hover:bg-white/5 p-2 -m-2 rounded-lg transition-colors group"
       >
         <span className="text-2xl">📚</span>
-        <h3 className="text-lg font-bold text-gray-900">Sources Referenced</h3>
-        <span className="text-sm text-gray-600 bg-green-100 px-3 py-1 rounded-full border border-green-300">
+        <h3 className="text-lg font-bold text-textPrimary">Sources Referenced</h3>
+        <span className="text-sm text-textSecondary bg-success/15 px-3 py-1 rounded-full border border-success/30">
           ✓ {sources.length} {sources.length === 1 ? 'Source' : 'Sources'} Cited
         </span>
-        <span className="ml-auto text-gray-500 group-hover:text-gray-700 transition-colors">
+        <span className="ml-auto text-textTertiary group-hover:text-textSecondary transition-colors">
           {isExpanded ? (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
@@ -88,14 +88,14 @@ export function SourcesReferencedSection({ sources }: SourcesReferencedSectionPr
             {sources.map((source, index) => (
               <div
                 key={index}
-                className="flex gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex gap-3 p-3 bg-surface/40 border border-white/10 rounded-lg hover:bg-surface/60 transition-colors"
               >
                 <div className="flex-shrink-0">
-                  <span className="inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-blue-700 bg-blue-100 border border-blue-300 rounded">
+                  <span className="inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-primary bg-primary/15 border border-primary/30 rounded">
                     {source.number}
                   </span>
                 </div>
-                <div className="flex-1 text-sm text-gray-800 leading-relaxed prose prose-sm max-w-none prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline">
+                <div className="flex-1 text-sm text-textSecondary leading-relaxed prose prose-invert prose-sm max-w-none">
                   <ReactMarkdown
                     components={{
                       a: ({ href, children, ...props }) => (
@@ -103,7 +103,7 @@ export function SourcesReferencedSection({ sources }: SourcesReferencedSectionPr
                           href={href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                          className="text-primary hover:text-primary/80 underline decoration-primary/40 hover:decoration-primary transition-colors"
                           {...props}
                         >
                           {children}
@@ -119,8 +119,8 @@ export function SourcesReferencedSection({ sources }: SourcesReferencedSectionPr
             ))}
           </div>
 
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg animate-in fade-in duration-200">
-            <div className="flex items-start gap-2 text-xs text-blue-900">
+          <div className="mt-4 p-3 bg-primary/10 border border-primary/20 rounded-lg animate-in fade-in duration-200">
+            <div className="flex items-start gap-2 text-xs text-textPrimary">
               <span className="flex-shrink-0 mt-0.5">ℹ️</span>
               <p>
                 <strong>Verification:</strong> All citations reference specific documents, page numbers, and publication details.
@@ -133,7 +133,7 @@ export function SourcesReferencedSection({ sources }: SourcesReferencedSectionPr
 
       {/* Collapsed Preview */}
       {!isExpanded && (
-        <p className="text-sm text-gray-600 italic">
+        <p className="text-sm text-textTertiary italic">
           Click to view {sources.length} source{sources.length !== 1 ? 's' : ''} with full bibliographic details
         </p>
       )}

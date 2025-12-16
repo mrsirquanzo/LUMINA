@@ -22,6 +22,8 @@ import type {
   Persona,
 } from '../types';
 
+export * from './her2Baseline';
+
 // ============================================
 // SCIENTIST PERSONA DATA
 // ============================================
@@ -32,22 +34,22 @@ export const SCIENTIST_EXECUTIVE_SUMMARY = {
   confidenceLevel: 0.85,
   dataFreshness: '2024-01-15',
   summaryText:
-    "TROP2 (TACSTD2) represents a well-validated oncology target with strong clinical precedent. FDA-approved ADC (Trodelvy) demonstrates proof-of-concept with 35% ORR in metastatic TNBC. High differential expression (8.2x fold-change in TNBC) and favorable therapeutic window support multiple modalities. Key risks include on-target toxicity in skin/mucosa and competitive landscape with Trodelvy and Dato-DXd advancing.",
+    'TROP2 (TACSTD2) is a clinically validated oncology antigen with strong precedent in ADC development. Sacituzumab govitecan (Trodelvy) establishes proof-of-concept in metastatic TNBC (ASCENT). However, GTEx v10 indicates high TACSTD2 expression in normal epithelia (notably GI mucosa and skin), which can constrain therapeutic window and drive on-target epithelial toxicity; differentiation depends heavily on linker/payload engineering and dosing. TCGA PanCancer Atlas (cBioPortal) shows high TACSTD2 expression across multiple tumor types (notably bladder/urothelial), supporting broad applicability with careful safety management.',
   quickMetrics: {
-    geneticValidation: 'Moderate' as ValidationScore,
-    therapeuticWindow: 'Favorable' as TherapeuticWindow,
+    geneticValidation: 'Limited' as ValidationScore,
+    therapeuticWindow: 'Moderate' as TherapeuticWindow,
     druggability: 'High' as DruggabilityScore,
     safetyProfile: 'Manageable' as SafetyScore,
   },
   keyStrengths: [
     'FDA-approved ADC (Trodelvy) validates mechanism',
-    'High differential expression in TNBC (8.2x fold-change)',
+    'High TACSTD2 expression across multiple TCGA tumor cohorts (cBioPortal)',
     'Multiple modalities feasible (ADC, bispecific, CAR-T)',
-    'Strong clinical activity signal (ORR 31-35%)',
+    'Strong clinical activity signal in mTNBC (ASCENT)',
     'High antigen density and rapid internalization ideal for ADCs',
   ],
   keyRisks: [
-    'On-target toxicity in skin/mucosa (high normal expression)',
+    'On-target epithelial toxicity risk (high normal expression in skin/mucosa on GTEx)',
     'Crowded competitive landscape with Trodelvy, Dato-DXd',
     'TACSTD2 LoF linked to corneal dystrophy - requires monitoring',
     'Limited genetic validation (no strong GWAS associations)',
@@ -60,63 +62,57 @@ export const SCIENTIST_EXECUTIVE_SUMMARY = {
     safety: { score: 72, weight: 0.2 },
     clinical: { score: 95, weight: 0.15 },
   },
+  // Agent attribution
+  agents: ['sonny'] as const,
+  primaryAgent: 'sonny' as const,
+  agentContributions: {
+    sonny: 'Synthesized comprehensive analysis from Target Biology, Clinical, Patent, Financial, Regulatory, and Market Research agents',
+  },
 };
 
 export const GENETIC_VALIDATION_DATA = {
-  validationScore: 'Moderate' as ValidationScore,
+  // Human genetics is limited for oncology targets like TACSTD2: clinical validation is strong,
+  // but inherited risk associations are not a major driver of the decision.
+  validationScore: 'Limited' as ValidationScore,
   validationSummary:
-    "TROP2 shows moderate genetic validation. While no strong GWAS associations link TROP2 directly to cancer risk, loss-of-function variants cause gelatinous drop-like corneal dystrophy (GDLD), confirming biological relevance. Constraint metrics (pLI 0.12, LOEUF 0.89) indicate moderate tolerance to loss-of-function. Homozygous LoF carriers develop corneal dystrophy but show no increased cancer risk, suggesting systemic inhibition may be tolerable with appropriate monitoring.",
+    'TROP2 (TACSTD2) has limited inherited genetics support for cancer risk (no robust GWAS signal is typically used clinically). The strongest human genetic relevance is Mendelian: biallelic loss-of-function in TACSTD2 causes gelatinous drop-like corneal dystrophy (GDLD), indicating on-target epithelial/ocular biology. Population constraint metrics from gnomAD show TACSTD2 is LoF-tolerant (very low pLI; LOEUF upper bound >1), with no homozygous LoF carriers observed in the gnomAD dataset query used for this baseline; this supports feasibility but underscores the need for epithelial toxicity monitoring (skin/mucosa, ocular).',
   gwasAssociations: [
-    {
-      disease: 'Breast Cancer',
-      score: 0.3,
-      evidenceType: 'GWAS' as const,
-      keyVariants: ['rs1234567'],
-      effectSize: 1.08,
-      pValue: '1.2e-4',
-    },
-    {
-      disease: 'NSCLC',
-      score: 0.25,
-      evidenceType: 'GWAS' as const,
-      keyVariants: ['rs7654321'],
-      effectSize: 1.05,
-      pValue: '3.8e-3',
-    },
     {
       disease: 'Corneal Dystrophy (GDLD)',
       score: 0.95,
       evidenceType: 'Mendelian' as const,
-      keyVariants: ['Q118X', 'c.551delT', 'R158Q'],
+      // Keep variants generic here unless we explicitly cite a curated clinical source.
+      keyVariants: [],
       effectSize: undefined,
       pValue: undefined,
     },
   ] as GWASAssociation[],
   constraintMetrics: {
-    pLI: 0.12,
-    LOEUF: 0.89,
-    lofObserved: 45,
-    lofExpected: 52,
-    homozygousCarriers: 3,
+    // gnomAD (GRCh38; constraint block):
+    // pLI: 0.0000036, oe_lof_upper (used as LOEUF upper bound): 1.868, exp_lof: 9.93, obs_lof: 13.
+    // No homozygous LoF carriers were observed in the gnomAD variants query used here.
+    pLI: 0.0000036277161274097553,
+    LOEUF: 1.868,
+    lofObserved: 13,
+    lofExpected: 9.926824060590436,
+    homozygousCarriers: 0,
   } as ConstraintMetrics,
   mendelianDiseases: ['Gelatinous Drop-like Corneal Dystrophy (GDLD)'],
   directionOfEffect: 'Inhibition/degradation reduces tumor cell survival',
   biobankEvidence: [
     {
-      source: 'UK Biobank',
-      finding: 'No significant associations with cancer incidence',
-    },
-    {
-      source: 'FinnGen',
-      finding: 'Weak association with epithelial cancers (OR 1.03, 95% CI 0.98-1.08)',
-    },
-    {
-      source: 'BioBank Japan',
-      finding: 'No significant associations in Japanese population',
+      source: 'Open Targets / biobanks',
+      finding: 'No strong, decision-driving inherited risk associations are used clinically for TACSTD2 (focus is tumor expression as a biomarker).',
     },
   ],
   lofCarrierPhenotypes:
-    "Homozygous LoF carriers develop GDLD (corneal opacity) but show no increased cancer risk, suggesting inhibition may be tolerable with ophthalmic monitoring. Heterozygous carriers are asymptomatic.",
+    'Biallelic loss-of-function causes GDLD (ocular surface/corneal phenotype). In gnomAD constraint/variant queries used for this baseline, no homozygous LoF carriers were observed; safety assessment should therefore rely primarily on normal-tissue expression + clinical ADC safety (and include ocular monitoring).',
+  // Agent attribution
+  agents: ['target_biology'] as const,
+  primaryAgent: 'target_biology' as const,
+  agentContributions: {
+    target_biology: 'Provided genetic validation data including GWAS associations, constraint metrics, biobank evidence, and LoF carrier phenotypes',
+  },
 };
 
 export const DRUGGABILITY_DATA = {
@@ -137,7 +133,7 @@ export const DRUGGABILITY_DATA = {
       name: 'Sacituzumab govitecan (Trodelvy)',
       phase: 'Approved',
       mechanism: 'ADC (SN-38, Topo-1 inhibitor)',
-      activity: 'ORR 31-35% in mTNBC',
+      activity: 'Clinically validated TROP2 ADC with meaningful activity in mTNBC (see ASCENT publication and current label for indication-specific details)',
       dar: 7.6,
       linker: 'CL2A (pH-sensitive)',
     },
@@ -145,7 +141,8 @@ export const DRUGGABILITY_DATA = {
       name: 'Datopotamab deruxtecan (Dato-DXd)',
       phase: 'Phase 3',
       mechanism: 'ADC (DXd, Topo-1 inhibitor)',
-      activity: 'ORR 26% in mTNBC, 26% in NSCLC',
+      activity:
+        'Late-stage investigational TROP2 ADC with Phase 3 program (TROPION trials). Early clinical datasets report an ILD/pneumonitis signal that requires monitoring (see PMID: 36972134).',
       dar: 4,
       linker: 'Tetrapeptide-based (protease-cleavable)',
     },
@@ -153,7 +150,8 @@ export const DRUGGABILITY_DATA = {
       name: 'SKB264 (MK-2870)',
       phase: 'Phase 3',
       mechanism: 'ADC (belotecan, Topo-1 inhibitor)',
-      activity: 'ORR 39% in mTNBC',
+      activity:
+        'Late-stage investigational TROP2 ADC in Phase 3 development; treat efficacy/safety point estimates as unverified unless sourced to a primary disclosure or peer-reviewed publication.',
       dar: 6,
       linker: 'Proprietary',
     },
@@ -167,12 +165,12 @@ export const DRUGGABILITY_DATA = {
     },
   ],
   tractabilityAssessment:
-    'Highly tractable for antibody-based approaches. Extracellular domain is well-characterized with multiple epitopes validated. High internalization rate (t1/2 ~15min) makes it ideal for ADC payloads. Crystal structures available for rational design. No small molecule approaches viable due to lack of enzymatic activity.',
+    'Highly tractable for antibody-based approaches. Extracellular domain is well-characterized with multiple epitopes validated. Internalization is reported as fast in multiple programs (supporting ADC payload delivery), but exact kinetics depend on assay/model. Crystal structures available for rational design. No small molecule approaches viable due to lack of enzymatic activity.',
   modalityRecommendations: [
     {
       modality: 'ADC',
       feasibility: 'High',
-      rationale: 'Proven with Trodelvy; high internalization rate (~15min t1/2); multiple validated payloads',
+      rationale: 'Proven with Trodelvy; internalization is reported as fast across multiple TROP2 antibody programs; multiple validated payloads',
     },
     {
       modality: 'Bispecific',
@@ -199,128 +197,153 @@ export const DRUGGABILITY_DATA = {
     'TROP2 is unique in the TACSTD family. TROP1 (EPCAM) is distinct with different tissue distribution. Limited off-target concerns from selectivity standpoint. Cross-reactivity assessment shows minimal binding to related proteins.',
   historicalAttrition:
     'No historical small molecule failures (not attempted). ADC programs have succeeded when payload optimized. Naked antibody approaches (DS-1062a precursor) showed insufficient efficacy, validating ADC approach.',
+  // Agent attribution
+  agents: ['target_biology'] as const,
+  primaryAgent: 'target_biology' as const,
+  agentContributions: {
+    target_biology: 'Provided druggability assessment including structural data, existing compounds, modality recommendations, and tractability analysis',
+  },
 };
 
 export const EXPRESSION_DATA = {
-  therapeuticWindowScore: 'Favorable' as TherapeuticWindow,
-  bestIndication: { name: 'Triple-Negative Breast Cancer', foldChange: 8.2, rank: 1 },
+  // Note: TROP2 (TACSTD2) shows very high expression in several normal epithelial tissues (GTEx),
+  // which can narrow the therapeutic window for modalities with bystander/payload toxicity.
+  therapeuticWindowScore: 'Moderate' as TherapeuticWindow,
+  bestIndication: { name: 'Urothelial carcinoma', foldChange: 188.57, rank: 1 },
   adcSuitability: {
     score: 'High',
-    antigenDensity: '150,000 copies/cell (median in TNBC)',
-    internalizationRate: 't1/2 ~15 min (fast)',
+    antigenDensity: 'High (tumor antigen; ADC-validated clinically)',
+    internalizationRate: 'Fast internalization reported for TROP2-directed antibodies (supports ADC payload delivery)',
     recyclingVsDegradation: 'Primarily degraded (favorable for ADC payload release)',
-    membraneHalfLife: '~2 hours',
+    membraneHalfLife: 'Reported as hours-scale (varies by model and assay)',
   },
   gtexNormalTissues: [
-    { name: 'Skin', tpm: 245, isSafetyOrgan: true, category: 'skin' as const },
-    { name: 'Esophagus Mucosa', tpm: 198, isSafetyOrgan: true, category: 'gi' as const },
-    { name: 'Bladder', tpm: 156, isSafetyOrgan: false, category: 'other' as const },
-    { name: 'Cervix Uteri', tpm: 134, isSafetyOrgan: false, category: 'other' as const },
-    { name: 'Vagina', tpm: 127, isSafetyOrgan: false, category: 'other' as const },
-    { name: 'Colon Transverse', tpm: 89, isSafetyOrgan: false, category: 'gi' as const },
-    { name: 'Breast', tpm: 42, isSafetyOrgan: false, category: 'other' as const },
-    { name: 'Lung', tpm: 38, isSafetyOrgan: true, category: 'lung' as const },
-    { name: 'Prostate', tpm: 35, isSafetyOrgan: false, category: 'other' as const },
-    { name: 'Kidney Cortex', tpm: 28, isSafetyOrgan: true, category: 'kidney' as const },
-    { name: 'Stomach', tpm: 24, isSafetyOrgan: true, category: 'gi' as const },
-    { name: 'Pancreas', tpm: 18, isSafetyOrgan: true, category: 'other' as const },
-    { name: 'Liver', tpm: 12, isSafetyOrgan: true, category: 'liver' as const },
-    { name: 'Heart Left Ventricle', tpm: 3, isSafetyOrgan: true, category: 'heart' as const },
-    { name: 'Brain Cortex', tpm: 1, isSafetyOrgan: true, category: 'brain' as const },
-    { name: 'Skeletal Muscle', tpm: 2, isSafetyOrgan: false, category: 'other' as const },
+    // GTEx v10 median gene expression for TACSTD2 (ENSG00000184292.7), unit TPM.
+    { name: 'Esophagus (Mucosa)', tpm: 1828.16, isSafetyOrgan: true, category: 'gi' as const },
+    { name: 'Skin (Not sun-exposed)', tpm: 930.88, isSafetyOrgan: true, category: 'skin' as const },
+    { name: 'Vagina', tpm: 882.516, isSafetyOrgan: false, category: 'other' as const },
+    { name: 'Cervix (Ectocervix)', tpm: 501.437, isSafetyOrgan: false, category: 'other' as const },
+    { name: 'Prostate', tpm: 205.841, isSafetyOrgan: false, category: 'other' as const },
+    { name: 'Lung', tpm: 158.821, isSafetyOrgan: true, category: 'lung' as const },
+    { name: 'Breast (Mammary)', tpm: 132.72, isSafetyOrgan: false, category: 'other' as const },
+    { name: 'Bladder', tpm: 102.134, isSafetyOrgan: false, category: 'other' as const },
+    { name: 'Kidney (Cortex)', tpm: 74.3375, isSafetyOrgan: true, category: 'kidney' as const },
+    { name: 'Pancreas', tpm: 60.9366, isSafetyOrgan: true, category: 'other' as const },
+    { name: 'Stomach', tpm: 12.9775, isSafetyOrgan: true, category: 'gi' as const },
+    { name: 'Cervix (Endocervix)', tpm: 7.43764, isSafetyOrgan: false, category: 'other' as const },
+    { name: 'Liver', tpm: 1.84563, isSafetyOrgan: true, category: 'liver' as const },
+    { name: 'Colon (Transverse)', tpm: 1.69345, isSafetyOrgan: false, category: 'gi' as const },
+    { name: 'Skeletal Muscle', tpm: 0.613901, isSafetyOrgan: false, category: 'other' as const },
+    { name: 'Brain (Cortex)', tpm: 0.42267, isSafetyOrgan: true, category: 'brain' as const },
+    // Keep heart/brain as low-expression safety organs; heart is particularly low for TACSTD2 in GTEx.
+    { name: 'Heart (Left Ventricle)', tpm: 0.283305, isSafetyOrgan: true, category: 'heart' as const },
   ] as ExpressionTissue[],
   tcgaTumorExpression: [
     {
-      tumorType: 'TNBC',
+      tumorType: 'Breast invasive carcinoma (TCGA BRCA)',
       tcgaCode: 'BRCA',
-      medianTPM: 892,
-      percentileRank: 95,
-      sampleCount: 187,
+      // cBioPortal (TCGA PanCancer Atlas): mRNA Expression, RSEM (RNA Seq V2)
+      medianTPM: 5924.585,
+      percentileRank: 33,
+      sampleCount: 1082,
     },
     {
       tumorType: 'NSCLC (Adeno)',
       tcgaCode: 'LUAD',
-      medianTPM: 456,
-      percentileRank: 82,
-      sampleCount: 515,
+      medianTPM: 6336.005,
+      percentileRank: 44,
+      sampleCount: 510,
     },
     {
       tumorType: 'NSCLC (Squamous)',
       tcgaCode: 'LUSC',
-      medianTPM: 523,
-      percentileRank: 88,
-      sampleCount: 501,
+      medianTPM: 8830.385,
+      percentileRank: 67,
+      sampleCount: 484,
     },
     {
       tumorType: 'Urothelial',
       tcgaCode: 'BLCA',
-      medianTPM: 634,
-      percentileRank: 91,
-      sampleCount: 408,
+      medianTPM: 19262.5,
+      percentileRank: 100,
+      sampleCount: 407,
     },
     {
       tumorType: 'Pancreatic Adenocarcinoma',
       tcgaCode: 'PAAD',
-      medianTPM: 267,
-      percentileRank: 68,
-      sampleCount: 178,
+      medianTPM: 7557.05,
+      percentileRank: 56,
+      sampleCount: 177,
     },
     {
       tumorType: 'Ovarian Serous',
       tcgaCode: 'OV',
-      medianTPM: 389,
-      percentileRank: 75,
-      sampleCount: 379,
+      medianTPM: 5304.0943,
+      percentileRank: 22,
+      sampleCount: 300,
     },
     {
       tumorType: 'Gastric Adenocarcinoma',
       tcgaCode: 'STAD',
-      medianTPM: 312,
-      percentileRank: 72,
-      sampleCount: 415,
+      medianTPM: 2780.22455,
+      percentileRank: 11,
+      sampleCount: 412,
     },
     {
-      tumorType: 'Colorectal Adenocarcinoma',
-      tcgaCode: 'COAD',
-      medianTPM: 298,
-      percentileRank: 70,
-      sampleCount: 457,
+      tumorType: 'Colorectal Adenocarcinoma (TCGA COADREAD)',
+      tcgaCode: 'COADREAD',
+      medianTPM: 240.1437,
+      percentileRank: 0,
+      sampleCount: 592,
     },
     {
       tumorType: 'Head and Neck SCC',
       tcgaCode: 'HNSC',
-      medianTPM: 445,
-      percentileRank: 80,
-      sampleCount: 520,
+      medianTPM: 14552.2,
+      percentileRank: 89,
+      sampleCount: 515,
     },
     {
       tumorType: 'Prostate Adenocarcinoma',
       tcgaCode: 'PRAD',
-      medianTPM: 234,
-      percentileRank: 65,
-      sampleCount: 497,
+      medianTPM: 10677.6,
+      percentileRank: 78,
+      sampleCount: 493,
     },
   ] as TumorExpression[],
   foldChangeData: [
-    { indication: 'TNBC', tumorTPM: 892, normalTPM: 42, foldChange: 21.2 },
-    { indication: 'NSCLC', tumorTPM: 489, normalTPM: 38, foldChange: 12.9 },
-    { indication: 'Urothelial', tumorTPM: 634, normalTPM: 156, foldChange: 4.1 },
-    { indication: 'Ovarian', tumorTPM: 389, normalTPM: 67, foldChange: 5.8 },
-    { indication: 'Pancreatic', tumorTPM: 267, normalTPM: 18, foldChange: 14.8 },
-    { indication: 'Gastric', tumorTPM: 312, normalTPM: 24, foldChange: 13.0 },
+    // IMPORTANT: TCGA values above are RNA-Seq V2 RSEM medians; GTEx values are TPM medians.
+    // These ratios are therefore an approximation intended only for visualization.
+    { indication: 'Breast (BRCA)', tumorTPM: 5924.585, normalTPM: 132.72, foldChange: 44.63, citations: ['GTEx v10', 'TCGA PanCancer Atlas (cBioPortal)'] },
+    { indication: 'NSCLC (LUAD)', tumorTPM: 6336.005, normalTPM: 158.821, foldChange: 39.88, citations: ['GTEx v10', 'TCGA PanCancer Atlas (cBioPortal)'] },
+    { indication: 'Urothelial (BLCA)', tumorTPM: 19262.5, normalTPM: 102.134, foldChange: 188.57, citations: ['GTEx v10', 'TCGA PanCancer Atlas (cBioPortal)'] },
+    { indication: 'Pancreatic (PAAD)', tumorTPM: 7557.05, normalTPM: 60.9366, foldChange: 124.01, citations: ['GTEx v10', 'TCGA PanCancer Atlas (cBioPortal)'] },
+    { indication: 'Head & Neck (HNSC)', tumorTPM: 14552.2, normalTPM: 1828.16, foldChange: 7.96, citations: ['GTEx v10', 'TCGA PanCancer Atlas (cBioPortal)'] },
   ],
   genomicAlterations: {
-    amplificationFrequency: { BRCA: 8, LUAD: 5, BLCA: 12, OV: 6, PAAD: 4 },
-    mutationFrequency: { BRCA: 2, LUAD: 3, BLCA: 4, OV: 1, PAAD: 2 },
+    amplificationFrequency: { BRCA: 1.5, LUAD: 1.37, LUSC: 0.41, BLCA: 1.47, OV: 2.45, PAAD: 0, STAD: 0.23, COADREAD: 0, HNSC: 0.39, PRAD: 0.2 },
+    mutationFrequency: { BRCA: 0, LUAD: 0.18, LUSC: 0.21, BLCA: 0.49, OV: 0, PAAD: 0, STAD: 0.23, COADREAD: 0.67, HNSC: 0.38, PRAD: 0.2 },
     hotspotMutations: ['None significant'],
     fusionEvents: ['None reported'],
     copyNumberGain: {
-      BRCA: 12,
-      LUAD: 8,
-      BLCA: 15,
-      OV: 9,
-      PAAD: 6,
+      BRCA: 13.36,
+      LUAD: 23.29,
+      LUSC: 15.2,
+      BLCA: 18.87,
+      OV: 33.22,
+      PAAD: 4.92,
+      STAD: 8.68,
+      COADREAD: 3.38,
+      HNSC: 12.38,
+      PRAD: 0.82,
     },
+  },
+  // Agent attribution
+  agents: ['target_biology', 'clinical'] as const,
+  primaryAgent: 'target_biology' as const,
+  agentContributions: {
+    target_biology: 'Provided GTEx/TCGA expression data, fold-change analysis, and genomic alterations',
+    clinical: 'Provided clinical context for expression patterns and therapeutic window assessment',
   },
 };
 
@@ -407,6 +430,12 @@ export const MECHANISTIC_DATA = {
     { year: 2023, count: 378 },
     { year: 2024, count: 145 }, // Partial year
   ],
+  // Agent attribution
+  agents: ['target_biology'] as const,
+  primaryAgent: 'target_biology' as const,
+  agentContributions: {
+    target_biology: 'Provided pathway context, mechanism of action, key publications, and preclinical evidence',
+  },
 };
 
 export const CLINICAL_PRECEDENT_DATA = {
@@ -426,7 +455,7 @@ export const CLINICAL_PRECEDENT_DATA = {
         orr: '35%',
         pfs: '5.6 mo (vs 1.7 mo control)',
         os: '12.1 mo (vs 6.7 mo control)',
-        safetyNotes: 'Neutropenia 51%, diarrhea 59%, nausea 66% (all grades)',
+          safetyNotes: 'ASCENT (label): neutropenia 64% any grade (49% grade 3-4), diarrhea 59% any grade (11% grade 3-4), febrile neutropenia 6%',
       },
     },
     {
@@ -452,19 +481,19 @@ export const CLINICAL_PRECEDENT_DATA = {
       results: undefined,
     },
     {
-      nctId: 'NCT04152499',
-      title: 'Trodelvy in Urothelial Cancer',
+      nctId: 'NCT03547973',
+      title: 'TROPHY-U-01 (sacituzumab govitecan in metastatic urothelial carcinoma)',
       phase: 'Phase 2',
-      status: 'Active' as const,
+      status: 'Completed' as const,
       sponsor: 'Gilead',
       indication: 'mUC',
       startDate: '2019-11-01',
-      expectedReadout: 'Q4 2024',
+      expectedReadout: undefined,
       results: {
-        orr: '27%',
-        pfs: '5.4 mo',
-        os: '10.9 mo',
-        safetyNotes: 'Similar safety profile to TNBC indication',
+        orr: '27% (reported in TROPHY-U-01 cohort 1)',
+        pfs: undefined,
+        os: undefined,
+        safetyNotes: 'Accelerated approval in urothelial cancer was later withdrawn; use as precedent only, not current label',
       },
     },
     {
@@ -480,7 +509,7 @@ export const CLINICAL_PRECEDENT_DATA = {
     },
   ] as ClinicalTrial[],
   keyFindings:
-    "Trodelvy (sacituzumab govitecan) approval validates TROP2 as ADC target. ORR ~35% in heavily pretreated mTNBC with manageable neutropenia and diarrhea. Dato-DXd showing differentiated safety profile with lower GI toxicity but ILD signal (3% incidence). Phase 1/2 data suggests dose-response relationship with higher DAR correlating with efficacy but also toxicity.",
+    'Trodelvy (sacituzumab govitecan) validates TROP2 as an ADC target with clinically meaningful activity in mTNBC (ASCENT). Trodelvy previously had accelerated approval in metastatic urothelial carcinoma that was later withdrawn, so urothelial data should be treated as precedent rather than current label. Datopotamab deruxtecan (Dato-DXd) is a late-stage investigational TROP2 ADC; available clinical datasets include an ILD/pneumonitis signal that requires monitoring (see PMID: 36972134).',
   failedApproaches: [
     {
       approach: 'Naked antibody (DS-1062a precursor)',
@@ -496,7 +525,13 @@ export const CLINICAL_PRECEDENT_DATA = {
     },
   ],
   translationalInsights:
-    'Patient selection by IHC (H-score >100) enriches responders. Topo-1 inhibitor payloads most effective based on current data. Linker stability critical for safety profile - pH-sensitive and protease-cleavable linkers both viable. High antigen density (>50,000 copies/cell) associated with better responses.',
+    'IHC-based patient selection is commonly used for TROP2 programs and may enrich for responders depending on assay and cutoff. Topo-1 inhibitor payloads dominate the current clinical landscape. Linker stability is a key determinant of systemic tolerability vs tumor delivery; both pH-sensitive and protease-cleavable linkers are used in practice.',
+  // Agent attribution
+  agents: ['clinical'] as const,
+  primaryAgent: 'clinical' as const,
+  agentContributions: {
+    clinical: 'Provided clinical trial data, efficacy results, key findings, and translational insights',
+  },
 };
 
 export const SAFETY_DATA = {
@@ -521,31 +556,35 @@ export const SAFETY_DATA = {
   expressionConcerns: [
     {
       organ: 'Skin',
-      expression: 'High (245 TPM)',
+      expression: 'High (GTEx v10 median ~931 TPM; skin not sun-exposed)',
       concern: 'Rash, alopecia observed with ADCs',
       severity: 'High',
-      clinicalManifestation: 'Maculopapular rash (Grade 1-2 in 40-50%), alopecia (20-30%)',
+      clinicalManifestation:
+        'Dermatologic adverse events (e.g., rash, alopecia) are observed across multiple epithelial targets and ADC payload classes; incidence is indication- and regimen-dependent',
     },
     {
       organ: 'GI Mucosa (Esophagus)',
-      expression: 'High (198 TPM)',
+      expression: 'Very high (GTEx v10 median ~1828 TPM; esophagus mucosa)',
       concern: 'Stomatitis, diarrhea common',
       severity: 'High',
-      clinicalManifestation: 'Stomatitis (Grade 1-2 in 50-60%), diarrhea (Grade 1-2 in 55-65%)',
+      clinicalManifestation:
+        'Mucositis/stomatitis and diarrhea are common epithelial toxicities with several ADCs; rates vary by asset, schedule, and patient population',
     },
     {
       organ: 'Lung',
-      expression: 'Moderate (38 TPM)',
+      expression: 'Moderate (GTEx v10 median ~159 TPM)',
       concern: 'ILD signal with some ADCs (Dato-DXd)',
       severity: 'Medium',
-      clinicalManifestation: 'Interstitial lung disease (3-5% with Dato-DXd, <1% with Trodelvy)',
+      clinicalManifestation:
+        'ILD/pneumonitis has been reported with some Topo-1 payload ADCs; operational monitoring and management are required and incidence varies by dataset',
     },
     {
       organ: 'Bladder',
-      expression: 'Moderate-High (156 TPM)',
+      expression: 'Moderate (GTEx v10 median ~102 TPM)',
       concern: 'Bladder irritation possible',
       severity: 'Low',
-      clinicalManifestation: 'Hematuria rare (<5%)',
+      clinicalManifestation:
+        'Lower urinary tract symptoms/hematuria are not expected class-defining AEs; monitor if signal emerges in target indication datasets',
     },
   ],
   knockoutPhenotypes: {
@@ -562,27 +601,27 @@ export const SAFETY_DATA = {
     {
       drug: 'Trodelvy (sacituzumab govitecan)',
       safetyProfile:
-        'Neutropenia (51% all grades, 11% G3-4), diarrhea (59% all grades, 10% G3-4), nausea (66%), fatigue (50%)',
+        'Pivotal ASCENT/label experience: neutropenia and diarrhea are common and can be dose-limiting without proactive supportive care (see pivotal publication and current label for exact rates by indication)',
       mitigation: 'G-CSF prophylaxis, anti-emetics, dose delays/reductions',
-      mtf: '10 mg/kg q2w',
+      mtf: 'Per label / trial protocol (verify by indication)',
     },
     {
       drug: 'Dato-DXd (datopotamab deruxtecan)',
       safetyProfile:
-        'Stomatitis (56% all grades, 6% G3), ILD (3% all grades, 1% G3-4), nausea (45%), fatigue (42%)',
+        'Early clinical datasets report stomatitis/mucositis and an ILD/pneumonitis signal that requires monitoring (see PMID: 36972134); exact rates are indication- and dataset-dependent',
       mitigation: 'Dose modification, ILD monitoring (CT scans), oral care',
-      mtf: '6 mg/kg q3w',
+      mtf: 'Per trial protocol (verify by study/indication)',
     },
     {
       drug: 'SKB264',
       safetyProfile: 'Similar to Trodelvy profile; detailed data pending from Phase 3',
       mitigation: 'Standard supportive care',
-      mtf: '5 mg/kg q2w',
+      mtf: 'Per trial protocol (verify by study/indication)',
     },
   ],
   therapeuticIndex: {
-    estimate: '3-5x',
-    basis: 'Based on tumor vs. skin expression differential (21x in TNBC) and clinical MTD data. Actual window depends on payload properties.',
+    estimate: 'Not quantified (requires head-to-head preclinical + clinical exposure/toxicity data)',
+    basis: 'Therapeutic index should be derived from integrated tumor-vs-normal expression, exposure-response, and observed DLTs; avoid hard multipliers without a primary dataset',
   },
   monitoringRequirements: [
     'Ophthalmic exams (corneal) - baseline and q6mo',
@@ -591,6 +630,12 @@ export const SAFETY_DATA = {
     'Skin assessments (rash) - q cycle',
     'GI symptom monitoring (diarrhea, stomatitis) - continuous',
   ],
+  // Agent attribution
+  agents: ['clinical'] as const,
+  primaryAgent: 'clinical' as const,
+  agentContributions: {
+    clinical: 'Provided safety data including genetic safety signals, expression concerns, class safety history, and monitoring requirements',
+  },
 };
 
 export const KEY_EXPERIMENTS_DATA = {
@@ -682,6 +727,12 @@ export const KEY_EXPERIMENTS_DATA = {
   },
   resourceEstimate: 'Total: 10 FTE-months, ~$725K for full de-risking package',
   timelineToDecision: '6 months to go/no-go on lead candidate',
+  // Agent attribution
+  agents: ['sonny'] as const,
+  primaryAgent: 'sonny' as const,
+  agentContributions: {
+    sonny: 'Synthesized evidence gaps and recommended experiments from Target Biology and Clinical agents to provide strategic recommendations',
+  },
 };
 
 // ============================================
@@ -692,30 +743,34 @@ export const BD_EXECUTIVE_SUMMARY = {
   opportunityRating: 'Attractive' as OpportunityRating,
   strategicFit: 'Strong Fit' as StrategicFit,
   summaryText:
-    "TargetCo's TROP2 ADC represents a compelling BD opportunity with differentiated safety profile versus market leader Trodelvy. Phase 1 data suggests improved therapeutic index via novel linker technology. Strong strategic fit with our oncology portfolio, filling gap in ADC capabilities. Market opportunity ~$5.2B by 2030 with multiple expansion opportunities.",
+    "TROP2-directed ADCs are a validated commercial category (Trodelvy; multiple next-generation programs). Near-term BD value is driven by differentiation (safety, dosing convenience, efficacy in defined biomarker/setting) and by access to scalable ADC manufacturing. This tile intentionally avoids asset-specific valuation claims unless supported by a sourced diligence package.",
   quickMetrics: {
-    developmentStage: 'Phase 1/2',
-    patentLife: '2038',
-    marketOpportunity: '$5.2B (2030 TAM)',
+    developmentStage: 'Approved + late-stage pipeline',
+    patentLife: 'Varies by asset (requires IP diligence)',
+    marketOpportunity: 'Multi-billion TAM (source required)',
     competitivePosition: 'Best-in-class potential',
-    totalDealValue: '$1.5-2.5B estimated',
+    totalDealValue: 'Depends on asset + data package',
   },
   keyValueDrivers: [
-    'Differentiated safety profile (lower GI toxicity vs Trodelvy)',
-    'Novel cleavable linker (proprietary IP through 2038)',
-    'Broad indication potential (TNBC, NSCLC, UC)',
-    'Phase 1 data shows comparable efficacy with better tolerability',
-    'Experienced team with ADC development track record',
+    'Category validated by approved agents and late-stage programs',
+    'Differentiation levers: safety/ILD profile, GI toxicity, dosing convenience, efficacy in defined settings',
+    'Broad indication potential across epithelial tumors with high TACSTD2 expression',
+    'Manufacturing/scalability and CMC readiness are key BD drivers',
   ],
   keyRisks: [
-    'Phase 1 data limited (n=42, single-arm)',
-    'Crowded competitive landscape (Trodelvy, Dato-DXd, SKB264)',
-    'Execution risk vs. Daiichi Sankyo resources',
-    'Regulatory pathway depends on differentiation story',
-    'Manufacturing scalability unproven at commercial scale',
+    'Crowded competitive landscape (Trodelvy, Dato-DXd/Datroway, multiple ADC entrants)',
+    'Regulatory/label success depends on clear differentiation and manageable safety',
+    'On-target epithelial toxicity can constrain dosing and limit combinations',
+    'Manufacturing scalability and supply chain execution risk',
   ],
   recommendedAction: 'Pursue CDA and request data room access',
-  valuationRange: '$1.5-2.5B total deal value',
+  valuationRange: 'Requires asset-specific data room + comps',
+  // Agent attribution
+  agents: ['sonny'] as const,
+  primaryAgent: 'sonny' as const,
+  agentContributions: {
+    sonny: 'Synthesized BD opportunity analysis from Financial, Market Research, Patent, and Clinical agents',
+  },
 };
 
 export const COMPETITIVE_LANDSCAPE_DATA = {
@@ -726,7 +781,7 @@ export const COMPETITIVE_LANDSCAPE_DATA = {
       asset: 'Trodelvy (sacituzumab govitecan)',
       modality: 'ADC (SN-38)',
       stage: 'Approved',
-      indication: 'mTNBC, mUC',
+      indication: 'mTNBC, HR+/HER2- breast cancer (see current label; prior mUC accelerated approval was withdrawn)',
       differentiation: 'Market leader, broad label, first-mover advantage',
       expectedMilestone: 'Additional indications (NSCLC, HR+ BC)',
       milestoneDate: '2024-2025',
@@ -737,9 +792,9 @@ export const COMPETITIVE_LANDSCAPE_DATA = {
       modality: 'ADC (DXd)',
       stage: 'Phase 3',
       indication: 'TNBC, NSCLC, HR+ BC',
-      differentiation: 'DXd platform, differentiated safety (lower GI, but ILD signal)',
-      expectedMilestone: 'TROPION-Breast01 and -Lung01 readouts',
-      milestoneDate: 'Q2-Q3 2024',
+      differentiation: 'DXd platform; ILD/pneumonitis signal has been reported in available datasets (monitoring required)',
+      expectedMilestone: 'Phase 3 readouts and regulatory updates (verify by program)',
+      milestoneDate: '2025+',
     },
     {
       company: 'Kelun-Biotech/Merck',
@@ -789,74 +844,27 @@ export const COMPETITIVE_LANDSCAPE_DATA = {
       rationale: 'Preclinical synergy data suggests combination opportunities',
     },
   ],
+  // Agent attribution
+  agents: ['market_research'] as const,
+  primaryAgent: 'market_research' as const,
+  agentContributions: {
+    market_research: 'Provided competitive landscape analysis including competitors, differentiation analysis, competitive risks, and white space opportunities',
+  },
 };
 
 export const IP_FTO_DATA = {
   ipPosition: 'Moderate' as IPPosition,
   patentSummary:
-    "TargetCo holds composition-of-matter patents on their specific ADC construct through 2038. Linker technology is proprietary with patent protection in major markets. Some FTO concerns around method-of-treatment patents held by Gilead, but preliminary analysis suggests design-around possible.",
-  keyPatents: [
-    {
-      patentNumber: 'US11,234,567',
-      title: 'TROP2-targeting ADC with novel linker-payload combination',
-      owner: 'TargetCo',
-      type: 'Composition' as const,
-      filingDate: '2018-03-15',
-      expiryDate: '2038-03-15',
-      relevance: 'High' as const,
-      claims: [
-        'Specific antibody sequence (CDR sequences)',
-        'Linker-payload combination (novel cleavable linker + Topo-1 inhibitor)',
-        'DAR range (4-8)',
-      ],
-    },
-    {
-      patentNumber: 'US10,987,654',
-      title: 'Methods of treating TNBC with TROP2 ADC',
-      owner: 'Gilead Sciences',
-      type: 'Method' as const,
-      filingDate: '2016-08-22',
-      expiryDate: '2036-08-22',
-      relevance: 'Medium' as const,
-      claims: [
-        'Method of treating mTNBC with sacituzumab govitecan',
-        'Dosing regimen (10 mg/kg q2w)',
-        'Patient selection criteria (IHC H-score)',
-      ],
-    },
-    {
-      patentNumber: 'US11,456,789',
-      title: 'Novel cleavable linker for antibody-drug conjugates',
-      owner: 'TargetCo',
-      type: 'Composition' as const,
-      filingDate: '2019-06-10',
-      expiryDate: '2039-06-10',
-      relevance: 'High' as const,
-      claims: [
-        'Linker structure and chemistry',
-        'Application to TROP2-targeting ADCs',
-        'Manufacturing methods',
-      ],
-    },
-    {
-      patentNumber: 'WO2020123456',
-      title: 'DXd platform for ADC payloads',
-      owner: 'Daiichi Sankyo',
-      type: 'Composition' as const,
-      filingDate: '2019-12-01',
-      expiryDate: '2039-12-01',
-      relevance: 'Low' as const,
-      claims: ['DXd payload structure', 'Application to multiple targets'],
-    },
-  ] as Patent[],
+    'TROP2 ADC IP is complex and asset-specific (antibody epitope, linker chemistry, payload, conjugation, and method-of-use). This baseline does not provide a formal patent landscape or FTO opinion; numbers and specific patent identifiers should only be shown when sourced from a counsel-reviewed landscape.',
+  // IMPORTANT: remove placeholder patent numbers; keep this empty until populated from a sourced landscape.
+  keyPatents: [] as Patent[],
   ftoAssessment:
-    'Preliminary FTO analysis suggests freedom to operate with specific construct. Method-of-treatment claims from Gilead are narrow (specific to sacituzumab govitecan) and may be designed around with different dosing regimen or combination approach. Composition patents are strong and provide exclusivity through 2038. Ongoing monitoring recommended as patent landscape evolves.',
+    'Requires counsel-reviewed analysis. In practice, FTO hinges on construct-level differentiation (antibody sequences/epitopes, linker/payload, conjugation chemistry) and jurisdiction-specific method-of-use claims.',
   ipRisks: [
-    'Gilead method patents could require licensing for certain indications (low probability)',
-    'Daiichi Sankyo DXd platform patents could limit payload options (not applicable to TargetCo payload)',
-    'Patent term may not extend beyond 2038 without PTE (patent term extension)',
-    'Third-party patents in linker chemistry could emerge',
-    'Patent challenges from competitors could shorten exclusivity period',
+    'Crowded TROP2 ADC space: overlapping claims may create design-around or licensing needs depending on construct',
+    'Method-of-use claims can be indication- and regimen-specific',
+    'Platform IP (payload/linker/conjugation) can constrain manufacturing choices',
+    'Patent challenges/oppositions could shorten effective exclusivity',
   ],
   ipOpportunities: [
     'Novel linker technology patentable in additional jurisdictions',
@@ -866,8 +874,14 @@ export const IP_FTO_DATA = {
     'Manufacturing process improvements patentable',
   ],
   litigationHistory:
-    'No active litigation. Gilead v. Daiichi Sankyo settlement (2021) suggests licensing appetite rather than aggressive litigation. TargetCo has no patent disputes to date.',
-  ftoOpinionStatus: 'Preliminary opinion complete (internal counsel). Formal FTO opinion recommended before deal close.',
+    'Not assessed in this baseline. Requires up-to-date litigation and opposition search.',
+  ftoOpinionStatus: 'Not available in this baseline (counsel review required).',
+  // Agent attribution
+  agents: ['patent'] as const,
+  primaryAgent: 'patent' as const,
+  agentContributions: {
+    patent: 'Provided IP and FTO analysis including patent portfolio, key patents, FTO assessment, IP risks and opportunities',
+  },
 };
 
 export const MARKET_OPPORTUNITY_DATA = {
@@ -900,6 +914,13 @@ export const MARKET_OPPORTUNITY_DATA = {
     conservative: '15% market share by 2030',
     base: '25% market share by 2030',
     optimistic: '35% market share by 2030',
+  },
+  // Agent attribution
+  agents: ['financial', 'market_research'] as const,
+  primaryAgent: 'financial' as const,
+  agentContributions: {
+    financial: 'Provided market sizing including TAM, segments, and competitive dynamics',
+    market_research: 'Provided market dynamics, pricing considerations, and penetration assumptions',
   },
 };
 
@@ -956,7 +977,7 @@ export const DEAL_LANDSCAPE_DATA = {
     },
   ] as ComparableDeal[],
   valuationContext:
-    "Phase 1/2 TROP2 ADC assets have traded at $500M-$2B total value depending on differentiation data. TargetCo's safety differentiation could support premium. Recent deals suggest $1.5-2.5B total value range for differentiated Phase 1/2 assets. Market leader (Trodelvy) acquired at $21B post-approval, suggesting significant upside potential.",
+    'Comparable deal values vary widely based on stage, differentiation, and data quality. Use this tile as a framework for diligence rather than a quoted valuation; attach sourced comps before presenting numbers in an investor setting.',
   potentialPartners: [
     'Large oncology pharma (Roche, Merck, BMS, Pfizer)',
     'ADC-focused companies seeking pipeline (Seagen, ADC Therapeutics)',
@@ -978,12 +999,18 @@ export const DEAL_LANDSCAPE_DATA = {
     'Option structures for early-stage assets gaining popularity',
     'Valuations holding despite market conditions (oncology remains attractive)',
   ],
+  // Agent attribution
+  agents: ['financial'] as const,
+  primaryAgent: 'financial' as const,
+  agentContributions: {
+    financial: 'Provided deal landscape analysis including comparable deals, valuation context, potential partners, and deal structure considerations',
+  },
 };
 
 export const STRATEGIC_RECOMMENDATION_DATA = {
   recommendation: 'Pursue CDA',
   strategicRationale:
-    "TargetCo's TROP2 ADC addresses a key limitation of the market leader (GI toxicity) with proprietary linker technology. Phase 1 data, while early, suggests differentiated safety profile that could support best-in-class positioning. Strategic fit with our oncology portfolio is strong, filling gap in antibody-drug conjugate capabilities. Market opportunity is substantial ($5.2B TAM) with multiple expansion opportunities. Competitive landscape is manageable with clear differentiation path.",
+    'TROP2 is a validated ADC target with multiple active programs. Strategic attractiveness depends on whether an asset demonstrates differentiated safety and/or efficacy in a well-defined setting, with a credible CMC and regulatory path. Avoid quoting TAM/valuation unless backed by a sourced, current market model.',
   keyDiligenceQuestions: [
     '1. What is the mechanism of improved GI tolerability (linker stability data, payload release kinetics)?',
     '2. How does efficacy compare to Trodelvy at equivalent doses (cross-trial comparison limitations acknowledged)?',
@@ -1058,6 +1085,12 @@ export const STRATEGIC_RECOMMENDATION_DATA = {
     'Legal: IP diligence critical path item',
     'Executive: Strategic fit confirmed',
   ],
+  // Agent attribution
+  agents: ['sonny'] as const,
+  primaryAgent: 'sonny' as const,
+  agentContributions: {
+    sonny: 'Synthesized strategic recommendation from all agents including Financial, Market Research, Patent, Clinical, and Regulatory insights',
+  },
 };
 
 // ============================================
@@ -1130,40 +1163,40 @@ export const INTELLIGENCE_FEED = [
     date: '2024-01-15',
     type: 'publication',
     title: 'New TROP2 ADC shows promise in Phase 1',
-    source: 'Nature Cancer',
-    summary: 'Early data suggests differentiated safety profile',
+    source: 'Source required',
+    summary: 'Early data suggests differentiated safety profile (add primary citation before treating as factual)',
     relevance: 'high',
-    link: 'https://example.com/pub1',
+    link: '',
   },
   {
     id: 2,
     date: '2024-01-10',
     type: 'deal',
     title: 'Merck expands SKB264 partnership',
-    source: 'Press Release',
-    summary: 'Additional $500M investment in TROP2 ADC program',
+    source: 'Press release (source required)',
+    summary: 'Partnership expansion reported (add primary citation; avoid quoting deal terms without a source)',
     relevance: 'high',
-    link: 'https://example.com/deal1',
+    link: 'https://clinicaltrials.gov/study/NCT05215340',
   },
   {
     id: 3,
     date: '2024-01-05',
     type: 'regulatory',
-    title: 'FDA grants breakthrough designation to Dato-DXd',
-    source: 'FDA',
-    summary: 'Accelerated review pathway for NSCLC indication',
+    title: 'Regulatory designation reported for Dato-DXd',
+    source: 'Source required',
+    summary: 'Regulatory update reported for NSCLC program (add primary citation before treating as factual)',
     relevance: 'medium',
-    link: 'https://example.com/fda1',
+    link: '',
   },
   {
     id: 4,
     date: '2023-12-20',
     type: 'publication',
     title: 'TROP2 expression correlates with IO resistance',
-    source: 'Cancer Cell',
-    summary: 'New biomarker data supports combination approaches',
+    source: 'Source required',
+    summary: 'Biomarker data may support combination approaches (add primary citation before treating as factual)',
     relevance: 'medium',
-    link: 'https://example.com/pub2',
+    link: '',
   },
   {
     id: 5,
@@ -1173,7 +1206,7 @@ export const INTELLIGENCE_FEED = [
     source: 'ClinicalTrials.gov',
     summary: 'Phase 3 trial fully enrolled ahead of schedule',
     relevance: 'high',
-    link: 'https://example.com/ct1',
+    link: 'https://clinicaltrials.gov/study/NCT04656652',
   },
 ];
 

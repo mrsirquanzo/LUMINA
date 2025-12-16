@@ -22,11 +22,15 @@ interface IPFreedomToOperateTileProps {
     ipRisks: string[];
     ipOpportunities: string[];
     litigationHistory: string;
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function IPFreedomToOperateTile({ data, loading }: IPFreedomToOperateTileProps) {
+export default function IPFreedomToOperateTile({ data, loading, onAgentClick, extendedIntelligence }: IPFreedomToOperateTileProps) {
   const [expandedPatent, setExpandedPatent] = useState<string | null>(null);
 
   const getIPColor = (position: IPPosition) => {
@@ -59,6 +63,10 @@ export default function IPFreedomToOperateTile({ data, loading }: IPFreedomToOpe
       tileType="ip"
       loading={loading}
       className="h-[300px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         <div

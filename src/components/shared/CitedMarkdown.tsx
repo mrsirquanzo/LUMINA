@@ -8,6 +8,22 @@ import { CitationBadge, SourcesReferencedSection } from './CitationBadge';
 interface CitedMarkdownProps {
   content: string;
   className?: string;
+  /**
+   * Optional theming for the inner markdown container.
+   * Pass Tailwind gradient/border classes to visually align outputs with an agent's color scheme.
+   */
+  tone?: {
+    /** Tailwind classes like: "from-purple-500/20 via-blue-500/12 to-cyan-500/18" */
+    gradient: string;
+    /** Tailwind border class like: "border-purple-500/20" */
+    border?: string;
+  };
+  /**
+   * When explicitly provided, renders a Demo/Live indicator banner.
+   * - true: DEMO banner
+   * - false: LIVE banner
+   * - undefined: no banner
+   */
   isDemo?: boolean;
 }
 
@@ -19,11 +35,12 @@ interface CitedMarkdownProps {
  * - Automatically extracts "Sources Referenced" section and renders it prominently
  * - Adds demo/live indicators for transparency
  */
-export function CitedMarkdown({ content, className = '', isDemo = false }: CitedMarkdownProps) {
+export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMarkdownProps) {
   // Parse out the Sources Referenced / References section - support both formats
-  const sourcesMatch = content.match(/## (?:📚 Sources Referenced|References)\n\n([\s\S]*?)(?=\n##|$)/);
+  // Match with flexible newline handling (1 or 2 newlines after heading)
+  const sourcesMatch = content.match(/## (?:📚 Sources Referenced|References)\n+([\s\S]*?)(?=\n##|$)/);
   const mainContent = sourcesMatch
-    ? content.replace(/## (?:📚 Sources Referenced|References)\n\n[\s\S]*?(?=\n##|$)/, '').trim()
+    ? content.replace(/## (?:📚 Sources Referenced|References)\n+[\s\S]*?(?=\n##|$)/, '').trim()
     : content;
 
   // Extract sources if they exist
@@ -57,11 +74,49 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-blue-600 hover:text-blue-800 underline hover:no-underline transition-colors"
+        className="text-blue-300 hover:text-blue-200 underline decoration-blue-400/40 hover:decoration-blue-300 transition-colors"
         {...props}
       >
         {children}
       </a>
+    ),
+    table: ({ children, ...props }: any) => (
+      <div className="w-full overflow-x-auto rounded-lg border border-white/10 bg-black/30">
+        <table className="min-w-full border-collapse text-sm" {...props}>
+          {children}
+        </table>
+      </div>
+    ),
+    thead: ({ children, ...props }: any) => (
+      <thead className="bg-surface/60" {...props}>
+        {children}
+      </thead>
+    ),
+    th: ({ children, ...props }: any) => (
+      <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-white/85 uppercase border-b border-white/10 align-top whitespace-nowrap" {...props}>
+        {children}
+      </th>
+    ),
+    td: ({ children, ...props }: any) => (
+      <td className="px-4 py-3 text-left text-sm text-white border-b border-white/5 align-top break-words" {...props}>
+        {children}
+      </td>
+    ),
+    code: ({ inline, children, ...props }: any) => (
+      inline ? (
+        <code className="px-1 py-0.5 rounded bg-black/30 border border-white/10 text-white text-xs" {...props}>
+          {children}
+        </code>
+      ) : (
+        <code className="text-white text-xs" {...props}>
+          {children}
+        </code>
+      )
+    ),
+    pre: ({ children, ...props }: any) => (
+      <pre className="p-4 rounded-lg bg-black/30 border border-white/10 overflow-x-auto text-xs text-white" {...props}>
+        {children}
+      </pre>
     ),
     p: ({ children, ...props }: any) => {
       // Process text nodes to detect [1], [2] style citations
@@ -82,7 +137,7 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
         return child;
       });
 
-      return <p {...props}>{processedChildren}</p>;
+      return <p className="text-white mb-3 leading-relaxed" {...props}>{processedChildren}</p>;
     },
     li: ({ children, ...props }: any) => {
       // Process list items similarly
@@ -102,53 +157,34 @@ export function CitedMarkdown({ content, className = '', isDemo = false }: Cited
         return child;
       });
 
-      return <li {...props}>{processedChildren}</li>;
+      return <li className="text-white mb-2" {...props}>{processedChildren}</li>;
     },
+    h1: ({ children, ...props }: any) => <h1 className="text-white text-2xl font-bold mb-4 mt-6" {...props}>{children}</h1>,
+    h2: ({ children, ...props }: any) => <h2 className="text-white text-xl font-bold mb-3 mt-5" {...props}>{children}</h2>,
+    h3: ({ children, ...props }: any) => <h3 className="text-white text-lg font-semibold mb-2 mt-4" {...props}>{children}</h3>,
+    strong: ({ children, ...props }: any) => <strong className="text-white font-semibold" {...props}>{children}</strong>,
+    em: ({ children, ...props }: any) => <em className="text-white/90" {...props}>{children}</em>,
   };
 
   return (
-    <div className={className}>
-      {/* Demo/Live indicator */}
-      {isDemo !== undefined && (
-        <div className="mb-4 p-3 bg-gray-50 border border-gray-300 rounded-lg">
-          <div className="flex items-center gap-2 text-sm mb-2">
-            {isDemo ? (
-              <>
-                <span className="px-2 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded font-medium text-xs">
-                  DEMO MODE
-                </span>
-                <span className="text-gray-700 font-medium">
-                  Showing pre-recorded analysis with illustrative sources
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="px-2 py-0.5 bg-green-100 text-green-800 border border-green-300 rounded font-medium text-xs">
-                  ✓ LIVE ANALYSIS
-                </span>
-                <span className="text-gray-700 font-medium">
-                  Sources extracted from uploaded documents and real-time data
-                </span>
-              </>
-            )}
-          </div>
-          {isDemo && (
-            <p className="text-xs text-gray-600 italic leading-relaxed">
-              Note: Document names (e.g., "ADC_Patent_Landscape.pdf") are placeholders showing what you would upload in Live mode.
-              Citations demonstrate the format you'll see when analyzing your actual files with page-level verification.
-            </p>
-          )}
-        </div>
-      )}
-
+    <div className={`min-w-0 overflow-x-hidden ${className}`}>
       {/* Main content with citation parsing */}
-      <div className="agent-output">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={components}
-        >
-          {mainContent}
-        </ReactMarkdown>
+      <div
+        className={`agent-output relative max-w-none break-words overflow-x-hidden rounded-lg border p-4 ${
+          tone?.border ?? 'border-white/10'
+        } bg-black/25`}
+      >
+        {tone && (
+          <div
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${tone.gradient} opacity-80`}
+          />
+        )}
+        <div className="relative">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+            {mainContent}
+          </ReactMarkdown>
+        </div>
       </div>
 
       {/* Sources section */}

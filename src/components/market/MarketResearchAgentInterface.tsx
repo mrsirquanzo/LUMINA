@@ -68,7 +68,7 @@ export default function MarketResearchAgentInterface({
     description: string;
     loaded: boolean;
   }>>([
-    { name: 'XYZ-001', description: 'NSCLC (KRAS G12C+)', loaded: true },
+    { name: 'XYZ-001', description: 'Breast cancer (HER2+)', loaded: true },
   ]);
   const [activeDetailPanel, setActiveDetailPanel] = useState<string | null>(null);
   const [chatInput, setChatInput] = useState('');
@@ -106,7 +106,7 @@ export default function MarketResearchAgentInterface({
 
   // Recent searches
   const recentSearches = [
-    { name: 'KRAS G12C Market Size', date: 'Today' },
+    { name: 'HER2 ADC Market Size', date: 'Today' },
     { name: 'GLP-1 Competitive Landscape', date: 'Yesterday' },
     { name: 'NASH Pricing Analysis', date: '2 days ago' },
     { name: 'CAR-T Market Opportunity', date: '3 days ago' },
@@ -142,7 +142,7 @@ export default function MarketResearchAgentInterface({
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        const assetMatches = file.name.match(/\b(XYZ-\d+|KRAS|GLP-1|NASH|CAR-T|PD-1)\b/gi);
+        const assetMatches = file.name.match(/\b(XYZ-\d+|HER2|ERBB2|GLP-1|NASH|CAR-T|PD-1)\b/gi);
         if (assetMatches && assetMatches.length > 0) {
           const assetName = assetMatches[0].toUpperCase();
           setLoadedAssets((prev) => {
@@ -293,8 +293,8 @@ export default function MarketResearchAgentInterface({
 
           {/* Tab Navigation - Match Financial Agent styling exactly */}
           {onBackToChat ? (
-            <div className="px-6 pt-4">
-              <div className="mb-4 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="p-4">
+              <div className="mb-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
                 {[
                   { id: 'analyze' as const, label: 'Analyze', icon: Search },
                   { id: 'market' as const, label: 'Market', icon: BarChart3 },
@@ -320,7 +320,7 @@ export default function MarketResearchAgentInterface({
               </div>
             </div>
           ) : (
-            <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="mb-4 p-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
               {[
                 { id: 'analyze' as const, label: 'Analyze' },
                 { id: 'market' as const, label: 'Market' },
@@ -343,7 +343,7 @@ export default function MarketResearchAgentInterface({
           )}
 
           {/* Tab Content - Match Financial Agent spacing */}
-          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'px-6 pb-4' : ''}`}>
+          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'p-4' : ''}`}>
             {activeTab === 'analyze' && (
               <div className="space-y-4">
                 {/* Skills Section - Enhanced (like Patent Agent) */}

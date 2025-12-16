@@ -4,9 +4,11 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 interface KeyExperimentsTileProps {
   data: any;
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function KeyExperimentsTile({ data, loading }: KeyExperimentsTileProps) {
+export default function KeyExperimentsTile({ data, loading, onAgentClick, extendedIntelligence }: KeyExperimentsTileProps) {
   return (
     <Tile
       title="Key Experiments"
@@ -14,7 +16,10 @@ export default function KeyExperimentsTile({ data, loading }: KeyExperimentsTile
       tileType="general"
       loading={loading}
       className="h-[340px]"
-      extendedIntelligence={
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence ?? (
         <div className="flex flex-col h-full">
           {/* Evidence Gaps Section */}
           <div className="flex-1 flex flex-col min-h-0 mb-8">
@@ -86,7 +91,7 @@ export default function KeyExperimentsTile({ data, loading }: KeyExperimentsTile
             )}
           </div>
         </div>
-      }
+      )}
     >
       <div className="space-y-4">
         <div>

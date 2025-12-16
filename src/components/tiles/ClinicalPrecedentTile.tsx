@@ -4,9 +4,11 @@ import { ClipboardList } from 'lucide-react';
 interface ClinicalPrecedentTileProps {
   data: any;
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function ClinicalPrecedentTile({ data, loading }: ClinicalPrecedentTileProps) {
+export default function ClinicalPrecedentTile({ data, loading, onAgentClick, extendedIntelligence }: ClinicalPrecedentTileProps) {
   return (
     <Tile
       title="Clinical Precedent"
@@ -14,6 +16,10 @@ export default function ClinicalPrecedentTile({ data, loading }: ClinicalPrecede
       tileType="clinical"
       loading={loading}
       className="h-[360px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         {/* Key Findings moved to top */}
@@ -22,22 +28,30 @@ export default function ClinicalPrecedentTile({ data, loading }: ClinicalPrecede
           <p className="text-base leading-relaxed text-textPrimary">{data.keyFindings}</p>
         </div>
         
-        <div className="grid grid-cols-4 gap-3">
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Total</p>
-            <p className="text-2xl font-bold text-textPrimary leading-tight">{data.programsSummary.total}</p>
+            <p className="text-2xl font-bold text-textPrimary leading-none tabular-nums whitespace-nowrap">
+              {data.programsSummary.total}
+            </p>
           </div>
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Active</p>
-            <p className="text-2xl font-bold text-success leading-tight">{data.programsSummary.active}</p>
+            <p className="text-2xl font-bold text-success leading-none tabular-nums whitespace-nowrap">
+              {data.programsSummary.active}
+            </p>
           </div>
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Approved</p>
-            <p className="text-2xl font-bold text-success leading-tight">{data.programsSummary.approved}</p>
+            <p className="text-2xl font-bold text-success leading-none tabular-nums whitespace-nowrap">
+              {data.programsSummary.approved}
+            </p>
           </div>
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Failed</p>
-            <p className="text-2xl font-bold text-danger leading-tight">{data.programsSummary.failed}</p>
+            <p className="text-2xl font-bold text-danger leading-none tabular-nums whitespace-nowrap">
+              {data.programsSummary.failed}
+            </p>
           </div>
         </div>
         <div className="space-y-3">

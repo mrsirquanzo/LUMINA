@@ -14,11 +14,15 @@ interface GeneticValidationTileProps {
     directionOfEffect: string;
     biobankEvidence: Array<{ source: string; finding: string }>;
     lofCarrierPhenotypes: string;
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function GeneticValidationTile({ data, loading }: GeneticValidationTileProps) {
+export default function GeneticValidationTile({ data, loading, onAgentClick, extendedIntelligence }: GeneticValidationTileProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'gwas' | 'constraints' | 'mendelian'>(
     'overview'
   );
@@ -43,6 +47,10 @@ export default function GeneticValidationTile({ data, loading }: GeneticValidati
       tileType="genetic"
       loading={loading}
       className="h-[380px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       {/* Tabs */}
       <div className="flex gap-2 mb-4 border-b border-white/5 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
@@ -81,7 +89,7 @@ export default function GeneticValidationTile({ data, loading }: GeneticValidati
               <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">LoF Observed</p>
                 <p className="text-2xl font-bold text-textPrimary leading-tight">
-                  {data.constraintMetrics.lofObserved}
+                  {data.constraintMetrics.lofObserved ?? '—'}
                 </p>
               </div>
             </div>
@@ -225,16 +233,16 @@ export default function GeneticValidationTile({ data, loading }: GeneticValidati
             <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-base text-textSecondary font-medium">LoF Observed:</span>
-                <span className="text-base text-textPrimary font-bold">{data.constraintMetrics.lofObserved}</span>
+                <span className="text-base text-textPrimary font-bold">{data.constraintMetrics.lofObserved ?? '—'}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-base text-textSecondary font-medium">LoF Expected:</span>
-                <span className="text-base text-textPrimary font-bold">{data.constraintMetrics.lofExpected}</span>
+                <span className="text-base text-textPrimary font-bold">{data.constraintMetrics.lofExpected ?? '—'}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-base text-textSecondary font-medium">Homozygous Carriers:</span>
                 <span className="text-base text-textPrimary font-bold">
-                  {data.constraintMetrics.homozygousCarriers}
+                  {data.constraintMetrics.homozygousCarriers ?? '—'}
                 </span>
               </div>
             </div>

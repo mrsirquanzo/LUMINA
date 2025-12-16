@@ -6,7 +6,7 @@ export const Persona = {
   BD: 'bd' as const,
 };
 
-export type ViewState = 'dashboard' | 'feed' | 'workspaces' | 'compare' | 'history';
+export type ViewState = 'dashboard' | 'feed' | 'workspaces' | 'history';
 
 // Scoring types
 export type ValidationScore = 'Strong' | 'Moderate' | 'Limited' | 'Insufficient';
@@ -36,9 +36,9 @@ export interface GWASAssociation {
 export interface ConstraintMetrics {
   pLI: number;
   LOEUF: number;
-  lofObserved: number;
-  lofExpected: number;
-  homozygousCarriers: number;
+  lofObserved?: number;
+  lofExpected?: number;
+  homozygousCarriers?: number;
 }
 
 export interface ExpressionTissue {
@@ -46,6 +46,16 @@ export interface ExpressionTissue {
   tpm: number;
   isSafetyOrgan: boolean;
   category: 'brain' | 'heart' | 'liver' | 'kidney' | 'lung' | 'skin' | 'gi' | 'other';
+  /**
+   * Optional: when sourced from an agent response, store short interpretation text.
+   * This is used for richer tile rendering (and can include inline citation markers like [7]).
+   */
+  implications?: string;
+  /**
+   * Optional: store citation markers found on the line (e.g. ["7"]).
+   * Note: the tile UI may render these as plain markers unless a dedicated citation renderer is used.
+   */
+  citations?: string[];
 }
 
 export interface TumorExpression {

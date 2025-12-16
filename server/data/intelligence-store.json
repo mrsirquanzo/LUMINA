@@ -1,0 +1,3585 @@
+{
+  "version": 4,
+  "entries": {
+    "trop2|oncology": {
+      "items": [
+        {
+          "id": "PMID:41384708",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+          "title": "Molecular pathology of bladder cancer.",
+          "source": "PubMed",
+          "kind": "publication",
+          "publishedAt": "2026-01-01T05:00:00.000Z",
+          "summary": "Histopathology • Lopez-Beltran A",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "PMID:41241473",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+          "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+          "source": "PubMed",
+          "kind": "publication",
+          "publishedAt": "2025-12-22T05:00:00.000Z",
+          "summary": "Anal Chim Acta • Shao W",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "PMID:41362788",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+          "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+          "source": "PubMed",
+          "kind": "publication",
+          "publishedAt": "2025-12-18T05:00:00.000Z",
+          "summary": "Mol Ther Oncol • Mohiuddin TM",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:c637d3f093",
+          "url": "http://www.hawaiitelegraph.com/news/278675521/cellbxhealth-plc-presents-proof-of-concept-study",
+          "title": "CelLBxHealth PLC Presents Proof - of - Concept Study",
+          "source": "hawaiitelegraph.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: hawaiitelegraph.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:64a939512e",
+          "url": "http://www.californiatelegraph.com/news/278675521/cellbxhealth-plc-presents-proof-of-concept-study",
+          "title": "CelLBxHealth PLC Presents Proof - of - Concept Study",
+          "source": "californiatelegraph.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: californiatelegraph.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:8df885857b",
+          "url": "https://www.curetoday.com/view/datroway-improves-progression-survival-in-triple-negative-breast-cancer",
+          "title": "Datroway Improves Progression , Survival in Triple - Negative Breast Cancer",
+          "source": "curetoday.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: curetoday.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:ff851fec9f",
+          "url": "https://www.investegate.co.uk/announcement/rns/astrazeneca--azn/datroway-improved-os-and-pfs-in-tropion-breast02/9152191",
+          "title": "Datroway improved OS and PFS in TROPION - Breast02 | Company Announcement",
+          "source": "investegate.co.uk",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: investegate.co.uk",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:2b7c6894f9",
+          "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+          "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+          "source": "ajmc.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: ajmc.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:ffa1a746a6",
+          "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+          "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+          "source": "prnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: prnewswire.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:7eaf27b32c",
+          "url": "https://portal.sina.com.hk/finance/finance-prnewswire/prnasia/2025/11/28/1391993/the-annals-of-oncology-publishes-results-of-phase-ii-study-of-sacituzumab-tirumotecan-monotherapy-for-urothelial-carcinoma/",
+          "title": "The Annals of Oncology Publishes Results of Phase II Study of Sacituzumab Tirumotecan Monotherapy for Urothelial Carcinoma",
+          "source": "portal.sina.com.hk",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: portal.sina.com.hk",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:2290658c84",
+          "url": "https://www.manilatimes.net/2025/11/28/tmt-newswire/pr-newswire/the-annals-of-oncology-publishes-results-of-phase-ii-study-of-sacituzumab-tirumotecan-monotherapy-for-urothelial-carcinoma/2233040",
+          "title": "The Annals of Oncology Publishes Results of Phase II Study of Sacituzumab Tirumotecan Monotherapy for Urothelial Carcinoma",
+          "source": "manilatimes.net",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: manilatimes.net",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:a3a8dd968e",
+          "url": "https://www.manilatimes.net/2025/10/18/tmt-newswire/pr-newswire/kelun-biotech-presents-positive-results-of-phase-3-clinical-study-optitrop-breast02-for-sacituzumab-tirumotecan-in-advanced-hrher2-breast-cancer-at-2025-esmo/2203534",
+          "title": "Kelun - Biotech Presents Positive Results of Phase 3 Clinical Study OptiTROP - Breast02 for Sacituzumab Tirumotecan in Advanced HR+ / HER2 - Breast Cancer at 2025 ESMO",
+          "source": "manilatimes.net",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: manilatimes.net",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:3b0e64e24b",
+          "url": "https://www.ajmc.com/view/ai-expands-clinical-trial-access-advances-drug-repurposing-efforts-vivek-subbiah-md",
+          "title": "AI Expands Clinical Trial Access , Advances Drug Repurposing Efforts : Vivek Subbiah , MD",
+          "source": "ajmc.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: ajmc.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:271b86d70b",
+          "url": "https://www.investegate.co.uk/announcement/rns/cellbxhealth-plc--clbx/cellbxhealth-presents-proof-of-concept-study-/9212862",
+          "title": "CelLBxHealth Presents Proof - of - Concept Study | Company Announcement",
+          "source": "investegate.co.uk",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: investegate.co.uk",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:0f6d63b653",
+          "url": "https://www.onclive.com/view/experts-highlight-hr-and-tnbc-trials-to-watch-ahead-of-sabcs-2025",
+          "title": "Experts Highlight HR+ and TNBC Trials to Watch Ahead of SABCS 2025",
+          "source": "onclive.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: onclive.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:262d6f69b0",
+          "url": "https://www.thailand-business-news.com/pr-news/kelun-biotech-presents-positive-results-of-phase-3-clinical-study-optitrop-breast02-for-sacituzumab-tirumotecan-in-advanced-hr-her2-breast-cancer-at-2025-esmo",
+          "title": "Kelun - Biotech Presents Positive Results of Phase 3 Clinical Study OptiTROP - Breast02 for Sacituzumab Tirumotecan in Advanced HR+ / HER2 - Breast Cancer at 2025 ESMO",
+          "source": "thailand-business-news.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: thailand-business-news.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:34b0f01081",
+          "url": "https://www.manilatimes.net/2025/12/11/tmt-newswire/globenewswire/purple-biotech-reports-positive-new-preclinical-data-demonstrating-multi-arm-anti-tumor-activity-across-two-captn-3-tri-specific-antibodies-at-esmo-immuno-oncology-congress-2025/2241560",
+          "title": "Purple Biotech Reports Positive New Preclinical Data Demonstrating Multi - Arm Anti - Tumor Activity Across Two CAPTN - 3 Tri - Specific Antibodies at ESMO Immuno - Oncology Congress 2025",
+          "source": "manilatimes.net",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: manilatimes.net",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:5b4ead1cc9",
+          "url": "http://www.indiagazette.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "indiagazette.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: indiagazette.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:7ed45240a9",
+          "url": "http://www.japanherald.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "japanherald.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: japanherald.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:f227acf9c6",
+          "url": "http://www.europesun.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "europesun.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: europesun.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:248babe0cf",
+          "url": "http://www.northkoreatimes.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "northkoreatimes.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: northkoreatimes.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:8f4d58576c",
+          "url": "http://www.californiatelegraph.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "californiatelegraph.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: californiatelegraph.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:ac3e68e7df",
+          "url": "http://www.irishsun.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "irishsun.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: irishsun.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:0e100cae96",
+          "url": "https://en.acnnewswire.com/press-release/english/103746/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "(untitled)",
+          "source": "en.acnnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: en.acnnewswire.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:7cfc5b6538",
+          "url": "http://www.clevelandstar.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "clevelandstar.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: clevelandstar.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:9cbf46cd30",
+          "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+          "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+          "source": "marketscreener.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: marketscreener.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:460ab86ae2",
+          "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+          "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+          "source": "pharmacytimes.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: pharmacytimes.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:55b559bc55",
+          "url": "https://www.jcnnewswire.com/pressrelease/103746/2/OBI-902-has-been-granted-by-US-FDA-for-Orphan-Drug-Designation-for-the-Treatment-of-Cholangiocarcino",
+          "title": "OBI - 902 has been granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "jcnnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: jcnnewswire.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:aa6d8f4b17",
+          "url": "https://www.jcnnewswire.com/pressrelease/103755/3/OBI-902-has-been-granted-by-US-FDA-for-Orphan-Drug-Designation-for-the-Treatment-of-Cholangiocarcino",
+          "title": "OBI - 902 has been granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "jcnnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: jcnnewswire.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:3a5e33a097",
+          "url": "https://www.biopharmadive.com/news/kelun-merck-adc-trop2-first-line-treatment-lung-cancer/806409/",
+          "title": "Kelun , Merck tout ADC as potential first - line treatment in lung cancer",
+          "source": "biopharmadive.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: biopharmadive.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:e17a37d139",
+          "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-announces-positive-results-from-phase-3-optitrop-l-ce7d5ad2d88bf022",
+          "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Announces Positive Results from Phase 3 OptiTROP - Lung04 Trial of Sacituzumab Tirumotecan Presented at ESMO Presidential Symposium and Simultaneously Published in NEJM",
+          "source": "marketscreener.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: marketscreener.com",
+          "firstSeenAt": "2025-12-13T03:16:16.430Z"
+        },
+        {
+          "id": "gdelt:news:fa38b1af54",
+          "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+          "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+          "source": "themunicheye.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: themunicheye.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:e6db8d92c9",
+          "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+          "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+          "source": "medicalxpress.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: medicalxpress.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:65463051f9",
+          "url": "http://www.tennesseedaily.com/news/278699658/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+          "title": "OBI - 902 Has Been Granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+          "source": "tennesseedaily.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: tennesseedaily.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:a6fdfe04c0",
+          "url": "https://www.onclive.com/view/additional-biomarkers-are-needed-to-inform-adc-selection-in-nsclc",
+          "title": "Additional Biomarkers Are Needed to Inform ADC Selection in NSCLC",
+          "source": "onclive.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: onclive.com",
+          "firstSeenAt": "2025-12-13T03:16:16.430Z"
+        },
+        {
+          "id": "gdelt:news:810cd633ed",
+          "url": "http://www.prnewswire.com/news-releases/the-annals-of-oncology-publishes-results-of-phase-ii-study-of-sacituzumab-tirumotecan-monotherapy-for-urothelial-carcinoma-302627874.html",
+          "title": "The Annals of Oncology Publishes Results of Phase II Study of Sacituzumab Tirumotecan Monotherapy for Urothelial Carcinoma",
+          "source": "prnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-15T15:20:38.284Z",
+          "summary": "Source: prnewswire.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:69bd4038ad",
+          "url": "https://www.onclive.com/view/sacituzumab-tirumotecan-plus-pembrolizumab-is-set-to-be-evaluated-in-tnbc",
+          "title": "Sacituzumab Tirumotecan Plus Pembrolizumab Is Set to Be Evaluated in TNBC",
+          "source": "onclive.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:54:57.360Z",
+          "summary": "Source: onclive.com",
+          "firstSeenAt": "2025-12-13T02:57:56.877Z"
+        },
+        {
+          "id": "gdelt:news:c53cec50dd",
+          "url": "https://www.prnewswire.com/news-releases/kelun-biotech-to-present-results-from-multiple-clinical-studies-at-the-2025-esmo-congress-302564236.html",
+          "title": "Kelun - Biotech to Present Results from Multiple Clinical Studies at the 2025 ESMO Congress",
+          "source": "prnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:54:57.359Z",
+          "summary": "Source: prnewswire.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        },
+        {
+          "id": "gdelt:news:18e11feb78",
+          "url": "https://www.pharmiweb.com/press-release/2025-11-05/cellbxhealth-plc-presents-proof-of-concept-study",
+          "title": "CelLBxHealth PLC Presents Proof - of - Concept Study",
+          "source": "pharmiweb.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:54:57.359Z",
+          "summary": "Source: pharmiweb.com",
+          "firstSeenAt": "2025-12-13T02:45:23.642Z"
+        }
+      ],
+      "lastSeenAt": "2025-12-16T04:11:11.662Z",
+      "lastFetchedAt": "2025-12-16T04:02:43.140Z",
+      "processedItems": [
+        {
+          "id": "PMID:41241473",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "Analytica chimica acta",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-10-01",
+            "reliabilityTier": 1,
+            "recencyScore": "RECENT",
+            "authorCredibility": "HIGH",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "CENTRAL",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "Study develops novel aptasensor for TROP-2 detection and imaging in triple-negative breast cancer, providing quantitative measurements of TROP-2 surface density across multiple cell lines",
+            "evidenceIds": [
+              "pubmed:41241473:title",
+              "pubmed:41241473:abstract"
+            ]
+          },
+          "classification": {
+            "category": "SCIENTIFIC",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "Novel aptasensor enables sensitive TROP-2 detection and imaging in triple-negative breast cancer with quantitative surface density measurements across cell lines",
+            "headlineEvidenceIds": [
+              "pubmed:41241473:title",
+              "pubmed:41241473:abstract"
+            ],
+            "body": "Researchers developed a fluorescence aptasensor combining hybridization chain reaction and catalytic hairpin assembly for TROP-2 detection in TNBC. The method achieved linear detection from 0.001-0.1 μM with 0.0009 μM limit of detection. Surface density measurements revealed varying TROP-2 expression: MDA-MB-468 (6.0×10⁶ molecules/cell), MCF-7 (2.0×10⁶), MDA-MB-231 (6.6×10⁵), and HL-7702 (4.1×10⁵). This represents the first aptasensor enabling both imaging and quantitative comparison across cell types.",
+            "bodyEvidenceIds": [
+              "pubmed:41241473:abstract"
+            ],
+            "keyData": [
+              {
+                "metric": "Detection Range",
+                "value": "0.001-0.1 μM",
+                "context": "Linear response range for TROP-2 detection",
+                "evidenceIds": [
+                  "pubmed:41241473:abstract"
+                ]
+              },
+              {
+                "metric": "Limit of Detection",
+                "value": "0.0009 μM",
+                "context": "Sensitivity threshold for TROP-2 detection",
+                "evidenceIds": [
+                  "pubmed:41241473:abstract"
+                ]
+              },
+              {
+                "metric": "TROP-2 Surface Density",
+                "value": "MDA-MB-468: 6.0×10⁶, MCF-7: 2.0×10⁶, MDA-MB-231: 6.6×10⁵, HL-7702: 4.1×10⁵ molecules/cell",
+                "context": "Quantitative TROP-2 expression across different cell lines",
+                "evidenceIds": [
+                  "pubmed:41241473:abstract"
+                ]
+              }
+            ],
+            "targetImplications": "Provides quantitative baseline for TROP-2 expression levels across different breast cancer cell lines, potentially informing patient stratification and therapeutic targeting strategies for TROP-2-directed therapies",
+            "targetImplicationsEvidenceIds": [
+              "pubmed:41241473:abstract"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "TNBC is strongly linked to overexpression of TROP-2, a transmembrane glycoprotein biomarker",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41241473:abstract"
+              ]
+            },
+            {
+              "fact": "Aptasensor achieved linear response from 0.001 μM to 0.1 μM with LOD of 0.0009 μM",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41241473:abstract"
+              ]
+            },
+            {
+              "fact": "MDA-MB-468 cells express 6.0×10⁶ TROP-2 molecules per cell",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41241473:abstract"
+              ]
+            },
+            {
+              "fact": "This is the first aptasensor enabling both in situ TROP-2 imaging and quantitative comparison across cell types",
+              "verificationStatus": "CLAIM",
+              "evidenceIds": [
+                "pubmed:41241473:abstract"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "VERIFIED",
+            "method": "Peer-reviewed publication in analytical chemistry journal with detailed methodology and quantitative results",
+            "methodEvidenceIds": [
+              "pubmed:41241473:journal",
+              "pubmed:41241473:abstract"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "HIGH",
+            "rationale": "Peer-reviewed publication with detailed quantitative data, specific methodology, and measurable outcomes from recent timeframe",
+            "rationaleEvidenceIds": [
+              "pubmed:41241473:journal",
+              "pubmed:41241473:abstract"
+            ],
+            "dataGaps": []
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "URL:ajmc.com:wd3mo0",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T04:26:47.685Z",
+            "reliabilityTier": 3,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "UNKNOWN",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "CENTRAL",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "Article directly discusses TROP2 ADC therapeutic performance in pretreated triple-negative breast cancer",
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0:title"
+            ]
+          },
+          "classification": {
+            "category": "CLINICAL_DATA",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "TROP2 ADC demonstrates promise in pretreated triple-negative breast cancer patients",
+            "headlineEvidenceIds": [
+              "URL:ajmc.com:wd3mo0:title"
+            ],
+            "body": "News article featuring Dr. Erika Hamilton discussing TROP2 antibody-drug conjugate performance in pretreated TNBC patients. Limited content available for detailed analysis.",
+            "bodyEvidenceIds": [
+              "URL:ajmc.com:wd3mo0:title"
+            ],
+            "keyData": [],
+            "targetImplications": "Suggests continued clinical development potential for TROP2-targeted therapies in pretreated TNBC population",
+            "targetImplicationsEvidenceIds": [
+              "URL:ajmc.com:wd3mo0:title"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "TROP2 ADC shows promise in pretreated triple-negative breast cancer",
+              "verificationStatus": "CLAIM",
+              "evidenceIds": [
+                "URL:ajmc.com:wd3mo0:title"
+              ]
+            },
+            {
+              "fact": "Dr. Erika Hamilton provided commentary on TROP2 ADC",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "URL:ajmc.com:wd3mo0:title"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "UNVERIFIED",
+            "method": "Headline-only analysis without supporting clinical data or study details",
+            "methodEvidenceIds": [
+              "URL:ajmc.com:wd3mo0:title"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "INSUFFICIENT",
+            "rationale": "Analysis based solely on headline with no abstract, clinical data, or detailed content available",
+            "rationaleEvidenceIds": [
+              "URL:ajmc.com:wd3mo0:title",
+              "URL:ajmc.com:wd3mo0:snippet"
+            ],
+            "dataGaps": [
+              "Clinical trial data or study details",
+              "Specific efficacy metrics",
+              "Patient population characteristics",
+              "Comparator information",
+              "Safety profile",
+              "Development stage information"
+            ]
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "URL:prnewswire.com:13guye0",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T04:26:47.685Z",
+            "reliabilityTier": 3,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "UNKNOWN",
+            "potentialBias": "LOW",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "SUPPORTING",
+            "targetMentioned": true,
+            "targetRole": "MENTIONED",
+            "whyRelevant": "Fallback: model output was not valid JSON; using only provided evidence.",
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0:title",
+              "URL:prnewswire.com:13guye0:snippet",
+              "URL:prnewswire.com:13guye0:page-title",
+              "URL:prnewswire.com:13guye0:meta-description",
+              "URL:prnewswire.com:13guye0:content"
+            ]
+          },
+          "classification": {
+            "category": "SCIENTIFIC",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "NEUTRAL",
+            "impactLevel": "LOW"
+          },
+          "summary": {
+            "headline": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "headlineEvidenceIds": [
+              "URL:prnewswire.com:13guye0:title",
+              "URL:prnewswire.com:13guye0:snippet",
+              "URL:prnewswire.com:13guye0:page-title",
+              "URL:prnewswire.com:13guye0:meta-description",
+              "URL:prnewswire.com:13guye0:content"
+            ],
+            "body": "Source: prnewswire.com",
+            "bodyEvidenceIds": [
+              "URL:prnewswire.com:13guye0:title",
+              "URL:prnewswire.com:13guye0:snippet",
+              "URL:prnewswire.com:13guye0:page-title",
+              "URL:prnewswire.com:13guye0:meta-description",
+              "URL:prnewswire.com:13guye0:content"
+            ],
+            "keyData": [],
+            "targetImplications": "Needs verified extraction; insufficient structured evidence.",
+            "targetImplicationsEvidenceIds": [
+              "URL:prnewswire.com:13guye0:title",
+              "URL:prnewswire.com:13guye0:snippet",
+              "URL:prnewswire.com:13guye0:page-title",
+              "URL:prnewswire.com:13guye0:meta-description",
+              "URL:prnewswire.com:13guye0:content"
+            ]
+          },
+          "facts": [],
+          "verification": {
+            "status": "UNVERIFIED",
+            "method": "Fallback (no valid JSON from model).",
+            "methodEvidenceIds": [
+              "URL:prnewswire.com:13guye0:title",
+              "URL:prnewswire.com:13guye0:snippet",
+              "URL:prnewswire.com:13guye0:page-title",
+              "URL:prnewswire.com:13guye0:meta-description",
+              "URL:prnewswire.com:13guye0:content"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "INSUFFICIENT",
+            "rationale": "Model output could not be parsed as valid JSON; falling back to headline/snippet only.",
+            "rationaleEvidenceIds": [
+              "URL:prnewswire.com:13guye0:title",
+              "URL:prnewswire.com:13guye0:snippet",
+              "URL:prnewswire.com:13guye0:page-title",
+              "URL:prnewswire.com:13guye0:meta-description",
+              "URL:prnewswire.com:13guye0:content"
+            ],
+            "dataGaps": [
+              "valid-processor-json"
+            ]
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "URL:medicalxpress.com:ac1l7",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "reliabilityTier": 3,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "UNKNOWN",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "CENTRAL",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "TROP2 is identified as a promising therapeutic target in renal medullary carcinoma based on molecular profiling",
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7:title"
+            ]
+          },
+          "classification": {
+            "category": "SCIENTIFIC",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "Molecular profiling study identifies TROP2 as promising therapeutic target for renal medullary carcinoma",
+            "headlineEvidenceIds": [
+              "URL:medicalxpress.com:ac1l7:title"
+            ],
+            "body": "Research involving molecular profiling of renal medullary carcinoma has identified TROP2 as a promising therapeutic target. Limited details available from headline only.",
+            "bodyEvidenceIds": [
+              "URL:medicalxpress.com:ac1l7:title"
+            ],
+            "keyData": [],
+            "targetImplications": "TROP2 emerges as potential therapeutic target for renal medullary carcinoma, suggesting opportunity for targeted therapy development",
+            "targetImplicationsEvidenceIds": [
+              "URL:medicalxpress.com:ac1l7:title"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "Molecular profiling of renal medullary carcinoma identified TROP2 as a promising therapeutic target",
+              "verificationStatus": "CLAIM",
+              "evidenceIds": [
+                "URL:medicalxpress.com:ac1l7:title"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "UNVERIFIED",
+            "method": "Headline-only information from news source without access to underlying research data or methodology",
+            "methodEvidenceIds": [
+              "URL:medicalxpress.com:ac1l7:title"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "LOW",
+            "rationale": "Assessment based solely on headline from news source without access to study details, methodology, sample size, or validation data",
+            "rationaleEvidenceIds": [
+              "URL:medicalxpress.com:ac1l7:title"
+            ],
+            "dataGaps": [
+              "Study methodology and sample size",
+              "Specific molecular profiling results",
+              "TROP2 expression levels or frequency",
+              "Validation data",
+              "Research institution and authors",
+              "Publication venue and peer review status"
+            ]
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "URL:themunicheye.com:1cj0sfa",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "reliabilityTier": 3,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "UNKNOWN",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "CENTRAL",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "TROP2 is identified as a potential therapeutic target for renal medullary carcinoma treatment",
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa:title"
+            ]
+          },
+          "classification": {
+            "category": "SCIENTIFIC",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "Study identifies TROP2 as potential therapeutic target for renal medullary carcinoma",
+            "headlineEvidenceIds": [
+              "URL:themunicheye.com:1cj0sfa:title"
+            ],
+            "body": "A comprehensive study has identified TROP2 as a potential therapeutic target for treating renal medullary carcinoma. Limited details available from headline only.",
+            "bodyEvidenceIds": [
+              "URL:themunicheye.com:1cj0sfa:title"
+            ],
+            "keyData": [],
+            "targetImplications": "TROP2 may represent a new therapeutic opportunity for renal medullary carcinoma, a rare and aggressive kidney cancer",
+            "targetImplicationsEvidenceIds": [
+              "URL:themunicheye.com:1cj0sfa:title"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "A comprehensive study identified TROP2 as a potential target for renal medullary carcinoma treatment",
+              "verificationStatus": "CLAIM",
+              "evidenceIds": [
+                "URL:themunicheye.com:1cj0sfa:title"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "UNVERIFIED",
+            "method": "Headline-only information without access to study details, methodology, or results",
+            "methodEvidenceIds": [
+              "URL:themunicheye.com:1cj0sfa:title"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "INSUFFICIENT",
+            "rationale": "Only headline available with no study details, methodology, results, or validation data provided",
+            "rationaleEvidenceIds": [
+              "URL:themunicheye.com:1cj0sfa:title"
+            ],
+            "dataGaps": [
+              "Study methodology and design",
+              "Sample size and patient population",
+              "TROP2 expression levels or biomarker data",
+              "Preclinical or clinical evidence supporting therapeutic potential",
+              "Comparison to existing treatments",
+              "Study authors and institutional affiliations"
+            ]
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "URL:marketscreener.com:14eiw21",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "reliabilityTier": 3,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "UNKNOWN",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "CENTRAL",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "Reports clinical study results for TROP2 ADC sacituzumab tirumotecan presented at major medical congress",
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21:title"
+            ]
+          },
+          "classification": {
+            "category": "CLINICAL_DATA",
+            "urgency": "TIMELY",
+            "sentiment": "NEUTRAL",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "Sichuan Kelun-Biotech presented clinical results for TROP2 ADC sacituzumab tirumotecan at 2025 Chinese Congress",
+            "headlineEvidenceIds": [
+              "URL:marketscreener.com:14eiw21:title"
+            ],
+            "body": "Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd. presented results from multiple clinical studies of their TROP2 ADC sacituzumab tirumotecan at the 2025 Chinese Congress. No specific clinical data or outcomes are provided in the available information.",
+            "bodyEvidenceIds": [
+              "URL:marketscreener.com:14eiw21:title"
+            ],
+            "keyData": [],
+            "targetImplications": "Conference presentation suggests ongoing clinical development of TROP2-targeted ADC therapy, though specific efficacy or safety outcomes are not disclosed",
+            "targetImplicationsEvidenceIds": [
+              "URL:marketscreener.com:14eiw21:title"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd. presented TROP2 ADC sacituzumab tirumotecan results at the 2025 Chinese Congress",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "URL:marketscreener.com:14eiw21:title"
+              ]
+            },
+            {
+              "fact": "Results were from multiple clinical studies",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "URL:marketscreener.com:14eiw21:title"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "UNVERIFIED",
+            "method": "Headline-only source with no detailed content or cross-references available",
+            "methodEvidenceIds": [
+              "URL:marketscreener.com:14eiw21:snippet"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "LOW",
+            "rationale": "Information limited to headline only with no detailed clinical data, outcomes, or context provided",
+            "rationaleEvidenceIds": [
+              "URL:marketscreener.com:14eiw21:snippet"
+            ],
+            "dataGaps": [
+              "Specific clinical trial phases",
+              "Patient populations studied",
+              "Efficacy outcomes",
+              "Safety data",
+              "Comparison to other TROP2 ADCs",
+              "Development timeline"
+            ]
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "URL:pharmacytimes.com:12ztipq",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "reliabilityTier": 3,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "UNKNOWN",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "CENTRAL",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "Article focuses on TROP2-targeted therapies in triple-negative breast cancer (TNBC) and their impact on patient outcomes",
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq:title"
+            ]
+          },
+          "classification": {
+            "category": "CLINICAL_DATA",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "TROP2-targeted therapies showing improved patient outcomes in triple-negative breast cancer",
+            "headlineEvidenceIds": [
+              "URL:pharmacytimes.com:12ztipq:title"
+            ],
+            "body": "News article discusses TROP2-targeted therapeutic approaches in TNBC treatment, suggesting positive impact on patient outcomes. Full content not available for detailed analysis.",
+            "bodyEvidenceIds": [
+              "URL:pharmacytimes.com:12ztipq:title"
+            ],
+            "keyData": [],
+            "targetImplications": "Suggests TROP2 remains a viable therapeutic target with evidence of clinical benefit in TNBC patients",
+            "targetImplicationsEvidenceIds": [
+              "URL:pharmacytimes.com:12ztipq:title"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "TROP2-targeted therapies are being used to treat triple-negative breast cancer",
+              "verificationStatus": "CLAIM",
+              "evidenceIds": [
+                "URL:pharmacytimes.com:12ztipq:title"
+              ]
+            },
+            {
+              "fact": "TROP2-targeted therapies improve patient outcomes in TNBC",
+              "verificationStatus": "CLAIM",
+              "evidenceIds": [
+                "URL:pharmacytimes.com:12ztipq:title"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "UNVERIFIED",
+            "method": "Only title available - no access to full article content for verification of claims",
+            "methodEvidenceIds": [
+              "URL:pharmacytimes.com:12ztipq:title"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "INSUFFICIENT",
+            "rationale": "Analysis based solely on article title with no access to full content, data, or supporting evidence",
+            "rationaleEvidenceIds": [
+              "URL:pharmacytimes.com:12ztipq:title"
+            ],
+            "dataGaps": [
+              "Full article content",
+              "Specific TROP2-targeted therapies discussed",
+              "Clinical data or study results",
+              "Patient outcome metrics",
+              "Author credentials and sources"
+            ]
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "PMID:41384708",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "Histopathology",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-12",
+            "reliabilityTier": 1,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "HIGH",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "SUPPORTING",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "TROP2 is discussed as a therapeutic target for sacituzumab govitecan in bladder cancer treatment, with specific efficacy data across molecular subtypes",
+            "evidenceIds": [
+              "pubmed:41384708:abstract"
+            ]
+          },
+          "classification": {
+            "category": "SCIENTIFIC",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "Comprehensive review highlights TROP2-targeting sacituzumab govitecan efficacy in bladder cancer molecular subtypes",
+            "headlineEvidenceIds": [
+              "pubmed:41384708:abstract"
+            ],
+            "body": "This comprehensive review of bladder cancer molecular pathology discusses advances in personalized oncology and targeted therapies. The paper highlights sacituzumab govitecan, an antibody-drug conjugate directed against TROP2, noting its effectiveness in basal, luminal and stroma-rich molecular subtypes of bladder cancer, but not in neuroendocrine carcinomas. The review also covers other targeted therapies including erdafitinib for FGFR3 alterations, enfortumab vedotin for Nectin-4, and trastuzumab deruxtecan for HER2-overexpressing tumors.",
+            "bodyEvidenceIds": [
+              "pubmed:41384708:abstract"
+            ],
+            "keyData": [
+              {
+                "metric": "TROP2 targeting efficacy",
+                "value": "Effective in basal, luminal and stroma-rich subtypes",
+                "context": "Sacituzumab govitecan effectiveness across bladder cancer molecular subtypes",
+                "evidenceIds": [
+                  "pubmed:41384708:abstract"
+                ]
+              },
+              {
+                "metric": "TROP2 targeting limitation",
+                "value": "Not effective in neuroendocrine carcinomas",
+                "context": "Sacituzumab govitecan subtype-specific efficacy",
+                "evidenceIds": [
+                  "pubmed:41384708:abstract"
+                ]
+              }
+            ],
+            "targetImplications": "TROP2 emerges as a validated therapeutic target in bladder cancer with subtype-specific efficacy patterns, supporting precision medicine approaches in urothelial carcinoma treatment",
+            "targetImplicationsEvidenceIds": [
+              "pubmed:41384708:abstract"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "Sacituzumab govitecan is an antibody-drug conjugate directed against TROP2",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41384708:abstract"
+              ]
+            },
+            {
+              "fact": "Sacituzumab govitecan is effective in basal, luminal and stroma-rich bladder cancer subtypes",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41384708:abstract"
+              ]
+            },
+            {
+              "fact": "Sacituzumab govitecan is not effective in neuroendocrine carcinomas",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41384708:abstract"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "VERIFIED",
+            "method": "Peer-reviewed publication in established pathology journal with PMID",
+            "methodEvidenceIds": [
+              "pubmed:41384708:journal"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "HIGH",
+            "rationale": "Peer-reviewed publication from 2026 in established pathology journal with comprehensive abstract providing specific therapeutic efficacy data",
+            "rationaleEvidenceIds": [
+              "pubmed:41384708:journal",
+              "pubmed:41384708:abstract"
+            ],
+            "dataGaps": []
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "PMID:41362788",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "Molecular therapy. Oncology",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-11-12",
+            "reliabilityTier": 1,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "HIGH",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "CENTRAL",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "TROP2 is one of five cell surface antigens targeted by NIR-PIT agents developed for ovarian cancer treatment, with demonstrated efficacy in preclinical studies",
+            "evidenceIds": [
+              "pubmed:41362788:abstract"
+            ]
+          },
+          "classification": {
+            "category": "SCIENTIFIC",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "NIR-PIT agents targeting TROP2 and four other antigens demonstrate potent anti-cancer activity in ovarian cancer preclinical models",
+            "headlineEvidenceIds": [
+              "pubmed:41362788:abstract"
+            ],
+            "body": "Researchers developed five near-infrared photoimmunotherapy (NIR-PIT) agents targeting TROP2, EGFR, Her2, FOLR1, and TF antigens on ovarian cancer cells. All agents showed specific binding to target cells and human ovarian cancer tissues, with IC50 values of 42-283 nM and cell death efficiencies of 80-92%. The treatment induced immunogenic cell death markers and enhanced dendritic cell maturation.",
+            "bodyEvidenceIds": [
+              "pubmed:41362788:abstract"
+            ],
+            "keyData": [
+              {
+                "metric": "IC50 range",
+                "value": "42-283 nM",
+                "context": "All five NIR-PIT agents in concentration-dependent cell viability assays",
+                "evidenceIds": [
+                  "pubmed:41362788:abstract"
+                ]
+              },
+              {
+                "metric": "Cell death efficiency",
+                "value": "80-92%",
+                "context": "All examined NIR-PIT agents",
+                "evidenceIds": [
+                  "pubmed:41362788:abstract"
+                ]
+              }
+            ],
+            "targetImplications": "TROP2-targeting NIR-PIT represents a promising therapeutic approach for ovarian cancer, demonstrating both direct cytotoxic effects and immunogenic cell death induction that could stimulate broader anti-tumor immune responses",
+            "targetImplicationsEvidenceIds": [
+              "pubmed:41362788:abstract"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "Five NIR-PIT agents were developed targeting EGFR, Her2, FOLR1, TROP2, and TF antigens on ovarian cancer cells",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41362788:abstract"
+              ]
+            },
+            {
+              "fact": "All NIR-PIT agents showed specific binding to corresponding overexpressed cancer cells confirmed by flow cytometry and microscopy",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41362788:abstract"
+              ]
+            },
+            {
+              "fact": "NIR-PIT agents decreased cell viability with IC50 values of approximately 42-283 nM",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41362788:abstract"
+              ]
+            },
+            {
+              "fact": "Cell death efficiencies ranged from 80-92% for all examined NIR-PIT agents",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41362788:abstract"
+              ]
+            },
+            {
+              "fact": "NIR-PIT agents induced immunogenic cell death markers including calreticulin, HSP70, HSP90 surface expression and ATP/HMGB1 release",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41362788:abstract"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "VERIFIED",
+            "method": "Peer-reviewed publication in Molecular Therapy Oncology with PMID identifier, containing detailed experimental methodology and quantitative results",
+            "methodEvidenceIds": [
+              "pubmed:41362788:journal",
+              "pubmed:41362788:abstract"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "HIGH",
+            "rationale": "Recent peer-reviewed publication with detailed experimental data, quantitative efficacy measurements, and comprehensive mechanistic studies across multiple target antigens including TROP2",
+            "rationaleEvidenceIds": [
+              "pubmed:41362788:abstract"
+            ],
+            "dataGaps": []
+          },
+          "relatedItems": []
+        },
+        {
+          "id": "URL:en.acnnewswire.com:1otq2ri",
+          "targetContext": {
+            "target": "TROP2",
+            "asset": null,
+            "company": null,
+            "indication": "Oncology"
+          },
+          "capturedAt": "2025-12-13T04:26:50.213Z",
+          "source": {
+            "sourceId": "URL:en.acnnewswire.com:1otq2ri",
+            "type": "NEWS",
+            "name": "en.acnnewswire.com",
+            "url": "https://en.acnnewswire.com/press-release/english/103746/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+            "publicationDate": "2025-12-13T04:26:47.685Z",
+            "reliabilityTier": 3,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "UNKNOWN",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "TANGENTIAL",
+            "targetMentioned": false,
+            "targetRole": "MENTIONED",
+            "whyRelevant": "URL suggests content about OBI-902 and cholangiocarcinoma treatment, potentially relevant to TROP2 oncology context, but evidence contains no substantive content",
+            "evidenceIds": [
+              "URL:en.acnnewswire.com:1otq2ri"
+            ]
+          },
+          "classification": {
+            "category": "REGULATORY",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "NEUTRAL",
+            "impactLevel": "LOW"
+          },
+          "summary": {
+            "headline": "Insufficient content available for analysis",
+            "headlineEvidenceIds": [
+              "URL:en.acnnewswire.com:1otq2ri:title",
+              "URL:en.acnnewswire.com:1otq2ri:snippet"
+            ],
+            "body": "The provided evidence contains only an untitled article and source attribution with no substantive content about the referenced topic.",
+            "bodyEvidenceIds": [
+              "URL:en.acnnewswire.com:1otq2ri:title",
+              "URL:en.acnnewswire.com:1otq2ri:snippet"
+            ],
+            "keyData": [],
+            "targetImplications": "Cannot assess implications for TROP2 due to lack of content",
+            "targetImplicationsEvidenceIds": [
+              "URL:en.acnnewswire.com:1otq2ri"
+            ]
+          },
+          "facts": [],
+          "verification": {
+            "status": "UNVERIFIED",
+            "method": "No substantive content available for verification",
+            "methodEvidenceIds": [
+              "URL:en.acnnewswire.com:1otq2ri:title",
+              "URL:en.acnnewswire.com:1otq2ri:snippet"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "INSUFFICIENT",
+            "rationale": "Evidence contains only untitled article and source attribution with no substantive content for analysis",
+            "rationaleEvidenceIds": [
+              "URL:en.acnnewswire.com:1otq2ri:title",
+              "URL:en.acnnewswire.com:1otq2ri:snippet"
+            ],
+            "dataGaps": [
+              "Article title",
+              "Article content",
+              "Details about OBI-902",
+              "FDA orphan drug designation details",
+              "Cholangiocarcinoma treatment information",
+              "Connection to TROP2"
+            ]
+          },
+          "relatedItems": []
+        }
+      ],
+      "digest": {
+        "generatedAt": "2025-12-13T04:26:50.213Z",
+        "persona": "SCIENTIST",
+        "markdown": "## Intelligence Digest — TROP2\n\n**Generated:** 2025-12-13T04:26:50.213Z | **Items analyzed:** 11 | **Persona:** SCIENTIST\n\n---\n\n### Executive Takeaways\n- Novel aptasensor technology enables quantitative TROP2 detection with high sensitivity (LOD 0.0009 μM) and provides baseline expression data across breast cancer cell lines [source:PMID:41241473]\n- TROP2-targeting sacituzumab govitecan demonstrates subtype-specific efficacy in bladder cancer, effective in basal, luminal and stroma-rich subtypes but not neuroendocrine carcinomas [source:PMID:41384708]\n- NIR-photoimmunotherapy agents targeting TROP2 show potent anti-cancer activity (80-92% cell death efficiency, IC50 42-283 nM) and induce immunogenic cell death in ovarian cancer models [source:PMID:41362788]\n- TROP2 emerges as therapeutic target in rare cancers including renal medullary carcinoma, expanding potential indications beyond established breast cancer applications [source:URL:medicalxpress.com:ac1l7, URL:themunicheye.com:1cj0sfa]\n- Multiple clinical development programs for TROP2 ADCs are advancing, with recent congress presentations suggesting continued therapeutic momentum [source:URL:marketscreener.com:14eiw21, URL:ajmc.com:wd3mo0]\n\n---\n\n### What's New (Top Developments)\n**1. Quantitative TROP2 Expression Profiling Across Cell Lines**\nNovel aptasensor technology provides first quantitative comparison of TROP2 surface density: MDA-MB-468 (6.0×10⁶ molecules/cell), MCF-7 (2.0×10⁶), MDA-MB-231 (6.6×10⁵), and HL-7702 (4.1×10⁵) molecules/cell [source:PMID:41241473]. This represents critical baseline data for patient stratification strategies.\n\n**2. TROP2 Photoimmunotherapy Demonstrates Multi-Modal Anti-Cancer Activity**\nNIR-PIT agents targeting TROP2 achieved 80-92% cell death efficiency with IC50 values of 42-283 nM in ovarian cancer models, while simultaneously inducing immunogenic cell death markers including calreticulin, HSP70, HSP90 surface expression and ATP/HMGB1 release [source:PMID:41362788].\n\n**3. Subtype-Specific Efficacy Patterns for TROP2 ADCs in Bladder Cancer**\nComprehensive review reveals sacituzumab govitecan effectiveness varies by molecular subtype, showing activity in basal, luminal and stroma-rich bladder cancers but not in neuroendocrine carcinomas [source:PMID:41384708]. This precision medicine insight could guide patient selection.\n\n---\n\n### Thematic Breakdown\n\n#### Clinical / Trials\n- Kelun-Biotech presented sacituzumab tirumotecan results from multiple clinical studies at 2025 CCHIO Congress [source:URL:marketscreener.com:14eiw21]\n- TROP2 ADCs showing promise in pretreated triple-negative breast cancer patients according to expert commentary [source:URL:ajmc.com:wd3mo0]\n- TROP2-targeted therapies reportedly improving patient outcomes in TNBC treatment [source:URL:pharmacytimes.com:12ztipq]\n\n#### Scientific / Mechanism\n- First aptasensor enabling both TROP2 imaging and quantitative comparison across cell types with linear detection range 0.001-0.1 μM [source:PMID:41241473]\n- NIR-PIT targeting TROP2 induces immunogenic cell death with enhanced dendritic cell maturation, suggesting potential for combination immunotherapy approaches [source:PMID:41362788]\n- TROP2 identified as transmembrane glycoprotein biomarker strongly linked to TNBC overexpression [source:PMID:41241473]\n\n#### Competitive / Market\n- Sacituzumab govitecan established as TROP2-targeting ADC with validated clinical efficacy across multiple cancer types [source:PMID:41384708]\n- Multiple TROP2 ADC programs in development, including sacituzumab tirumotecan from Kelun-Biotech [source:URL:marketscreener.com:14eiw21]\n- Expanding therapeutic applications beyond breast cancer to bladder, ovarian, and rare cancers [source:PMID:41384708, PMID:41362788, URL:medicalxpress.com:ac1l7]\n\n---\n\n### Conflicts / Ambiguities\nNone detected in provided sources.\n\n---\n\n### Needs Verification ⚠️\n- Claims about TROP2 therapeutic potential in renal medullary carcinoma lack detailed study methodology and validation data [gap:rmc-study-details]\n- Clinical outcomes and specific efficacy metrics for TROP2 ADCs in pretreated TNBC require supporting trial data [gap:tnbc-efficacy-data]\n- Kelun-Biotech congress presentation results need detailed clinical data beyond headline announcements [gap:kelun-congress-data]\n\n---\n\n### Sonny's Read 🎯\nThe TROP2 landscape is maturing with increasingly sophisticated approaches to target validation and patient selection. The quantitative expression profiling data provides critical baseline metrics that could transform patient stratification from qualitative to precision-based selection [source:PMID:41241473]. The subtype-specific efficacy patterns in bladder cancer represent a significant advance in understanding TROP2 therapeutic windows [source:PMID:41384708]. Most intriguingly, the NIR-PIT approach suggests TROP2 targeting can be leveraged beyond traditional ADC mechanisms to induce immunogenic cell death, potentially opening combination therapy opportunities [source:PMID:41362788]. The expansion into rare cancers like renal medullary carcinoma, while requiring validation, suggests TROP2's therapeutic utility may extend well beyond its established breast cancer applications [source:URL:medicalxpress.com:ac1l7]. The convergence of multiple development programs and novel targeting modalities positions TROP2 as a mature yet still-evolving therapeutic target with significant precision medicine potential.\n\n---\n\n### Sources\n| ID | Source | Type | Reliability | Link |\n|----|--------|------|-------------|------|\n| PMID:41241473 | Analytica chimica acta | PUB | Tier 1 | [pubmed.ncbi.nlm.nih.gov](https://pubmed.ncbi.nlm.nih.gov/41241473/) |\n| URL:ajmc.com:wd3mo0 | ajmc.com | NEWS | Tier 3 | [ajmc.com](https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md) |\n| URL:prnewswire.com:13guye0 | prnewswire.com | NEWS | Tier 3 | [prnewswire.com](http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html) |\n| URL:medicalxpress.com:ac1l7 | medicalxpress.com | NEWS | Tier 3 | [medicalxpress.com](https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html) |\n| URL:themunicheye.com:1cj0sfa | themunicheye.com | NEWS | Tier 3 | [themunicheye.com](https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453) |\n| URL:marketscreener.com:14eiw21 | marketscreener.com | NEWS | Tier 3 | [marketscreener.com](https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025) |\n| URL:pharmacytimes.com:12ztipq | pharmacytimes.com | NEWS | Tier 3 | [pharmacytimes.com](https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes) |\n| PMID:41384708 | Histopathology | PUB | Tier 1 | [pubmed.ncbi.nlm.nih.gov](https://pubmed.",
+        "sourceIds": [
+          "PMID:41241473",
+          "URL:ajmc.com:wd3mo0",
+          "URL:prnewswire.com:13guye0",
+          "URL:medicalxpress.com:ac1l7",
+          "URL:themunicheye.com:1cj0sfa",
+          "URL:marketscreener.com:14eiw21",
+          "URL:pharmacytimes.com:12ztipq",
+          "PMID:41384708",
+          "PMID:41362788",
+          "URL:en.acnnewswire.com:1otq2ri"
+        ]
+      }
+    },
+    "trop2": {
+      "items": [],
+      "processedItems": [
+        {
+          "id": "PMID:41384708",
+          "targetContext": {
+            "target": "TROP2"
+          },
+          "capturedAt": "2025-12-13T03:00:00.000Z",
+          "source": {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "Histopathology",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-12",
+            "reliabilityTier": 1,
+            "recencyScore": "CURRENT",
+            "authorCredibility": "HIGH",
+            "potentialBias": "NONE",
+            "biasDirection": null
+          },
+          "relevance": {
+            "level": "SUPPORTING",
+            "targetMentioned": true,
+            "targetRole": "PRIMARY_SUBJECT",
+            "whyRelevant": "TROP2 is discussed as a therapeutic target for sacituzumab govitecan in bladder cancer treatment, with specific efficacy data across molecular subtypes",
+            "evidenceIds": [
+              "pubmed:41384708:abstract"
+            ]
+          },
+          "classification": {
+            "category": "SCIENTIFIC",
+            "urgency": "INFORMATIONAL",
+            "sentiment": "POSITIVE",
+            "impactLevel": "MEDIUM"
+          },
+          "summary": {
+            "headline": "Comprehensive review highlights TROP2-targeting sacituzumab govitecan efficacy in bladder cancer molecular subtypes",
+            "headlineEvidenceIds": [
+              "pubmed:41384708:abstract"
+            ],
+            "body": "This comprehensive review of bladder cancer molecular pathology discusses TROP2 as a therapeutic target. Sacituzumab govitecan, an antibody-drug conjugate directed against TROP2, demonstrates efficacy in basal, luminal and stroma-rich molecular subtypes of bladder cancer but shows no efficacy in neuroendocrine carcinomas. The review positions TROP2-targeting therapy within the broader context of personalized oncology approaches that integrate molecular classifications for treatment selection.",
+            "bodyEvidenceIds": [
+              "pubmed:41384708:abstract"
+            ],
+            "keyData": [
+              {
+                "metric": "Sacituzumab govitecan efficacy",
+                "value": "Effective in basal, luminal and stroma-rich subtypes; not effective in neuroendocrine carcinomas",
+                "context": "Bladder cancer molecular subtypes",
+                "evidenceIds": [
+                  "pubmed:41384708:abstract"
+                ]
+              }
+            ],
+            "targetImplications": "TROP2 represents a validated therapeutic target in bladder cancer with subtype-specific efficacy patterns that could inform patient stratification strategies",
+            "targetImplicationsEvidenceIds": [
+              "pubmed:41384708:abstract"
+            ]
+          },
+          "facts": [
+            {
+              "fact": "Sacituzumab govitecan is an antibody-drug conjugate directed against TROP2",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41384708:abstract"
+              ]
+            },
+            {
+              "fact": "Sacituzumab govitecan is effective in basal, luminal and stroma-rich subtypes of bladder cancer",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41384708:abstract"
+              ]
+            },
+            {
+              "fact": "Sacituzumab govitecan is not effective in neuroendocrine carcinomas",
+              "verificationStatus": "VERIFIABLE",
+              "evidenceIds": [
+                "pubmed:41384708:abstract"
+              ]
+            }
+          ],
+          "verification": {
+            "status": "VERIFIED",
+            "method": "Peer-reviewed publication in established pathology journal with PMID",
+            "methodEvidenceIds": [
+              "pubmed:41384708:journal"
+            ],
+            "crossReferences": []
+          },
+          "confidence": {
+            "level": "HIGH",
+            "rationale": "Peer-reviewed publication from established journal with comprehensive abstract providing specific therapeutic efficacy data",
+            "rationaleEvidenceIds": [
+              "pubmed:41384708:journal",
+              "pubmed:41384708:abstract"
+            ],
+            "dataGaps": []
+          },
+          "relatedItems": []
+        }
+      ],
+      "digest": {
+        "generatedAt": "2025-12-13T03:00:00.000Z",
+        "persona": "SCIENTIST",
+        "markdown": "## Intelligence Digest — TROP2\n\n**Generated:** 2025-12-13T03:00:00.000Z | **Items analyzed:** 1 | **Persona:** SCIENTIST\n\n---\n\n### Executive Takeaways\n- TROP2-targeting sacituzumab govitecan demonstrates subtype-specific efficacy in bladder cancer, showing activity in basal, luminal, and stroma-rich molecular subtypes but not in neuroendocrine carcinomas [source:PMID:41384708]\n- The differential efficacy pattern across molecular subtypes suggests TROP2 expression or accessibility varies by bladder cancer biology, supporting precision medicine approaches [source:PMID:41384708]\n- This comprehensive pathology review positions TROP2 as a validated therapeutic target within personalized oncology frameworks for bladder cancer treatment selection [source:PMID:41384708]\n\n---\n\n### What's New (Top Developments)\n**1. Molecular Subtype-Specific TROP2 Efficacy Pattern Defined in Bladder Cancer**\nA comprehensive review in Histopathology establishes that sacituzumab govitecan, the TROP2-directed antibody-drug conjugate, shows efficacy in basal, luminal, and stroma-rich bladder cancer subtypes while demonstrating no activity in neuroendocrine carcinomas [source:PMID:41384708]. This differential response pattern provides critical insights for patient stratification strategies in TROP2-targeted therapy.\n\n---\n\n### Thematic Breakdown\n\n#### Clinical / Trials\n- Sacituzumab govitecan efficacy validated across multiple bladder cancer molecular subtypes (basal, luminal, stroma-rich) with notable exception of neuroendocrine carcinomas [source:PMID:41384708]\n\n#### Scientific / Mechanism\n- TROP2 serves as therapeutic target for antibody-drug conjugate approach in bladder cancer, with mechanism of action appearing dependent on molecular subtype characteristics [source:PMID:41384708]\n- Neuroendocrine carcinoma resistance suggests distinct TROP2 expression patterns or cellular accessibility compared to other bladder cancer subtypes [source:PMID:41384708]\n\n---\n\n### Conflicts / Ambiguities\nNone detected in provided sources.\n\n---\n\n### Needs Verification ⚠️\n- Mechanistic basis for neuroendocrine carcinoma resistance to TROP2-targeting therapy [gap:neuroendocrine-resistance-mechanism]\n- Quantitative efficacy data and response rates across molecular subtypes [gap:subtype-response-rates]\n\n---\n\n### Sonny's Read 🎯\nThe subtype-specific efficacy pattern for TROP2-targeting therapy represents a significant advance in precision oncology for bladder cancer [source:PMID:41384708]. The complete lack of activity in neuroendocrine carcinomas is particularly noteworthy—this isn't just reduced efficacy but absence of benefit, suggesting fundamental biological differences in TROP2 expression, localization, or downstream signaling pathways. This pattern could drive companion diagnostic development and inform clinical trial design for next-generation TROP2-targeted agents. The broad activity across basal, luminal, and stroma-rich subtypes indicates TROP2 as a robust target spanning the major bladder cancer molecular classifications [source:PMID:41384708].\n\n---\n\n### Sources\n| ID | Source | Type | Reliability | Link |\n|----|--------|------|-------------|------|\n| PMID:41384708 | Histopathology | PUB | Tier 1 | [pubmed.ncbi.nlm.nih.gov](https://pubmed.ncbi.nlm.nih.gov/41384708/) |",
+        "sourceIds": [
+          "PMID:41384708"
+        ]
+      }
+    },
+    "global": {
+      "items": [
+        {
+          "id": "PMID:41346710",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/41346710/",
+          "title": "Tumor mRNA-lipid nanoparticles via chimeric nanobody-lipid co-assembly.",
+          "source": "PubMed",
+          "kind": "publication",
+          "publishedAt": "2026-01-01T00:00:00.000Z",
+          "summary": "Theranostics • Zhu C",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "PMID:41369171",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/41369171/",
+          "title": "Serum Arginase-1 is a predictive biomarker for melanoma patients and a surrogate indicator of systemic myeloid cell fitness.",
+          "source": "PubMed",
+          "kind": "publication",
+          "publishedAt": "2025-12-31T05:00:00.000Z",
+          "summary": "Oncoimmunology • Brand M",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:b2a32161bf",
+          "url": "http://www.laosnews.net/news/278666723/health-biotech-strengthens-global-footprint-at-cphi-frankfurt-2025",
+          "title": "Health Biotech Strengthens Global Footprint at CPHI Frankfurt 2025",
+          "source": "laosnews.net",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.796Z",
+          "summary": "Source: laosnews.net",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:e670898a09",
+          "url": "http://www.cambodiantimes.com/news/278666723/health-biotech-strengthens-global-footprint-at-cphi-frankfurt-2025",
+          "title": "Health Biotech Strengthens Global Footprint at CPHI Frankfurt 2025",
+          "source": "cambodiantimes.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.796Z",
+          "summary": "Source: cambodiantimes.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:cc9838eaa3",
+          "url": "https://www.zawya.com/en/business/healthcare/iros-biosapien-to-conduct-oncology-clinical-trials-in-uae-in-2026-axnu9hg3",
+          "title": "IROS , BioSapien to conduct oncology clinical trials in UAE in 2026",
+          "source": "zawya.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.796Z",
+          "summary": "Source: zawya.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:fd55e20b48",
+          "url": "https://www.globenewswire.com/news-release/2025/10/17/3168494/0/en/ITM-to-Announce-Phase-3-COMPETE-Trial-Post-Hoc-Subgroup-Analyses-and-Host-Satellite-Symposium-at-NANETS-2025.html",
+          "title": "ITM to Announce Phase 3 COMPETE Trial Post Hoc Subgroup",
+          "source": "globenewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.796Z",
+          "summary": "Source: globenewswire.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:2032322dff",
+          "url": "https://www.meteoweb.eu/2025/12/nasce-lasse-lione-torino-milano-per-la-ricerca-oncologica-un-programma-decennale-da-15-milioni/1001866908/",
+          "title": "Nasce lasse Lione - Torino - Milano per la ricerca oncologica : un programma decennale da 15 milioni",
+          "source": "meteoweb.eu",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.796Z",
+          "summary": "Source: meteoweb.eu",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:dfed01e5b0",
+          "url": "https://www.zonebourse.com/actualite-bourse/ose-immuno-signe-un-partenariat-strategique-avec-inserm-transfert-et-la-fac-de-nantes-ce7d5bdad981f726",
+          "title": "OSE Immuno signe un partenariat stratégique avec Inserm Transfert et la fac de Nantes",
+          "source": "zonebourse.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.796Z",
+          "summary": "Source: zonebourse.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:4f4f03a4c6",
+          "url": "https://www.zonebourse.com/actualite-bourse/abbvie-lance-un-prix-pour-soutenir-les-biotechs-emergentes-au-quebec-ce7d5ed2d98af723",
+          "title": "AbbVie lance un prix pour soutenir les biotechs émergentes au Québec",
+          "source": "zonebourse.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: zonebourse.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:b478d2b4a0",
+          "url": "https://markets.financialcontent.com/stocks/article/marketminute-2025-10-2-nanobiotix-stock-soars-on-breakthrough-esophageal-cancer-data-igniting-biotech-hopes",
+          "title": "Nanobiotix Stock Soars on Breakthrough Esophageal Cancer Data , Igniting Biotech Hopes",
+          "source": "markets.financialcontent.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: markets.financialcontent.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:57c3c81b7b",
+          "url": "https://www.fool.com/investing/2025/10/08/why-cg-oncology-stock-rocketed-7-higher-today/?source=iedfolrf0000001",
+          "title": "Why Cg Oncology Stock Rocketed 7 % Higher Today",
+          "source": "fool.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: fool.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:efdb1abf32",
+          "url": "http://www.econotimes.com/Genmab-in-Talks-to-Acquire-Merus-in-Landmark-52B-Biotech-Deal-1721798",
+          "title": "Genmab in Talks to Acquire Merus in Landmark $5 . 2B Biotech Deal",
+          "source": "econotimes.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: econotimes.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:cffa3ff716",
+          "url": "https://www.manilatimes.net/2025/12/04/tmt-newswire/pr-newswire/kelun-biotech-and-crescent-biopharma-announce-strategic-partnership-to-develop-and-commercialize-novel-oncology-therapeutics/2236967",
+          "title": "Kelun - Biotech and Crescent Biopharma Announce Strategic Partnership to Develop and Commercialize Novel Oncology Therapeutics",
+          "source": "manilatimes.net",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: manilatimes.net",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:649db79003",
+          "url": "https://markets.financialcontent.com/stocks/article/marketminute-2025-9-29-merus-nv-soars-on-8-billion-genmab-acquisition-propelled-by-oncology-pipeline-successes",
+          "title": "Merus N . V . Soars on $8 Billion Genmab Acquisition , Propelled by Oncology Pipeline Successes",
+          "source": "markets.financialcontent.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: markets.financialcontent.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:a68eb8c73e",
+          "url": "https://finance.yahoo.com/news/td-cowen-reiterates-buy-rating-045710037.html",
+          "title": "TD Cowen Reiterates a Buy Rating on Legend Biotech Corporation ( LEGN )",
+          "source": "finance.yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finance.yahoo.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:fbd477e4c2",
+          "url": "https://www.finanznachrichten.de/nachrichten-2025-10/66690894-vanderbilt-report-three-biotech-companies-redefining-value-creation-through-dual-strategies-200.htm",
+          "title": "Vanderbilt Report : Three Biotech Companies Redefining Value Creation Through Dual Strategies",
+          "source": "finanznachrichten.de",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finanznachrichten.de",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:55232053b0",
+          "url": "https://www.finanznachrichten.de/nachrichten-2025-10/66609165-datam-intelligence-4-market-research-llp-active-pharmaceutical-ingredients-api-market-to-surpass-us-dollar-428-5-billion-by-2033-as-biotech-apis-and-onco-008.htm",
+          "title": "DataM Intelligence 4 Market Research LLP : Active Pharmaceutical Ingredients ( API ) Market to Surpass US$ 428 . 5 Billion by 2033 as Biotech APIs and Oncology Applications Lead Global Growth",
+          "source": "finanznachrichten.de",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finanznachrichten.de",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:b390e5f5e6",
+          "url": "https://www.europeanpharmaceuticalreview.com/news/267297/ipsen-strikes-e1bn-deal-to-acquire-french-biotech-imcheck-therapeutics/",
+          "title": "Ipsen strikes €1bn deal to acquire biotech ImCheck Therapeutics",
+          "source": "europeanpharmaceuticalreview.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: europeanpharmaceuticalreview.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:78ee7c20a0",
+          "url": "https://www.bnnbloomberg.ca/investing/investor-outlook/2025/11/06/investor-outlook-moderna-posts-stronger-q3-as-cost-cutting-cushions-weaker-covid-vaccine-sales/",
+          "title": "Moderna delivers Q3 profit boost as COVID sales wane",
+          "source": "bnnbloomberg.ca",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: bnnbloomberg.ca",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:20f04f34bd",
+          "url": "https://www.finanznachrichten.de/nachrichten-2025-09/66572565-eqt-life-sciences-portfolio-company-merus-to-be-acquired-by-genmab-in-an-all-cash-usd-8-0-billion-transaction-008.htm",
+          "title": "EQT Life Sciences portfolio company Merus to be acquired by Genmab in an all - cash USD 8 . 0 billion transaction",
+          "source": "finanznachrichten.de",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finanznachrichten.de",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:dde0a84769",
+          "url": "https://finance.yahoo.com/news/recursion-pharmaceuticals-inc-rxrx-secures-132602417.html",
+          "title": "Recursion Pharmaceuticals , Inc . ( RXRX ) Secures $12 . 5M Milestone From Rallybio as REV102 Advances",
+          "source": "finance.yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finance.yahoo.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:2808bb2aae",
+          "url": "https://finance.yahoo.com/news/got-200-2-healthcare-stocks-091000489.html",
+          "title": "Got $200 ? 2 Healthcare Stocks to Buy and Hold Forever",
+          "source": "finance.yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finance.yahoo.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:aeeb304eb6",
+          "url": "https://www.finanznachrichten.de/nachrichten-2025-12/67178480-angriff-auf-den-kraftstoff-der-tumore-warum-roche-pfizer-und-vidac-pharma-die-onkologie-neu-definieren-700.htm",
+          "title": "Angriff auf den Kraftstoff der Tumore : Warum Roche , Pfizer und Vidac Pharma die Onkologie neu definieren",
+          "source": "finanznachrichten.de",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finanznachrichten.de",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:2f8dd025d3",
+          "url": "http://www.prnewswire.com/news-releases/ideaya-biosciences-to-participate-in-upcoming-december-2025-investor-relations-events-302623457.html",
+          "title": "IDEAYA Biosciences to Participate in Upcoming December 2025 Investor Relations Events",
+          "source": "prnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: prnewswire.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:3802343dd5",
+          "url": "https://www.globenewswire.com/news-release/2025/09/23/3154806/0/en/Fifty-1-Labs-Inc-Engages-PCAOB-Auditing-Firm-to-Prepare-for-Uplist-to-OTCQB.html",
+          "title": "Fifty 1 Labs , Inc . Engages PCAOB Auditing Firm to Prepare",
+          "source": "globenewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: globenewswire.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:ffc21216b5",
+          "url": "https://www.insidermonkey.com/blog/recursion-pharmaceuticals-inc-rxrx-secures-12-5m-milestone-from-rallybio-as-rev102-advances-1612852/",
+          "title": "Recursion Pharmaceuticals , Inc . ( RXRX ) Secures $12 . 5M Milestone From Rallybio as REV102 Advances",
+          "source": "insidermonkey.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: insidermonkey.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:d5b16a6fb1",
+          "url": "https://finance.yahoo.com/news/pfizer-inc-pfe-pushes-forward-131926627.html",
+          "title": "Pfizer Inc . ( PFE ) Pushes Forward in Cancer and Hemophilia Treatments",
+          "source": "finance.yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finance.yahoo.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:c7ae01a487",
+          "url": "https://www.yahoo.com/news/articles/proactive-strategy-needed-ensure-project-113054980.html",
+          "title": "Proactive strategy needed to ensure Project Optimus compliance",
+          "source": "yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: yahoo.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:2e551f38bb",
+          "url": "https://www.insidermonkey.com/blog/pfizer-inc-pfe-pushes-forward-in-cancer-and-hemophilia-treatments-1612874/",
+          "title": "Pfizer Inc . ( PFE ) Pushes Forward in Cancer and Hemophilia Treatments",
+          "source": "insidermonkey.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: insidermonkey.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:2b08dfc646",
+          "url": "https://www.thehindubusinessline.com/companies/alkem-launches-pertuzumab-biosimilar/article70081432.ece",
+          "title": "Alkem launches pertuzumab biosimilar - The Hindu BusinessLine",
+          "source": "thehindubusinessline.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: thehindubusinessline.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:80b3b5ba01",
+          "url": "https://www.prnewswire.com/news-releases/emerald-clinical-appoints-luke-gill-as-vice-president-global-head-of-oncology-medical--scientific-affairs-302630902.html",
+          "title": "Emerald Clinical Appoints Luke Gill as Vice President , Global Head of Oncology , Medical & Scientific Affairs",
+          "source": "prnewswire.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: prnewswire.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:82fdb7e7b3",
+          "url": "https://www.manilatimes.net/2025/12/03/tmt-newswire/pr-newswire/emerald-clinical-appoints-luke-gill-as-vice-president-global-head-of-oncology-medical-scientific-affairs/2236239",
+          "title": "Emerald Clinical Appoints Luke Gill as Vice President , Global Head of Oncology , Medical & Scientific Affairs",
+          "source": "manilatimes.net",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: manilatimes.net",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:e720aebf7e",
+          "url": "https://news.webindia123.com/news/Articles/Business/20251031/4378541.html",
+          "title": "Health Biotech Strengthens Global Footprint at CPHI Frankfurt 2025",
+          "source": "news.webindia123.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: news.webindia123.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:0633ccd9ef",
+          "url": "https://finance.yahoo.com/news/undiscovered-biotech-stock-quintupled-just-161002649.html",
+          "title": "This Undiscovered Biotech Stock Has Quintupled in a Year and Just Hit New Highs",
+          "source": "finance.yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finance.yahoo.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:3b13158e5c",
+          "url": "https://www.marketscreener.com/news/china-s-innovent-strikes-cancer-drug-deal-with-takeda-for-up-to-11-4-billion-update-ce7d5ddade80f726",
+          "title": "China Innovent Strikes Cancer Drug Deal With Takeda for Up to $11 . 4 Billion -- Update",
+          "source": "marketscreener.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: marketscreener.com",
+          "firstSeenAt": "2025-12-13T04:55:44.796Z"
+        },
+        {
+          "id": "gdelt:news:61684c9775",
+          "url": "https://finance.yahoo.com/news/1-growth-stock-under-100-184201931.html",
+          "title": "1 Growth Stock Under $100 to Buy Before It Soars",
+          "source": "finance.yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:55:44.795Z",
+          "summary": "Source: finance.yahoo.com",
+          "firstSeenAt": "2025-12-13T04:55:44.796Z"
+        },
+        {
+          "id": "gdelt:news:f30ea0de9d",
+          "url": "https://www.yahoo.com/news/articles/podcast-highlights-2025-esmo-congress-190954039.html",
+          "title": "Podcast : Highlights from the 2025 ESMO Congress",
+          "source": "yahoo.com",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:45:43.985Z",
+          "summary": "Source: yahoo.com",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        },
+        {
+          "id": "gdelt:news:30251ee7f0",
+          "url": "https://www.investegate.co.uk/announcement/rns/physiomics--pyc/physiomics-awarded-two-new-contracts/9274799",
+          "title": "Physiomics Awarded Two New Contracts | Company Announcement",
+          "source": "investegate.co.uk",
+          "kind": "news",
+          "publishedAt": "2025-12-13T04:45:43.985Z",
+          "summary": "Source: investegate.co.uk",
+          "firstSeenAt": "2025-12-13T04:45:43.987Z"
+        }
+      ],
+      "lastFetchedAt": "2025-12-16T04:05:38.795Z"
+    }
+  },
+  "jobs": {
+    "job_mj3ovg0c_9q056hjb": {
+      "id": "job_mj3ovg0c_9q056hjb",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "failed",
+      "createdAt": "2025-12-13T02:40:50.892Z",
+      "progress": 0.7,
+      "message": "Extracting item 10/10",
+      "payload": {
+        "generatedAt": "2025-12-13T02:40:50.889Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-12-22T05:00:00.000Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+            "snippet": "Anal Chim Acta • Shao W",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41241473"
+            ]
+          },
+          {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T02:31:39.558Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+            "snippet": "Source: ajmc.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T02:31:39.558Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0"
+            ]
+          },
+          {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T02:31:39.557Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+            "snippet": "Source: medicalxpress.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7"
+            ]
+          },
+          {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T02:31:39.557Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+            "snippet": "Source: themunicheye.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T02:31:39.557Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21"
+            ]
+          },
+          {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T02:31:39.557Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+            "snippet": "Source: pharmacytimes.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq"
+            ]
+          },
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-01T05:00:00.000Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Molecular pathology of bladder cancer.",
+            "snippet": "Histopathology • Lopez-Beltran A",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          },
+          {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-12-18T05:00:00.000Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+            "snippet": "Mol Ther Oncol • Mohiuddin TM",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41362788"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:1s5hgtk",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/the-annals-of-oncology-publishes-results-of-phase-ii-study-of-sacituzumab-tirumotecan-monotherapy-for-urothelial-carcinoma-302627874.html",
+            "publicationDate": "2025-12-13T02:31:39.558Z",
+            "capturedAt": "2025-12-13T02:40:50.889Z",
+            "title": "The Annals of Oncology Publishes Results of Phase II Study of Sacituzumab Tirumotecan Monotherapy for Urothelial Carcinoma",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:1s5hgtk"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T02:40:50.893Z",
+      "heartbeatAt": "2025-12-13T02:42:34.629Z",
+      "finishedAt": "2025-12-13T02:40:51.189Z",
+      "error": "ENOENT: no such file or directory, rename '/Users/quanho/lumina/server/data/intelligence-store.json.tmp' -> '/Users/quanho/lumina/server/data/intelligence-store.json'"
+    },
+    "job_mj3oyzgj_ft5qz23r": {
+      "id": "job_mj3oyzgj_ft5qz23r",
+      "entryKey": "trop2",
+      "type": "digest",
+      "status": "completed",
+      "createdAt": "2025-12-13T02:43:36.067Z",
+      "progress": 1,
+      "message": "Completed",
+      "payload": {
+        "generatedAt": "2025-12-13T00:00:00.000Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2025-12-01",
+            "capturedAt": "2025-12-13T00:00:00.000Z",
+            "title": "Test",
+            "snippet": "Test",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "heartbeatAt": "2025-12-13T02:45:22.934Z",
+      "startedAt": "2025-12-13T02:44:54.145Z",
+      "finishedAt": "2025-12-13T02:45:22.934Z"
+    },
+    "job_mj3q4l0b_ng7ic5r4": {
+      "id": "job_mj3q4l0b_ng7ic5r4",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "completed",
+      "createdAt": "2025-12-13T03:15:56.891Z",
+      "progress": 1,
+      "message": "Completed",
+      "payload": {
+        "generatedAt": "2025-12-13T03:15:56.887Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-12-22T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+            "snippet": "Anal Chim Acta • Shao W",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41241473"
+            ]
+          },
+          {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T02:57:56.877Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+            "snippet": "Source: ajmc.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T02:57:56.877Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0"
+            ]
+          },
+          {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T02:57:56.876Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+            "snippet": "Source: medicalxpress.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7"
+            ]
+          },
+          {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T02:57:56.876Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+            "snippet": "Source: themunicheye.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T02:57:56.876Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21"
+            ]
+          },
+          {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T02:57:56.876Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+            "snippet": "Source: pharmacytimes.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq"
+            ]
+          },
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-01T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Molecular pathology of bladder cancer.",
+            "snippet": "Histopathology • Lopez-Beltran A",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          },
+          {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-12-18T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+            "snippet": "Mol Ther Oncol • Mohiuddin TM",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41362788"
+            ]
+          },
+          {
+            "sourceId": "URL:jcnnewswire.com:18n2zfs",
+            "type": "NEWS",
+            "name": "jcnnewswire.com",
+            "url": "https://www.jcnnewswire.com/pressrelease/103746/2/OBI-902-has-been-granted-by-US-FDA-for-Orphan-Drug-Designation-for-the-Treatment-of-Cholangiocarcino",
+            "publicationDate": "2025-12-13T02:57:56.877Z",
+            "capturedAt": "2025-12-13T03:15:56.887Z",
+            "title": "OBI - 902 has been granted by US FDA for Orphan Drug Designation for the Treatment of Cholangiocarcinoma",
+            "snippet": "Source: jcnnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:jcnnewswire.com:18n2zfs"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T03:15:56.986Z",
+      "heartbeatAt": "2025-12-13T03:17:30.949Z",
+      "finishedAt": "2025-12-13T03:17:30.949Z"
+    },
+    "job_mj3q6osx_fqie7g73": {
+      "id": "job_mj3q6osx_fqie7g73",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "failed",
+      "createdAt": "2025-12-13T03:17:35.121Z",
+      "progress": 1,
+      "message": "Failed",
+      "payload": {
+        "generatedAt": "2025-12-13T03:17:35.117Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-12-22T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+            "snippet": "Anal Chim Acta • Shao W",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41241473"
+            ]
+          },
+          {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T03:16:16.429Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+            "snippet": "Source: medicalxpress.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7"
+            ]
+          },
+          {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T03:16:16.429Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+            "snippet": "Source: themunicheye.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T03:16:16.429Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21"
+            ]
+          },
+          {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T03:16:16.429Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+            "snippet": "Source: pharmacytimes.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq"
+            ]
+          },
+          {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T03:16:16.429Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+            "snippet": "Source: ajmc.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T03:16:16.429Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0"
+            ]
+          },
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-01T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Molecular pathology of bladder cancer.",
+            "snippet": "Histopathology • Lopez-Beltran A",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          },
+          {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-12-18T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+            "snippet": "Mol Ther Oncol • Mohiuddin TM",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41362788"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:lzlydi",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-announces-positive-results-from-phase-3-optitrop-l-ce7d5ad2d88bf022",
+            "publicationDate": "2025-12-13T03:16:16.429Z",
+            "capturedAt": "2025-12-13T03:17:35.117Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Announces Positive Results from Phase 3 OptiTROP - Lung04 Trial of Sacituzumab Tirumotecan Presented at ESMO Presidential Symposium and Simultaneously Published in NEJM",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:lzlydi"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T03:17:36.071Z",
+      "heartbeatAt": "2025-12-13T03:18:41.446Z",
+      "finishedAt": "2025-12-13T03:18:41.446Z",
+      "error": "Expected ',' or '}' after property value in JSON at position 4661 (line 95 column 4)"
+    },
+    "job_mj3qu7r3_dhlefskf": {
+      "id": "job_mj3qu7r3_dhlefskf",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "completed",
+      "createdAt": "2025-12-13T03:35:52.767Z",
+      "progress": 1,
+      "message": "Completed",
+      "payload": {
+        "generatedAt": "2025-12-13T03:35:52.763Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-12-22T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+            "snippet": "Anal Chim Acta • Shao W",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41241473"
+            ]
+          },
+          {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+            "snippet": "Source: themunicheye.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21"
+            ]
+          },
+          {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+            "snippet": "Source: pharmacytimes.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq"
+            ]
+          },
+          {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+            "snippet": "Source: ajmc.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0"
+            ]
+          },
+          {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T03:35:49.629Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+            "snippet": "Source: medicalxpress.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7"
+            ]
+          },
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-01T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Molecular pathology of bladder cancer.",
+            "snippet": "Histopathology • Lopez-Beltran A",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          },
+          {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-12-18T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+            "snippet": "Mol Ther Oncol • Mohiuddin TM",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41362788"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:lzlydi",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-announces-positive-results-from-phase-3-optitrop-l-ce7d5ad2d88bf022",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:35:52.763Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Announces Positive Results from Phase 3 OptiTROP - Lung04 Trial of Sacituzumab Tirumotecan Presented at ESMO Presidential Symposium and Simultaneously Published in NEJM",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:lzlydi"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T03:35:53.469Z",
+      "heartbeatAt": "2025-12-13T03:37:33.237Z",
+      "finishedAt": "2025-12-13T03:37:33.237Z"
+    },
+    "job_mj3qyo52_ml8g6swr": {
+      "id": "job_mj3qyo52_ml8g6swr",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "failed",
+      "createdAt": "2025-12-13T03:39:20.630Z",
+      "progress": 1,
+      "message": "Failed",
+      "payload": {
+        "generatedAt": "2025-12-13T03:39:20.623Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-12-22T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+            "snippet": "Anal Chim Acta • Shao W",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41241473"
+            ]
+          },
+          {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+            "snippet": "Source: themunicheye.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21"
+            ]
+          },
+          {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+            "snippet": "Source: pharmacytimes.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq"
+            ]
+          },
+          {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+            "snippet": "Source: ajmc.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0"
+            ]
+          },
+          {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T03:35:49.629Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+            "snippet": "Source: medicalxpress.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7"
+            ]
+          },
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-01T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Molecular pathology of bladder cancer.",
+            "snippet": "Histopathology • Lopez-Beltran A",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          },
+          {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-12-18T05:00:00.000Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+            "snippet": "Mol Ther Oncol • Mohiuddin TM",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41362788"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:lzlydi",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-announces-positive-results-from-phase-3-optitrop-l-ce7d5ad2d88bf022",
+            "publicationDate": "2025-12-13T03:35:49.630Z",
+            "capturedAt": "2025-12-13T03:39:20.623Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Announces Positive Results from Phase 3 OptiTROP - Lung04 Trial of Sacituzumab Tirumotecan Presented at ESMO Presidential Symposium and Simultaneously Published in NEJM",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:lzlydi"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T03:39:20.661Z",
+      "heartbeatAt": "2025-12-13T03:40:19.178Z",
+      "finishedAt": "2025-12-13T03:40:19.178Z",
+      "error": "Expected ',' or '}' after property value in JSON at position 4874 (line 101 column 4)"
+    },
+    "job_mj3r2hxe_xaraii3y": {
+      "id": "job_mj3r2hxe_xaraii3y",
+      "entryKey": "trop2",
+      "type": "digest",
+      "status": "completed",
+      "createdAt": "2025-12-13T03:42:19.202Z",
+      "progress": 1,
+      "message": "Completed",
+      "payload": {
+        "generatedAt": "2025-12-13T03:00:00.000Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2025-12-01",
+            "capturedAt": "2025-12-13T03:00:00.000Z",
+            "title": "Test",
+            "snippet": "Test",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T03:42:19.848Z",
+      "heartbeatAt": "2025-12-13T03:42:52.559Z",
+      "finishedAt": "2025-12-13T03:42:52.559Z"
+    },
+    "job_mj3s0cks_p003hk7c": {
+      "id": "job_mj3s0cks_p003hk7c",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "completed",
+      "createdAt": "2025-12-13T04:08:38.572Z",
+      "progress": 1,
+      "message": "Completed",
+      "payload": {
+        "generatedAt": "2025-12-13T04:08:38.565Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-12-22T05:00:00.000Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+            "snippet": "Anal Chim Acta • Shao W",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41241473"
+            ]
+          },
+          {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T04:08:30.739Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+            "snippet": "Source: ajmc.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T04:08:30.739Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T04:08:30.738Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21"
+            ]
+          },
+          {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T04:08:30.738Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+            "snippet": "Source: pharmacytimes.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq"
+            ]
+          },
+          {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T04:08:30.737Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+            "snippet": "Source: themunicheye.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa"
+            ]
+          },
+          {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T04:08:30.735Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+            "snippet": "Source: medicalxpress.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7"
+            ]
+          },
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-01T05:00:00.000Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Molecular pathology of bladder cancer.",
+            "snippet": "Histopathology • Lopez-Beltran A",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          },
+          {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-12-18T05:00:00.000Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+            "snippet": "Mol Ther Oncol • Mohiuddin TM",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41362788"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:12bh88u",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "https://www.prnewswire.com/news-releases/kelun-biotech-to-present-results-from-multiple-clinical-studies-at-the-2025-esmo-congress-302564236.html",
+            "publicationDate": "2025-12-13T04:08:30.740Z",
+            "capturedAt": "2025-12-13T04:08:38.565Z",
+            "title": "Kelun - Biotech to Present Results from Multiple Clinical Studies at the 2025 ESMO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:12bh88u"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T04:08:38.622Z",
+      "heartbeatAt": "2025-12-13T04:10:40.108Z",
+      "finishedAt": "2025-12-13T04:10:40.108Z"
+    },
+    "job_mj3snqwc_kz0vm0ai": {
+      "id": "job_mj3snqwc_kz0vm0ai",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "completed",
+      "createdAt": "2025-12-13T04:26:50.220Z",
+      "progress": 1,
+      "message": "Completed",
+      "payload": {
+        "generatedAt": "2025-12-13T04:26:50.213Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [
+          {
+            "sourceId": "PMID:41241473",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41241473/",
+            "publicationDate": "2025-12-22T05:00:00.000Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Isothermal nucleic acid amplification-based magnetic aptasensor for sensitive detection and in situ imaging of Trop-2 in triple-negative breast cancer.",
+            "snippet": "Anal Chim Acta • Shao W",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41241473"
+            ]
+          },
+          {
+            "sourceId": "URL:ajmc.com:wd3mo0",
+            "type": "NEWS",
+            "name": "ajmc.com",
+            "url": "https://www.ajmc.com/view/trop2-adc-shows-promise-in-pretreated-tnbc-erika-hamilton-md",
+            "publicationDate": "2025-12-13T04:26:47.685Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "TROP2 ADC Shows Promise in Pretreated TNBC : Erika Hamilton , MD",
+            "snippet": "Source: ajmc.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:ajmc.com:wd3mo0"
+            ]
+          },
+          {
+            "sourceId": "URL:prnewswire.com:13guye0",
+            "type": "NEWS",
+            "name": "prnewswire.com",
+            "url": "http://www.prnewswire.com/news-releases/kelun-biotech-presented-trop2-adc-sacituzumab-tirumotecan-results-from-multiple-clinical-studies-at-the-2025-cchio-congress-302609623.html",
+            "publicationDate": "2025-12-13T04:26:47.685Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Kelun - Biotech Presented TROP2 ADC Sacituzumab Tirumotecan Results From Multiple Clinical Studies at the 2025 CCHIO Congress",
+            "snippet": "Source: prnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:prnewswire.com:13guye0"
+            ]
+          },
+          {
+            "sourceId": "URL:medicalxpress.com:ac1l7",
+            "type": "NEWS",
+            "name": "medicalxpress.com",
+            "url": "https://medicalxpress.com/news/2025-10-molecular-profiling-renal-medullary-carcinoma.html",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Molecular profiling of renal medullary carcinoma identifies TROP2 as a promising therapeutic target",
+            "snippet": "Source: medicalxpress.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:medicalxpress.com:ac1l7"
+            ]
+          },
+          {
+            "sourceId": "URL:themunicheye.com:1cj0sfa",
+            "type": "NEWS",
+            "name": "themunicheye.com",
+            "url": "https://themunicheye.com/trop2-therapeutic-target-renal-medullary-carcinoma-28453",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Comprehensive Study Identifies TROP2 as a Potential Target for Renal Medullary Carcinoma Treatment",
+            "snippet": "Source: themunicheye.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:themunicheye.com:1cj0sfa"
+            ]
+          },
+          {
+            "sourceId": "URL:marketscreener.com:14eiw21",
+            "type": "NEWS",
+            "name": "marketscreener.com",
+            "url": "https://www.marketscreener.com/news/sichuan-kelun-biotech-biopharmaceutical-co-ltd-presented-trop2-adc-sacituzumab-tirumotecan-result-ce7d5fd8d989f025",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Sichuan Kelun - Biotech Biopharmaceutical Co ., Ltd . Presented TROP2 ADC Sacituzumab Tirumotecan Results from Multiple Clinical Studies at the 2025 Chinese Congress",
+            "snippet": "Source: marketscreener.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:marketscreener.com:14eiw21"
+            ]
+          },
+          {
+            "sourceId": "URL:pharmacytimes.com:12ztipq",
+            "type": "NEWS",
+            "name": "pharmacytimes.com",
+            "url": "https://www.pharmacytimes.com/view/turning-the-tide-in-tnbc-trop2-targeted-therapies-improve-patient-outcomes",
+            "publicationDate": "2025-12-13T04:26:47.684Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Turning the Tide in TNBC : Trop2 - Targeted Therapies Improve Patient Outcomes",
+            "snippet": "Source: pharmacytimes.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:pharmacytimes.com:12ztipq"
+            ]
+          },
+          {
+            "sourceId": "PMID:41384708",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41384708/",
+            "publicationDate": "2026-01-01T05:00:00.000Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Molecular pathology of bladder cancer.",
+            "snippet": "Histopathology • Lopez-Beltran A",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41384708"
+            ]
+          },
+          {
+            "sourceId": "PMID:41362788",
+            "type": "PUB",
+            "name": "PubMed",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/41362788/",
+            "publicationDate": "2025-12-18T05:00:00.000Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "Near-infrared photoimmunotherapy for effective elimination of ovarian cancer cells by inducing immunogenic cell death.",
+            "snippet": "Mol Ther Oncol • Mohiuddin TM",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "PMID:41362788"
+            ]
+          },
+          {
+            "sourceId": "URL:en.acnnewswire.com:1otq2ri",
+            "type": "NEWS",
+            "name": "en.acnnewswire.com",
+            "url": "https://en.acnnewswire.com/press-release/english/103746/obi-902-has-been-granted-by-us-fda-for-orphan-drug-designation-for-the-treatment-of-cholangiocarcinoma",
+            "publicationDate": "2025-12-13T04:26:47.685Z",
+            "capturedAt": "2025-12-13T04:26:50.213Z",
+            "title": "(untitled)",
+            "snippet": "Source: en.acnnewswire.com",
+            "abstract": null,
+            "targetContext": {
+              "target": "TROP2",
+              "asset": null,
+              "company": null,
+              "indication": "Oncology"
+            },
+            "evidenceIds": [
+              "URL:en.acnnewswire.com:1otq2ri"
+            ]
+          }
+        ],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-13T04:26:50.614Z",
+      "heartbeatAt": "2025-12-13T04:28:27.752Z",
+      "finishedAt": "2025-12-13T04:28:27.753Z"
+    },
+    "job_mj80zoa8_o3caywiw": {
+      "id": "job_mj80zoa8_o3caywiw",
+      "entryKey": "trop2|oncology",
+      "type": "digest",
+      "status": "failed",
+      "createdAt": "2025-12-16T03:31:08.335Z",
+      "progress": 1,
+      "message": "Failed",
+      "payload": {
+        "generatedAt": "2025-12-16T03:31:08.330Z",
+        "persona": "SCIENTIST",
+        "targetContext": {
+          "target": "TROP2",
+          "asset": null,
+          "company": null,
+          "indication": "Oncology"
+        },
+        "items": [],
+        "isDemo": false
+      },
+      "startedAt": "2025-12-16T03:31:08.500Z",
+      "heartbeatAt": "2025-12-16T03:31:08.507Z",
+      "finishedAt": "2025-12-16T03:31:08.507Z",
+      "error": "Missing API key(s) for provider: anthropic"
+    }
+  }
+}

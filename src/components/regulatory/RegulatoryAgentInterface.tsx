@@ -68,7 +68,7 @@ export default function RegulatoryAgentInterface({
     description: string;
     loaded: boolean;
   }>>([
-    { name: 'XYZ-001', description: 'NSCLC (KRAS G12C+)', loaded: true },
+    { name: 'XYZ-001', description: 'Breast cancer (HER2+)', loaded: true },
   ]);
   const [activeDetailPanel, setActiveDetailPanel] = useState<string | null>(null);
   const [chatInput, setChatInput] = useState('');
@@ -107,7 +107,7 @@ export default function RegulatoryAgentInterface({
   // Recent analyses
   const recentAnalyses = [
     { name: 'CAR-T Regulatory Path', date: 'Today' },
-    { name: 'KRAS G12C Approval Strategy', date: 'Yesterday' },
+    { name: 'HER2 Labeling Strategy', date: 'Yesterday' },
     { name: 'GLP-1 CMC Assessment', date: '2 days ago' },
   ];
 
@@ -140,7 +140,7 @@ export default function RegulatoryAgentInterface({
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        const assetMatches = file.name.match(/\b(XYZ-\d+|KRAS|GLP-1|CAR-T|PD-1)\b/gi);
+        const assetMatches = file.name.match(/\b(XYZ-\d+|HER2|ERBB2|GLP-1|CAR-T|PD-1)\b/gi);
         if (assetMatches && assetMatches.length > 0) {
           const assetName = assetMatches[0].toUpperCase();
           setLoadedAssets((prev) => {
@@ -282,8 +282,8 @@ export default function RegulatoryAgentInterface({
         <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Tab Navigation - Match Financial Agent styling exactly */}
           {onBackToChat ? (
-            <div className="px-6 pt-4">
-              <div className="mb-4 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="p-4">
+              <div className="mb-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
                 {[
                   { id: 'overview' as const, label: 'Overview' },
                   { id: 'timeline' as const, label: 'Timeline' },
@@ -304,7 +304,7 @@ export default function RegulatoryAgentInterface({
               </div>
             </div>
           ) : (
-            <div className="mb-4 px-6 flex gap-1 p-1 bg-surfaceElevated rounded-lg overflow-x-auto">
+            <div className="mb-4 p-4 flex gap-1 bg-surfaceElevated rounded-lg overflow-x-auto">
               {[
                 { id: 'overview' as const, label: 'Overview' },
                 { id: 'timeline' as const, label: 'Timeline' },
@@ -326,7 +326,7 @@ export default function RegulatoryAgentInterface({
           )}
 
           {/* Tab Content - Match Financial Agent spacing */}
-          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'px-6 pb-4' : ''}`}>
+          <div className={`flex-1 overflow-y-auto space-y-4 ${onBackToChat ? 'p-4' : ''}`}>
             {activeTab === 'overview' && (
               <>
                 {/* Asset Input Section */}

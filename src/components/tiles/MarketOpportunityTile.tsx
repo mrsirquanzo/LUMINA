@@ -16,11 +16,15 @@ interface MarketOpportunityTileProps {
     pricingConsiderations: string;
     marketRisks: string[];
     upsideScenarios: string[];
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function MarketOpportunityTile({ data, loading }: MarketOpportunityTileProps) {
+export default function MarketOpportunityTile({ data, loading, onAgentClick, extendedIntelligence }: MarketOpportunityTileProps) {
   const pieData = data.segments.map((seg) => ({
     name: seg.name,
     value: seg.size,
@@ -49,6 +53,10 @@ export default function MarketOpportunityTile({ data, loading }: MarketOpportuni
       tileType="market"
       loading={loading}
       className="h-[320px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         {/* TAM Card */}

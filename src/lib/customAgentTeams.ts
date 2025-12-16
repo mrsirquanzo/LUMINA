@@ -165,7 +165,7 @@ export const AGENT_INFO: Record<AgentType, { name: string; icon: string; descrip
   },
   clinical: {
     name: 'Clinical Analyst',
-    icon: '🔬',
+    icon: '👩‍⚕️',
     description: 'Trial data, efficacy, safety analysis',
     color: 'blue',
   },

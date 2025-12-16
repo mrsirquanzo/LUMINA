@@ -49,15 +49,16 @@ export default function ExportButton({ messages, agentName, className = '' }: Ex
           hover:bg-gray-50 transition-colors
           flex items-center gap-2 text-sm font-medium shadow-sm
           disabled:opacity-50 disabled:cursor-not-allowed
+          text-gray-900
           ${isOpen ? 'bg-gray-50' : ''}
         `}
       >
-        <FiDownload className="w-4 h-4" />
-        <span>{isExporting ? 'Exporting...' : 'Export'}</span>
+        <FiDownload className="w-4 h-4 text-gray-700" />
+        <span className="text-gray-900">{isExporting ? 'Exporting...' : 'Export'}</span>
         {messages.length > 0 && (
-          <span className="text-gray-500">({messages.length})</span>
+          <span className="text-gray-600">({messages.length})</span>
         )}
-        <FiChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <FiChevronDown className={`w-4 h-4 text-gray-700 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {/* Dropdown Menu */}

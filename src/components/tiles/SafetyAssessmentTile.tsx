@@ -4,9 +4,11 @@ import { AlertTriangle } from 'lucide-react';
 interface SafetyAssessmentTileProps {
   data: any;
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function SafetyAssessmentTile({ data, loading }: SafetyAssessmentTileProps) {
+export default function SafetyAssessmentTile({ data, loading, onAgentClick, extendedIntelligence }: SafetyAssessmentTileProps) {
   return (
     <Tile
       title="Safety Assessment"
@@ -14,6 +16,10 @@ export default function SafetyAssessmentTile({ data, loading }: SafetyAssessment
       tileType="safety"
       loading={loading}
       className="h-[340px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         <div>

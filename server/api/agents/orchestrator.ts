@@ -26,9 +26,16 @@ router.post('/', isAuthenticated, async (req: Request, res: Response) => {
       isDemo,
       demoScenarioId,
       documentsCount: documents?.length || 0,
+      hasQuery: !!query,
+      queryType: typeof query,
     });
 
-    // Validate inputs
+    // Log if isDemo is not set correctly
+    if (isDemo === undefined) {
+      console.warn('[Sonny Orchestrator API] WARNING: isDemo is undefined, defaulting to false');
+    }
+
+    // Validate inputs BEFORE setting SSE headers
     if (!query || typeof query !== 'string') {
       return res.status(400).json({ error: 'Query is required and must be a string' });
     }
@@ -49,8 +56,12 @@ router.post('/', isAuthenticated, async (req: Request, res: Response) => {
     const encoder = new TextEncoder();
 
     const sendEvent = (event: SSEEvent) => {
-      const eventData = `data: ${JSON.stringify(event)}\n\n`;
-      res.write(encoder.encode(eventData));
+      try {
+        const eventData = `data: ${JSON.stringify(event)}\n\n`;
+        res.write(encoder.encode(eventData));
+      } catch (writeError) {
+        console.error('Failed to write SSE event:', writeError);
+      }
     };
 
     try {
@@ -69,19 +80,46 @@ router.post('/', isAuthenticated, async (req: Request, res: Response) => {
       res.end();
     } catch (error: any) {
       console.error('Orchestration error:', error);
-      sendEvent({
-        type: 'error',
-        data: {
-          message: error.message || 'An error occurred during analysis',
-        },
-      });
-      res.end();
+      try {
+        sendEvent({
+          type: 'error',
+          data: {
+            message: error.message || 'An error occurred during analysis',
+          },
+        });
+        res.end();
+      } catch (endError) {
+        console.error('Failed to send error event:', endError);
+        // If we can't send SSE, try to send a regular JSON response
+        if (!res.headersSent) {
+          res.status(500).json({
+            error: error.message || 'An error occurred during analysis',
+          });
+        }
+      }
     }
   } catch (error: any) {
     console.error('Error in Sonny orchestrator API:', error);
-    res.status(500).json({
-      error: error.message || 'Failed to start orchestration',
-    });
+    // Only send JSON response if headers haven't been sent (SSE not started)
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: error.message || 'Failed to start orchestration',
+      });
+    } else {
+      // If SSE headers are already sent, try to send error event
+      try {
+        const encoder = new TextEncoder();
+        const eventData = `data: ${JSON.stringify({
+          type: 'error',
+          data: { message: error.message || 'Failed to start orchestration' },
+        })}\n\n`;
+        res.write(encoder.encode(eventData));
+        res.end();
+      } catch (writeError) {
+        console.error('Failed to send error via SSE:', writeError);
+        res.end();
+      }
+    }
   }
 });
 

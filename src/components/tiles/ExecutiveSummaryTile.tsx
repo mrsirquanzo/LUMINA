@@ -3,6 +3,8 @@ import Tile from '../Tile';
 import { CheckCircle2, AlertTriangle, Target } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Recommendation } from '../../types';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ExecutiveSummaryTileProps {
   data: {
@@ -26,11 +28,15 @@ interface ExecutiveSummaryTileProps {
       safety: { score: number; weight: number };
       clinical: { score: number; weight: number };
     };
+    agents?: readonly ('sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research')[];
+    primaryAgent?: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research';
   };
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-const ExecutiveSummaryTile = memo(function ExecutiveSummaryTile({ data }: ExecutiveSummaryTileProps) {
+const ExecutiveSummaryTile = memo(function ExecutiveSummaryTile({ data, onAgentClick, extendedIntelligence }: ExecutiveSummaryTileProps) {
 
   // Format date to current date or remove if not present
   const formatDate = (dateString: string) => {
@@ -47,14 +53,56 @@ const ExecutiveSummaryTile = memo(function ExecutiveSummaryTile({ data }: Execut
       icon={<Target className="w-5 h-5" />}
       tileType="general"
       dataFreshness={formatDate(data.dataFreshness)}
-      className="min-h-[300px]"
+      className=""
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Summary (Main Content) */}
         <div className="lg:col-span-7 space-y-6">
           {/* Summary Text - Main content */}
           <div>
-            <p className="text-lg leading-relaxed text-textPrimary">{data.summaryText}</p>
+            <div className="min-w-0">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ children, ...props }) => (
+                    <p className="text-lg leading-relaxed text-textPrimary mb-3" {...props}>
+                      {children}
+                    </p>
+                  ),
+                  strong: ({ children, ...props }) => (
+                    <strong className="font-semibold text-textPrimary" {...props}>
+                      {children}
+                    </strong>
+                  ),
+                  em: ({ children, ...props }) => (
+                    <em className="text-textPrimary/90" {...props}>
+                      {children}
+                    </em>
+                  ),
+                  ul: ({ children, ...props }) => (
+                    <ul className="mt-3 mb-3 space-y-2 list-disc pl-6" {...props}>
+                      {children}
+                    </ul>
+                  ),
+                  ol: ({ children, ...props }) => (
+                    <ol className="mt-3 mb-3 space-y-2 list-decimal pl-6" {...props}>
+                      {children}
+                    </ol>
+                  ),
+                  li: ({ children, ...props }) => (
+                    <li className="text-lg leading-relaxed text-textPrimary" {...props}>
+                      {children}
+                    </li>
+                  ),
+                }}
+              >
+                {data.summaryText}
+              </ReactMarkdown>
+            </div>
           </div>
         </div>
 

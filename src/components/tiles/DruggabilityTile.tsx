@@ -5,9 +5,11 @@ import { FlaskConical } from 'lucide-react';
 interface DruggabilityTileProps {
   data: any;
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function DruggabilityTile({ data, loading }: DruggabilityTileProps) {
+export default function DruggabilityTile({ data, loading, onAgentClick, extendedIntelligence }: DruggabilityTileProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'structure' | 'compounds' | 'modalities'>(
     'overview'
   );
@@ -19,6 +21,10 @@ export default function DruggabilityTile({ data, loading }: DruggabilityTileProp
       tileType="general"
       loading={loading}
       className="h-[380px]"
+      agents={data.agents}
+      primaryAgent={data.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex gap-2 mb-4 border-b border-white/5 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
         {(['overview', 'structure', 'compounds', 'modalities'] as const).map((tab) => (

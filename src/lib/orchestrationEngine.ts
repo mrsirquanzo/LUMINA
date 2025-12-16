@@ -7,11 +7,12 @@ import type {
   ConversationState,
   ExecutionPlan,
 } from './multiAgentTypes';
-import { getDemoScenario, playDemoScenario } from './demoMultiAgentScenarios';
+import { getDemoScenario, playDemoScenario, matchQueryToScenario } from './demoMultiAgentScenarios';
 import { createLLMClient } from './llm/clientFactory';
 import { AGENT_MODEL_CONFIG, SYNTHESIS_MODEL_CONFIG, getAgentName as getAgentDisplayName } from './llm/agentConfig';
 import { AGENT_PROMPTS } from './agentPrompts';
 import { getMCPClient } from './mcp';
+import { SONNY_SYNTHESIS_PROMPT } from './sonnyPrompts';
 
 /**
  * Main orchestration function
@@ -26,13 +27,25 @@ export async function runOrchestration(
   customAgents?: AgentType[],
   mcpEnabled?: boolean
 ): Promise<void> {
-  // If demo mode, play pre-recorded scenario
-  if (isDemo && demoScenarioId) {
-    const scenario = getDemoScenario(demoScenarioId);
-    if (scenario) {
-      await playDemoScenario(scenario, sendEvent, 1.0); // Real-time playback
-      return;
+  // If demo mode, prevent API calls - use demo scenario or match query to scenario
+  if (isDemo) {
+    // Use provided scenario ID, or match query to appropriate scenario
+    const scenarioId = demoScenarioId || matchQueryToScenario(query);
+    if (scenarioId) {
+      const scenario = getDemoScenario(scenarioId);
+      if (scenario) {
+        await playDemoScenario(scenario, sendEvent, 1.0); // Real-time playback
+        return;
+      }
     }
+    // In demo mode without a matching scenario, return an error instead of making API calls
+    sendEvent({
+      type: 'error',
+      data: {
+        message: 'Demo mode requires a pre-recorded scenario. Please use a demo scenario from the demo interface or switch to Live mode for custom queries.',
+      },
+    });
+    return;
   }
 
   // Validate API keys before starting (for live mode)
@@ -151,8 +164,33 @@ function createInitialPlan(mode: ExecutionMode, customAgents?: AgentType[]): Exe
 function getPlanDescription(plan: ExecutionPlan): string {
   const agents = plan.steps.map(s => s.agent).join(' → ');
   return plan.mode === 'fast'
-    ? `Parallel analysis: All agents run simultaneously`
+    ? `Fast analysis: Staged execution (rate-limit safe)`
     : `Sequential analysis: ${agents} → Synthesis`;
+}
+
+/**
+ * Map with limited concurrency (simple in-file helper; avoids extra deps).
+ */
+async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  concurrency: number,
+  worker: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  const limit = Number.isFinite(concurrency) && concurrency > 0 ? Math.floor(concurrency) : 1;
+  const results: R[] = new Array(items.length);
+  let nextIndex = 0;
+
+  async function runOne(): Promise<void> {
+    const current = nextIndex;
+    nextIndex += 1;
+    if (current >= items.length) return;
+    results[current] = await worker(items[current], current);
+    await runOne();
+  }
+
+  const runners = Array.from({ length: Math.min(limit, items.length) }, () => runOne());
+  await Promise.all(runners);
+  return results;
 }
 
 /**
@@ -256,8 +294,11 @@ async function executeFastMode(
   state: ConversationState,
   sendEvent: (event: SSEEvent) => void
 ): Promise<void> {
-  // Run all agents in parallel
-  const agentPromises = state.plan.steps.map(async step => {
+  // Live fast mode previously ran all agents simultaneously (high TPM → 429 rate limits).
+  // We stage execution with a small concurrency cap to be demo-safe.
+  const maxConcurrency = Math.max(1, Number(process.env.LUMINA_LIVE_MAX_CONCURRENCY || 2));
+
+  const results = await mapWithConcurrency(state.plan.steps, maxConcurrency, async (step, index) => {
     sendEvent({
       type: 'agent_start',
       data: {
@@ -265,6 +306,9 @@ async function executeFastMode(
         task: `Analyzing ${step.agent} aspects of the query`,
       },
     });
+
+    // Small stagger to reduce bursty TPM even within concurrency window
+    if (index > 0) await new Promise((r) => setTimeout(r, 250));
 
     const { response } = await callAgent(
       step.agent,
@@ -285,8 +329,6 @@ async function executeFastMode(
 
     return { agent: step.agent, response };
   });
-
-  const results = await Promise.all(agentPromises);
 
   // Synthesize results
   sendEvent({
@@ -637,16 +679,7 @@ ${combinedAnalysis}`;
   const client = createLLMClient(SYNTHESIS_MODEL_CONFIG);
 
   // Override the synthesis prompt to identify as Sonny
-  const sonnyPrompt = `You are Sonny, a senior biotech strategist AI that orchestrates and synthesizes input from multiple expert analysts.
-
-Your role as Sonny is to:
-1. Integrate findings across all expert domains (clinical, patent, financial, regulatory, market research)
-2. Identify key insights and cross-domain connections
-3. Highlight agreements and contradictions between experts
-4. Provide clear, actionable recommendations
-5. Structure your synthesis as an executive summary suitable for decision-makers
-
-Be specific, quantitative, and actionable in your recommendations.`;
+  const sonnyPrompt = SONNY_SYNTHESIS_PROMPT;
 
   const response = await client.sendMessage(
     sonnyPrompt,

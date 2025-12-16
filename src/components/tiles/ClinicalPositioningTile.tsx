@@ -4,9 +4,11 @@ import { ClipboardList, Calendar } from 'lucide-react';
 interface ClinicalPositioningTileProps {
   data: any;
   loading?: boolean;
+  extendedIntelligence?: React.ReactNode;
+  onAgentClick?: (agent: 'sonny' | 'target_biology' | 'clinical' | 'patent' | 'financial' | 'regulatory' | 'market_research', tileTitle: string, tileData?: any) => void;
 }
 
-export default function ClinicalPositioningTile({ data, loading }: ClinicalPositioningTileProps) {
+export default function ClinicalPositioningTile({ data, loading, onAgentClick, extendedIntelligence }: ClinicalPositioningTileProps) {
   const stages = ['Preclinical', 'Phase 1', 'Phase 2', 'Phase 3', 'Approved'];
   const currentIndex = stages.indexOf('Phase 2');
 
@@ -17,6 +19,10 @@ export default function ClinicalPositioningTile({ data, loading }: ClinicalPosit
       tileType="clinical"
       loading={loading}
       className="h-[300px]"
+      agents={data?.agents}
+      primaryAgent={data?.primaryAgent}
+      onAgentClick={onAgentClick}
+      extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
         {/* Development Stage Progress Bar */}
