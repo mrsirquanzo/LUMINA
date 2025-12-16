@@ -137,6 +137,8 @@ export default function SonnySidePanel({
   const [isResizing, setIsResizing] = useState(false);
   const [isDemo, setIsDemo] = useState(true);
   const [pendingModeRequest, setPendingModeRequest] = useState<'demo' | 'live' | null>(null);
+  const [liveMissingKeys, setLiveMissingKeys] = useState<string[]>([]);
+  const [isCheckingLiveReady, setIsCheckingLiveReady] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(false);
@@ -256,6 +258,26 @@ export default function SonnySidePanel({
       }
     };
     checkAuth();
+  }, []);
+
+  // Check live readiness (keys configured) on mount
+  useEffect(() => {
+    let isCancelled = false;
+    const checkReady = async () => {
+      try {
+        const res = await fetch('/api/ready', { method: 'GET' });
+        if (!res.ok) return;
+        const data = (await res.json()) as { ok?: boolean; missing?: string[] };
+        if (isCancelled) return;
+        setLiveMissingKeys(Array.isArray(data.missing) ? data.missing : []);
+      } catch {
+        // ignore
+      }
+    };
+    void checkReady();
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   // Initialize demo/live mode from localStorage (but do not force login on first load)
@@ -534,6 +556,34 @@ export default function SonnySidePanel({
 
   const handleToggleMode = async (newMode: 'demo' | 'live') => {
     if (newMode === 'live') {
+      // Gate live mode on backend readiness (API keys configured)
+      setIsCheckingLiveReady(true);
+      try {
+        const res = await fetch('/api/ready', { method: 'GET' });
+        if (res.ok) {
+          const ready = (await res.json()) as { ok?: boolean; missing?: string[] };
+          const missing = Array.isArray(ready.missing) ? ready.missing : [];
+          setLiveMissingKeys(missing);
+          if (missing.length > 0) {
+            // Keep demo mode; show a clear banner in the panel.
+            setIsDemo(true);
+            setStoredAgentMode('demo');
+            setPendingModeRequest(null);
+            setShowLoginModal(false);
+            return;
+          }
+        }
+      } catch {
+        // If readiness check fails, keep demo to avoid a broken live experience.
+        setIsDemo(true);
+        setStoredAgentMode('demo');
+        setPendingModeRequest(null);
+        setShowLoginModal(false);
+        return;
+      } finally {
+        setIsCheckingLiveReady(false);
+      }
+
       // If auth is still being determined, defer the switch until the check completes.
       if (isCheckingAuth) {
         setPendingModeRequest('live');
@@ -1276,6 +1326,15 @@ export default function SonnySidePanel({
               {/* Mode Info Banner - Only for Sonny, shown below header card */}
               {selectedAgent === 'sonny' && (
                 <>
+                  {!isDemo && liveMissingKeys.length > 0 && (
+                    <div className="mb-4 p-3 bg-warning/10 border border-warning/20 rounded-lg">
+                      <p className="text-xs text-textSecondary">
+                        <strong className="text-warning">Live not ready:</strong> Missing required API keys:{' '}
+                        <span className="font-mono">{liveMissingKeys.join(', ')}</span>. Add them in Vercel →
+                        Settings → Environment Variables, then retry Live.
+                      </p>
+                    </div>
+                  )}
                   {isDemo && (
                     <div className={`mb-4 p-3 ${themeClasses.bgLight} border ${themeClasses.borderLight} rounded-lg`}>
                       <p className="text-xs text-textSecondary">
