@@ -28,37 +28,37 @@ export default function ClinicalPrecedentTile({ data, loading, onAgentClick, ext
           <p className="text-base leading-relaxed text-textPrimary">{data.keyFindings}</p>
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-0">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Total</p>
-            <p className="text-2xl font-bold text-textPrimary leading-none tabular-nums whitespace-nowrap">
+            <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-textPrimary leading-none tracking-tight tabular-nums truncate">
               {data.programsSummary.total}
             </p>
           </div>
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Active</p>
-            <p className="text-2xl font-bold text-success leading-none tabular-nums whitespace-nowrap">
+            <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-success leading-none tracking-tight tabular-nums truncate">
               {data.programsSummary.active}
             </p>
           </div>
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Approved</p>
-            <p className="text-2xl font-bold text-success leading-none tabular-nums whitespace-nowrap">
+            <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-success leading-none tracking-tight tabular-nums truncate">
               {data.programsSummary.approved}
             </p>
           </div>
-          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center overflow-hidden">
+          <div className="bg-surfaceElevated rounded-lg p-5 text-center border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
             <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">Failed</p>
-            <p className="text-2xl font-bold text-danger leading-none tabular-nums whitespace-nowrap">
+            <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-danger leading-none tracking-tight tabular-nums truncate">
               {data.programsSummary.failed}
             </p>
           </div>
         </div>
         <div className="space-y-3">
           {data.clinicalTrials.slice(0, 3).map((trial: any, idx: number) => (
-            <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
-              <div className="flex items-start justify-between mb-2">
-                <p className="text-base font-semibold text-textPrimary flex-1">{trial.title}</p>
+            <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5 min-w-0 overflow-hidden">
+              <div className="flex items-start justify-between gap-3 mb-2 min-w-0">
+                <p className="text-base font-semibold text-textPrimary flex-1 min-w-0 break-words">{trial.title}</p>
                 <span className="text-sm px-3 py-1 bg-primary/20 text-primary rounded font-medium flex-shrink-0 ml-3">
                   {trial.phase}
                 </span>
