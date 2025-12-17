@@ -6,6 +6,7 @@ import {
   Sparkles,
   SlidersHorizontal,
   X,
+  Ban,
   RefreshCw,
   FileText,
   Newspaper,
@@ -24,6 +25,8 @@ import { buildDemoFeedResponse, DEMO_FEED_PACKS } from '../../lib/intelligence/d
 
 type FeedItemType = 'publication' | 'deal' | 'regulatory' | 'news' | 'clinical';
 type RelevanceFilter = 'Target-specific' | 'Market' | 'Competitive' | 'All';
+
+const BLACKLIST_PREFIX = 'lumina:intelligence:blacklist:';
 
 function extractPmidFromUrl(rawUrl: string): string | null {
   const m = rawUrl.match(/pubmed\.ncbi\.nlm\.nih\.gov\/(\d+)\b/i);
@@ -53,6 +56,45 @@ function buildDigestSourceId(it: { url: string; kind: FeedItemType; source: stri
   } catch {
     return `URL:unknown:${hashToBase36(it.url || it.source)}`;
   }
+}
+
+function escapeRegExp(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function uniqueTerms(terms: string[]): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const t of terms) {
+    const s = (t || '').trim();
+    if (!s) continue;
+    const k = s.toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(s);
+  }
+  // longest first helps prevent partial matches eating longer ones
+  return out.sort((a, b) => b.length - a.length);
+}
+
+function highlightText(text: string, terms: string[]) {
+  const t = text || '';
+  const needles = uniqueTerms(terms);
+  if (!t || needles.length === 0) return t;
+
+  const re = new RegExp(`(${needles.map(escapeRegExp).join('|')})`, 'ig');
+  const parts = t.split(re);
+  if (parts.length === 1) return t;
+
+  return parts.map((part, idx) => {
+    const isMatch = needles.some((n) => n.toLowerCase() === part.toLowerCase());
+    if (!isMatch) return <span key={idx}>{part}</span>;
+    return (
+      <mark key={idx} className="bg-primary/20 text-primary rounded px-1 py-0.5">
+        {part}
+      </mark>
+    );
+  });
 }
 
 interface FeedItem {
@@ -366,6 +408,45 @@ export default function IntelligenceFeed() {
     return { q: effectiveTopic, limit, fresh: forceFresh };
   }, [assetQuery, companyQuery, currentTarget?.indication, currentTarget?.name, effectiveTopic, forceFresh, hasCustomTopic]);
 
+  const blacklistKey = useMemo(() => {
+    const ctx = requestParams.target || requestParams.q || 'global';
+    return `${BLACKLIST_PREFIX}${ctx.toLowerCase()}`;
+  }, [requestParams.q, requestParams.target]);
+
+  const [blacklistedHosts, setBlacklistedHosts] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(blacklistKey);
+      const parsed = raw ? (JSON.parse(raw) as unknown) : [];
+      const next = Array.isArray(parsed) ? parsed.map((s) => String(s)).filter(Boolean) : [];
+      setBlacklistedHosts(next);
+    } catch {
+      setBlacklistedHosts([]);
+    }
+  }, [blacklistKey]);
+
+  const blacklistedHostSet = useMemo(() => new Set(blacklistedHosts.map((h) => h.toLowerCase())), [blacklistedHosts]);
+
+  const hideSourceForContext = (rawUrl: string) => {
+    try {
+      const u = new URL(rawUrl);
+      const host = u.hostname.replace(/^www\./, '').toLowerCase();
+      if (!host) return;
+      if (blacklistedHostSet.has(host)) return;
+      const next = [...blacklistedHosts, host];
+      setBlacklistedHosts(next);
+      localStorage.setItem(blacklistKey, JSON.stringify(next));
+    } catch {
+      // ignore
+    }
+  };
+
+  const clearHiddenSources = () => {
+    setBlacklistedHosts([]);
+    localStorage.removeItem(blacklistKey);
+  };
+
   // Persist jobId per target context so leaving the page doesn't reset progress.
   const jobStorageKey = useMemo(() => {
     const t = requestParams.target || '';
@@ -535,6 +616,19 @@ export default function IntelligenceFeed() {
   const filteredItems = useMemo(() => {
     let filtered = [...feedItems];
 
+    // Hide user-marked irrelevant sources for this context
+    if (blacklistedHostSet.size > 0) {
+      filtered = filtered.filter((item) => {
+        try {
+          const u = new URL(item.link);
+          const host = u.hostname.replace(/^www\./, '').toLowerCase();
+          return !blacklistedHostSet.has(host);
+        } catch {
+          return true;
+        }
+      });
+    }
+
     // Type filter
     if (typeFilter !== 'All') {
       filtered = filtered.filter((item) => item.type === typeFilter);
@@ -565,7 +659,20 @@ export default function IntelligenceFeed() {
       (a, b) =>
         (b.score ?? 0) - (a.score ?? 0) || new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-  }, [feedItems, typeFilter, relevanceFilter, feedFilterInput]);
+  }, [feedItems, typeFilter, relevanceFilter, feedFilterInput, blacklistedHostSet]);
+
+  const hiddenCount = useMemo(() => {
+    if (blacklistedHostSet.size === 0) return 0;
+    return feedItems.filter((item) => {
+      try {
+        const u = new URL(item.link);
+        const host = u.hostname.replace(/^www\./, '').toLowerCase();
+        return blacklistedHostSet.has(host);
+      } catch {
+        return false;
+      }
+    }).length;
+  }, [feedItems, blacklistedHostSet]);
 
   const getTypeTone = (type: FeedItemType) => {
     switch (type) {
@@ -1056,6 +1163,19 @@ export default function IntelligenceFeed() {
               Some sources failed to load ({data.errors.length}). Results shown are partial.
             </div>
           ) : null}
+
+          {hiddenCount > 0 ? (
+            <div className="mt-2 flex items-center justify-between gap-3 text-xs text-textTertiary">
+              <span className="truncate">{hiddenCount} items hidden (marked not relevant for this target/topic).</span>
+              <button
+                type="button"
+                onClick={clearHiddenSources}
+                className="shrink-0 px-2 py-1 rounded-md bg-surfaceElevated/60 border border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/20"
+              >
+                Clear hidden
+              </button>
+            </div>
+          ) : null}
         </div>
 
         {/* Digest (progressive disclosure) */}
@@ -1139,14 +1259,39 @@ export default function IntelligenceFeed() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-medium text-textPrimary leading-snug line-clamp-2 group-hover:text-white transition-colors">
-                        {item.title}
+                        {highlightText(item.title, item.matchedTerms || [])}
                       </h3>
+                      {(item.matchedTerms?.length || 0) > 0 ? (
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surfaceElevated/60 border border-white/10 text-[11px] text-textSecondary">
+                            Matched {item.matchedFields?.includes('title') ? 'title' : 'summary'}
+                          </span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-surfaceElevated/60 border border-white/10 text-[11px] text-textSecondary max-w-full truncate">
+                            {uniqueTerms(item.matchedTerms || []).slice(0, 3).join(', ')}
+                            {(item.matchedTerms?.length || 0) > 3 ? '…' : ''}
+                          </span>
+                        </div>
+                      ) : null}
                       <div className="flex items-center gap-2 mt-2 text-xs text-textTertiary">
                         <span className="truncate max-w-[22ch]">{item.source}</span>
                         <span className="text-white/10">·</span>
                         <span>{formatRelativeTime(item.date)}</span>
                       </div>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        hideSourceForContext(item.link);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg text-textTertiary hover:text-textPrimary hover:bg-surface/40"
+                      title="Not relevant (hide this source for this target/topic)"
+                      aria-label="Not relevant"
+                    >
+                      <Ban className="w-4 h-4" />
+                    </button>
                   </div>
                 </article>
               );
