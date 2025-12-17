@@ -709,23 +709,33 @@ export default function IntelligenceFeed() {
 
       const basePayload = { generatedAt: now, persona, targetContext, items } as const;
 
+      // Live mode: generate digest synchronously (serverless) to avoid relying on background job endpoints.
+      // If API keys are missing, fall back to a demo digest on the backend if supported.
       let isDemo = false;
       try {
-        const started = await startDigestJob(basePayload);
-        setDigestJobId(started.jobId);
-        setDigestJobStatus({ status: started.status });
+        const generated = await generateDigest(basePayload);
+        setDigestMarkdown(generated.digestMarkdown);
+        setDigestMeta({ generatedAt: now, persona });
+        setIsDigestLoading(false);
+        setDigestJobStatus(null);
+        setDigestJobId('');
+        return;
       } catch (e) {
         const msg = e instanceof Error ? e.message : '';
         if (msg.includes('Missing API key') || msg.includes('Missing API key(s)')) {
           isDemo = true;
-          const started = await startDigestJob({ ...basePayload, isDemo: true });
-          setDigestJobId(started.jobId);
-          setDigestJobStatus({ status: started.status });
-        } else {
-          throw e;
+          const generated = await generateDigest({ ...basePayload, isDemo: true });
+          setDigestMarkdown(generated.digestMarkdown);
+          setDigestMeta({ generatedAt: now, persona: `${persona} (demo)` });
+          setIsDigestLoading(false);
+          setDigestJobStatus(null);
+          setDigestJobId('');
+          return;
         }
+        throw e;
+      } finally {
+        setDigestMeta({ generatedAt: now, persona: isDemo ? `${persona} (demo)` : persona });
       }
-      setDigestMeta({ generatedAt: now, persona: isDemo ? `${persona} (demo)` : persona });
     } catch (e) {
       setDigestError(e instanceof Error ? e.message : 'Failed to generate digest');
       setIsDigestLoading(false);
@@ -780,7 +790,7 @@ export default function IntelligenceFeed() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search feed..."
+                placeholder={`Filter current feed (${data?.queryPack?.target || currentTarget?.name || '—'})...`}
                 className="w-full pl-10 pr-9 py-2.5 bg-surfaceElevated/50 border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
               />
               {searchQuery ? (
@@ -794,6 +804,28 @@ export default function IntelligenceFeed() {
                 </button>
               ) : null}
             </div>
+            {searchQuery && (
+              <div className="flex items-center justify-between gap-2 text-xs text-textTertiary">
+                <span className="truncate">
+                  Filtering results for <span className="font-mono">{data?.queryPack?.target || currentTarget?.name || '—'}</span>. To fetch a new target/topic (e.g. EGFR, cMET), use Advanced → Topic override.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const q = searchQuery.trim();
+                    if (!q) return;
+                    setHasCustomTopic(true);
+                    setTopicQuery(q);
+                    setSearchQuery('');
+                    triggerRefresh(true);
+                  }}
+                  className="shrink-0 px-2 py-1 rounded-md bg-surfaceElevated/60 border border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/20"
+                  title="Run this as a new topic search"
+                >
+                  Search as topic
+                </button>
+              </div>
+            )}
 
             <div className="relative">
               <button
