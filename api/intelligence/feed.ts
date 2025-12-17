@@ -468,9 +468,9 @@ async function fetchPubmedItems(params: { pubmedQuery: string; terms: string[] }
   return items.slice(0, max);
 }
 
-async function fetchClinicalTrialsItems(query: string, max: number): Promise<NormalizedFeedItem[]> {
+async function fetchClinicalTrialsItems(params: { query: string; terms: string[] }, max: number): Promise<NormalizedFeedItem[]> {
   const url = new URL('https://clinicaltrials.gov/api/v2/studies');
-  url.searchParams.set('query.term', query);
+  url.searchParams.set('query.term', params.query);
   url.searchParams.set('pageSize', String(Math.min(10, max)));
   // Keep it light: summary fields only
   const res = await fetchWithTimeout(url.toString());
@@ -478,29 +478,83 @@ async function fetchClinicalTrialsItems(query: string, max: number): Promise<Nor
   const jsonBody = (await res.json()) as any;
   const studies: any[] = jsonBody?.studies || [];
 
+  const matchers = buildTermMatchers(params.terms);
+
   const items: NormalizedFeedItem[] = [];
   for (const s of studies) {
     const protocol = s?.protocolSection;
     const idMod = protocol?.identificationModule;
     const statusMod = protocol?.statusModule;
+    const descMod = protocol?.descriptionModule;
+    const condMod = protocol?.conditionsModule;
+    const armsMod = protocol?.armsInterventionsModule;
     const nct = idMod?.nctId;
     if (!nct) continue;
-    const title = idMod?.briefTitle || `Clinical trial ${nct}`;
+    const title = String(idMod?.briefTitle || idMod?.officialTitle || `Clinical trial ${nct}`).trim();
     const date = toIsoDate(statusMod?.studyFirstSubmitDate || statusMod?.startDateStruct?.date);
-    const condition = (protocol?.conditionsModule?.conditions || []).slice(0, 2).join(', ');
+
+    const conditions = (condMod?.conditions || []).slice(0, 4).map((c: any) => String(c)).filter(Boolean);
+    const keywords = (condMod?.keywords || []).slice(0, 6).map((k: any) => String(k)).filter(Boolean);
+    const briefSummary = String(descMod?.briefSummary || '').trim();
+    const interventions = (armsMod?.interventions || [])
+      .slice(0, 6)
+      .map((iv: any) => String(iv?.name || iv?.description || '').trim())
+      .filter(Boolean);
+
+    const hayTitle = title.toLowerCase();
+    const haySummary = [briefSummary, ...conditions, ...keywords, ...interventions].join(' ').toLowerCase();
+
+    const matchedTerms: string[] = [];
+    const matchedFields = new Set<'title' | 'summary'>();
+    let matchedAmbiguousOnly = true;
+
+    for (const m of matchers) {
+      const inTitle = m.re.test(hayTitle);
+      const inSummary = haySummary ? m.re.test(haySummary) : false;
+      if (!inTitle && !inSummary) continue;
+      matchedTerms.push(m.term);
+      if (inTitle) matchedFields.add('title');
+      if (inSummary) matchedFields.add('summary');
+      if (!m.isAmbiguous) matchedAmbiguousOnly = false;
+    }
+
+    // Extremely selective: require explicit mention in title/summary/interventions/keywords
+    if (!matchedTerms.length) continue;
+
+    // If only ambiguous matches (e.g., MET), require title match and gene/receptor context.
+    if (matchedAmbiguousOnly) {
+      if (!matchedFields.has('title')) continue;
+      const contextRe = /\b(gene|receptor|oncogene|kinase|hgfr|c[-\s]?met|proto-oncogene)\b/i;
+      const ctxOk =
+        contextRe.test(title) ||
+        contextRe.test(briefSummary) ||
+        interventions.some((v: string) => contextRe.test(v)) ||
+        keywords.some((v: string) => contextRe.test(v));
+      if (!ctxOk) continue;
+    }
+
+    const condition = conditions.slice(0, 2).join(', ');
+    const summary = clamp(
+      briefSummary ||
+        (interventions.length ? `Interventions: ${interventions.slice(0, 2).join(', ')}` : condition ? `Conditions: ${condition}` : 'Clinical trial record'),
+      220
+    );
+
+    const score = 0.78 + (matchedFields.has('title') ? 0.06 : 0) + (matchedFields.has('summary') ? 0.03 : 0);
+
     items.push({
       id: `NCT:${nct}`,
       title,
       url: `https://clinicaltrials.gov/study/${encodeURIComponent(nct)}`,
       source: 'ClinicalTrials.gov',
       publishedAt: date,
-      summary: clamp(condition ? `Conditions: ${condition}` : 'Clinical trial record', 220),
+      summary,
       kind: 'clinical',
-      relevance: 'medium',
-      tags: ['clinical trial'],
-      score: 0.75,
-      matchedTerms: [],
-      matchedFields: [],
+      relevance: matchedFields.has('title') ? 'high' : 'medium',
+      tags: ['clinical trial', matchedFields.has('title') ? 'target-in-title' : 'target-in-summary'],
+      score,
+      matchedTerms: uniqStrings(matchedTerms),
+      matchedFields: Array.from(matchedFields),
     });
   }
   return items.slice(0, max);
@@ -572,7 +626,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     }
 
     try {
-      items.push(...(await fetchClinicalTrialsItems(queryPack.trialsQuery, Math.ceil(limit / 2))));
+      items.push(...(await fetchClinicalTrialsItems({ query: queryPack.trialsQuery, terms: queryPack.terms }, Math.ceil(limit / 2))));
     } catch (e: any) {
       partial = true;
       errors.push({
