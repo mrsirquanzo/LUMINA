@@ -8,6 +8,8 @@ import {
   X,
   Ban,
   Pin,
+  EyeOff,
+  Info,
   RefreshCw,
   FileText,
   Newspaper,
@@ -28,6 +30,7 @@ type FeedItemType = 'publication' | 'deal' | 'regulatory' | 'news' | 'clinical';
 type RelevanceFilter = 'Target-specific' | 'Market' | 'Competitive' | 'All';
 
 const BLACKLIST_PREFIX = 'lumina:intelligence:blacklist:';
+const HIDDEN_ITEMS_PREFIX = 'lumina:intelligence:hiddenItems:';
 const PINNED_PREFIX = 'lumina:intelligence:pinned:';
 const CURATED_ONLY_PREFIX = 'lumina:intelligence:curatedOnly:';
 
@@ -432,6 +435,11 @@ export default function IntelligenceFeed() {
     return `${PINNED_PREFIX}${ctx.toLowerCase()}`;
   }, [requestParams.q, requestParams.target]);
 
+  const hiddenItemsKey = useMemo(() => {
+    const ctx = requestParams.target || requestParams.q || 'global';
+    return `${HIDDEN_ITEMS_PREFIX}${ctx.toLowerCase()}`;
+  }, [requestParams.q, requestParams.target]);
+
   const curatedOnlyKey = useMemo(() => {
     const ctx = requestParams.target || requestParams.q || 'global';
     return `${CURATED_ONLY_PREFIX}${ctx.toLowerCase()}`;
@@ -440,6 +448,8 @@ export default function IntelligenceFeed() {
   const [blacklistedHosts, setBlacklistedHosts] = useState<string[]>([]);
   const [pinnedIds, setPinnedIds] = useState<string[]>([]);
   const [isCuratedOnly, setIsCuratedOnly] = useState(false);
+  const [hiddenItemUrls, setHiddenItemUrls] = useState<string[]>([]);
+  const [whyOpenId, setWhyOpenId] = useState<string>('');
 
   useEffect(() => {
     try {
@@ -451,6 +461,17 @@ export default function IntelligenceFeed() {
       setBlacklistedHosts([]);
     }
   }, [blacklistKey]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(hiddenItemsKey);
+      const parsed = raw ? (JSON.parse(raw) as unknown) : [];
+      const next = Array.isArray(parsed) ? parsed.map((s) => String(s)).filter(Boolean) : [];
+      setHiddenItemUrls(next);
+    } catch {
+      setHiddenItemUrls([]);
+    }
+  }, [hiddenItemsKey]);
 
   useEffect(() => {
     try {
@@ -474,6 +495,7 @@ export default function IntelligenceFeed() {
 
   const blacklistedHostSet = useMemo(() => new Set(blacklistedHosts.map((h) => h.toLowerCase())), [blacklistedHosts]);
   const pinnedIdSet = useMemo(() => new Set(pinnedIds), [pinnedIds]);
+  const hiddenUrlSet = useMemo(() => new Set(hiddenItemUrls.map((u) => u.toLowerCase())), [hiddenItemUrls]);
 
   const hideSourceForContext = (rawUrl: string) => {
     try {
@@ -494,6 +516,21 @@ export default function IntelligenceFeed() {
     localStorage.removeItem(blacklistKey);
   };
 
+  const hideItemUrlForContext = (rawUrl: string) => {
+    const u = (rawUrl || '').trim();
+    if (!u) return;
+    const key = u.toLowerCase();
+    if (hiddenUrlSet.has(key)) return;
+    const next = [u, ...hiddenItemUrls].slice(0, 200);
+    setHiddenItemUrls(next);
+    localStorage.setItem(hiddenItemsKey, JSON.stringify(next));
+  };
+
+  const clearHiddenItems = () => {
+    setHiddenItemUrls([]);
+    localStorage.removeItem(hiddenItemsKey);
+  };
+
   const togglePinned = (id: string) => {
     const exists = pinnedIdSet.has(id);
     const next = exists ? pinnedIds.filter((x) => x !== id) : [id, ...pinnedIds].slice(0, 8);
@@ -504,6 +541,14 @@ export default function IntelligenceFeed() {
   const setCuratedOnly = (next: boolean) => {
     setIsCuratedOnly(next);
     localStorage.setItem(curatedOnlyKey, next ? 'true' : 'false');
+  };
+
+  const applyDemoPreset = () => {
+    setCuratedOnly(true);
+    setTypeFilter('All');
+    setRelevanceFilter('Target-specific');
+    setFeedFilterInput('');
+    setShowFilters(false);
   };
 
   // Persist jobId per target context so leaving the page doesn't reset progress.
@@ -691,6 +736,11 @@ export default function IntelligenceFeed() {
       });
     }
 
+    // Hide specific items (URL-level) for this context
+    if (hiddenUrlSet.size > 0) {
+      filtered = filtered.filter((item) => !hiddenUrlSet.has(item.link.toLowerCase()));
+    }
+
     // Type filter
     if (typeFilter !== 'All') {
       filtered = filtered.filter((item) => item.type === typeFilter);
@@ -721,7 +771,7 @@ export default function IntelligenceFeed() {
       (a, b) =>
         (b.score ?? 0) - (a.score ?? 0) || new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-  }, [feedItems, typeFilter, relevanceFilter, feedFilterInput, blacklistedHostSet]);
+  }, [feedItems, typeFilter, relevanceFilter, feedFilterInput, blacklistedHostSet, hiddenUrlSet, isCuratedOnly]);
 
   const pinnedItems = useMemo(() => {
     if (!pinnedIds.length) return [];
@@ -741,6 +791,11 @@ export default function IntelligenceFeed() {
       }
     }).length;
   }, [feedItems, blacklistedHostSet]);
+
+  const hiddenItemCount = useMemo(() => {
+    if (hiddenUrlSet.size === 0) return 0;
+    return feedItems.filter((it) => hiddenUrlSet.has(it.link.toLowerCase())).length;
+  }, [feedItems, hiddenUrlSet]);
 
   const getTypeTone = (type: FeedItemType) => {
     switch (type) {
@@ -1245,19 +1300,42 @@ export default function IntelligenceFeed() {
             </div>
           ) : null}
 
+          {hiddenItemCount > 0 ? (
+            <div className="mt-2 flex items-center justify-between gap-3 text-xs text-textTertiary">
+              <span className="truncate">{hiddenItemCount} items hidden (URL-level).</span>
+              <button
+                type="button"
+                onClick={clearHiddenItems}
+                className="shrink-0 px-2 py-1 rounded-md bg-surfaceElevated/60 border border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/20"
+              >
+                Clear hidden items
+              </button>
+            </div>
+          ) : null}
+
           <div className="mt-3 flex items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={() => setCuratedOnly(!isCuratedOnly)}
-              className={`px-3 py-2 rounded-lg border text-sm transition-colors ${
-                isCuratedOnly
-                  ? 'bg-primary/15 border-primary/40 text-primary'
-                  : 'bg-surfaceElevated/50 border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/15'
-              }`}
-              title="Show only curated sources (recommended for investor demos)"
-            >
-              Curated only
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCuratedOnly(!isCuratedOnly)}
+                className={`px-3 py-2 rounded-lg border text-sm transition-colors ${
+                  isCuratedOnly
+                    ? 'bg-primary/15 border-primary/40 text-primary'
+                    : 'bg-surfaceElevated/50 border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/15'
+                }`}
+                title="Show only curated sources (recommended for investor demos)"
+              >
+                Curated only
+              </button>
+              <button
+                type="button"
+                onClick={applyDemoPreset}
+                className="px-3 py-2 rounded-lg border text-sm bg-surfaceElevated/50 border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/15"
+                title="Apply investor demo preset (curated + target-specific)"
+              >
+                Demo preset
+              </button>
+            </div>
             {pinnedItems.length > 0 ? (
               <span className="text-xs text-textTertiary">{pinnedItems.length} pinned</span>
             ) : (
@@ -1449,6 +1527,34 @@ export default function IntelligenceFeed() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        hideItemUrlForContext(item.link);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg text-textTertiary hover:text-textPrimary hover:bg-surface/40"
+                      title="Hide this item only (URL-level)"
+                      aria-label="Hide item"
+                    >
+                      <EyeOff className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setWhyOpenId((prev) => (prev === item.id ? '' : item.id));
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg text-textTertiary hover:text-textPrimary hover:bg-surface/40"
+                      title="Why included?"
+                      aria-label="Why included"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         togglePinned(item.id);
                       }}
                       className={`opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg hover:bg-surface/40 ${
@@ -1460,6 +1566,43 @@ export default function IntelligenceFeed() {
                       <Pin className="w-4 h-4" />
                     </button>
                   </div>
+
+                  {whyOpenId === item.id ? (
+                    <div
+                      className="mt-3 p-3 rounded-lg bg-surface/40 border border-white/10 text-xs text-textSecondary"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="font-semibold text-textPrimary">Why included</p>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setWhyOpenId('');
+                          }}
+                          className="text-textTertiary hover:text-textPrimary"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="mt-2 space-y-1">
+                        <div>
+                          <span className="text-textTertiary">Matched:</span>{' '}
+                          <span className="font-mono">{uniqueTerms(item.matchedTerms || []).slice(0, 8).join(', ') || '—'}</span>
+                        </div>
+                        <div>
+                          <span className="text-textTertiary">Field:</span>{' '}
+                          <span>{item.matchedFields?.includes('title') ? 'title' : item.matchedFields?.includes('summary') ? 'summary' : '—'}</span>
+                        </div>
+                        <div>
+                          <span className="text-textTertiary">Score:</span>{' '}
+                          <span className="font-mono">{typeof item.score === 'number' ? item.score.toFixed(2) : '—'}</span>
+                        </div>
+                        <div className="pt-1 text-textTertiary">{item.summary}</div>
+                      </div>
+                    </div>
+                  ) : null}
                 </article>
               );
             })}

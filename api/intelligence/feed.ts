@@ -40,7 +40,8 @@ interface FeedResponse {
 }
 
 const DEFAULT_LIMIT = 30;
-const CACHE_TTL_MS = 10 * 60 * 1000;
+// Longer cache for demo stability; clients can force refresh with fresh=true
+const CACHE_TTL_MS = 30 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 12_000;
 
 const cache = new Map<string, { expiresAt: number; data: FeedResponse }>();
@@ -102,6 +103,28 @@ function getUrl(req: IncomingMessage): URL {
   const host = req.headers.host || 'localhost';
   const proto = (req.headers['x-forwarded-proto'] as string) || 'https';
   return new URL(req.url || '/', `${proto}://${host}`);
+}
+
+function makeCacheKey(input: {
+  target?: string;
+  q?: string;
+  asset?: string;
+  company?: string;
+  indication?: string;
+  synonyms: string[];
+  limit: number;
+}) {
+  const parts = [
+    'v3',
+    `t:${(input.target || '').toLowerCase()}`,
+    `q:${(input.q || '').toLowerCase()}`,
+    `a:${(input.asset || '').toLowerCase()}`,
+    `c:${(input.company || '').toLowerCase()}`,
+    `i:${(input.indication || '').toLowerCase()}`,
+    `s:${uniqStrings(input.synonyms).map((s) => s.toLowerCase()).join('|')}`,
+    `l:${input.limit}`,
+  ];
+  return `feed:${parts.join(':')}`;
 }
 
 function toIsoDate(input: string | undefined): string {
@@ -619,12 +642,6 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const query = target || q;
     if (!query) return json(res, 400, { error: 'Missing target or q' });
 
-    const key = `feed:${query.toLowerCase()}:${limit}`;
-    const cached = cache.get(key);
-    if (!fresh && cached && cached.expiresAt > Date.now()) {
-      return json(res, 200, { ...cached.data, cached: true });
-    }
-
     const synonyms = (url.searchParams.get('synonyms') || '')
       .split(',')
       .map((s) => s.trim())
@@ -634,15 +651,32 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const expanded = expandKnownSynonyms(query);
     const asset = url.searchParams.get('asset')?.trim() || undefined;
     const company = url.searchParams.get('company')?.trim() || undefined;
+    const indication = url.searchParams.get('indication')?.trim() || undefined;
 
     const terms = uniqStrings([query, ...synonyms, ...expanded, asset || ''].filter(Boolean));
+    const allSynonyms = uniqStrings([...synonyms, ...expanded]).slice(0, 10);
+
+    const cacheKey = makeCacheKey({
+      target,
+      q,
+      asset,
+      company,
+      indication,
+      synonyms: allSynonyms,
+      limit,
+    });
+
+    const cached = cache.get(cacheKey);
+    if (!fresh && cached && cached.expiresAt > Date.now()) {
+      return json(res, 200, { ...cached.data, cached: true });
+    }
 
     const queryPack = {
       target,
       asset,
       company,
-      indication: url.searchParams.get('indication')?.trim() || undefined,
-      synonyms: uniqStrings([...synonyms, ...expanded]).slice(0, 10),
+      indication,
+      synonyms: allSynonyms,
       pubmedQuery: buildPubmedQuery({ terms, strict: true }),
       newsQuery: `${query} biotech OR pharma`,
       trialsQuery: `${query} AND (trial OR phase)`,
@@ -693,7 +727,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       errors,
     };
 
-    cache.set(key, { expiresAt: Date.now() + CACHE_TTL_MS, data: response });
+    cache.set(cacheKey, { expiresAt: Date.now() + CACHE_TTL_MS, data: response });
     return json(res, 200, response);
   } catch (e: any) {
     return json(res, 500, { error: e?.message || 'Failed to build feed' });
