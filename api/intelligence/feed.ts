@@ -153,6 +153,9 @@ function expandKnownSynonyms(targetOrQuery: string): string[] {
   if (compact === 'HER2' || compact === 'ERBB2')
     return ['HER2', 'ERBB2', 'HER-2', 'neu', 'receptor tyrosine-protein kinase erbB-2'];
   if (compact === 'TROP2' || compact === 'TACSTD2') return ['TROP2', 'TACSTD2', 'trophoblast cell-surface antigen 2'];
+  if (compact === 'KIT') return ['KIT', 'CD117', 'stem cell factor receptor', 'c-KIT'];
+  if (compact === 'ALK') return ['ALK', 'anaplastic lymphoma kinase'];
+  if (compact === 'YES') return ['YES1', 'Yamaguchi sarcoma viral oncogene homolog 1'];
   return [];
 }
 
@@ -230,6 +233,22 @@ function buildTermMatchers(terms: string[]) {
   });
 
   return matchers;
+}
+
+function hasBiomedicalContext(text: string, termUpper: string): boolean {
+  const base = /\b(gene|receptor|oncogene|kinase|mutation|mutant|fusion|amplif|overexpress|phospho|tyrosine|pathway|signaling|inhibitor|antibody|adc|biomarker)\b/i;
+  if (base.test(text)) return true;
+
+  // Term-specific aliases/context for ambiguous symbols
+  if (termUpper === 'MET') return /\b(hgfr|c[-\s]?met|hepatocyte growth factor receptor|proto-oncogene)\b/i.test(text);
+  if (termUpper === 'KIT') return /\b(cd117|c[-\s]?kit|stem cell factor receptor)\b/i.test(text);
+  if (termUpper === 'ALK') return /\b(anaplastic lymphoma kinase|fusion)\b/i.test(text);
+  if (termUpper === 'YES') return /\b(yes1|src family|tyrosine kinase)\b/i.test(text);
+
+  // Generic: allow if the ambiguous token is adjacent to a biomedical qualifier
+  // e.g., "ALK fusion", "KIT mutation", "MET inhibitor"
+  const adjacent = new RegExp(`\\b${escapeRegExp(termUpper)}\\b\\s*(gene|receptor|kinase|mutation|fusion|inhibitor|antibody)\\b`, 'i');
+  return adjacent.test(text);
 }
 
 function dedupeItems(items: NormalizedFeedItem[]): NormalizedFeedItem[] {
@@ -346,8 +365,10 @@ async function fetchRssNewsItems(params: { terms: string[] }, max: number): Prom
       // If only ambiguous matches, require title match plus gene/receptor context
       if (matchedAmbiguousOnly) {
         if (!matchedFields.has('title')) continue;
-        const contextRe = /\b(gene|receptor|oncogene|kinase|hgfr|c[-\s]?met|proto-oncogene)\b/i;
-        if (!contextRe.test(title) && !contextRe.test(it.summary || '')) continue;
+        // Require biomedical context so we don't match "met", "kit", "yes" as common words
+        const termUpper = matchedTerms[0]?.replace(/\s+/g, '').toUpperCase() || '';
+        const combined = `${title}\n${it.summary || ''}`;
+        if (!hasBiomedicalContext(combined, termUpper)) continue;
       }
 
       const publishedAt = toIsoDate(it.publishedAt);
