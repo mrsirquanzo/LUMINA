@@ -56,6 +56,13 @@ const RSS_SOURCES = [
     weight: 0.92,
   },
   {
+    id: 'endpts',
+    name: 'Endpoints News',
+    url: 'https://endpts.com/feed/',
+    kind: 'news' as const,
+    weight: 0.88,
+  },
+  {
     id: 'fiercebiotech',
     name: 'Fierce Biotech',
     url: 'https://www.fiercebiotech.com/rss/xml',
@@ -68,6 +75,20 @@ const RSS_SOURCES = [
     url: 'https://www.fiercepharma.com/rss/xml',
     kind: 'news' as const,
     weight: 0.82,
+  },
+  {
+    id: 'fda-press',
+    name: 'FDA Press Announcements',
+    url: 'https://www.fda.gov/about-fda/contact-fda/stay-informed/rss-feeds/press-announcements/rss.xml',
+    kind: 'regulatory' as const,
+    weight: 0.9,
+  },
+  {
+    id: 'ema-news',
+    name: 'EMA News',
+    url: 'https://www.ema.europa.eu/en/news/rss.xml',
+    kind: 'regulatory' as const,
+    weight: 0.88,
   },
 ] as const;
 

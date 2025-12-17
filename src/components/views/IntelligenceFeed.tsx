@@ -7,6 +7,7 @@ import {
   SlidersHorizontal,
   X,
   Ban,
+  Pin,
   RefreshCw,
   FileText,
   Newspaper,
@@ -27,6 +28,19 @@ type FeedItemType = 'publication' | 'deal' | 'regulatory' | 'news' | 'clinical';
 type RelevanceFilter = 'Target-specific' | 'Market' | 'Competitive' | 'All';
 
 const BLACKLIST_PREFIX = 'lumina:intelligence:blacklist:';
+const PINNED_PREFIX = 'lumina:intelligence:pinned:';
+const CURATED_ONLY_PREFIX = 'lumina:intelligence:curatedOnly:';
+
+const CURATED_SOURCES = new Set([
+  'PubMed',
+  'ClinicalTrials.gov',
+  'STAT News',
+  'Endpoints News',
+  'Fierce Biotech',
+  'Fierce Pharma',
+  'FDA Press Announcements',
+  'EMA News',
+]);
 
 function extractPmidFromUrl(rawUrl: string): string | null {
   const m = rawUrl.match(/pubmed\.ncbi\.nlm\.nih\.gov\/(\d+)\b/i);
@@ -413,7 +427,19 @@ export default function IntelligenceFeed() {
     return `${BLACKLIST_PREFIX}${ctx.toLowerCase()}`;
   }, [requestParams.q, requestParams.target]);
 
+  const pinnedKey = useMemo(() => {
+    const ctx = requestParams.target || requestParams.q || 'global';
+    return `${PINNED_PREFIX}${ctx.toLowerCase()}`;
+  }, [requestParams.q, requestParams.target]);
+
+  const curatedOnlyKey = useMemo(() => {
+    const ctx = requestParams.target || requestParams.q || 'global';
+    return `${CURATED_ONLY_PREFIX}${ctx.toLowerCase()}`;
+  }, [requestParams.q, requestParams.target]);
+
   const [blacklistedHosts, setBlacklistedHosts] = useState<string[]>([]);
+  const [pinnedIds, setPinnedIds] = useState<string[]>([]);
+  const [isCuratedOnly, setIsCuratedOnly] = useState(false);
 
   useEffect(() => {
     try {
@@ -426,7 +452,28 @@ export default function IntelligenceFeed() {
     }
   }, [blacklistKey]);
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(pinnedKey);
+      const parsed = raw ? (JSON.parse(raw) as unknown) : [];
+      const next = Array.isArray(parsed) ? parsed.map((s) => String(s)).filter(Boolean) : [];
+      setPinnedIds(next);
+    } catch {
+      setPinnedIds([]);
+    }
+  }, [pinnedKey]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(curatedOnlyKey);
+      setIsCuratedOnly(raw === 'true');
+    } catch {
+      setIsCuratedOnly(false);
+    }
+  }, [curatedOnlyKey]);
+
   const blacklistedHostSet = useMemo(() => new Set(blacklistedHosts.map((h) => h.toLowerCase())), [blacklistedHosts]);
+  const pinnedIdSet = useMemo(() => new Set(pinnedIds), [pinnedIds]);
 
   const hideSourceForContext = (rawUrl: string) => {
     try {
@@ -445,6 +492,18 @@ export default function IntelligenceFeed() {
   const clearHiddenSources = () => {
     setBlacklistedHosts([]);
     localStorage.removeItem(blacklistKey);
+  };
+
+  const togglePinned = (id: string) => {
+    const exists = pinnedIdSet.has(id);
+    const next = exists ? pinnedIds.filter((x) => x !== id) : [id, ...pinnedIds].slice(0, 8);
+    setPinnedIds(next);
+    localStorage.setItem(pinnedKey, JSON.stringify(next));
+  };
+
+  const setCuratedOnly = (next: boolean) => {
+    setIsCuratedOnly(next);
+    localStorage.setItem(curatedOnlyKey, next ? 'true' : 'false');
   };
 
   // Persist jobId per target context so leaving the page doesn't reset progress.
@@ -616,6 +675,9 @@ export default function IntelligenceFeed() {
   const filteredItems = useMemo(() => {
     let filtered = [...feedItems];
 
+    // Curated-only mode for investor demos
+    if (isCuratedOnly) filtered = filtered.filter((item) => CURATED_SOURCES.has(item.source));
+
     // Hide user-marked irrelevant sources for this context
     if (blacklistedHostSet.size > 0) {
       filtered = filtered.filter((item) => {
@@ -660,6 +722,12 @@ export default function IntelligenceFeed() {
         (b.score ?? 0) - (a.score ?? 0) || new Date(b.date).getTime() - new Date(a.date).getTime()
     );
   }, [feedItems, typeFilter, relevanceFilter, feedFilterInput, blacklistedHostSet]);
+
+  const pinnedItems = useMemo(() => {
+    if (!pinnedIds.length) return [];
+    const byId = new Map(feedItems.map((it) => [it.id, it]));
+    return pinnedIds.map((id) => byId.get(id)).filter(Boolean) as FeedItem[];
+  }, [feedItems, pinnedIds]);
 
   const hiddenCount = useMemo(() => {
     if (blacklistedHostSet.size === 0) return 0;
@@ -1176,6 +1244,26 @@ export default function IntelligenceFeed() {
               </button>
             </div>
           ) : null}
+
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => setCuratedOnly(!isCuratedOnly)}
+              className={`px-3 py-2 rounded-lg border text-sm transition-colors ${
+                isCuratedOnly
+                  ? 'bg-primary/15 border-primary/40 text-primary'
+                  : 'bg-surfaceElevated/50 border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/15'
+              }`}
+              title="Show only curated sources (recommended for investor demos)"
+            >
+              Curated only
+            </button>
+            {pinnedItems.length > 0 ? (
+              <span className="text-xs text-textTertiary">{pinnedItems.length} pinned</span>
+            ) : (
+              <span className="text-xs text-textTertiary">Tip: Pin top items for demos</span>
+            )}
+          </div>
         </div>
 
         {/* Digest (progressive disclosure) */}
@@ -1218,6 +1306,69 @@ export default function IntelligenceFeed() {
             )}
           </details>
         )}
+
+        {/* Pinned highlights */}
+        {pinnedItems.length > 0 ? (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold text-textTertiary uppercase tracking-wider">Pinned highlights</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setPinnedIds([]);
+                  localStorage.removeItem(pinnedKey);
+                }}
+                className="text-xs text-textTertiary hover:text-textPrimary"
+              >
+                Clear
+              </button>
+            </div>
+            <div className="space-y-2">
+              {pinnedItems.map((item) => {
+                const Icon = getTypeIcon(item.type);
+                const tone = getTypeTone(item.type);
+                return (
+                  <article
+                    key={`pinned:${item.id}`}
+                    className="group p-4 bg-surfaceElevated/40 hover:bg-surfaceElevated/70 border border-white/15 rounded-xl transition-colors cursor-pointer"
+                    onClick={() => window.open(item.link, '_blank', 'noopener,noreferrer')}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`mt-1 p-1.5 rounded-md bg-surfaceElevated/60 ${tone}`}>
+                        <Icon className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-medium text-textPrimary leading-snug line-clamp-2">
+                          {highlightText(item.title, item.matchedTerms || [])}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-2 text-xs text-textTertiary">
+                          <span className="truncate max-w-[28ch]">{item.source}</span>
+                          <span className="text-white/10">·</span>
+                          <span>{formatRelativeTime(item.date)}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          togglePinned(item.id);
+                        }}
+                        className="p-2 rounded-lg text-primary hover:bg-primary/10"
+                        title="Unpin"
+                        aria-label="Unpin"
+                      >
+                        <Pin className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
 
         {/* Feed list */}
         {isError ? (
@@ -1291,6 +1442,22 @@ export default function IntelligenceFeed() {
                       aria-label="Not relevant"
                     >
                       <Ban className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        togglePinned(item.id);
+                      }}
+                      className={`opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg hover:bg-surface/40 ${
+                        pinnedIdSet.has(item.id) ? 'text-primary' : 'text-textTertiary hover:text-textPrimary'
+                      }`}
+                      title={pinnedIdSet.has(item.id) ? 'Unpin' : 'Pin as highlight'}
+                      aria-label={pinnedIdSet.has(item.id) ? 'Unpin' : 'Pin'}
+                    >
+                      <Pin className="w-4 h-4" />
                     </button>
                   </div>
                 </article>
