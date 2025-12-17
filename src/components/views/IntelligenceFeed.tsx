@@ -256,11 +256,15 @@ export default function IntelligenceFeed() {
 
   const [typeFilter, setTypeFilter] = useState<FeedItemType | 'All'>('All');
   const [relevanceFilter, setRelevanceFilter] = useState<RelevanceFilter>('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  // Primary search: fetch a new target/topic for the feed
+  const [feedSearchInput, setFeedSearchInput] = useState('');
+  // Secondary: filter within the currently loaded feed items
+  const [feedFilterInput, setFeedFilterInput] = useState('');
   const [topicQuery, setTopicQuery] = useState('');
   const [hasCustomTopic, setHasCustomTopic] = useState(false);
   const [assetQuery, setAssetQuery] = useState('');
   const [companyQuery, setCompanyQuery] = useState('');
+  const [targetOverride, setTargetOverride] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [refreshToken, setRefreshToken] = useState(0);
@@ -316,13 +320,38 @@ export default function IntelligenceFeed() {
 
   const effectiveTopic = topicQuery.trim() || defaultTopic;
 
+  function normalizeTargetInput(raw: string): string {
+    const v = raw.trim();
+    if (!v) return '';
+    const compact = v.replace(/\s+/g, '');
+    if (/^cmet$/i.test(compact)) return 'MET';
+    return compact.toUpperCase();
+  }
+
+  function submitFeedSearch() {
+    const raw = feedSearchInput.trim();
+    if (!raw) return;
+    const isSingleToken = !/\s/.test(raw) && /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(raw);
+    if (isSingleToken) {
+      setTargetOverride(normalizeTargetInput(raw));
+      setHasCustomTopic(false);
+      setTopicQuery(defaultTopic);
+      triggerRefresh(true);
+      return;
+    }
+    setTargetOverride('');
+    setHasCustomTopic(true);
+    setTopicQuery(raw);
+    triggerRefresh(true);
+  }
+
   const requestParams = useMemo<IntelligenceFeedParams>(() => {
     const limit = 36;
     if (hasCustomTopic) {
       return { q: effectiveTopic, limit, fresh: forceFresh };
     }
 
-    const target = currentTarget?.name?.trim();
+    const target = targetOverride.trim() || currentTarget?.name?.trim();
     if (target) {
       return {
         target,
@@ -522,8 +551,8 @@ export default function IntelligenceFeed() {
     }
 
     // Search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+    if (feedFilterInput) {
+      const query = feedFilterInput.toLowerCase();
       filtered = filtered.filter(
         (item) =>
           item.title.toLowerCase().includes(query) ||
@@ -536,7 +565,7 @@ export default function IntelligenceFeed() {
       (a, b) =>
         (b.score ?? 0) - (a.score ?? 0) || new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-  }, [feedItems, typeFilter, relevanceFilter, searchQuery]);
+  }, [feedItems, typeFilter, relevanceFilter, feedFilterInput]);
 
   const getTypeTone = (type: FeedItemType) => {
     switch (type) {
@@ -788,15 +817,21 @@ export default function IntelligenceFeed() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textTertiary" />
               <input
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Filter current feed (${data?.queryPack?.target || currentTarget?.name || '—'})...`}
+                value={feedSearchInput}
+                onChange={(e) => setFeedSearchInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitFeedSearch();
+                  }
+                }}
+                placeholder="Search targets or topics (e.g., EGFR, cMET)…"
                 className="w-full pl-10 pr-9 py-2.5 bg-surfaceElevated/50 border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
               />
-              {searchQuery ? (
+              {feedSearchInput ? (
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setFeedSearchInput('')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-textTertiary hover:text-textPrimary hover:bg-surface/40"
                   aria-label="Clear search"
                 >
@@ -804,28 +839,39 @@ export default function IntelligenceFeed() {
                 </button>
               ) : null}
             </div>
-            {searchQuery && (
-              <div className="flex items-center justify-between gap-2 text-xs text-textTertiary">
-                <span className="truncate">
-                  Filtering results for <span className="font-mono">{data?.queryPack?.target || currentTarget?.name || '—'}</span>. To fetch a new target/topic (e.g. EGFR, cMET), use Advanced → Topic override.
+            <div className="flex items-center justify-between gap-2 text-[11px] text-textTertiary">
+              <span className="truncate">
+                Showing feed for{' '}
+                <span className="font-mono">
+                  {requestParams.target || requestParams.q || data?.queryPack?.target || currentTarget?.name || '—'}
                 </span>
+              </span>
+              <div className="flex items-center gap-2 shrink-0">
                 <button
                   type="button"
-                  onClick={() => {
-                    const q = searchQuery.trim();
-                    if (!q) return;
-                    setHasCustomTopic(true);
-                    setTopicQuery(q);
-                    setSearchQuery('');
-                    triggerRefresh(true);
-                  }}
-                  className="shrink-0 px-2 py-1 rounded-md bg-surfaceElevated/60 border border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/20"
-                  title="Run this as a new topic search"
+                  onClick={() => submitFeedSearch()}
+                  disabled={!feedSearchInput.trim()}
+                  className="px-2 py-1 rounded-md bg-surfaceElevated/60 border border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/20 disabled:opacity-50"
                 >
-                  Search as topic
+                  Fetch
                 </button>
+                {(targetOverride || hasCustomTopic) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTargetOverride('');
+                      setHasCustomTopic(false);
+                      setTopicQuery(defaultTopic);
+                      triggerRefresh(true);
+                    }}
+                    className="px-2 py-1 rounded-md bg-surfaceElevated/60 border border-white/10 text-textSecondary hover:text-textPrimary hover:border-white/20"
+                    title="Reset to dashboard target"
+                  >
+                    Reset
+                  </button>
+                )}
               </div>
-            )}
+            </div>
 
             <div className="relative">
               <button
@@ -895,6 +941,13 @@ export default function IntelligenceFeed() {
 
                     {showAdvanced && (
                       <div className="mt-2 space-y-2 px-2 pb-2">
+                        <input
+                          type="text"
+                          value={feedFilterInput}
+                          onChange={(e) => setFeedFilterInput(e.target.value)}
+                          placeholder="Filter within current results (optional)"
+                          className="w-full px-3 py-2 bg-surfaceElevated/60 border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
+                        />
                         <input
                           type="text"
                           value={hasCustomTopic ? topicQuery : ''}

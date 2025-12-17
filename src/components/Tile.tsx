@@ -263,7 +263,12 @@ const Tile = memo(function Tile({
         const contextualQuery = `Regarding the ${title} tile: ${userMessage}`;
         
         // Call Sonny orchestrator API
-        const response = await fetch('/api/orchestrator', {
+        const orchestratorPath =
+          typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? '/api/agents/orchestrator'
+            : '/api/orchestrator';
+
+        const response = await fetch(orchestratorPath, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

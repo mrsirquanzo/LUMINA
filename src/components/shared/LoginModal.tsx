@@ -16,13 +16,18 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
 
   if (!isOpen) return null;
 
+  const loginPath =
+    typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? '/api/auth/login'
+      : '/api/auth-login';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('/api/auth-login', {
+      const response = await fetch(loginPath, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Important for cookies
