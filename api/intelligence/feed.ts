@@ -47,6 +47,30 @@ const cache = new Map<string, { expiresAt: number; data: FeedResponse }>();
 
 const AMBIGUOUS_SYMBOLS = new Set(['MET', 'KIT', 'YES', 'AND', 'OR', 'NOT']);
 
+const RSS_SOURCES = [
+  {
+    id: 'stat',
+    name: 'STAT News',
+    url: 'https://www.statnews.com/feed/',
+    kind: 'news' as const,
+    weight: 0.92,
+  },
+  {
+    id: 'fiercebiotech',
+    name: 'Fierce Biotech',
+    url: 'https://www.fiercebiotech.com/rss/xml',
+    kind: 'news' as const,
+    weight: 0.86,
+  },
+  {
+    id: 'fiercepharma',
+    name: 'Fierce Pharma',
+    url: 'https://www.fiercepharma.com/rss/xml',
+    kind: 'news' as const,
+    weight: 0.82,
+  },
+] as const;
+
 function json(res: ServerResponse, statusCode: number, body: unknown) {
   res.statusCode = statusCode;
   res.setHeader('content-type', 'application/json; charset=utf-8');
@@ -206,6 +230,149 @@ function buildTermMatchers(terms: string[]) {
   });
 
   return matchers;
+}
+
+function dedupeItems(items: NormalizedFeedItem[]): NormalizedFeedItem[] {
+  const out: NormalizedFeedItem[] = [];
+  const seen = new Set<string>();
+
+  for (const it of items) {
+    let key = it.url;
+    try {
+      const u = new URL(it.url);
+      u.searchParams.delete('utm_source');
+      u.searchParams.delete('utm_medium');
+      u.searchParams.delete('utm_campaign');
+      u.searchParams.delete('utm_term');
+      u.searchParams.delete('utm_content');
+      key = u.toString();
+    } catch {
+      // ignore
+    }
+    const k = `${it.kind}:${key}`.toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(it);
+  }
+
+  return out;
+}
+
+function parseRssItems(xml: string): Array<{ title: string; url: string; publishedAt?: string; summary?: string }> {
+  // Minimal RSS/Atom parsing without deps; assumes trusted source feeds.
+  const items: Array<{ title: string; url: string; publishedAt?: string; summary?: string }> = [];
+
+  // RSS <item> blocks
+  const rssBlocks = xml.split(/<\/item>/i);
+  for (const block of rssBlocks) {
+    if (!/<item\b/i.test(block)) continue;
+    const title = stripXmlTags(block.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '');
+    const link = stripXmlTags(block.match(/<link[^>]*>([\s\S]*?)<\/link>/i)?.[1] || '');
+    const pubDate = stripXmlTags(block.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i)?.[1] || '');
+    const desc = stripXmlTags(block.match(/<description[^>]*>([\s\S]*?)<\/description>/i)?.[1] || '');
+    if (!title || !link) continue;
+    items.push({
+      title,
+      url: link.trim(),
+      publishedAt: pubDate ? new Date(pubDate).toISOString() : undefined,
+      summary: desc || undefined,
+    });
+  }
+
+  // Atom <entry> blocks (fallback)
+  if (!items.length) {
+    const entryBlocks = xml.split(/<\/entry>/i);
+    for (const block of entryBlocks) {
+      if (!/<entry\b/i.test(block)) continue;
+      const title = stripXmlTags(block.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '');
+      const linkHref = block.match(/<link[^>]*href="([^"]+)"[^>]*>/i)?.[1] || '';
+      const updated = stripXmlTags(block.match(/<updated[^>]*>([\s\S]*?)<\/updated>/i)?.[1] || '');
+      const summary = stripXmlTags(block.match(/<summary[^>]*>([\s\S]*?)<\/summary>/i)?.[1] || '');
+      if (!title || !linkHref) continue;
+      items.push({
+        title,
+        url: linkHref.trim(),
+        publishedAt: updated ? new Date(updated).toISOString() : undefined,
+        summary: summary || undefined,
+      });
+    }
+  }
+
+  return items;
+}
+
+async function fetchRssNewsItems(params: { terms: string[] }, max: number): Promise<NormalizedFeedItem[]> {
+  const matchers = buildTermMatchers(params.terms);
+
+  // Fetch multiple sources in parallel
+  const results = await Promise.allSettled(
+    RSS_SOURCES.map(async (src) => {
+      const res = await fetchWithTimeout(src.url);
+      if (!res.ok) throw new Error(`RSS failed (${res.status})`);
+      const xml = await res.text();
+      return { src, items: parseRssItems(xml) };
+    })
+  );
+
+  const out: NormalizedFeedItem[] = [];
+  for (const settled of results) {
+    if (settled.status !== 'fulfilled') continue;
+    const { src, items } = settled.value;
+
+    for (const it of items) {
+      const title = it.title.trim();
+      const url = it.url.trim();
+      if (!title || !url) continue;
+
+      const hayTitle = title.toLowerCase();
+      const haySummary = (it.summary || '').toLowerCase();
+
+      const matchedTerms: string[] = [];
+      const matchedFields = new Set<'title' | 'summary'>();
+      let matchedAmbiguousOnly = true;
+
+      for (const m of matchers) {
+        const inTitle = m.re.test(hayTitle);
+        const inSummary = haySummary ? m.re.test(haySummary) : false;
+        if (!inTitle && !inSummary) continue;
+        matchedTerms.push(m.term);
+        if (inTitle) matchedFields.add('title');
+        if (inSummary) matchedFields.add('summary');
+        if (!m.isAmbiguous) matchedAmbiguousOnly = false;
+      }
+
+      // Extremely selective: require explicit mention in title or summary
+      if (!matchedTerms.length) continue;
+      // If only ambiguous matches, require title match plus gene/receptor context
+      if (matchedAmbiguousOnly) {
+        if (!matchedFields.has('title')) continue;
+        const contextRe = /\b(gene|receptor|oncogene|kinase|hgfr|c[-\s]?met|proto-oncogene)\b/i;
+        if (!contextRe.test(title) && !contextRe.test(it.summary || '')) continue;
+      }
+
+      const publishedAt = toIsoDate(it.publishedAt);
+      const score = src.weight + (matchedFields.has('title') ? 0.05 : 0) + (matchedFields.has('summary') ? 0.02 : 0);
+
+      out.push({
+        id: `URL:${src.id}:${hashToBase36(url)}`,
+        title,
+        url,
+        source: src.name,
+        publishedAt,
+        summary: clamp(it.summary || src.name, 260),
+        kind: src.kind,
+        relevance: matchedFields.has('title') ? 'high' : 'medium',
+        tags: ['news', src.id, matchedFields.has('title') ? 'target-in-title' : 'target-in-summary'],
+        score,
+        matchedTerms: uniqStrings(matchedTerms),
+        matchedFields: Array.from(matchedFields),
+      });
+    }
+  }
+
+  // Sort and cap
+  out.sort((a, b) => b.score - a.score || new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  return out.slice(0, max);
 }
 
 async function fetchPubmedItems(params: { pubmedQuery: string; terms: string[] }, max: number): Promise<NormalizedFeedItem[]> {
@@ -398,6 +565,13 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     }
 
     try {
+      items.push(...(await fetchRssNewsItems({ terms: queryPack.terms }, Math.ceil(limit / 2))));
+    } catch (e: any) {
+      partial = true;
+      errors.push({ sourceId: 'news', source: 'News', message: e?.message || 'News fetch failed' });
+    }
+
+    try {
       items.push(...(await fetchClinicalTrialsItems(queryPack.trialsQuery, Math.ceil(limit / 2))));
     } catch (e: any) {
       partial = true;
@@ -408,14 +582,15 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       });
     }
 
-    // Sort by score then recency
+    // Sort by score then recency, then dedupe
     items.sort((a, b) => b.score - a.score || new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    const deduped = dedupeItems(items);
 
     const response: FeedResponse = {
       query,
       queryPack,
-      sources: Array.from(new Set(items.map((i) => i.source))),
-      items: items.slice(0, limit),
+      sources: Array.from(new Set(deduped.map((i) => i.source))),
+      items: deduped.slice(0, limit),
       fetchedAt: new Date().toISOString(),
       cached: false,
       partial,
