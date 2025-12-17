@@ -876,28 +876,128 @@ export default function IntelligenceFeed() {
         return { sourceId, name: it.source, kind: it.kind, url: it.url, title: it.title, date: it.publishedAt, snippet: it.summary };
       });
 
-      const bullets = sourcesRows
+      const byKind = sourcesRows.reduce<Record<string, typeof sourcesRows>>((acc, s) => {
+        (acc[s.kind] ||= []).push(s);
+        return acc;
+      }, {});
+
+      const topDevelopments = [...sourcesRows]
         .slice(0, 6)
-        .map((s) => `- **${s.kind.toUpperCase()}**: [${s.title}](${s.url}) — ${s.snippet} [source:${s.sourceId}]`)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      const pack = DEMO_FEED_PACKS.find((p) => p.target.toLowerCase() === String(resp.queryPack.target || '').toLowerCase());
+      const blueprint = pack?.digestBlueprint;
+      const p = (persona || 'GENERAL').toUpperCase();
+      const blueprintTakeaways =
+        (blueprint?.executiveTakeaways as any)?.[p] || (blueprint?.executiveTakeaways as any)?.GENERAL || [];
+      const blueprintRead = (blueprint?.sonnyRead as any)?.[p] || (blueprint?.sonnyRead as any)?.GENERAL || '';
+      const watchlist = blueprint?.watchlist || [];
+
+      const cite = (s?: { sourceId: string }) => (s ? `[source:${s.sourceId}]` : '');
+      const citeFromKinds = (kinds: Array<keyof typeof byKind>) => {
+        const first = kinds.map((k) => byKind[k]?.[0]).find(Boolean);
+        return first ? cite(first) : cite(topDevelopments[0]);
+      };
+
+      const executiveTakeaways = [
+        ...blueprintTakeaways.map((t: string, idx: number) => {
+          const citation =
+            idx === 0
+              ? citeFromKinds(['publication', 'clinical'])
+              : idx === 1
+                ? citeFromKinds(['regulatory', 'news'])
+                : citeFromKinds(['news', 'deal', 'publication']);
+          return `- ${t} ${citation}`.trim();
+        }),
+      ]
+        .slice(0, 5)
         .join('\n');
+
+      const devBlocks = topDevelopments.slice(0, 3).map((s, i) => {
+        const sentences = [
+          `**${i + 1}. ${s.title}**`,
+          `${s.snippet} ${cite(s)}`.trim(),
+        ];
+        return sentences.join('\n');
+      });
+
+      const theme = (label: string, kindKey: keyof typeof byKind) => {
+        const items = byKind[kindKey] || [];
+        if (!items.length) return '';
+        const bullets = items
+          .slice(0, 3)
+          .map((s) => `- ${s.title} ${cite(s)}`.trim())
+          .join('\n');
+        return [`#### ${label}`, bullets, ''].join('\n');
+      };
 
       const sourcesTable = [
         '### Sources',
         '',
-        '| id | source | type | url |',
-        '|---|---|---|---|',
-        ...sourcesRows.map((s) => `| ${s.sourceId} | ${s.name} | ${s.kind.toUpperCase()} | ${s.url} |`),
+        '| ID | Source | Type | Reliability | Link |',
+        '|----|--------|------|-------------|------|',
+        ...sourcesRows.map((s) => {
+          const type = s.kind === 'publication' ? 'PUB' : s.kind === 'clinical' ? 'CTR' : s.kind === 'regulatory' ? 'REG' : s.kind === 'deal' ? 'PR' : 'NEWS';
+          const tier = s.kind === 'publication' || s.kind === 'clinical' || s.kind === 'regulatory' ? 'Tier 1' : s.kind === 'deal' ? 'Tier 2' : 'Tier 3';
+          let domain = '';
+          try {
+            domain = new URL(s.url).hostname.replace(/^www\./, '');
+          } catch {
+            domain = 'source';
+          }
+          return `| ${s.sourceId} | ${s.name} | ${type} | ${tier} | [${domain}](${s.url}) |`;
+        }),
         '',
       ].join('\n');
 
+      const needsVerification = watchlist.length
+        ? watchlist.slice(0, 4).map((w) => `- ${w} [gap:demo-watchlist]`).join('\n')
+        : 'None flagged in demo pack.';
+
+      const sonnyRead = blueprintRead
+        ? `${blueprintRead} ${cite(topDevelopments[0])}`.trim()
+        : `Synthesize the above into a concrete thesis: what changed, why it matters, and what you would watch next. ${cite(topDevelopments[0])}`.trim();
+
       return [
-        `# Sonny Digest — ${titleTarget}`,
+        `## Intelligence Digest — ${titleTarget}`,
         '',
-        `Generated: ${now}`,
-        `Persona: ${persona} (demo)`,
+        `**Generated:** ${now} | **Items analyzed:** ${sourcesRows.length} | **Persona:** ${persona} (demo)`,
         '',
-        '## Key updates',
-        bullets || '- No items available in this demo pack.',
+        '---',
+        '',
+        '### Executive Takeaways',
+        executiveTakeaways || '- No items available in this demo pack.',
+        '',
+        '---',
+        '',
+        "### What's New (Top Developments)",
+        devBlocks.join('\n\n') || 'None.',
+        '',
+        '---',
+        '',
+        '### Thematic Breakdown',
+        '',
+        theme('Clinical / Trials', 'clinical'),
+        theme('Regulatory', 'regulatory'),
+        theme('Scientific / Mechanism', 'publication'),
+        theme('Competitive / Market', 'news'),
+        theme('Financial / Deal', 'deal'),
+        '---',
+        '',
+        '### Conflicts / Ambiguities',
+        'None detected in provided sources.',
+        '',
+        '---',
+        '',
+        '### Needs Verification ⚠️',
+        needsVerification,
+        '',
+        '---',
+        '',
+        "### Sonny's Read 🎯",
+        sonnyRead,
+        '',
+        '---',
         '',
         sourcesTable,
       ].join('\n');

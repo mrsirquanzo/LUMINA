@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { SONNY_DIGEST_SYNTHESIZER_PROMPT } from '../../src/lib/intelligence/sonnyIntelligencePrompts';
 
 function json(res: ServerResponse, statusCode: number, body: unknown) {
   res.statusCode = statusCode;
@@ -27,7 +28,8 @@ async function callAnthropic(system: string, user: string): Promise<string> {
   const model = process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022';
   const payload = {
     model,
-    max_tokens: 1400,
+    // Allow a more thorough digest (still bounded)
+    max_tokens: 2200,
     temperature: 0.2,
     system,
     messages: [{ role: 'user', content: user }],
@@ -79,40 +81,17 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const targetContext = body?.targetContext || {};
     const items = Array.isArray(body?.items) ? body.items : [];
 
-    const heading = targetContext?.target || targetContext?.company || targetContext?.asset || 'Intelligence';
-    const system = `You are Sonny. Write a concise investor-ready intelligence digest in markdown.
-Rules:
-- Use headings, bullets, and be decisive.
-- Include a "### Sources" section as a markdown table with columns: id, source, type, tier, url.
-- When citing, include inline markers like [source:<id>] in the text, matching the table id column.
-- Keep it under ~700 words.`;
+    // Use the full Sonny digest prompt (structured, grounded, citation-first).
+    // We provide the raw digest input JSON; model must not use outside facts.
+    const digestInput = {
+      generatedAt: body?.generatedAt || new Date().toISOString(),
+      persona,
+      targetContext,
+      items,
+    };
 
-    const sources = items
-      .slice(0, 12)
-      .map((it: any) => ({
-        id: String(it?.sourceId || ''),
-        source: String(it?.name || it?.source || ''),
-        type: String(it?.type || ''),
-        title: String(it?.title || ''),
-        url: String(it?.url || ''),
-        date: String(it?.publicationDate || it?.capturedAt || ''),
-        snippet: String(it?.snippet || ''),
-      }))
-      .filter((s: any) => s.id && s.url);
-
-    const user = `Persona: ${persona}
-Context: ${JSON.stringify(targetContext)}
-Digest topic: ${heading}
-
-Sources (use these only; do not invent new links):
-${sources
-  .map(
-    (s: any) =>
-      `- ${s.id} | ${s.source} | ${s.type} | ${s.date}\n  ${s.title}\n  ${s.url}\n  ${s.snippet}`
-  )
-  .join('\n\n')}`;
-
-    const digestMarkdown = await callAnthropic(system, user);
+    const user = JSON.stringify(digestInput, null, 2);
+    const digestMarkdown = await callAnthropic(SONNY_DIGEST_SYNTHESIZER_PROMPT, user);
     return json(res, 200, { digestMarkdown });
   } catch (e: any) {
     return json(res, 500, { error: e?.message || 'Failed to generate digest' });

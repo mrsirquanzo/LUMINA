@@ -21,6 +21,22 @@ export interface DemoFeedItem {
 export interface DemoFeedPack {
   target: string;
   synonyms: string[];
+  digestBlueprint?: {
+    // High-signal, non-factual strategic framing for demos (no invented numbers).
+    executiveTakeaways: {
+      GENERAL: string[];
+      SCIENTIST?: string[];
+      SCOUT?: string[];
+      VC?: string[];
+    };
+    sonnyRead: {
+      GENERAL: string;
+      SCIENTIST?: string;
+      SCOUT?: string;
+      VC?: string;
+    };
+    watchlist: string[]; // gaps/catalysts phrased without invented specifics
+  };
   snapshots: Array<{
     id: string;
     fetchedAt: string; // ISO
@@ -83,6 +99,42 @@ export const DEMO_FEED_PACKS: DemoFeedPack[] = [
   {
     target: 'TROP2',
     synonyms: ['TACSTD2', 'TROP-2'],
+    digestBlueprint: {
+      executiveTakeaways: {
+        GENERAL: [
+          'TROP2 remains a validated ADC target; value concentrates in differentiation (payload/linker, tolerability, and sequencing) rather than “target novelty”.',
+          'The operational risk profile (e.g., class safety monitoring, dose intensity management) is a major competitive lever alongside efficacy.',
+          'Near-term catalysts should be framed as “proof of differentiation” rather than incremental response rate headlines.',
+        ],
+        SCIENTIST: [
+          'For TROP2 ADCs, clinical signal interpretation must separate efficacy from dose-limiting toxicity and monitoring burden.',
+          'A mechanistic wedge (bystander effect, payload properties, linker stability) matters only if it maps to a safety/efficacy trade-off you can execute.',
+        ],
+        SCOUT: [
+          'BD thesis: validated biology lowers target risk; underwriting shifts to CMC/execution and label differentiation.',
+          'A winning strategy is indication sequencing + biomarker-enriched wedge indications that let you “earn” later expansion.',
+        ],
+        VC: [
+          'Risk-adjusted thesis hinges on differentiation and late-stage execution, not just being “in the class”.',
+          'Market will reward credible safety/operational advantages and a clear sequencing story over generic TAM narratives.',
+        ],
+      },
+      sonnyRead: {
+        GENERAL:
+          'TROP2 is already de-risked; the only durable edge is a defensible differentiation story that survives real-world tolerability and sequencing constraints. In demos, emphasize what specific design/clinical choices reduce operational burden (monitoring, ILD risk management, hematologic toxicity) while preserving efficacy—then map that to a wedge indication and a credible expansion path.',
+        SCIENTIST:
+          'Treat “better” as a measurable shift in the safety/efficacy frontier, not a marketing claim. The key is whether payload/linker choices plausibly reduce class-limiting toxicities and allow sustained dosing—if not, the program risks being a me-too even with similar efficacy.',
+        SCOUT:
+          'The BD conversation is about underwriting execution and differentiation: can this program win a label segment with clear superiority, or is it stranded as a follower? The most compelling pitch is a wedge indication where safety/operational advantages matter and incumbents are constrained.',
+        VC:
+          'This is a class trade: de-risked target, crowded landscape. The investment-grade story is not “TROP2 is hot”, it’s a tight set of differentiation claims you can validate quickly, plus a sequencing narrative that makes the commercial wedge credible.',
+      },
+      watchlist: [
+        'Evidence that differentiation is real (not just headline response rate): safety/monitoring burden, tolerability, dosing continuity.',
+        'Clarity on sequencing/label strategy: wedge indication first, then expansion.',
+        'Signals of competitive crowding: how many programs converge on the same payload class and safety profile.',
+      ],
+    },
     snapshots: [
       {
         id: 'trop2-day-1',
@@ -199,6 +251,42 @@ export const DEMO_FEED_PACKS: DemoFeedPack[] = [
   {
     target: 'HER2',
     synonyms: ['ERBB2', 'HER-2'],
+    digestBlueprint: {
+      executiveTakeaways: {
+        GENERAL: [
+          'HER2 is a proven axis; the “new value” is in segmentation (HER2-low / HER2-mutant), sequencing, and safety/tolerability differentiation.',
+          'Competitive advantage increasingly hinges on operational execution (CNS positioning, toxicity management, and patient selection) rather than target validation.',
+          'Regulatory expectations for class risks (e.g., monitoring plans) shape trial design and can become an advantage if executed well.',
+        ],
+        SCIENTIST: [
+          'HER2-low and HER2-mutant are operational biomarker problems: assay, cutoff, heterogeneity, and how that drives endpoint interpretation.',
+          'Mechanistic claims (bystander effect, payload properties, CNS penetration) must be tied to practical endpoints and safety trade-offs.',
+        ],
+        SCOUT: [
+          'BD thesis: differentiated HER2 programs win on a crisp “where we fit in sequencing” argument plus a safety/label wedge.',
+          'Watch for programs positioning into CNS disease or hard-to-treat segments where incumbents are constrained.',
+        ],
+        VC: [
+          'HER2 is de-risked biology; underwriting is about differentiation and time-to-catalyst in crowded segments.',
+          'A credible path is: niche wedge → data-driven expansion → defendable combination/sequence strategy.',
+        ],
+      },
+      sonnyRead: {
+        GENERAL:
+          'HER2 is not about proving the target—it’s about proving where you win. A robust demo digest should connect segmentation (HER2-low/mutant), operational biomarker realities, and how safety management affects real-world adoption. The most persuasive narrative frames a specific wedge (e.g., CNS disease, mutant NSCLC, HER2-low sequencing) with a clear differentiation hypothesis and an execution plan that regulators and clinicians will accept.',
+        SCIENTIST:
+          'The scientific risk is rarely “does HER2 matter”; it’s whether biomarker operationalization and tumor heterogeneity undermine the intended segment. Tie every claim to how the assay and endpoint choices will behave in practice, and highlight where safety management constrains dosing and interpretation.',
+        SCOUT:
+          'The best BD angle is a sequencing story: where does this sit relative to incumbents, and what’s the wedge that forces adoption? CNS and tolerability are recurring levers; make them explicit and connect to trial design choices.',
+        VC:
+          'Make the investment case concrete: crowded but de-risked. You win by proving differentiation quickly in a wedge segment, then expanding with a defensible sequencing strategy—otherwise you’re a follower in a mature class.',
+      },
+      watchlist: [
+        'Signals that segmentation is operationally robust (assay strategy, cutoff clarity, heterogeneity handling).',
+        'Differentiation proof points: CNS positioning, tolerability/safety management, sequencing rationale.',
+        'Regulatory/label risk management expectations shaping trial design and timelines.',
+      ],
+    },
     snapshots: [
       {
         id: 'her2-day-1',
