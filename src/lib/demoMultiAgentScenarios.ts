@@ -9491,26 +9491,110 @@ function stripDemoPreamble(markdown: string): string {
   return out;
 }
 
+function escapeRegExp(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function hasHeading(markdown: string, heading: string): boolean {
+  const re = new RegExp(`^##\\s+${escapeRegExp(heading)}\\b`, 'm');
+  return re.test(markdown);
+}
+
+function extractExecutiveSummaryBullets(markdown: string): string[] {
+  const lines = (markdown || '').split('\n').slice(0, 140);
+  const candidates = lines
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .filter((l) => {
+      if (/^\*\*(Assessment|Recommendation|Confidence|Bottom Line)\b/i.test(l)) return true;
+      if (/^(✓|⚠️)\s+/.test(l)) return true;
+      if (/^\*\*[^*]+:\*\*\s+/.test(l)) return true; // "**Label:** value"
+      return false;
+    })
+    // avoid tables / separators / boilerplate
+    .filter((l) => !/^\|/.test(l))
+    .filter((l) => !/^---$/.test(l))
+    .filter((l) => !/^#+\s*📚\s*Sources/i.test(l))
+    .filter((l) => !/^##\s+📚\s*Sources/i.test(l));
+
+  const unique: string[] = [];
+  const seen = new Set<string>();
+  for (const c of candidates) {
+    const k = c.toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    unique.push(c.replace(/\s+$/g, ''));
+    if (unique.length >= 5) break;
+  }
+  return unique;
+}
+
+function insertAfterFirstRule(markdown: string, insert: string): string {
+  const idx = markdown.indexOf('\n---\n');
+  if (idx === -1) return `${markdown.trim()}\n\n${insert.trim()}\n`.trim();
+  const cut = idx + '\n---\n'.length;
+  return `${markdown.slice(0, cut)}\n${insert.trim()}\n\n${markdown.slice(cut).trim()}\n`.trim();
+}
+
+function normalizeDemoResponseTemplate(params: {
+  scenarioId: string;
+  agentName: string;
+  markdown: string;
+}): string {
+  const md = (params.markdown || '').trim();
+  if (!md) return md;
+
+  // Only enforce template for the target-focused demo scenarios requested by the user.
+  if (params.scenarioId !== 'her2-analysis' && params.scenarioId !== 'trop2-analysis') return md;
+
+  // Ensure each demo response starts with an Executive Summary section (many do; some don’t).
+  if (hasHeading(md, 'Executive Summary')) return md;
+
+  const bullets = extractExecutiveSummaryBullets(md);
+  const renderedBullets =
+    bullets.length > 0
+      ? bullets.map((b) => `- ${b.replace(/^-+\s*/, '')}`).join('\n')
+      : [
+          `- This demo response is a prewritten snapshot; see the sections below for the supporting details.`,
+          `- In Live mode, this agent will generate the same structure from fresh sources.`,
+        ].join('\n');
+
+  const insert = [`## Executive Summary`, '', renderedBullets].join('\n');
+  return insertAfterFirstRule(md, insert);
+}
+
 function sanitizeDemoScenario(s: DemoScenario): DemoScenario {
   return {
     ...s,
     events: s.events.map((e) => {
       if (e?.type === 'agent_response' && typeof (e as any).data?.response === 'string') {
+        const stripped = stripDemoPreamble((e as any).data.response);
+        const normalized = normalizeDemoResponseTemplate({
+          scenarioId: s.id,
+          agentName: String((e as any).data?.agent || ''),
+          markdown: stripped,
+        });
         return {
           ...e,
           data: {
             ...(e as any).data,
-            response: stripDemoPreamble((e as any).data.response),
+            response: normalized,
           },
         };
       }
 
       if (e?.type === 'complete' && typeof (e as any).data?.synthesis === 'string') {
+        const stripped = stripDemoPreamble((e as any).data.synthesis);
+        const normalized = normalizeDemoResponseTemplate({
+          scenarioId: s.id,
+          agentName: 'Sonny',
+          markdown: stripped,
+        });
         return {
           ...e,
           data: {
             ...(e as any).data,
-            synthesis: stripDemoPreamble((e as any).data.synthesis),
+            synthesis: normalized,
           },
         };
       }

@@ -913,22 +913,87 @@ export default function IntelligenceFeed() {
         .slice(0, 5)
         .join('\n');
 
+      const makeGapSlug = (raw: string) => raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 40) || 'demo-gap';
+
+      const buildContextSentence = (kind: FeedItemType) => {
+        if (kind === 'regulatory')
+          return 'This is a regulatory/label-grade signal that constrains what claims are defensible and what monitoring burden becomes “standard of care”.';
+        if (kind === 'clinical')
+          return 'This is a trial-design/endpoint signal; interpret through patient selection, comparator, and what would constitute a true value-inflection versus noise.';
+        if (kind === 'publication')
+          return 'This is a peer-reviewed scientific anchor; use it to ground biomarker/biology assumptions and avoid over-reading trade-press narratives.';
+        if (kind === 'deal')
+          return 'This is a capital/BD signal; it’s less about “truth” than about what sophisticated counterparties are willing to underwrite right now.';
+        return 'This is a market narrative signal; treat it as contextual until corroborated by primary data and label-grade sources.';
+      };
+
+      const buildImplicationSentence = (kind: FeedItemType) => {
+        if (p === 'SCIENTIST') {
+          if (kind === 'publication') return 'Mechanistically, the highest leverage next step is to translate this into a testable hypothesis for patient selection, durability, and AE phenotype.';
+          if (kind === 'clinical') return 'Scientifically, this should redirect focus to endpoint choice, biomarker rigor, and whether dosing continuity is feasible at effective exposure.';
+          if (kind === 'regulatory') return 'Scientifically, assume label/monitoring expectations will shape exposure and therefore observed durability—plan translational work accordingly.';
+          return 'Scientifically, treat this as hypothesis-generating: define what data would falsify (or confirm) the implied mechanistic edge.';
+        }
+        if (p === 'SCOUT') {
+          if (kind === 'deal') return 'Commercially, this changes the negotiation surface: counterparties will price execution risk and demand a clear wedge + timing story.';
+          if (kind === 'regulatory') return 'Commercially, label language and monitoring expectations can create (or erase) a wedge—design studies to “earn” the sequencing claim you want.';
+          return 'Commercially, this should be translated into a sequencing/positioning statement: where do we force adoption, and what must be true for that to hold?';
+        }
+        if (p === 'VC') {
+          if (kind === 'deal') return 'From a returns lens, this is a signal about where capital is flowing and how quickly the market expects value-inflection; align catalyst design to compress time-to-proof.';
+          if (kind === 'regulatory') return 'From a returns lens, regulatory framing affects time-to-label and post-approval adoption risk; it should feed directly into thesis sizing and timelines.';
+          return 'From a returns lens, this should update the thesis on probability-of-success and the next catalyst that truly changes underwriting.';
+        }
+        // GENERAL
+        if (kind === 'regulatory') return 'Strategically, this sets constraints on claims and may create a “rules-of-the-road” advantage for teams that anticipate monitoring and biomarker expectations.';
+        if (kind === 'clinical') return 'Strategically, this reframes what constitutes a meaningful readout: not just efficacy headlines, but sustained dosing, comparators, and sequencing relevance.';
+        if (kind === 'deal') return 'Strategically, this signals where partnering appetite exists and what risk profile is being underwritten.';
+        return 'Strategically, this should be converted into a concrete watchpoint that would change a decision-maker’s model, not just confirm priors.';
+      };
+
+      const buildQuestionSentence = (kind: FeedItemType) => {
+        if (kind === 'regulatory') return 'What exact label language (biomarker definition + monitoring expectations) will become the precedent—and how does it constrain the next trial design?';
+        if (kind === 'clinical') return 'What is the single missing piece of data that would convert this from “interesting” to “decision-changing” (endpoint, subgroup, durability, or tolerability)?';
+        if (kind === 'publication') return 'Which assumption is most likely wrong when translating this into the clinic (assay, heterogeneity, exposure-response, resistance), and how would we test it quickly?';
+        if (kind === 'deal') return 'What specific proof point would shift leverage materially in the next negotiation window—and what’s the shortest path to that proof?';
+        return 'What primary data or label-grade confirmation would validate (or invalidate) the implied narrative before it hardens into consensus?';
+      };
+
       const devBlocks = topDevelopments.slice(0, 3).map((s, i) => {
-        const sentences = [
+        const gapSlug = makeGapSlug(`${titleTarget}-${s.kind}-${s.sourceId}`);
+        return [
           `**${i + 1}. ${s.title}**`,
-          `${s.snippet} ${cite(s)}`.trim(),
-        ];
-        return sentences.join('\n');
+          '',
+          `**The news:** ${s.snippet} ${cite(s)}`.trim(),
+          '',
+          `**The context:** ${buildContextSentence(s.kind)} ${cite(s)}`.trim(),
+          '',
+          `**The implication:** ${buildImplicationSentence(s.kind)} ${cite(s)}`.trim(),
+          '',
+          `**The question:** ${buildQuestionSentence(s.kind)} [gap:${gapSlug}]`,
+        ].join('\n');
       });
 
       const theme = (label: string, kindKey: keyof typeof byKind) => {
         const items = byKind[kindKey] || [];
         if (!items.length) return '';
         const bullets = items
-          .slice(0, 3)
+          .slice(0, 4)
           .map((s) => `- ${s.title} ${cite(s)}`.trim())
           .join('\n');
-        return [`#### ${label}`, bullets, ''].join('\n');
+
+        const synthesis =
+          kindKey === 'publication'
+            ? `Synthesis: Use the scientific anchors above to sanity-check biomarker and mechanism assumptions before over-weighting market narrative. ${cite(items[0])}`.trim()
+            : kindKey === 'clinical'
+              ? `Synthesis: Treat the trial items as a roadmap for what the field considers “decision-grade” evidence—endpoint choices and patient selection will determine whether a readout changes practice. ${cite(items[0])}`.trim()
+              : kindKey === 'regulatory'
+                ? `Synthesis: Regulatory items set the constraint set: label language, definitions, and monitoring expectations that shape both development strategy and adoption. ${cite(items[0])}`.trim()
+                : kindKey === 'deal'
+                  ? `Synthesis: Deal items should be interpreted as underwriting signals—what is being funded/partnered, and what execution risks remain. ${cite(items[0])}`.trim()
+                  : `Synthesis: News items are best used to track the narrative and competitive framing; validate with primary data where possible. ${cite(items[0])}`.trim();
+
+        return [`#### ${label}`, bullets, '', synthesis, ''].join('\n');
       };
 
       const sourcesTable = [
@@ -951,12 +1016,30 @@ export default function IntelligenceFeed() {
       ].join('\n');
 
       const needsVerification = watchlist.length
-        ? watchlist.slice(0, 4).map((w) => `- ${w} [gap:demo-watchlist]`).join('\n')
+        ? watchlist
+            .slice(0, 4)
+            .map((w) => {
+              const slug = makeGapSlug(`${titleTarget}-${w}`);
+              return `- **Gap:** ${w} **Why it matters:** This is a high-leverage uncertainty that would change the strategic interpretation if resolved. **How to resolve:** Identify the specific data/readout/label detail needed and the fastest path to it. [gap:${slug}]`;
+            })
+            .join('\n')
         : 'None flagged in demo pack.';
 
-      const sonnyRead = blueprintRead
-        ? `${blueprintRead} ${cite(topDevelopments[0])}`.trim()
-        : `Synthesize the above into a concrete thesis: what changed, why it matters, and what you would watch next. ${cite(topDevelopments[0])}`.trim();
+      const seedRead = blueprintRead
+        ? `${blueprintRead}`.trim()
+        : `The items above should be converted into a concrete thesis: what changed, why it matters, and what would change your view next.`.trim();
+
+      const seedSentenceCount = seedRead.split(/[.!?]\s+/).map((s) => s.trim()).filter(Boolean).length;
+      const readPad =
+        seedSentenceCount >= 6
+          ? ''
+          : [
+              `The decision-relevant question is not “what happened,” but which single uncertainty would most change a board-level call on timing, sequencing, or capital allocation. [gap:${makeGapSlug(`${titleTarget}-highest-leverage-uncertainty`)}]`,
+              `If the next data point does not resolve that uncertainty, treat subsequent updates as noise and avoid narrative drift. ${cite(topDevelopments[0])}`.trim(),
+              `I would change my view if the strongest “wedge” implied by these sources is invalidated by either label constraints or a competitor readout that closes the gap. ${cite(topDevelopments[0])}`.trim(),
+            ].slice(0, Math.max(0, 6 - seedSentenceCount)).join(' ');
+
+      const sonnyRead = `${seedRead} ${readPad} ${cite(topDevelopments[0])}`.trim();
 
       return [
         `## Intelligence Digest — ${titleTarget}`,
