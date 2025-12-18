@@ -219,12 +219,12 @@ export const DEMO_FEED_PACKS: DemoFeedPack[] = [
           makeItem({
             id: 'trop2-reg-001',
             kind: 'regulatory',
-            title: 'Regulatory update: safety labeling considerations for topo-1 payload ADCs',
+            title: 'FDA update: Trodelvy (sacituzumab govitecan-hziy) approval/label context (curated)',
             source: 'FDA (curated)',
-            url: 'https://www.fda.gov/',
+            url: 'https://www.fda.gov/drugs/resources-information-approved-drugs/fda-disco-burst-edition-fda-approval-trodelvy-sacituzumab-govitecan-hziy-hr-positive-breast-cancer',
             publishedAt: isoDaysAgo(30),
             summary:
-              'Curated summary of class safety language patterns (ILD, neutropenia) and implications for trial monitoring and label differentiation.',
+              'Curated regulatory context for Trodelvy in breast cancer and what label language implies about class monitoring expectations; use as a proxy for TROP2 ADC risk-management framing.',
             relevance: 'high',
             tags: ['FDA', 'label', 'safety'],
             score: 0.86,
@@ -357,12 +357,12 @@ export const DEMO_FEED_PACKS: DemoFeedPack[] = [
           makeItem({
             id: 'her2-reg-001',
             kind: 'regulatory',
-            title: 'Regulatory watch: ILD risk management expectations for HER2 DXd-class ADCs',
+            title: 'FDA approval: Enhertu (fam-trastuzumab deruxtecan-nxki) in HR+ HER2-low/ultralow breast cancer',
             source: 'FDA (curated)',
-            url: 'https://www.fda.gov/',
+            url: 'https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-fam-trastuzumab-deruxtecan-nxki-unresectable-or-metastatic-hr-positive-her2-low-or-her2',
             publishedAt: isoDaysAgo(45),
             summary:
-              'Curated digest of common risk-mitigation elements and what “good” monitoring looks like in trial protocols.',
+              'Curated regulatory framing around HER2-low segmentation and implications for sequencing/label narrative; use as a proxy for how the class is positioned in practice.',
             relevance: 'high',
             tags: ['FDA', 'ILD', 'risk management'],
             score: 0.85,
@@ -373,7 +373,7 @@ export const DEMO_FEED_PACKS: DemoFeedPack[] = [
             kind: 'news',
             title: 'Investor note: HER2 is proven—value is in sequencing and differentiation',
             source: 'Analyst note (curated)',
-            url: 'https://www.biopharmadive.com/',
+            url: 'https://www.biopharmadive.com/news/callio-adc-cancer-biotech-startup-series-a/741370/',
             publishedAt: isoDaysAgo(3),
             summary:
               'Takeaway: HER2 is de-risked as a target; successful programs win by expanding into HER2-low/HER2-mutant segments and improving safety/tolerability.',

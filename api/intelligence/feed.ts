@@ -364,6 +364,17 @@ function parseRssItems(xml: string): Array<{ title: string; url: string; publish
   return items;
 }
 
+function isLikelyHomepageUrl(rawUrl: string): boolean {
+  try {
+    const u = new URL(rawUrl);
+    const path = (u.pathname || '').trim();
+    // Only block true homepages; many CMS articles end with "/"
+    return path === '' || path === '/';
+  } catch {
+    return false;
+  }
+}
+
 async function fetchRssNewsItems(params: { terms: string[] }, max: number): Promise<NormalizedFeedItem[]> {
   const matchers = buildTermMatchers(params.terms);
 
@@ -386,6 +397,8 @@ async function fetchRssNewsItems(params: { terms: string[] }, max: number): Prom
       const title = it.title.trim();
       const url = it.url.trim();
       if (!title || !url) continue;
+      // Never allow homepages to appear as "sources"
+      if (isLikelyHomepageUrl(url)) continue;
 
       const hayTitle = title.toLowerCase();
       const haySummary = (it.summary || '').toLowerCase();
