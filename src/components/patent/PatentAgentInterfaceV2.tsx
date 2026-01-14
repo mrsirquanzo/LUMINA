@@ -42,7 +42,7 @@ export const PatentAgentInterfaceV2: React.FC<PatentAgentInterfaceV2Props> = ({
         body: JSON.stringify({
           messages: [{
             role: 'user',
-            content: `Perform a comprehensive Freedom-to-Operate analysis for ${targetName || 'this target'}. Include risk scoring, blocking patents identification, and strategic recommendations.`,
+            content: `Perform a comprehensive Freedom-to-Operate analysis for ${targetName || 'this target'}. Include risk assessment, blocking patents identification, and decision-support considerations (no prescriptive directive).`,
           }],
           target: targetName,
           analysisType: 'fto_analysis',
@@ -245,7 +245,7 @@ export const PatentAgentInterfaceV2: React.FC<PatentAgentInterfaceV2Props> = ({
         <div className="grid grid-cols-1 gap-4">
           <HeroSkillCard
             title="FTO Risk Assessment"
-            description="Comprehensive Freedom-to-Operate analysis with risk scoring, blocking patents identification, and strategic recommendations"
+            description="Comprehensive Freedom-to-Operate analysis with risk assessment, blocking patents identification, and decision-support considerations"
             icon={AlertTriangle}
             themeColor={THEME_COLOR}
             onClick={handleFTOAnalysis}

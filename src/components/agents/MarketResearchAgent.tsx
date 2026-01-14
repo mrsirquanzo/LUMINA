@@ -222,9 +222,9 @@ To capture 15-20% market share, focus on:
 
 ---
 
-### Recommendation
+### Decision-support takeaway
 
-**Market opportunity is substantial ($4-5B peak sales) but requires:**
+**Market opportunity is substantial ($4-5B peak sales) but the outcome hinges on:**
 1. **Competitive pricing** at $26,500/year
 2. **Strong safety differentiation** to overcome payer skepticism
 3. **Diagnostic partnerships** to expand testing access

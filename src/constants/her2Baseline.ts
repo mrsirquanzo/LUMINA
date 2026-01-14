@@ -549,7 +549,7 @@ export const HER2_KEY_EXPERIMENTS_DATA = {
     ],
   },
   resourceEstimate: 'Total: ~6–10 FTE-weeks + $300–500K for a demo-grade de-risking plan',
-  timelineToDecision: '8–12 weeks to a crisp “wedge + plan” recommendation',
+  timelineToDecision: '8–12 weeks to a crisp “wedge + plan” decision-ready brief',
   agents: ['sonny'] as const,
   primaryAgent: 'sonny' as const,
   agentContributions: {
@@ -774,7 +774,6 @@ export const HER2_DEAL_LANDSCAPE_DATA = {
 };
 
 export const HER2_STRATEGIC_RECOMMENDATION_DATA = {
-  recommendation: 'Define wedge first',
   strategicRationale:
     'HER2 is validated, but differentiation is the gating factor. A pitch-ready plan must specify the segment (HER2-low, CNS, HER2-mutant, safety) and how evidence will prove superiority. Without a wedge, the asset is not financeable in a crowded franchise.',
   keyDiligenceQuestions: [

@@ -199,6 +199,58 @@ export function openPrintPreview(title: string, markdownContent: string): void {
   doc.close();
 }
 
+export function openPrintPreviewHtml(title: string, html: string): void {
+  const dateStamp = new Date().toISOString().split('T')[0];
+  const base = `${slugify(title) || 'lumina-export'}-${dateStamp}`;
+
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.right = '0';
+  iframe.style.bottom = '0';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = '0';
+  iframe.style.opacity = '0';
+  iframe.setAttribute('aria-hidden', 'true');
+
+  const cleanup = () => {
+    try {
+      iframe.remove();
+    } catch {
+      // ignore
+    }
+  };
+
+  iframe.onload = () => {
+    try {
+      const win = iframe.contentWindow;
+      if (!win) {
+        downloadTextFile(`${base}.html`, html, 'text/html;charset=utf-8');
+        cleanup();
+        return;
+      }
+      win.focus();
+      win.print();
+    } catch {
+      downloadTextFile(`${base}.html`, html, 'text/html;charset=utf-8');
+    } finally {
+      window.setTimeout(cleanup, 60_000);
+    }
+  };
+
+  document.body.appendChild(iframe);
+  const doc = iframe.contentDocument;
+  if (!doc) {
+    downloadTextFile(`${base}.html`, html, 'text/html;charset=utf-8');
+    cleanup();
+    return;
+  }
+
+  doc.open();
+  doc.write(html);
+  doc.close();
+}
+
 export function exportMarkdownReport(format: 'pdf' | 'pptx' | 'docx', filenameBase: string, title: string, markdownContent: string): void {
   const safeBase = filenameBase.replace(/[^a-zA-Z0-9-_]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'lumina-export';
 

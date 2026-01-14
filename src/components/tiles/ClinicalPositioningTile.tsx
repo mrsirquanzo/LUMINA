@@ -102,7 +102,7 @@ export default function ClinicalPositioningTile({ data, loading, onAgentClick, e
             <p className="text-base font-bold text-warning">Next Inflection Point</p>
           </div>
           <p className="text-base font-bold text-textPrimary mb-2">Phase 2 Data Readout</p>
-          <p className="text-base text-textPrimary leading-relaxed font-medium">Q2 2024 • Key milestone for go/no-go decision</p>
+          <p className="text-base text-textPrimary leading-relaxed font-medium">Q2 2024 • Key milestone that updates the decision thresholds</p>
         </div>
       </div>
     </Tile>

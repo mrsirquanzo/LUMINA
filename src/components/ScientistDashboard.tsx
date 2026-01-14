@@ -42,7 +42,6 @@ import { useTileStore } from '../lib/tiles/store';
 import { useWorkspaceStore } from '../lib/workspaces/store';
 import type { AgentType } from '../lib/multiAgentTypes';
 import { getStoredAgentMode, onAgentModeUpdated } from '../lib/agentMode';
-import type { Recommendation } from '../types';
 import { formatTPM, stripMarkdown } from '../utils/scoring';
 import {
   SCIENTIST_EXECUTIVE_SUMMARY,
@@ -334,16 +333,6 @@ const ScientistDashboard = memo(function ScientistDashboard({ viewMode = 'grid' 
     return null;
   }, [latestTileByAgent]);
 
-  function mapSynthesisRecommendationToUi(rec: string | null | undefined): Recommendation | null {
-    if (!rec) return null;
-    const upper = rec.toUpperCase();
-    if (upper.includes('DO NOT') || upper.includes('NO')) return 'No-Go';
-    if (upper.includes('CAUTION') || upper.includes('CONDITION')) return 'Conditional';
-    if (upper.includes('DEPRIOR')) return 'Deprioritize';
-    if (upper.includes('PROCEED') || upper.includes('ADVANCE')) return 'Advance';
-    return null;
-  }
-
   function extractBulletsFromSection(markdown: string, sectionTitleContains: string, max = 5): string[] {
     const lines = markdown.split(/\r?\n/);
     const startIdx = lines.findIndex((l) => l.toLowerCase().includes(sectionTitleContains.toLowerCase()));
@@ -378,9 +367,6 @@ const ScientistDashboard = memo(function ScientistDashboard({ viewMode = 'grid' 
         synthesisText.includes('**REAL data**') ||
         synthesisText.includes('Switch to Live Model'));
     if (!synthesisText || isDemoPreamble) return base;
-    const recRaw: string | null | undefined = (synthesisTile.data as any)?.summary?.recommendation;
-    const mappedRec = mapSynthesisRecommendationToUi(recRaw);
-
     const strengths = synthesisText ? extractBulletsFromSection(synthesisText, 'convergent strengths', 6) : [];
     const concerns = synthesisText ? extractBulletsFromSection(synthesisText, 'convergent concerns', 6) : [];
 
@@ -410,7 +396,6 @@ const ScientistDashboard = memo(function ScientistDashboard({ viewMode = 'grid' 
 
     return {
       ...base,
-      recommendation: mappedRec || base.recommendation,
       dataFreshness: new Date().toISOString(),
       summaryText: summaryText || base.summaryText,
       keyStrengths: strengths.length > 0 ? strengths.slice(0, 5) : base.keyStrengths,
@@ -642,14 +627,13 @@ const ScientistDashboard = memo(function ScientistDashboard({ viewMode = 'grid' 
       <AnalystWalkthrough
         title="Executive Summary Walkthrough"
         agent="sonny"
-        intro="This is the decision layer: what we should do, why, what could change the recommendation, and what to validate next."
+        intro="This is the synthesis layer: what matters most, what is uncertain, and what evidence would change the view."
         questions={[
-          'Should we advance work on this target now, and under what conditions?',
-          'What are the strongest evidence-backed reasons to believe this can succeed?',
-          'What are the highest-risk unknowns that could flip the decision?',
+          'What is the strongest evidence-backed case for biological/clinical translation?',
+          'What are the most decision-relevant risks and uncertainties?',
+          'What are the highest-risk unknowns that could change the view?',
         ]}
         keyTakeaways={[
-          `Recommendation: ${effectiveExecutiveSummary.recommendation}`,
           `Confidence: ${(effectiveExecutiveSummary.confidenceLevel * 100).toFixed(0)}%`,
         ]}
         whatWeLearn={[
@@ -657,8 +641,8 @@ const ScientistDashboard = memo(function ScientistDashboard({ viewMode = 'grid' 
           { label: 'Risks', value: <ul className="space-y-2">{risks.map((r: string, i: number) => <li key={i} className="text-sm text-textSecondary">• {r}</li>)}</ul> },
         ]}
         nextSteps={[
-          'Translate the recommendation into explicit go/no-go criteria (differenti&D, tox, differentiation).',
-          'Prioritize 2–3 uncertainties that would change the decision and design the smallest experiments/analyses to resolve them.',
+          'Prioritize 2–3 uncertainties that would change the view and design the smallest experiments/analyses to resolve them.',
+          'Define explicit decision triggers (what result would increase confidence vs require a pivot).',
         ]}
         sourceMarkdown={synthSource || undefined}
       />

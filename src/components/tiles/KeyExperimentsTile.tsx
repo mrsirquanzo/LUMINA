@@ -49,11 +49,11 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
             </div>
           </div>
 
-          {/* Go/No-Go Criteria Section */}
+          {/* Decision thresholds (non-prescriptive) */}
           <div className="flex-1 flex flex-col min-h-0 mb-8">
             <div className="grid grid-cols-2 gap-6 h-full">
               <div className="flex flex-col">
-                <p className="text-base font-bold text-textSecondary mb-4 uppercase tracking-wider">Advance If</p>
+                <p className="text-base font-bold text-textSecondary mb-4 uppercase tracking-wider">Confidence increases if</p>
                 <div className="flex-1 space-y-3">
                   {data.goNoGoCriteria.advanceIf.map((criteria: string, idx: number) => (
                     <div key={idx} className="flex items-baseline gap-3 text-base leading-relaxed text-textSecondary">
@@ -64,7 +64,7 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
                 </div>
               </div>
               <div className="flex flex-col">
-                <p className="text-base font-bold text-textSecondary mb-4 uppercase tracking-wider">Stop If</p>
+                <p className="text-base font-bold text-textSecondary mb-4 uppercase tracking-wider">Pause / pivot if</p>
                 <div className="flex-1 space-y-3">
                   {data.goNoGoCriteria.stopIf.map((criteria: string, idx: number) => (
                     <div key={idx} className="flex items-baseline gap-3 text-base leading-relaxed text-textSecondary">
@@ -120,7 +120,7 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">Advance If</p>
+            <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">Confidence increases if</p>
             <div className="space-y-2">
               {data.goNoGoCriteria.advanceIf.slice(0, 2).map((criteria: string, idx: number) => (
                 <div key={idx} className="flex items-baseline gap-2 text-sm leading-relaxed text-textSecondary">
@@ -131,7 +131,7 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
             </div>
           </div>
           <div>
-            <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">Stop If</p>
+            <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">Pause / pivot if</p>
             <div className="space-y-2">
               {data.goNoGoCriteria.stopIf.slice(0, 2).map((criteria: string, idx: number) => (
                 <div key={idx} className="flex items-baseline gap-2 text-sm leading-relaxed text-textSecondary">

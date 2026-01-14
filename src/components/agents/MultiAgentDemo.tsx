@@ -26,9 +26,9 @@ const DEMO_SCENARIOS = [
   },
   {
     id: 'ma-due-diligence',
-    title: 'M&A Due Diligence',
+    title: 'M&A Diligence Brief',
     description: '⚠️ DEMO: Fictional company "BioSpectra" - comprehensive bispecific antibody acquisition analysis',
-    query: 'Should we acquire BioSpectra for $2.2B? Analyze their Phase 2 bispecific T-cell engager data, patent portfolio, and financials.',
+    query: 'Assess BioSpectra acquisition at $2.2B: analyze Phase 2 bispecific T-cell engager data, patent portfolio, and financials. Provide decision-support framing (uncertainties → triggers → next steps).',
     documents: [
       { fileName: 'BioSpectra_Phase2_Results.pdf', size: '2.8 MB' },
       { fileName: 'BioSpectra_Patent_Portfolio.pdf', size: '2.1 MB' },
@@ -38,9 +38,9 @@ const DEMO_SCENARIOS = [
   },
   {
     id: 'licensing-deal',
-    title: 'Technology Licensing Deal',
+    title: 'Licensing Deal Diligence',
     description: '⚠️ DEMO: Fictional company "BaseGenomics" - CRISPR base editing platform evaluation',
-    query: 'Should we license BaseGenomics\' adenine base editing platform for $125M upfront + double-digit royalties? Analyze the technology, IP strength, competitive landscape, and financial terms.',
+    query: 'Evaluate BaseGenomics adenine base editing platform licensing terms ($125M upfront + double-digit royalties): analyze technology, IP strength, competitive landscape, and financial terms. Provide decision-support framing (uncertainties → triggers → next steps).',
     documents: [
       { fileName: 'BaseGenomics_Technology_Package.pdf', size: '2.1 MB' },
       { fileName: 'CRISPR_BaseEditing_Patent_Landscape.pdf', size: '3.4 MB' },
@@ -50,9 +50,9 @@ const DEMO_SCENARIOS = [
   },
   {
     id: 'investment-decision',
-    title: 'Series B Investment Decision',
+    title: 'Series B Diligence Brief',
     description: '⚠️ DEMO: Fictional company "ObesityRx" - oral GLP-1 biotech investment analysis',
-    query: 'Should we invest $40M in ObesityRx\'s $150M Series B? Evaluate their oral GLP-1 Phase 2a data, patent portfolio, competitive landscape, and burn rate.',
+    query: 'Evaluate ObesityRx Series B context ($40M in a $150M round): assess oral GLP-1 Phase 2a data, patent portfolio, competitive landscape, and burn rate. Provide decision-support framing (uncertainties → triggers → next steps).',
     documents: [
       { fileName: 'ObesityRx_Phase2a_Data.pdf', size: '2.2 MB' },
       { fileName: 'ObesityRx_IP_Portfolio.pdf', size: '1.7 MB' },

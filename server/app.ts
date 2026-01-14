@@ -34,6 +34,7 @@ import intelligenceUnreadRoutes from './api/intelligence/unread';
 import intelligenceMarkSeenRoutes from './api/intelligence/mark-seen';
 import intelligenceDigestRoutes from './api/intelligence/digest';
 import intelligenceDigestJobsRoutes from './api/intelligence/digest-jobs';
+import intelligenceArticleAnalysisRoutes from './api/intelligence/article-analysis';
 
 // Routes
 app.use('/api/agents/orchestrator', orchestratorRoutes);
@@ -49,6 +50,7 @@ app.use('/api/intelligence/unread', intelligenceUnreadRoutes);
 app.use('/api/intelligence/mark-seen', intelligenceMarkSeenRoutes);
 app.use('/api/intelligence/digest', intelligenceDigestRoutes);
 app.use('/api/intelligence/digest-jobs', intelligenceDigestJobsRoutes);
+app.use('/api/intelligence/article-analysis', intelligenceArticleAnalysisRoutes);
 
 // Health check
 app.get('/api/health', (_req: Request, res: Response) => {

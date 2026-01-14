@@ -120,7 +120,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
                           <div className="bg-surfaceElevated border border-white/10 rounded-lg p-3 shadow-xl">
                             <p className="font-medium text-textPrimary">{data.fullDisease}</p>
                             <p className="text-sm text-textSecondary">
-                              Score: {data.score.toFixed(1)}%
+                              Association strength: {data.score.toFixed(1)}%
                             </p>
                             <p className="text-sm text-textTertiary">{data.evidenceType}</p>
                           </div>
@@ -148,7 +148,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
                     </span>
                   </div>
                   <p className="text-sm text-textSecondary mb-2 font-medium">
-                    Score: {(gwas.score * 100).toFixed(1)}%
+                    Association strength: {(gwas.score * 100).toFixed(1)}%
                   </p>
                   {gwas.keyVariants && gwas.keyVariants.length > 0 && (
                     <p className="text-sm text-textTertiary">
@@ -169,7 +169,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
           <div className="space-y-6 pb-4 px-1">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-surface/50 rounded-lg p-4 text-center">
-                <p className="text-sm font-semibold text-textSecondary mb-2">pLI Score</p>
+                <p className="text-sm font-semibold text-textSecondary mb-2">pLI (constraint)</p>
                 <div className="relative w-20 h-20 mx-auto mb-2">
                   <svg className="transform -rotate-90 w-20 h-20">
                     <circle
@@ -201,7 +201,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
               </div>
 
               <div className="bg-surface/50 rounded-lg p-4 text-center">
-                <p className="text-sm font-semibold text-textSecondary mb-2">LOEUF Score</p>
+                <p className="text-sm font-semibold text-textSecondary mb-2">LOEUF (constraint)</p>
                 <div className="relative w-20 h-20 mx-auto mb-2">
                   <svg className="transform -rotate-90 w-20 h-20">
                     <circle

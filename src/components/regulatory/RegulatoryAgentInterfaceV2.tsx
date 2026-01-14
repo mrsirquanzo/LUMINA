@@ -40,7 +40,7 @@ export const RegulatoryAgentInterfaceV2: React.FC<RegulatoryAgentInterfaceV2Prop
         body: JSON.stringify({
           messages: [{
             role: 'user',
-            content: `Provide AI-powered regulatory pathway recommendation for ${targetName || 'this target'}. Include timeline estimates, required studies, and global filing strategy.`,
+            content: `Provide regulatory pathway framing for ${targetName || 'this target'}. Include likely pathways, timeline estimates, required studies, and global filing strategy (no prescriptive directive).`,
           }],
           target: targetName,
           analysisType: 'pathway_analysis',
@@ -226,7 +226,7 @@ export const RegulatoryAgentInterfaceV2: React.FC<RegulatoryAgentInterfaceV2Prop
         <div className="grid grid-cols-1 gap-4">
           <HeroSkillCard
             title="Approval Pathway Advisor"
-            description="AI-powered regulatory pathway recommendation with timeline estimates, required studies, and global filing strategy"
+            description="Regulatory pathway framing with timeline estimates, required studies, and global filing strategy"
             icon={Route}
             themeColor={THEME_COLOR}
             onClick={handlePathwayAnalysis}

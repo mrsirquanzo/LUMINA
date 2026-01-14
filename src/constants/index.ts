@@ -1008,7 +1008,6 @@ export const DEAL_LANDSCAPE_DATA = {
 };
 
 export const STRATEGIC_RECOMMENDATION_DATA = {
-  recommendation: 'Pursue CDA',
   strategicRationale:
     'TROP2 is a validated ADC target with multiple active programs. Strategic attractiveness depends on whether an asset demonstrates differentiated safety and/or efficacy in a well-defined setting, with a credible CMC and regulatory path. Avoid quoting TAM/valuation unless backed by a sourced, current market model.',
   keyDiligenceQuestions: [
@@ -1089,7 +1088,7 @@ export const STRATEGIC_RECOMMENDATION_DATA = {
   agents: ['sonny'] as const,
   primaryAgent: 'sonny' as const,
   agentContributions: {
-    sonny: 'Synthesized strategic recommendation from all agents including Financial, Market Research, Patent, Clinical, and Regulatory insights',
+    sonny: 'Synthesized decision-support framing from all agents including Financial, Market Research, Patent, Clinical, and Regulatory insights',
   },
 };
 

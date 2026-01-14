@@ -11,7 +11,6 @@ import {
 
 interface StrategicRecommendationTileProps {
   data: {
-    recommendation: string;
     strategicRationale: string;
     keyDiligenceQuestions: string[];
     proposedNextSteps: Array<{
@@ -39,22 +38,9 @@ export default function StrategicRecommendationTile({
 }: StrategicRecommendationTileProps) {
   const [showWalkAway, setShowWalkAway] = useState(false);
 
-  const getRecommendationColor = (rec: string) => {
-    if (rec.toLowerCase().includes('pursue') || rec.toLowerCase().includes('proceed')) {
-      return 'bg-success/20 text-success border-success/50';
-    }
-    if (rec.toLowerCase().includes('request') || rec.toLowerCase().includes('schedule')) {
-      return 'bg-warning/20 text-warning border-warning/50';
-    }
-    if (rec.toLowerCase().includes('pass')) {
-      return 'bg-danger/20 text-danger border-danger/50';
-    }
-    return 'bg-warning/20 text-warning border-warning/50';
-  };
-
   return (
     <Tile
-      title="Strategic Recommendation"
+      title="Decision Support"
       icon={<CheckCircle2 className="w-5 h-5" />}
       tileType="deal"
       loading={loading}
@@ -63,15 +49,6 @@ export default function StrategicRecommendationTile({
       primaryAgent={data.primaryAgent}
       onAgentClick={onAgentClick}
       extendedIntelligence={extendedIntelligence}
-      headerRight={
-        <div
-          className={`px-5 py-2.5 rounded-xl border-2 text-base font-bold ${getRecommendationColor(
-            data.recommendation
-          )}`}
-        >
-          {data.recommendation}
-        </div>
-      }
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
 
@@ -140,7 +117,7 @@ export default function StrategicRecommendationTile({
                 onClick={() => setShowWalkAway(!showWalkAway)}
                 className="flex items-center justify-between w-full text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors"
               >
-                <span>Walk-Away Criteria</span>
+                <span>Disconfirming evidence (stop / park conditions)</span>
                 {showWalkAway ? (
                   <ChevronUp className="w-4 h-4" />
                 ) : (
@@ -164,7 +141,7 @@ export default function StrategicRecommendationTile({
         {/* Action Buttons - More compact */}
         <div className="flex flex-wrap gap-2 pt-2">
           <button className="px-4 py-2 bg-warning text-black rounded-lg hover:bg-warning/90 transition-colors font-semibold text-sm text-center">
-            {data.recommendation.includes('CDA') ? data.recommendation : 'Request Data Room'}
+            Request Data Room
           </button>
           <button className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-sm font-medium text-textPrimary text-center flex items-center justify-center gap-2">
             <Calendar className="w-4 h-4" />

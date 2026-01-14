@@ -1,5 +1,5 @@
 import Tile from '../Tile';
-import { FlaskConical, Star } from 'lucide-react';
+import { FlaskConical } from 'lucide-react';
 
 interface ScientificValidationTileProps {
   data: any;
@@ -9,17 +9,6 @@ interface ScientificValidationTileProps {
 }
 
 export default function ScientificValidationTile({ data, loading, onAgentClick, extendedIntelligence }: ScientificValidationTileProps) {
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${
-          i < rating ? 'fill-warning text-warning' : 'fill-none text-textTertiary'
-        }`}
-      />
-    ));
-  };
-
   return (
     <Tile
       title="Scientific Validation"
@@ -33,20 +22,26 @@ export default function ScientificValidationTile({ data, loading, onAgentClick, 
       extendedIntelligence={extendedIntelligence}
     >
       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-5 px-1 pb-2">
-        {/* Star Ratings */}
-        <div className="space-y-5">
-          <div className="flex items-center justify-between">
-            <span className="text-base font-medium text-textSecondary">Target Validation</span>
-            <div className="flex items-center gap-1">{renderStars(5)}</div>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-base font-medium text-textSecondary">Clinical PoC (Validated)</span>
-            <div className="flex items-center gap-1">{renderStars(4)}</div>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-base font-medium text-textSecondary">Differentiation Data (Early)</span>
-            <div className="flex items-center gap-1">{renderStars(3)}</div>
-          </div>
+        {/* Evidence maturity (non-scored) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            { label: 'Target validation', value: 'Established', tone: 'good' },
+            { label: 'Clinical precedent', value: 'Validated', tone: 'good' },
+            { label: 'Differentiation evidence', value: 'Early / unconfirmed', tone: 'watch' },
+          ].map((row) => (
+            <div key={row.label} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+              <div className="text-sm font-semibold text-textSecondary">{row.label}</div>
+              <div
+                className={`mt-2 inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold border ${
+                  row.tone === 'good'
+                    ? 'border-success/30 bg-success/10 text-success'
+                    : 'border-warning/30 bg-warning/10 text-warning'
+                }`}
+              >
+                {row.value}
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">

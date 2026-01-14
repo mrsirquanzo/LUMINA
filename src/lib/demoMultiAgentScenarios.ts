@@ -9674,6 +9674,48 @@ export function matchQueryToScenario(query: string): string | undefined {
 /**
  * Play demo scenario with event streaming
  */
+function sanitizeDecisionSupportText(text: string): string {
+  if (!text) return text;
+
+  // Normalize common prescriptive sections into decision-support framing.
+  let out = text;
+
+  // Headings that encode a recommendation ("M&A Recommendation: ...", etc.)
+  out = out.replace(/^(#{1,3}\s*)(.*\bRecommendation\b\s*:?\s*)(.*)$/gim, '$1Decision Support: $3');
+  out = out.replace(/^(#{1,3}\s*)Final Recommendation\b.*$/gim, '$1Decision Support Summary');
+  out = out.replace(/^(#{1,3}\s*)Strategic Recommendation\b.*$/gim, '$1Decision Support');
+  out = out.replace(/^(#{1,3}\s*)Investment Recommendation\b.*$/gim, '$1Investment Decision Support');
+
+  // Inline bold recommendation lines — drop the action word and keep neutral framing.
+  out = out.replace(/^\s*\*\*(Recommendation)\s*:\*\*.*$/gim, '**Decision-support takeaway:** Non-prescriptive framing; see uncertainties, triggers, and next steps below.');
+
+  // Common "RECOMMENDATION:" bullets in synthesis prompts.
+  out = out.replace(/^\s*-\s*\*\*RECOMMENDATION:\*\*.*$/gim, '- **Decision drivers:** (non-prescriptive; grounded in evidence)');
+
+  // Remove isolated BUY/SELL/HOLD badges when they appear as standalone lines.
+  out = out.replace(/^\s*(BUY|SELL|HOLD|NO-GO|GO\/NO-GO|ADVANCE|DEPRIORITIZE)\s*$/gim, '');
+
+  return out;
+}
+
+function sanitizeDemoEvent(event: any): any {
+  if (!event || !event.data) return event;
+  const seen = new WeakSet<object>();
+
+  function walk(value: any): any {
+    if (typeof value === 'string') return sanitizeDecisionSupportText(value);
+    if (!value || typeof value !== 'object') return value;
+    if (seen.has(value)) return value;
+    seen.add(value);
+    if (Array.isArray(value)) return value.map(walk);
+    const next: any = {};
+    for (const [k, v] of Object.entries(value)) next[k] = walk(v);
+    return next;
+  }
+
+  return { ...event, data: walk(event.data) };
+}
+
 export function playDemoScenario(
  scenario: DemoScenario,
  onEvent: (event: any) => void,
@@ -9691,7 +9733,7 @@ export function playDemoScenario(
 
  const timeout = setTimeout(() => {
  console.log('[playDemoScenario] Firing event:', event.type, 'at', adjustedDelay, 'ms');
- onEvent(event);
+ onEvent(sanitizeDemoEvent(event));
  }, adjustedDelay);
  timeouts.push(timeout);
  });

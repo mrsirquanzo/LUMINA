@@ -28,7 +28,7 @@ import {
   AgentIconNavigation,
 } from '../agents/shared';
 import type { AgentType } from '../../lib/multiAgentTypes';
-import { exportMarkdownReport, downloadTextFile } from '../../lib/reportExport';
+import { exportStructuredDocument, type StructuredDocument } from '../../lib/professionalExport';
 
 // Types
 interface SonnyHeroInterfaceProps {
@@ -182,11 +182,20 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
           regulatory: 'Low',
           commercial: 'Medium',
         },
-        opportunityScore: 8.4,
-        recommendations: [
-          'Prioritize for internal development',
-          'Consider partnership for Phase 3',
-          'File provisional patents in identified white spaces',
+        keyUncertainties: [
+          'Therapeutic window vs normal tissue expression is not yet quantified in the relevant indication.',
+          'Differentiation vs incumbent/next-gen assets is unclear without head-to-head comparator data.',
+          'Durability and safety profile at the intended dose/route remain to be validated beyond early cohorts.',
+        ],
+        decisionTriggers: [
+          'Confirm tumor vs key normal-tissue expression (IHC / H-score) and define a practical cutoff for patient selection.',
+          'Pressure-test FTO on linker/payload/construct claims in the top 2 competitor families and identify concrete design-arounds.',
+          'Define 1–2 measurable “must-win” differentiation claims (safety or efficacy) and map the minimal data package to prove them.',
+        ],
+        nextSteps: [
+          'Request full dataset + protocol for the most relevant clinical cohort (incl. AE tables and dose modifications).',
+          'Run a short competitive teardown: comparator benchmarks, trial designs, and expected readouts in the next 6–12 months.',
+          'Draft a diligence checklist that ties each uncertainty to a specific data request and owner.',
         ],
       },
     }));
@@ -232,7 +241,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
       status: 'complete',
       progress: 100,
       sections: {
-        thesis: `${targetName || 'This target'}-targeting therapeutics represent a compelling investment opportunity with strong risk-adjusted returns based on validated biology, clear regulatory pathway, and significant unmet medical need.`,
+        thesis: `${targetName || 'This target'}-targeting therapeutics present a decision-grade opportunity to underwrite an investable story, but the outcome hinges on a small number of falsifiable claims (therapeutic window, differentiation, and execution).`,
         bullCase: [
           'First-in-class mechanism with differentiated efficacy profile',
           'Large addressable market ($4.2B TAM) with limited competition',
@@ -246,6 +255,16 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
           'Potential for fast-follower competition post-approval',
           'Manufacturing complexity may impact margins',
         ],
+        keyUncertainties: [
+          'Is the claimed differentiation real, and does it persist at scale (not just early cohorts)?',
+          'What is the true regulatory path (including required comparators) given precedent in this indication?',
+          'How strong is the IP position around the specific construct and CMC workflow (not just the target)?',
+        ],
+        decisionTriggers: [
+          'Next clinical readout that directly tests the differentiation claim (define endpoint + threshold upfront).',
+          'A clean FTO opinion on the construct’s “blocking” claims + credible design-around plan.',
+          'A realistic enrollment/ops plan with sites, timelines, and contingency for competitive trials.',
+        ],
         keyRisks: [
           { risk: 'Clinical failure', probability: '25%', impact: 'High', mitigant: 'Strong Phase 2 data, biomarker strategy' },
           { risk: 'Regulatory delay', probability: '15%', impact: 'Medium', mitigant: 'Pre-submission meetings scheduled' },
@@ -255,13 +274,11 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
           { target: 'Similar Target A', acquirer: 'Big Pharma X', value: '$2.1B', stage: 'Phase 2', year: 2023 },
           { target: 'Similar Target B', acquirer: 'Big Pharma Y', value: '$3.8B', stage: 'Phase 3', year: 2024 },
         ],
-        valuationRange: {
-          conservative: '$1.2B',
-          base: '$2.4B',
-          optimistic: '$4.1B',
-        },
-        recommendation: 'BUY',
-        confidenceScore: 7.8,
+        nextSteps: [
+          'Convert the thesis into an explicit diligence plan: claims → evidence → data request → owner → deadline.',
+          'Define the “kill criteria” that would invalidate the thesis and require a pivot (pre-commit thresholds).',
+          'Map catalysts and timing risk: what events reprice the story, and what delays break it?',
+        ],
       },
     }));
   }, [targetName, isDemo]);
@@ -274,41 +291,129 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
       if (!analysisResult || analysisResult.status !== 'complete') return;
 
       const now = new Date();
-      const dateStamp = now.toISOString().split('T')[0];
       const safeTarget = (targetName || 'target').replace(/[^a-zA-Z0-9-_]+/g, '-');
-
       const title = `${targetName || 'Target'} • Sonny ${analysisResult.type.replace('-', ' ')}`;
-      const content =
-        (typeof analysisResult.content === 'string' && analysisResult.content.trim())
-          ? analysisResult.content.trim()
-          : `## Sonny Analysis (Structured)\n\n\`\`\`json\n${JSON.stringify(analysisResult.sections ?? {}, null, 2)}\n\`\`\`\n`;
 
-      const markdown = [
-        `# ${title}`,
-        '',
-        `Generated: ${now.toLocaleString()}`,
-        '',
-        '---',
-        '',
-        content,
-        '',
-      ].join('\n');
+      const s = analysisResult.sections ?? {};
+      const doc: StructuredDocument =
+        analysisResult.type === 'executive-brief'
+          ? {
+              kind: 'sonny-executive-brief',
+              title,
+              subtitle: 'Executive Target Brief (multi-agent synthesis)',
+              generatedAt: now.toISOString(),
+              target: targetName || undefined,
+              persona: 'Sonny (orchestrator)',
+              confidentiality: 'Confidential • For internal use only',
+              sections: [
+                {
+                  id: 'overview',
+                  title: 'Overview',
+                  blocks: [{ type: 'paragraph', text: String(s.overview || '') }],
+                },
+                {
+                  id: 'key-findings',
+                  title: 'Key Findings',
+                  blocks: [{ type: 'bullets', items: Array.isArray(s.keyFindings) ? s.keyFindings.map(String) : [] }],
+                },
+                {
+                  id: 'risk-summary',
+                  title: 'Risk Summary',
+                  blocks: [
+                    {
+                      type: 'kv',
+                      items: Object.entries(s.riskSummary || {}).map(([k, v]: any) => ({
+                        label: String(k),
+                        value: String(v),
+                        tone:
+                          String(v).toLowerCase() === 'low'
+                            ? 'good'
+                            : String(v).toLowerCase() === 'medium'
+                              ? 'watch'
+                              : String(v).toLowerCase() === 'high'
+                                ? 'bad'
+                                : 'neutral',
+                      })),
+                    },
+                  ],
+                },
+                {
+                  id: 'decision-support',
+                  title: 'Decision Support (uncertainties → triggers → next steps)',
+                  blocks: [
+                    { type: 'bullets', items: Array.isArray(s.keyUncertainties) ? s.keyUncertainties.map(String) : [] },
+                    { type: 'bullets', items: Array.isArray(s.decisionTriggers) ? s.decisionTriggers.map(String) : [] },
+                    { type: 'bullets', items: Array.isArray(s.nextSteps) ? s.nextSteps.map(String) : [] },
+                  ],
+                },
+              ],
+            }
+          : {
+              kind: 'sonny-investment-thesis',
+              title,
+              subtitle: 'Investment Thesis (board-ready framing)',
+              generatedAt: now.toISOString(),
+              target: targetName || undefined,
+              persona: 'Sonny (orchestrator)',
+              confidentiality: 'Confidential • For internal use only',
+              sections: [
+                { id: 'thesis', title: 'Thesis', blocks: [{ type: 'paragraph', text: String(s.thesis || '') }] },
+                { id: 'bull', title: 'Bull Case', blocks: [{ type: 'bullets', items: Array.isArray(s.bullCase) ? s.bullCase.map(String) : [] }] },
+                { id: 'bear', title: 'Bear Case', blocks: [{ type: 'bullets', items: Array.isArray(s.bearCase) ? s.bearCase.map(String) : [] }] },
+                {
+                  id: 'risks',
+                  title: 'Key Risks',
+                  blocks: [
+                    {
+                      type: 'riskRegister',
+                      rows: Array.isArray(s.keyRisks)
+                        ? s.keyRisks.map((r: any) => ({
+                            risk: String(r.risk || ''),
+                            probability: String(r.probability || ''),
+                            impact: String(r.impact || ''),
+                            mitigant: r.mitigant ? String(r.mitigant) : '',
+                          }))
+                        : [],
+                    },
+                  ],
+                },
+                {
+                  id: 'comparable-deals',
+                  title: 'Comparable Deals',
+                  blocks: [
+                    {
+                      type: 'table',
+                      columns: ['Target', 'Acquirer', 'Value', 'Stage', 'Year'],
+                      rows: Array.isArray(s.comparableDeals)
+                        ? s.comparableDeals.map((d: any) => [d.target, d.acquirer, d.value, d.stage, d.year].map((x: any) => String(x ?? '')))
+                        : [],
+                    },
+                  ],
+                },
+                {
+                  id: 'decision-support',
+                  title: 'Decision Support (uncertainties → triggers → next steps)',
+                  blocks: [
+                    { type: 'bullets', items: Array.isArray(s.keyUncertainties) ? s.keyUncertainties.map(String) : [] },
+                    { type: 'bullets', items: Array.isArray(s.decisionTriggers) ? s.decisionTriggers.map(String) : [] },
+                    { type: 'bullets', items: Array.isArray(s.nextSteps) ? s.nextSteps.map(String) : [] },
+                  ],
+                },
+              ],
+            };
 
-      if (format === 'pdf' || format === 'pptx' || format === 'docx') {
-        exportMarkdownReport(format, `${safeTarget}-sonny-${analysisResult.type}-${dateStamp}`, title, markdown);
-        return;
-      }
-
-      if (format === 'share') {
-        downloadTextFile(`${safeTarget}-sonny-${analysisResult.type}-${dateStamp}.md`, markdown, 'text/markdown;charset=utf-8');
-        return;
-      }
-
+      // Map UI options to structured export formats (no markdown).
+      if (format === 'pdf') return exportStructuredDocument('pdf', `${safeTarget}-sonny-${analysisResult.type}`, doc);
+      if (format === 'docx') return exportStructuredDocument('docx', `${safeTarget}-sonny-${analysisResult.type}`, doc);
+      if (format === 'share') return exportStructuredDocument('json', `${safeTarget}-sonny-${analysisResult.type}`, doc);
       if (format === 'email') {
-        const subject = encodeURIComponent(title);
-        const body = encodeURIComponent(markdown.slice(0, 8000)); // keep mailto reasonable
+        const subject = encodeURIComponent(doc.title);
+        const body = encodeURIComponent(`${doc.subtitle || ''}\n\nGenerated: ${doc.generatedAt}\n\n(Attached: export JSON/PDF from LUMINA)`.trim());
         window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        return;
       }
+      // PPTX not supported without a library; export HTML as a practical fallback.
+      if (format === 'pptx') return exportStructuredDocument('html', `${safeTarget}-sonny-${analysisResult.type}`, doc);
     } finally {
       setIsExporting(false);
     }
@@ -757,22 +862,41 @@ const AnalysisResultsView: React.FC<{
             </div>
           </div>
 
-          {/* Opportunity Score */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium text-green-300">Opportunity Score</h4>
-              <div className="text-3xl font-bold text-green-400">{result.sections.opportunityScore}/10</div>
-            </div>
-          </div>
-
-          {/* Recommendations */}
+          {/* Decision support */}
           <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Recommended Actions</h4>
-            <ol className="space-y-2 list-decimal list-inside">
-              {result.sections.recommendations.map((rec: string, idx: number) => (
-                <li key={idx} className="text-sm text-white">{rec}</li>
-              ))}
-            </ol>
+            <h4 className="text-sm font-medium text-gray-300 mb-3">Decision Support</h4>
+            <div className="space-y-4">
+              <div>
+                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Key uncertainties</div>
+                <ul className="space-y-2">
+                  {(result.sections.keyUncertainties || []).map((u: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                      <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      {u}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Decision triggers</div>
+                <ul className="space-y-2">
+                  {(result.sections.decisionTriggers || []).map((t: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Next steps</div>
+                <ol className="space-y-2 list-decimal list-inside">
+                  {(result.sections.nextSteps || []).map((step: string, idx: number) => (
+                    <li key={idx} className="text-sm text-white">{step}</li>
+                  ))}
+                </ol>
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -798,21 +922,6 @@ const AnalysisResultsView: React.FC<{
           <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 border border-purple-500/20">
             <h4 className="text-sm font-medium text-purple-300 mb-2">Investment Thesis</h4>
             <p className="text-white">{result.sections.thesis}</p>
-          </div>
-
-          {/* Recommendation Badge */}
-          <div className="flex items-center justify-center gap-4">
-            <div className={`px-6 py-3 rounded-xl font-bold text-xl ${
-              result.sections.recommendation === 'BUY'
-                ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                : 'bg-red-500/20 text-red-400 border border-red-500/30'
-            }`}>
-              {result.sections.recommendation}
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">{result.sections.confidenceScore}/10</div>
-              <div className="text-xs text-gray-500">Confidence Score</div>
-            </div>
           </div>
 
           {/* Bull/Bear Cases */}
@@ -841,23 +950,39 @@ const AnalysisResultsView: React.FC<{
             </div>
           </div>
 
-          {/* Valuation Range */}
+          {/* Decision Support */}
           <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Valuation Range</h4>
-            <div className="flex items-center justify-between">
-              <div className="text-center">
-                <div className="text-lg font-semibold text-gray-400">{result.sections.valuationRange.conservative}</div>
-                <div className="text-xs text-gray-500">Conservative</div>
+            <h4 className="text-sm font-medium text-gray-300 mb-3">Decision Support</h4>
+            <div className="space-y-4">
+              <div>
+                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Key uncertainties</div>
+                <ul className="space-y-2">
+                  {(result.sections.keyUncertainties || []).map((u: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                      <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      {u}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="flex-1 mx-4 h-2 bg-gradient-to-r from-gray-600 via-purple-500 to-green-500 rounded-full" />
-              <div className="text-center">
-                <div className="text-lg font-semibold text-purple-400">{result.sections.valuationRange.base}</div>
-                <div className="text-xs text-gray-500">Base</div>
+              <div>
+                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Decision triggers</div>
+                <ul className="space-y-2">
+                  {(result.sections.decisionTriggers || []).map((t: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      {t}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="flex-1 mx-4 h-2 bg-gradient-to-r from-purple-500 to-green-500 rounded-full" />
-              <div className="text-center">
-                <div className="text-lg font-semibold text-green-400">{result.sections.valuationRange.optimistic}</div>
-                <div className="text-xs text-gray-500">Optimistic</div>
+              <div>
+                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Next steps</div>
+                <ol className="space-y-2 list-decimal list-inside">
+                  {(result.sections.nextSteps || []).map((step: string, idx: number) => (
+                    <li key={idx} className="text-sm text-white">{step}</li>
+                  ))}
+                </ol>
               </div>
             </div>
           </div>

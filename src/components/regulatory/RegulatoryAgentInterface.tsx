@@ -94,7 +94,7 @@ export default function RegulatoryAgentInterface({
 
   // Analysis modules
   const analysisModules = [
-    { title: 'Pathway Strategy', description: 'NDA/BLA pathway recommendation', icon: Target },
+    { title: 'Pathway Strategy', description: 'NDA/BLA pathway framing', icon: Target },
     { title: 'Expedited Designations', description: 'BTD, Fast Track, Accelerated Approval', icon: Zap },
     { title: 'Safety Assessment', description: 'Mechanism-based safety evaluation', icon: Shield },
     { title: 'CMC Readiness', description: 'Manufacturing and quality assessment', icon: Building2 },

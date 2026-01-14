@@ -135,8 +135,8 @@ const DEMO_RESPONSES = [
 - **Accelerated Approval**: 5.5-6 years from IND
 - **Regular Approval**: 7-8 years from IND
 
-### Recommendation
-**Pursue BTD** based on preliminary Phase 1 data showing >30% ORR in refractory solid tumor population. Target accelerated approval with ORR endpoint, commit to confirmatory trial. Budget for intensive FDA interactions and manufacturing development.`,
+### Decision-support takeaway
+Based on preliminary Phase 1 signal (>30% ORR in a refractory solid tumor population), the highest-leverage path to explore is an expedited program strategy (BTD discussion) paired with an accelerated-approval-style endpoint plan and a pre-specified confirmatory package. The gating uncertainties are durability/safety at scale and CMC readiness; plan for intensive FDA interactions and manufacturing development accordingly.`,
   },
 ];
 

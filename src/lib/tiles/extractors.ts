@@ -205,11 +205,6 @@ export function extractTargetBiologyData(
   const prevalenceMatch = normalized.match(/(\d+(?:\.\d+)?%)[^\n]*(?:NSCLC|prevalence|frequency)/i);
   const prevalence = prevalenceMatch ? prevalenceMatch[1] : null;
   
-  // Extract recommendation
-  const recommendationMatch = normalized.match(/Recommendation[:\s]+(ADVANCE|VALIDATED|Do Not Advance|CONDITIONAL)/i) ||
-                              normalized.match(/Bottom Line[^\n]*(ADVANCE|VALIDATED|Proceed)/i);
-  const recommendation = recommendationMatch ? recommendationMatch[1] : null;
-
   // Competitive programs table (common in TROP2 target biology writeups)
   const competitorRows = normalized
     .split(/\r?\n/)
@@ -229,7 +224,6 @@ export function extractTargetBiologyData(
         druggability,
         safety,
         prevalence,
-        recommendation,
         sections: Object.keys(sections).slice(0, 5), // Top 5 section titles
         competitors,
         verifiedHighlights: getCitedBulletLines(normalized, 4),
@@ -244,7 +238,6 @@ export function extractTargetBiologyData(
         druggability,
         safety,
         prevalence,
-        recommendation,
         sections,
         competitors,
         referencesSection: extractReferencesSection(normalized),
@@ -876,11 +869,6 @@ export function extractSynthesisData(
   const sections = extractMarkdownSections(normalized);
   const citationStats = getCitationStats(normalized);
   
-  // Extract recommendation
-  const recommendationMatch = normalized.match(/(?:Recommendation|RECOMMENDATION)[:\s]+(PROCEED|PROCEED WITH EXTREME CAUTION|PROCEED WITH CONDITIONS|DO NOT PROCEED|ADVANCE|VALIDATED|CONDITIONAL)/i) ||
-                              normalized.match(/\*\*Recommendation[:\s]+\*\*(PROCEED|PROCEED WITH CONDITIONS|DO NOT PROCEED)/i);
-  const recommendation = recommendationMatch ? recommendationMatch[1] : null;
-  
   // Extract key findings summary
   const keyFindings: string[] = [];
   const findingMatches = normalized.match(/\*\*Key Findings[:\s]+\*\*[\s\S]*?([^\n]+(?:\n[^\n]+){0,3})/i) ||
@@ -904,7 +892,6 @@ export function extractSynthesisData(
   return {
     data: {
       summary: {
-        recommendation,
         confidence,
         keyFindings: keyFindings.length > 0 ? keyFindings : null,
         sections: Object.keys(sections).slice(0, 5),
@@ -914,7 +901,6 @@ export function extractSynthesisData(
       },
       detailed: {
         fullSynthesis: normalized,
-        recommendation,
         confidence,
         keyFindings,
         sections,

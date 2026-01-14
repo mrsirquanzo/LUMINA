@@ -27,7 +27,7 @@ export function TargetBiologySummaryView({ data }: { data: TileData }) {
       )}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <p className="text-xs text-gray-500 mb-1">Genetic Score</p>
+          <p className="text-xs text-gray-500 mb-1">Genetic evidence</p>
           <p className={`text-lg font-semibold ${
             summary.geneticScore?.includes('GOLD') || summary.geneticScore?.includes('STRONG') 
               ? 'text-emerald-600' 
@@ -74,12 +74,6 @@ export function TargetBiologySummaryView({ data }: { data: TileData }) {
           }`}>
             {summary.safety}
           </span>
-        </div>
-      )}
-      {summary.recommendation && (
-        <div className="pt-2 border-t border-gray-200">
-          <p className="text-xs text-gray-500 mb-1">Recommendation</p>
-          <p className="text-sm font-medium text-emerald-600">{summary.recommendation}</p>
         </div>
       )}
       {summary.verifiedHighlights && summary.verifiedHighlights.length > 0 && (

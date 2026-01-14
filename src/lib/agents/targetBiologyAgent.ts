@@ -412,13 +412,6 @@ Provide a concise, accurate answer with specific metrics and citations.`;
     // Compile next steps
     const nextSteps = this.compileNextSteps(geneticEvidence, druggability, literature);
 
-    // Determine overall recommendation
-    const overallRecommendation = this.determineRecommendation(
-      geneticEvidence,
-      druggability,
-      safety
-    );
-
     return {
       targetSymbol,
       indication,
@@ -427,7 +420,7 @@ Provide a concise, accurate answer with specific metrics and citations.`;
       druggability,
       literature,
       safety,
-      overallRecommendation,
+      overallRecommendation: '',
       keyRisks,
       nextSteps,
       executiveSummary,
@@ -586,27 +579,6 @@ Provide a concise, accurate answer with specific metrics and citations.`;
       steps.push(`Address evidence gaps: ${literature.evidenceGaps[0]}`);
     }
     return steps;
-  }
-
-  private determineRecommendation(
-    genetic: GeneticEvidence | null,
-    druggability: DruggabilityAssessment | null,
-    safety: SafetyAssessment | null
-  ): string {
-    const geneticScore = genetic?.overallValidationScore ?? 0;
-    const hasDrugs = (druggability?.existingCompounds.length ?? 0) > 0;
-    const safetyRisks = safety?.geneticSafetySignals.length ?? 0;
-
-    if (geneticScore >= 0.7 && hasDrugs && safetyRisks < 2) {
-      return 'Strong candidate - recommend advancing';
-    }
-    if (geneticScore >= 0.4 || hasDrugs) {
-      return 'Promising candidate - recommend further validation';
-    }
-    if (geneticScore > 0) {
-      return 'Early-stage candidate - significant validation needed';
-    }
-    return 'Insufficient evidence - not recommended at this time';
   }
 
   // LLM-powered generation methods
@@ -843,7 +815,7 @@ STRICT CITATION REQUIREMENTS:
 
 ${sourcesBlock}
 
-Structure as: (1) Overall assessment and recommendation, (2) Key strengths and supporting evidence, (3) Key risks and gaps to address.`;
+Structure as: (1) Overall assessment (non-prescriptive), (2) Key strengths and supporting evidence, (3) Key risks and gaps to address, (4) Decision-support next steps (what evidence would change the view).`;
 
     const response = await this.llm.sendMessage(
       AGENT_PROMPTS.target_biology,
@@ -931,7 +903,7 @@ ${report.druggability?.druggabilitySummary ?? 'Not assessed.'}
 
 ${report.druggability?.existingCompounds.length ? report.druggability.existingCompounds.map(c => `- ${c.compoundName ?? c.chemblId} (Phase ${c.maxPhase}): ${c.mechanism ?? 'Unknown mechanism'}`).join('\n') : 'No existing compounds identified.'}
 
-### Recommended Modalities
+### Candidate Modalities
 
 ${report.druggability?.recommendedModalities.map(m => `- ${m}`).join('\n') || 'None specified'}
 
@@ -957,17 +929,13 @@ ${report.safety?.safetySummary ?? 'No safety assessment available.'}
 
 ---
 
-## 5. Summary and Recommendations
-
-### Overall Recommendation
-
-${report.overallRecommendation}
+## 5. Decision Support
 
 ### Key Risks
 
 ${report.keyRisks.map(r => `- ${r}`).join('\n') || 'None identified'}
 
-### Recommended Next Steps
+### Next Steps
 
 ${report.nextSteps.map((s, i) => `${i + 1}. ${s}`).join('\n') || 'None specified'}
 `;

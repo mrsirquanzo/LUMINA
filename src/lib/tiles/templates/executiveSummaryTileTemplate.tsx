@@ -3,7 +3,6 @@
  * Template for rendering synthesis/executive summary data in tiles
  */
 
-import { CheckCircle2, AlertTriangle, TrendingUp, FileText } from 'lucide-react';
 import type { TileData } from '../types';
 import { AgentWalkthrough } from '../../../components/shared/AgentWalkthrough';
 
@@ -24,30 +23,6 @@ export function ExecutiveSummarySummaryView({ data }: { data: TileData }) {
           )}
         </div>
       )}
-      {summary.recommendation && (
-        <div className="flex items-center gap-2">
-          {summary.recommendation.includes('PROCEED') || summary.recommendation.includes('ADVANCE') ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-          ) : summary.recommendation.includes('CONDITIONS') ? (
-            <AlertTriangle className="w-5 h-5 text-yellow-600" />
-          ) : (
-            <AlertTriangle className="w-5 h-5 text-red-600" />
-          )}
-          <div>
-            <p className="text-xs text-gray-500 mb-1">Recommendation</p>
-            <p className={`text-lg font-semibold ${
-              summary.recommendation.includes('PROCEED') || summary.recommendation.includes('ADVANCE')
-                ? 'text-emerald-700'
-                : summary.recommendation.includes('CONDITIONS')
-                ? 'text-yellow-700'
-                : 'text-red-700'
-            }`}>
-              {summary.recommendation}
-            </p>
-          </div>
-        </div>
-      )}
-      
       {summary.confidence && (
         <div>
           <p className="text-xs text-gray-500 mb-1">Confidence Level</p>
@@ -99,7 +74,7 @@ export const executiveSummaryTileTemplate: TileTemplate = {
   type: 'general' as any, // Use 'general' as base type for executive summary
   agent: 'synthesis' as any,
   name: 'Executive Summary',
-  description: 'Strategic synthesis and recommendations',
+  description: 'Strategic synthesis and decision support',
   defaultSize: 'full-width' as any,
   icon: '📋',
   color: 'purple',

@@ -39,7 +39,7 @@ export const DATA_ANALYST_DEMOS: MockConversation[] = [
 **Clinical Significance:**
 The strong correlation between PD-L1 expression and response rate suggests this could be a viable biomarker for patient selection. The TMB trend is also promising but needs validation in Phase 3.
 
-**Recommendation:** These endpoints support advancement to Phase 3 with PD-L1 as an enrichment biomarker.`
+**Decision-support takeaway:** The key uncertainty is whether the PD-L1 effect persists prospectively; the next step is to pre-specify a PD-L1 enrichment strategy and confirm it in a larger, controlled dataset before treating it as decision-grade.`
   },
   {
     query: "Compare the top 3 CAR-T therapies by response rates, durability, and safety profile.",
@@ -267,7 +267,7 @@ export const PATENT_EXPERT_DEMOS: MockConversation[] = [
 2. Use alternative enzymes (Cas12a, Cas13)
 3. Geographic arbitrage (some patents invalid in Europe)
 
-**Recommendation:** Companies pursuing CRISPR therapeutics should secure licenses from both Broad and Berkeley to avoid infringement risk.`
+**Decision-support takeaway:** Treat Broad/Berkeley composition claims as gating. Before any serious build, obtain counsel-level clarity on required licenses (or credible design-arounds) to avoid becoming blocked late.`
   },
   {
     query: "What's the patent strategy behind Moderna's mRNA vaccine platform? What are their blocking patents?",
@@ -386,7 +386,7 @@ export const PATENT_EXPERT_DEMOS: MockConversation[] = [
 - Circular RNA (circRNA) - emerging, less crowded
 - Non-LNP delivery (polymers, exosomes)
 
-**Recommendation:** Conduct comprehensive FTO analysis before mRNA therapeutic development. Consider licensing from established platforms (Moderna, BioNTech) vs. designing around.`
+**Decision-support takeaway:** This IP space is dominated by platform claims. The gating work is a formal FTO + claim-chart exercise to decide whether licensing, partnering, or a design-around path is realistic for the specific payload and delivery stack.`
   },
   {
     query: "Compare the ADC patent portfolios of Daiichi Sankyo, AstraZeneca, and Seagen. Who has the strongest position?",
@@ -529,7 +529,7 @@ export const PATENT_EXPERT_DEMOS: MockConversation[] = [
 - **Neutral:** AstraZeneca (access via partnership, limited upside)
 - **Bearish:** Legacy Seagen ADCs (IP expiration cliff)
 
-**Recommendation:** Daiichi Sankyo has the strongest ADC patent position with long-lived, differentiated IP that is difficult to design around. Their DXd platform represents a 10-15 year competitive moat.`
+**Decision-support takeaway:** Daiichi’s DXd platform appears to be the hardest to design around, which raises the bar for any competing construct. The diligence focus should be claim scope, enforceability, and concrete design-around options rather than a single “winner” label.`
   }
 ];
 
@@ -631,7 +631,7 @@ Regeneron is **highly profitable** and generates substantial positive cash flow.
 
 **Verdict:** Regeneron is **fairly valued** with strong fundamentals. The 7.7% FCF yield is attractive, and the Dupixent growth runway extends to 2030+.
 
-**Recommendation:** HOLD / Accumulate on dips. Strong financial position supports continued pipeline investment and shareholder returns (buybacks/dividends).`
+**Decision-support takeaway:** The decision hinges on your risk tolerance for EYLEA erosion vs. confidence in Dupixent durability and pipeline conversion; monitor guidance changes, pipeline readouts, and capital return cadence as the key triggers.`
   },
   {
     query: "Value a preclinical biotech with promising CAR-T data. What multiples should I use?",
@@ -709,7 +709,7 @@ Regeneron is **highly profitable** and generates substantial positive cash flow.
 
 ---
 
-## 🎯 Recommended Valuation Approach
+## 🎯 Valuation Framework (non-advice)
 
 **Base Case: $400M Pre-Money**
 
@@ -728,7 +728,7 @@ Regeneron is **highly profitable** and generates substantial positive cash flow.
 
 ---
 
-## 💰 Financing Structure Recommendations
+## 💰 Financing Structure Options
 
 **Series B Raise: $100M at $400M pre**
 - Post-money: $500M
@@ -766,12 +766,12 @@ Regeneron is **highly profitable** and generates substantial positive cash flow.
 
 ---
 
-## 💡 Final Recommendation
+## 💡 Decision-Support Summary
 
 **Fair Value Range: $350-500M**
 **Midpoint: $400M pre-money**
 
-**Recommended Multiples:**
+**Reference Multiples (framework, not advice):**
 - **EV/Peak Sales:** 0.3-0.4x (risk-adjusted)
 - **EV/EBITDA:** Not applicable (pre-revenue)
 - **P/S (peak):** 0.4x (post PoS adjustment)
@@ -951,8 +951,8 @@ At $400M, investors pay ~0.33x peak sales (risk-adjusted), which is reasonable f
 - ✅ Platform technology highly valued
 - ⚠️ Crowding in ADC space may compress future premiums
 
-**Recommendation:**
-ADC companies with Phase 2+ assets should expect $1.5-3B valuations. Approved ADCs with $1B+ sales command $8-15B, depending on peak sales trajectory and patent life. Sellers should run competitive processes to maximize premiums—single-bidder deals average 30-40% lower valuations.`
+**Decision-support takeaway:**
+Observed deal comps suggest a wide dispersion by stage, data quality, and IP runway. The decision-grade work is selecting true comps, normalizing by differentiation and timing, and stress-testing auction dynamics (single-bidder vs competitive) rather than anchoring to a single “expected” number.`
   }
 ];
 

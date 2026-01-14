@@ -423,6 +423,17 @@ function MultiAgentCollaboration({
     });
   };
 
+  const resolveAgentTypeForChat = (agentName: string): AgentType | null => {
+    if (!agentName) return null;
+    if (agentName.includes('Patent')) return 'patent';
+    if (agentName.includes('Financial')) return 'financial';
+    if (agentName.includes('Regulatory')) return 'regulatory';
+    if (agentName.includes('Market')) return 'market_research';
+    if (agentName.includes('Clinical')) return 'clinical';
+    if (agentName.includes('Target') || agentName.includes('Biology')) return 'target_biology';
+    return null;
+  };
+
   const sendChatToAgent = async (agentName: string) => {
     const activity = agentActivities.get(agentName);
     if (!activity || !activity.chatInput?.trim() || activity.isProcessingChat) return;
@@ -442,28 +453,26 @@ function MultiAgentCollaboration({
     });
 
     try {
-      // Determine which API endpoint to call based on agent name
-      let endpoint = '/api/agents/data-analyst';
-      if (agentName.includes('Patent')) endpoint = '/api/agents/patent-expert';
-      if (agentName.includes('Financial')) endpoint = '/api/agents/financial-analyst';
-      if (agentName.includes('Regulatory')) endpoint = '/api/agents/regulatory-expert';
-      if (agentName.includes('Market')) endpoint = '/api/agents/market-research';
+      const agentType = resolveAgentTypeForChat(agentName);
+      if (!agentType) throw new Error(`Unsupported agent for follow-up chat: ${agentName}`);
 
       // Build context from original response
       const context = activity.response || '';
       const fullQuery = `Context from earlier analysis:\n${context.substring(0, 500)}...\n\nFollow-up question: ${userMessage}`;
 
-      const response = await fetch(endpoint, {
+      const response = await fetch('/api/agents/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          agentType,
           messages: [{ role: 'user', content: fullQuery }],
           documents: [],
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response from agent');
+        const text = await response.text().catch(() => '');
+        throw new Error(text || 'Failed to get response from agent');
       }
 
       const data = await response.json();
@@ -473,7 +482,7 @@ function MultiAgentCollaboration({
         const updated = new Map(prev);
         const act = updated.get(agentName);
         if (act) {
-          act.chatMessages = [...(act.chatMessages || []), { role: 'assistant', content: data.message }];
+          act.chatMessages = [...(act.chatMessages || []), { role: 'assistant', content: data.message || '' }];
           act.isProcessingChat = false;
         }
         return updated;
@@ -559,7 +568,7 @@ ${synthesis}
   return (
     <div className="w-full min-w-0">
       {/* Header */}
-      <div className="relative mb-6 overflow-hidden rounded-xl border border-white/10 bg-surfaceElevated/60 p-4 shadow-sm backdrop-blur-md">
+      <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/10 bg-surfaceElevated/50 p-4 shadow-md backdrop-blur-md">
         <div aria-hidden="true" className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${sonnyTheme.gradient}`} />
         <div className="relative flex items-start justify-between mb-4">
           <div>
@@ -580,6 +589,11 @@ ${synthesis}
               <div className="flex items-center gap-1 text-sm text-textSecondary">
                 {mode === 'fast' ? <FiZap className="w-4 h-4" /> : <FiClock className="w-4 h-4" />}
                 <span className="font-medium uppercase text-textPrimary">{mode} Mode</span>
+                {isRunning && !synthesis ? (
+                  <span className="ml-1 inline-flex items-center gap-1 text-xs text-textTertiary">
+                    <span className="inline-block h-2.5 w-2.5 rounded-full border border-white/30 border-t-transparent animate-spin" />
+                  </span>
+                ) : null}
               </div>
               {estimatedCost && (
                 <div className="flex items-center gap-1 text-xs text-textTertiary mt-1">
@@ -596,14 +610,26 @@ ${synthesis}
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm text-textSecondary mb-2">
               <span className="font-medium">Analysis Progress</span>
-              <span className="font-semibold text-textPrimary">{Math.min(Math.round(getProgressPercentage()), 100)}%</span>
+              <span className="font-semibold text-textPrimary">{Math.max(1, Math.min(Math.round(getProgressPercentage()), 100))}%</span>
             </div>
-            <div className="w-full bg-white/10 rounded-full h-2.5 mb-4 overflow-hidden">
+            <div className="w-full bg-white/10 rounded-full h-2.5 mb-4 overflow-hidden relative">
+              {/* subtle shimmer so 0% doesn't look dead */}
               <div
-                className={`bg-gradient-to-r ${sonnyTheme.accentGradient} h-2.5 rounded-full transition-all duration-500 ease-out`}
-                style={{ width: `${Math.min(getProgressPercentage(), 100)}%`, maxWidth: '100%' }}
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-70 animate-pulse"
+              />
+              <div
+                className={`relative bg-gradient-to-r ${sonnyTheme.accentGradient} h-2.5 rounded-full transition-all duration-500 ease-out`}
+                style={{ width: `${Math.max(Math.min(getProgressPercentage(), 100), 6)}%`, maxWidth: '100%' }}
               />
             </div>
+
+            {agentActivities.size === 0 && !timeoutWarning && !synthesisStep ? (
+              <div className="mb-3 flex items-center gap-2 text-xs text-textSecondary">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-transparent rounded-full animate-spin" />
+                <span>Initializing orchestration… preparing agents</span>
+              </div>
+            ) : null}
 
             {/* Timeout Warning */}
             {timeoutWarning && (

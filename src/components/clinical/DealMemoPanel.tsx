@@ -126,17 +126,16 @@ export default function DealMemoPanel({ deal, onClose }: DealMemoPanelProps) {
           </div>
         </div>
 
-        {/* Recommendation */}
+        {/* Decision framing (non-prescriptive) */}
         <div>
-          <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Recommendation</h3>
+          <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Decision Framing</h3>
           <div className="p-4 bg-red-500/20 border border-red-500/40 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <X size={20} className="text-red-400" />
-              <span className="font-semibold text-red-400">PASS</span>
+              <span className="font-semibold text-red-400">High-risk signal</span>
             </div>
             <p className="text-sm text-textPrimary">
-              Do not pursue TIGIT-focused assets unless: novel combination strategy with compelling rationale,
-              differentiated mechanism (e.g., Treg-depleting Fc), or indication with specific biology favoring TIGIT.
+              The current evidence stack reads as high-risk without a clearly differentiated mechanism or context. If you decide to explore TIGIT anyway, pre-commit to a minimal “evidence bar” (novel combination rationale, differentiated Fc / biology, and a context where TIGIT is plausibly dominant) and treat early readouts as gating.
             </p>
           </div>
         </div>

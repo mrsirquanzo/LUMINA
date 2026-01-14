@@ -351,13 +351,11 @@ export default function ScoutDashboard({ viewMode = 'grid' }: ScoutDashboardProp
       .join('\n\n');
     const drivers = extractBulletsFromSection(synthesisText, 'convergent strengths', 6);
     const risks = extractBulletsFromSection(synthesisText, 'convergent concerns', 6);
-    const recLine = (synthesisText.match(/RECOMMENDATION:\s*([^\n]+)/i)?.[1] || base.recommendedAction).trim();
     return {
       ...base,
       summaryText: summaryText || base.summaryText,
       keyValueDrivers: drivers.length > 0 ? drivers.slice(0, 5) : base.keyValueDrivers,
       keyRisks: risks.length > 0 ? risks.slice(0, 5) : base.keyRisks,
-      recommendedAction: recLine,
       agents: ['sonny'] as const,
       primaryAgent: 'sonny' as const,
     };
@@ -374,7 +372,6 @@ export default function ScoutDashboard({ viewMode = 'grid' }: ScoutDashboardProp
         'What diligence items are gating and how do we resolve them quickly?',
       ]}
       keyTakeaways={[
-        `Recommended action: ${effectiveBDExecutiveSummary.recommendedAction}`,
         effectiveBDExecutiveSummary.summaryText,
       ].filter(Boolean).slice(0, 3)}
       whatWeLearn={[
@@ -482,16 +479,16 @@ export default function ScoutDashboard({ viewMode = 'grid' }: ScoutDashboardProp
 
   const strategyExtendedIntelligence = useMemo(() => (
     <AnalystWalkthrough
-      title="Strategic Recommendation Walkthrough"
+      title="Decision Support Walkthrough"
       agent="sonny"
-      intro="This is the action plan: what to do next, what to request, and what would make us walk away."
+      intro="This tile is decision support: what to validate next, what could change the view, and what would invalidate the thesis."
       questions={[
-        'What is the recommended action and what evidence supports it?',
-        'What diligence questions are most likely to change the decision?',
-        'What are the explicit walk-away criteria?',
+        'What are the 2–3 most decision-relevant uncertainties?',
+        'What evidence would resolve each uncertainty (and where would it come from)?',
+        'What are explicit stop/park conditions to avoid sunk-cost drift?',
       ]}
       nextSteps={[
-        'Turn the recommendation into a diligence checklist with owners and deadlines.',
+        'Turn the uncertainties into a diligence checklist with owners and deadlines.',
         'Set walk-away criteria early to prevent sunk-cost drift.',
       ]}
       sourceMarkdown={getAgentSourceMarkdown('synthesis') || undefined}

@@ -112,8 +112,8 @@ export function AgentWalkthrough({
       flags={flags}
       nextSteps={[
         'Verify the most decision-critical claims in the source and primary references.',
-        'Translate findings into explicit go/no-go criteria (efficacy, safety, differentiation, IP).',
-        'Prioritize 2–3 follow-up analyses that would change the recommendation.',
+        'Translate findings into explicit decision thresholds (efficacy, safety, differentiation, IP).',
+        'Prioritize 2–3 follow-up analyses that would materially change the view.',
       ]}
       sourceMarkdown={source}
     />
