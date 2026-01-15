@@ -2,8 +2,8 @@
 
 Sprint window: Week 1 (5 working days)  
 Inputs:
-- `TRUST_LAYER_IMPLEMENTATION_BACKLOG.md` (v0.4)
-- `DILIGENCE_TRUST_STACK_SCHEMAS.md` (contracts v0.1)
+- `./TRUST_LAYER_IMPLEMENTATION_BACKLOG.md` (v0.4)
+- `./DILIGENCE_TRUST_STACK_SCHEMAS.md` (contracts v0.1)
 
 Objective: deliver a **vertical slice** of the trust layer that proves the core loop:
 

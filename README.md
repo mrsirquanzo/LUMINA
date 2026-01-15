@@ -1,113 +1,46 @@
-# LUMINA - Biotech Intelligence Dashboard
+# LUMINA — Biotech Intelligence Dashboard
 
-A modern biotech intelligence dashboard built with React, TypeScript, and Vite, following Apple's Human Interface Guidelines.
+LUMINA is a biotech diligence dashboard built around a multi-agent workflow (Sonny + specialists). The product direction emphasizes **decision support** (drivers, uncertainties, triggers, verification) over prescriptive “BUY/SELL” recommendations, with evidence-disciplined prompting and room for a system-level trust layer.
 
-## Tech Stack
-
-- **React 19** with TypeScript
-- **Vite** for build tooling
-- **React Router** for navigation
-- **Tailwind CSS** for styling
-- **TanStack Query** for data fetching
-- **Recharts** for data visualization
-- **Framer Motion** for animations
-- **Lucide React** for icons
-- **date-fns** for date formatting
-
-## Design System
-
-### Colors
-- **Background**: `#000000` (pure black)
-- **Surface**: `#1C1C1E` (dark gray)
-- **Surface Highlight**: `#2C2C2E`
-- **Surface Elevated**: `#3A3A3C`
-- **Primary**: CSS variable `--color-primary` (defaults to purple: `191 90 242`)
-
-### Semantic Colors
-- **Success**: `#30D158`
-- **Warning**: `#FF9F0A`
-- **Danger**: `#FF453A`
-- **Info**: `#0A84FF`
-
-### Text Colors
-- **Primary**: `#F5F5F7`
-- **Secondary**: `#86868B`
-- **Tertiary**: `#636366`
-
-## Project Structure
-
-```
-src/
-├── types/
-│   └── index.ts          # TypeScript type definitions
-├── utils/
-│   └── scoring.ts        # Scoring algorithms
-├── App.tsx               # Main app component
-├── main.tsx              # Entry point
-└── index.css             # Global styles with Tailwind
-```
-
-## Getting Started
-
-### Install Dependencies
+## Quick start
 
 ```bash
 npm install
+npm run dev:all
 ```
 
-### Development Server
+- Frontend: `http://localhost:5173` (Vite)
+- Backend: `http://localhost:3001` (Express API; required for Sonny/agents)
 
-```bash
-npm run dev
-```
+More details: `docs/getting-started/START_GUIDE.md`
 
-### Build for Production
+## Repository layout
 
-```bash
-npm run build
-```
+- `src/`: React app (dashboards, tiles, Sonny side panel, Intelligence Feed)
+- `server/`: local Express backend (dev/runtime API)
+- `api/`: Vercel serverless functions (deployed API)
+- `docs/`: product + engineering documentation
+- `mockups/`: static HTML prototypes (not used by the build)
 
-### Preview Production Build
+## Documentation index (start here)
 
-```bash
-npm run preview
-```
+- **Getting started**: `docs/getting-started/START_GUIDE.md`
+- **Running record (handoff)**: `docs/records/LUMINA_BUILD_UPDATES.md`
+- **Trust layer**: `docs/trust/TRUST_LAYER_IMPLEMENTATION_BACKLOG.md`, `docs/trust/TRUST_LAYER_SPRINT_PLAN_WEEK1.md`, `docs/trust/TRUST_LAYER_SPRINT_PLAN_WEEK2.md`
+- **Agents**: `docs/agents/` (hero skills, integration status, domain reviews)
+- **Deployment**: `docs/deployment/`
+- **Dashboard / UX**: `docs/dashboard/`
+- **Tiles**: `docs/tiles/`
+- **Patent parsing**: `docs/patent-parsing/`
+- **Exports**: `docs/export/PDF_EXPORT_GUIDE.md`
+- **Investment memo**: `docs/investment-memo/`
+- **MCP (retrieval layer)**: `docs/mcp/`
 
-## Features
+## Tech stack
 
-### Type System
-Comprehensive TypeScript types for:
-- Personas (Scientist, BD)
-- Scoring types (Validation, Druggability, Safety, etc.)
-- Data interfaces (GWAS, Clinical Trials, Patents, etc.)
-
-### Scoring Algorithms
-Utility functions for calculating:
-- Overall scores with weighted components
-- Validation scores from genetic evidence
-- Therapeutic window from expression profiles
-- Druggability scores from target characteristics
-
-### Design Principles
-- Clean, minimal interface
-- Subtle glassmorphism effects
-- Custom scrollbar styling
-- Smooth animations and transitions
-- Accessibility-focused focus states
-
-## Customization
-
-### Primary Color
-Change the primary color by updating the CSS variable in `src/index.css`:
-
-```css
-:root {
-  --color-primary: 191 90 242; /* Purple (RGB values) */
-}
-```
-
-### Tailwind Configuration
-Edit `tailwind.config.js` to customize the theme, colors, and utilities.
+- **Frontend**: React 19, TypeScript, Vite, React Router, Tailwind CSS, TanStack Query, Zustand, Framer Motion
+- **Backend**: Express (local), Vercel serverless functions (deployed)
+- **LLMs**: Anthropic Claude, Google Gemini, Perplexity (see `docs/records/LUMINA_BUILD_UPDATES.md` for current routing)
 
 ## License
 

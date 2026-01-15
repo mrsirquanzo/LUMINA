@@ -143,7 +143,7 @@ The Sonny side panel is the “demo surface” for each agent. The intent is:
 
 ### Current “Hero Skills” per agent (as implemented / defined)
 
-Source-of-truth for the intended skill map: `AGENT_HERO_SKILLS_IMPLEMENTATION_PLAN.md`
+Source-of-truth for the intended skill map: `docs/agents/AGENT_HERO_SKILLS_IMPLEMENTATION_PLAN.md`
 
 - **Clinical**
   - Trial Landscape Analyzer
@@ -303,17 +303,17 @@ Notes:
 ## Trust stack contracts (BD/scientist)
 
 - Canonical schemas for claim-first, evidence-backed outputs:
-  - `DILIGENCE_TRUST_STACK_SCHEMAS.md` (Claim Ledger, Retrieval Log, Verification Plan, Sonny derived synthesis view)
+  - `docs/trust/DILIGENCE_TRUST_STACK_SCHEMAS.md` (Claim Ledger, Retrieval Log, Verification Plan, Sonny derived synthesis view)
 
 ## Trust layer backlog (epics → stories → acceptance criteria)
 
 - Implementation backlog aligned to the contracts above:
-  - `TRUST_LAYER_IMPLEMENTATION_BACKLOG.md`
+  - `docs/trust/TRUST_LAYER_IMPLEMENTATION_BACKLOG.md`
   - Backlog v0.4 includes: drug/condition/company extraction + disambiguation, trial results retrieval, packet sizing controls, caching/dedup + error recovery, **rate limiting coordination**, retraction checks + conflict resolution, narrative generator, persistence (file→DB) + permissions model, export integrity/signatures, cost management, rollout/feature flags/monitoring + **source health monitoring**, **run history search/filter**, and optional batch processing.
   - Week 1 execution plan:
-    - `TRUST_LAYER_SPRINT_PLAN_WEEK1.md`
+    - `docs/trust/TRUST_LAYER_SPRINT_PLAN_WEEK1.md`
   - Week 2 execution plan:
-    - `TRUST_LAYER_SPRINT_PLAN_WEEK2.md`
+    - `docs/trust/TRUST_LAYER_SPRINT_PLAN_WEEK2.md`
 
 ---
 
@@ -355,7 +355,7 @@ Every run should produce:
 - **Retrieval logs** (canonical): what was searched, where, when, what returned, limitations
 - **Verification plan** (canonical): BD-style “data room request list” mapped to uncertainties + unlocks
 
-Contracts defined in: `DILIGENCE_TRUST_STACK_SCHEMAS.md`
+Contracts defined in: `docs/trust/DILIGENCE_TRUST_STACK_SCHEMAS.md`
 
 ### RAG strategy (yes — but “just-in-time”, structured, source-tiered)
 

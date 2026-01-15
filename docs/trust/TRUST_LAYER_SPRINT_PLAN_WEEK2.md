@@ -2,9 +2,9 @@
 
 Sprint window: Week 2 (5 working days)  
 Inputs:
-- `TRUST_LAYER_IMPLEMENTATION_BACKLOG.md` (v0.4)
-- `TRUST_LAYER_SPRINT_PLAN_WEEK1.md` (Week 1 deliverables)
-- `DILIGENCE_TRUST_STACK_SCHEMAS.md` (contracts v0.1)
+- `./TRUST_LAYER_IMPLEMENTATION_BACKLOG.md` (v0.4)
+- `./TRUST_LAYER_SPRINT_PLAN_WEEK1.md` (Week 1 deliverables)
+- `./DILIGENCE_TRUST_STACK_SCHEMAS.md` (contracts v0.1)
 
 Objective: extend the Week 1 vertical slice into a **credible “trust loop”** by adding:
 

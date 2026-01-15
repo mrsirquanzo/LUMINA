@@ -7,7 +7,7 @@ Purpose: Convert LUMINA from “prompting + hope” into **grounded, auditable, 
 - **Trust UI** (tier badges + evidence drawers)
 - **Human‑in‑the‑loop** (approve/annotate/lock)
 
-Canonical data contracts: `DILIGENCE_TRUST_STACK_SCHEMAS.md`
+Canonical data contracts: `./DILIGENCE_TRUST_STACK_SCHEMAS.md`
 
 Updates in v0.4 (production readiness gap-fill):
 - Expand entity extraction to include **drug/condition/company** + disambiguation/linking.
@@ -21,7 +21,7 @@ Updates in v0.4 (production readiness gap-fill):
 - Add **export integrity/signatures** (tamper-evident exports + verification utility).
 - Add **batch processing/job queue** (optional for v1; critical for team-scale adoption).
 - Added a concrete Week 1 execution plan:
-  - `TRUST_LAYER_SPRINT_PLAN_WEEK1.md`
+  - `./TRUST_LAYER_SPRINT_PLAN_WEEK1.md`
 - Add operational scalability:
   - centralized **rate limiting coordination** (shared quotas + priority scheduling)
   - **run history search/filter** (findability at scale)
