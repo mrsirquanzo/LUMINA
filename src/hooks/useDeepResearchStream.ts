@@ -4,6 +4,7 @@ import { createTraceBuffer } from '../lib/research/traceBuffer.js';
 import { useBriefingStore } from '../lib/research/briefingStore.js';
 import { startDeepResearch, fetchBriefing } from '../lib/research/api.js';
 import type { ResearchTraceEvent, BriefingView } from '../lib/research/sseTypes.js';
+import { createSSEParser } from '../lib/research/sseParse.js';
 
 export type RunStatus = 'idle' | 'hydrating' | 'running' | 'done' | 'error';
 
@@ -79,24 +80,15 @@ export function useDeepResearchStream(): UseDeepResearchStream {
       }
 
       const decoder = new TextDecoder();
+      const parser = createSSEParser();
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
+        const events = parser.push(decoder.decode(value, { stream: true }));
 
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const raw = line.substring(6);
-          let event: ResearchTraceEvent;
-          try {
-            event = JSON.parse(raw) as ResearchTraceEvent;
-          } catch {
-            continue;
-          }
-
+        for (const event of events as ResearchTraceEvent[]) {
           if (event.type === 'run_started') {
             const rid = event.runId as string | undefined;
             if (rid) {
