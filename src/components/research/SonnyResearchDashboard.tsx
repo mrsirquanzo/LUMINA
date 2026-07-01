@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDeepResearchStream } from '../../hooks/useDeepResearchStream';
 import { useBriefingStore } from '../../lib/research/briefingStore';
 import { ResearchComposer } from './ResearchComposer';
+import GlassBoxTrace from './GlassBoxTrace.js';
 import { AlertTriangle } from 'lucide-react';
 
 export function SonnyResearchDashboard() {
@@ -44,8 +45,7 @@ export function SonnyResearchDashboard() {
         {/* Left: trace / reasoning steps */}
         <div className="bg-surfaceElevated/60 backdrop-blur-sm border border-white/10 rounded-2xl p-4 min-h-[400px]">
           <p className="text-xs text-textTertiary font-medium tracking-wider uppercase mb-3">Reasoning Trace</p>
-          {/* TODO(2.8): Replace with <GlassBoxTrace traceStore={s.traceStore} status={s.status} /> */}
-          <div className="text-textTertiary text-sm italic">trace</div>
+          <GlassBoxTrace traceStore={s.traceStore} status={s.status} />
         </div>
 
         {/* Right: dossier / briefing */}
