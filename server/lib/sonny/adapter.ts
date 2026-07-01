@@ -82,9 +82,12 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
 
   handle.on('exit', (code: number) => {
     if (finished) return;
+    // A worker that exits WITHOUT having posted done/error (silent exit) must still
+    // terminate the run, or its bus subscribers (e.g. an open SSE connection) are
+    // orphaned forever. Nonzero also surfaces an error; either way, finish() closes it.
     if (code !== 0) {
       publish(input.runId, { type: 'error', message: `worker exited ${code}` });
-      closeRun(input.runId);
     }
+    finish();
   });
 }

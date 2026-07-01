@@ -50,6 +50,28 @@ describe('startRun adapter', () => {
     expect(got.map((e) => e.type)).toEqual(['done']); // no trailing error
   });
 
+  it('closes and terminates the run on a silent clean exit (code 0, no done posted)', () => {
+    const { spawn, emit, wasTerminated } = fakeSpawn();
+    const got: Array<{ type: string }> = [];
+    subscribe('r4', (e) => got.push(e as never));
+    startRun({ runId: 'r4', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
+    emit('exit', 0);
+    // run is now closed: a later publish is a no-op, and the worker was terminated
+    publish('r4', { type: 'error', message: 'late' } as never);
+    expect(got).toEqual([]); // no terminal event fabricated for a clean exit
+    expect(wasTerminated()).toBe(true);
+  });
+
+  it('reports an error and closes on a nonzero exit with no prior done', () => {
+    const { spawn, emit, wasTerminated } = fakeSpawn();
+    const got: Array<{ type: string; message?: string }> = [];
+    subscribe('r5', (e) => got.push(e as never));
+    startRun({ runId: 'r5', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
+    emit('exit', 3);
+    expect(got).toEqual([{ type: 'error', message: 'worker exited 3' }]);
+    expect(wasTerminated()).toBe(true);
+  });
+
   it('persists the briefing on done, with the runId, and not on error', async () => {
     const { spawn, emit } = fakeSpawn();
     const calls: Array<{ runId: string; target: string }> = [];
