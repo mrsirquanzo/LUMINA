@@ -16,3 +16,18 @@ export const EMPTY_AGGREGATE: TraceAggregate = Object.freeze({
   auditFlags: 0,
   log: Object.freeze([]) as Array<{ type: string; label: string }>,
 });
+
+export interface BriefingView {
+  target?: string;
+  recommendation?: {
+    verdict?: string;
+    thesis?: string;
+    bull?: Array<{ point?: string; citations?: string[] }>;
+    bear?: Array<{ point?: string; citations?: string[] }>;
+    conditions?: string[];
+  };
+  executiveRead?: string;
+  sections?: Array<{ id?: string; title?: string; takeaway?: string; rag?: 'red' | 'amber' | 'green'; claims?: Array<{ text?: string; citations?: string[] }> }>;
+  references?: Array<{ id?: string; title?: string; url?: string }>;
+  kolCluster?: { labs?: Array<{ investigator?: string; institution?: string; paperCount?: number }> };
+}
