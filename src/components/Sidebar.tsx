@@ -12,6 +12,7 @@ import {
   User,
   LogOut,
   Target,
+  Microscope,
 } from 'lucide-react';
 import type { Persona, ViewState } from '../types';
 import { useWorkspaceStore } from '../lib/workspaces/store';
@@ -286,7 +287,7 @@ const Sidebar = memo(function Sidebar({
       }
 
       const navItems: ViewState[] = ['dashboard', 'workspaces', 'feed'];
-      const allNavItems: ViewState[] = [...navItems, 'history'];
+      const allNavItems: ViewState[] = [...navItems, 'history', 'research'];
       const currentIndex = allNavItems.indexOf(currentView);
 
       switch (e.key) {
@@ -308,7 +309,7 @@ const Sidebar = memo(function Sidebar({
           break;
         case 'End':
           e.preventDefault();
-          onViewChange('history');
+          onViewChange('research');
           break;
       }
     };
@@ -343,6 +344,7 @@ const Sidebar = memo(function Sidebar({
     { id: 'dashboard' as ViewState, icon: LayoutGrid, label: 'Dashboard' },
     { id: 'workspaces' as ViewState, icon: FolderOpen, label: 'Workspaces' },
     { id: 'history' as ViewState, icon: History, label: 'Recent' },
+    { id: 'research' as ViewState, icon: Microscope, label: 'Research' },
   ];
 
   const bottomNavItems: NavItem[] = [
