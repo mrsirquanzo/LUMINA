@@ -1,5 +1,7 @@
 import { Worker } from 'worker_threads';
 import path from 'path';
+import fs from 'fs';
+import { buildSync } from 'esbuild';
 import { publish, closeRun } from './runBus.js';
 import type { WorkerMessage, WorkerOpts } from './worker.js';
 import { saveBriefing } from './runStore.js';
@@ -16,10 +18,29 @@ export interface WorkerHandle {
 
 export type SpawnWorker = (opts: WorkerOpts) => WorkerHandle;
 
+// The worker's TS module graph cannot be spawned directly: a worker_thread loading a `.ts`
+// file resolves its `.js` sibling imports against native Node, not tsx (proven: tsx only
+// rewrites extensions in the main CLI process, not in spawned workers). So we bundle the
+// worker into a single self-contained ESM file with esbuild, keeping the engine EXTERNAL so
+// its runtime `await import()` still resolves from node_modules. Bundled once per process,
+// cached under node_modules/.cache (gitignored). Resolves from source (dev) via process.cwd().
+let cachedWorkerBundle: string | null = null;
+function resolveWorkerBundle(): string {
+  if (cachedWorkerBundle && fs.existsSync(cachedWorkerBundle)) return cachedWorkerBundle;
+  const cwd = process.cwd();
+  const src = path.join(cwd, 'server/lib/sonny/worker.ts');
+  const out = path.join(cwd, 'node_modules/.cache/sonny/worker.mjs');
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  buildSync({
+    entryPoints: [src], outfile: out, bundle: true, format: 'esm',
+    platform: 'node', target: 'node20', external: ['@mrsirquanzo/*'],
+  });
+  cachedWorkerBundle = out;
+  return out;
+}
+
 const defaultSpawn: SpawnWorker = (opts) => {
-  const isTs = __filename.endsWith('.ts');
-  const workerPath = path.join(__dirname, isTs ? 'worker.ts' : 'worker.js');
-  const w = new Worker(workerPath, { workerData: opts, execArgv: isTs ? ['--import', 'tsx'] : [] });
+  const w = new Worker(resolveWorkerBundle(), { workerData: opts });
   return {
     on: (ev: 'message' | 'error' | 'exit', cb: (arg: never) => void) => { w.on(ev, cb as (a: unknown) => void); },
     terminate: () => { void w.terminate(); },
