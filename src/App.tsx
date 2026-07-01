@@ -7,6 +7,7 @@ import ScoutDashboard from './components/ScoutDashboard';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
 import Workspaces from './components/views/Workspaces';
 import Recent from './components/views/Recent';
+import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import SearchModal from './components/SearchModal';
 import ExportModal from './components/ExportModal';
@@ -538,6 +539,12 @@ function AppContent() {
                 {currentView === 'history' && (
                   <Suspense fallback={<DashboardSkeleton />}>
                     <Recent />
+                  </Suspense>
+                )}
+
+                {currentView === 'research' && (
+                  <Suspense fallback={<DashboardSkeleton />}>
+                    <SonnyResearchDashboard />
                   </Suspense>
                 )}
               </div>
