@@ -9,12 +9,14 @@ export interface TraceAggregate {
   log: Array<{ type: string; label: string }>;
 }
 
+// Frozen at the top level; foldTrace always copies (spreads) before writing, so the
+// nested empties are never mutated. Avoids the `readonly never[]` cast that breaks tsc -b.
 export const EMPTY_AGGREGATE: TraceAggregate = Object.freeze({
   phase: 'idle',
-  counts: Object.freeze({}) as Record<string, number>,
-  sectionsRag: Object.freeze({}) as Record<string, 'red' | 'amber' | 'green'>,
+  counts: {} as Record<string, number>,
+  sectionsRag: {} as Record<string, 'red' | 'amber' | 'green'>,
   auditFlags: 0,
-  log: Object.freeze([]) as Array<{ type: string; label: string }>,
+  log: [] as Array<{ type: string; label: string }>,
 });
 
 export interface BriefingView {
