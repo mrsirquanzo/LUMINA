@@ -1,5 +1,16 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
+// Stable short id derived from a URL string (FNV-1a 32-bit, unsigned, base36).
+// Deterministic so the same URL always yields the same feed-item id.
+function hashToBase36(input: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < input.length; i++) {
+    h ^= input.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36);
+}
+
 type FeedItemKind = 'publication' | 'news' | 'regulatory' | 'deal' | 'clinical';
 type FeedItemRelevance = 'high' | 'medium' | 'low';
 
