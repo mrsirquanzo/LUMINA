@@ -3,6 +3,7 @@ import { useDeepResearchStream } from '../../hooks/useDeepResearchStream';
 import { useBriefingStore } from '../../lib/research/briefingStore';
 import { ResearchComposer } from './ResearchComposer';
 import GlassBoxTrace from './GlassBoxTrace.js';
+import ResearchDossier from './ResearchDossier.js';
 import { AlertTriangle } from 'lucide-react';
 
 export function SonnyResearchDashboard() {
@@ -52,8 +53,7 @@ export function SonnyResearchDashboard() {
         <div className="bg-surfaceElevated/60 backdrop-blur-sm border border-white/10 rounded-2xl p-4 min-h-[400px]">
           <p className="text-xs text-textTertiary font-medium tracking-wider uppercase mb-3">Dossier</p>
           {briefing ? (
-            // TODO(2.9): Replace with <ResearchDossier briefing={briefing} runId={s.runId} />
-            <div className="text-textTertiary text-sm italic">dossier</div>
+            <ResearchDossier briefing={briefing} />
           ) : (
             <div className="flex flex-col items-center justify-center h-[300px] gap-3">
               <div className="w-6 h-6 rounded-full border-2 border-primary/40 border-t-primary animate-spin" />
