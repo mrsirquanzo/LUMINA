@@ -2,6 +2,10 @@ import { Worker } from 'worker_threads';
 import path from 'path';
 import { publish, closeRun } from './runBus.js';
 import type { WorkerMessage, WorkerOpts } from './worker.js';
+import { saveBriefing } from './runStore.js';
+import type { Briefing } from '@mrsirquanzo/sonny-shared';
+
+export type PersistBriefing = (runId: string, briefing: Briefing) => Promise<void>;
 
 export interface WorkerHandle {
   on(event: 'message', cb: (m: WorkerMessage) => void): void;
@@ -22,7 +26,7 @@ const defaultSpawn: SpawnWorker = (opts) => {
   };
 };
 
-export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn): void {
+export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, persist: PersistBriefing = saveBriefing): void {
   const handle = spawn(input);
   let finished = false;
 
@@ -39,6 +43,9 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn): 
       publish(input.runId, m.event);
     } else if (m.kind === 'done') {
       publish(input.runId, { type: 'done', briefing: m.briefing });
+      void persist(input.runId, m.briefing).catch((err) => {
+        console.error(`[sonny] failed to persist run ${input.runId}:`, err);
+      });
       finish();
     } else if (m.kind === 'error') {
       publish(input.runId, { type: 'error', message: m.message });

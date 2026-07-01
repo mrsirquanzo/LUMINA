@@ -20,7 +20,7 @@ describe('startRun adapter', () => {
     const { spawn, emit, wasTerminated } = fakeSpawn();
     const seen: string[] = [];
     subscribe('r1', (e) => seen.push(e.type));
-    startRun({ runId: 'r1', target: 'T', mode: 'fast', backend: 'ollama' }, spawn);
+    startRun({ runId: 'r1', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
     emit('message', { kind: 'trace', event: { type: 'lead_decompose', specialists: [] } } as WorkerMessage);
     emit('message', { kind: 'done', briefing: { target: 'T' } } as unknown as WorkerMessage);
     const afterDone = seen.length;
@@ -35,7 +35,7 @@ describe('startRun adapter', () => {
     const seen: WorkerMessage[] = [] as never;
     const got: Array<{ type: string; message?: string }> = [];
     subscribe('r2', (e) => got.push(e as never));
-    startRun({ runId: 'r2', target: 'T', mode: 'fast', backend: 'ollama' }, spawn);
+    startRun({ runId: 'r2', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
     emit('error', new Error('worker crashed'));
     expect(got).toEqual([{ type: 'error', message: 'worker crashed' }]);
   });
@@ -44,9 +44,31 @@ describe('startRun adapter', () => {
     const { spawn, emit } = fakeSpawn();
     const got: Array<{ type: string }> = [];
     subscribe('r3', (e) => got.push(e as never));
-    startRun({ runId: 'r3', target: 'T', mode: 'fast', backend: 'ollama' }, spawn);
+    startRun({ runId: 'r3', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
     emit('message', { kind: 'done', briefing: { target: 'T' } } as unknown as WorkerMessage);
     emit('exit', 1);
     expect(got.map((e) => e.type)).toEqual(['done']); // no trailing error
+  });
+
+  it('persists the briefing on done, with the runId, and not on error', async () => {
+    const { spawn, emit } = fakeSpawn();
+    const calls: Array<{ runId: string; target: string }> = [];
+    const persist = async (runId: string, briefing: { target?: string }) => {
+      calls.push({ runId, target: briefing.target ?? '' });
+    };
+    subscribe('p1', () => {});
+    startRun({ runId: 'p1', target: 'CDCP1', mode: 'fast', backend: 'ollama' }, spawn, persist as never);
+    emit('message', { kind: 'done', briefing: { target: 'CDCP1' } } as never);
+    // fire-and-forget: allow the microtask to run
+    await Promise.resolve();
+    expect(calls).toEqual([{ runId: 'p1', target: 'CDCP1' }]);
+
+    // error path must NOT persist
+    const { spawn: spawn2, emit: emit2 } = fakeSpawn();
+    const calls2: unknown[] = [];
+    startRun({ runId: 'p2', target: 'X', mode: 'fast', backend: 'ollama' }, spawn2, (async () => { calls2.push(1); }) as never);
+    emit2('message', { kind: 'error', message: 'boom' } as never);
+    await Promise.resolve();
+    expect(calls2).toEqual([]);
   });
 });
