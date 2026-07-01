@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { makeDeepResearchRouter } from './deepResearch.js';
+import type { BusEvent } from './deepResearch.js';
 
 interface FakeRes {
   setHeader(): void;
@@ -22,19 +23,19 @@ function fakeRes(): FakeRes {
 
 describe('deepResearch router', () => {
   it('POST streams run_started, forwards bus events, ends on done', async () => {
-    let handler: ((e: unknown) => void) | null = null;
+    let handler: ((e: BusEvent) => void) | null = null;
     const deps = {
       makeRunId: () => 'RID',
       startRun: () => {},
-      subscribe: (_r: string, fn: (e: unknown) => void) => { handler = fn; return () => {}; },
+      subscribe: (_r: string, fn: (e: BusEvent) => void) => { handler = fn; return () => {}; },
       loadBriefing: async () => null,
     };
     const router = makeDeepResearchRouter(deps);
     const post = (router.stack.find((l: any) => l.route?.path === '/' && l.route?.methods?.post) as any).route.stack[0].handle;
     const res = fakeRes();
     await post({ body: { target: 'CDCP1', mode: 'fast' } }, res);
-    handler!({ type: 'lead_decompose', specialists: [] });
-    handler!({ type: 'done', briefing: { target: 'CDCP1' } });
+    handler!({ type: 'lead_decompose', specialists: [] } as BusEvent);
+    handler!({ type: 'done', briefing: { target: 'CDCP1' } } as BusEvent);
     const joined = res.chunks.join('');
     expect(joined).toContain('"type":"run_started"');
     expect(joined).toContain('"runId":"RID"');

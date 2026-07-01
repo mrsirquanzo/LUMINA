@@ -1,18 +1,16 @@
 import { Router, Request, Response } from 'express';
-import type { Briefing, TraceEvent } from '@mrsirquanzo/sonny-shared';
+import type { Briefing } from '@mrsirquanzo/sonny-shared';
 import { startRun as realStartRun } from '../../lib/sonny/adapter.js';
 import { subscribe as realSubscribe } from '../../lib/sonny/runBus.js';
+import type { BusEvent } from '../../lib/sonny/runBus.js';
 import { loadBriefing as realLoadBriefing } from '../../lib/sonny/runStore.js';
 
-export type BusEvent =
-  | TraceEvent
-  | { type: 'done'; briefing: Briefing }
-  | { type: 'error'; message: string };
+export type { BusEvent };
 
 export interface DeepResearchDeps {
   makeRunId: (target: string) => string;
   startRun: (input: { runId: string; target: string; mode: 'fast' | 'thorough'; backend?: string }) => void;
-  subscribe: (runId: string, fn: (e: any) => void) => () => void;
+  subscribe: (runId: string, fn: (e: BusEvent) => void) => () => void;
   loadBriefing: (runId: string) => Promise<Briefing | null>;
 }
 
@@ -83,7 +81,7 @@ export function makeDeepResearchRouter(deps: DeepResearchDeps): Router {
 const deepResearchRoutes = makeDeepResearchRouter({
   makeRunId: defaultMakeRunId,
   startRun: realStartRun,
-  subscribe: realSubscribe as (runId: string, fn: (e: BusEvent) => void) => () => void,
+  subscribe: realSubscribe,
   loadBriefing: realLoadBriefing,
 });
 
