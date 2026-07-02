@@ -30,3 +30,8 @@ server/data/sonny-runs/
 .env
 .env.local
 .env.*.local
+
+# Tooling / agent scratch (never commit)
+.gstack/
+.claude/worktrees/
+.superpowers/
