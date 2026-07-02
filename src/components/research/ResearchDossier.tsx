@@ -16,7 +16,7 @@ function ragChipClass(rag?: 'red' | 'amber' | 'green'): string {
   if (rag === 'green') return 'bg-teal-500/20 text-teal-300 border border-teal-500/30';
   if (rag === 'amber') return 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
   if (rag === 'red') return 'bg-red-500/20 text-red-300 border border-red-500/30';
-  return 'bg-white/10 text-textTertiary border border-white/10';
+  return 'bg-subtle text-textSecondary border border-border';
 }
 
 export default function ResearchDossier({ briefing }: Props): ReactElement {
@@ -47,11 +47,11 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       {/* Sections */}
       {(briefing.sections ?? []).length > 0 && (
         <div className="space-y-3">
-          <p className="text-xs text-textTertiary font-medium tracking-wider uppercase">Analysis Sections</p>
+          <p className="text-xs text-textSecondary font-medium tracking-wider uppercase">Analysis Sections</p>
           {briefing.sections!.map((section, i) => (
             <div
               key={section.id ?? i}
-              className="bg-surfaceElevated/40 backdrop-blur-sm border border-white/10 rounded-xl p-4"
+              className="bg-subtle border border-border rounded-xl p-4"
             >
               <div className="flex items-center gap-2 mb-2">
                 {section.rag && (
@@ -69,8 +69,8 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
               {(section.claims ?? []).length > 0 && (
                 <ul className="space-y-1">
                   {section.claims!.map((c, ci) => (
-                    <li key={ci} className="text-textTertiary flex gap-1">
-                      <span className="shrink-0 text-white/20">-</span>
+                    <li key={ci} className="text-textSecondary flex gap-1">
+                      <span className="shrink-0 text-textTertiary">-</span>
                       <span>
                         {c.text ?? ''}
                         {(c.citations ?? []).length > 0 && (
@@ -152,10 +152,10 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       {/* KOL terrain */}
       {(briefing.kolCluster?.labs ?? []).length > 0 && (
         <div>
-          <p className="text-xs text-textTertiary font-medium tracking-wider uppercase mb-2">KOL & Institutional Terrain</p>
+          <p className="text-xs text-textSecondary font-medium tracking-wider uppercase mb-2">KOL & Institutional Terrain</p>
           <ul className="space-y-1">
             {(briefing.kolCluster?.labs ?? []).map((lab, i) => (
-              <li key={i} className="text-textTertiary">
+              <li key={i} className="text-textSecondary">
                 {lab.investigator ?? ''}
                 {lab.institution ? ` - ${lab.institution}` : ''}
                 {lab.paperCount !== undefined ? ` (${lab.paperCount} papers)` : ''}
@@ -168,24 +168,24 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       {/* References */}
       {(briefing.references ?? []).length > 0 && (
         <div>
-          <p className="text-xs text-textTertiary font-medium tracking-wider uppercase mb-2">References</p>
+          <p className="text-xs text-textSecondary font-medium tracking-wider uppercase mb-2">References</p>
           <ul className="space-y-1">
             {(briefing.references ?? []).map((r, i) => (
               <li key={r.id ?? i} className="flex gap-2 items-baseline">
                 {r.id && (
-                  <span className="font-mono text-xs text-textTertiary shrink-0">[{r.id}]</span>
+                  <span className="font-mono text-xs text-textSecondary shrink-0">[{r.id}]</span>
                 )}
                 {r.url ? (
                   <a
                     href={r.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-300 hover:text-blue-200 underline decoration-blue-400/40 text-xs break-all"
+                    className="text-primary hover:text-primary/80 underline decoration-primary/40 text-xs break-all"
                   >
                     {r.title ?? r.url}
                   </a>
                 ) : (
-                  <span className="text-textTertiary text-xs">{r.title ?? ''}</span>
+                  <span className="text-textSecondary text-xs">{r.title ?? ''}</span>
                 )}
               </li>
             ))}

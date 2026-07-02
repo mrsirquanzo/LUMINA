@@ -53,36 +53,36 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
 
       {/* Counters */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-center">
+        <div className="bg-subtle border border-border rounded-xl px-3 py-2 text-center">
           <p className="text-lg font-semibold text-textPrimary tabular-nums">
             {counts['research_read'] ?? 0}
           </p>
-          <p className="text-[10px] text-textTertiary uppercase tracking-wider mt-0.5">Papers</p>
+          <p className="text-[10px] text-textSecondary uppercase tracking-wider mt-0.5">Papers</p>
         </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-center">
+        <div className="bg-subtle border border-border rounded-xl px-3 py-2 text-center">
           <p className="text-lg font-semibold text-textPrimary tabular-nums">
             {counts['evidence_registered'] ?? 0}
           </p>
-          <p className="text-[10px] text-textTertiary uppercase tracking-wider mt-0.5">Evidence</p>
+          <p className="text-[10px] text-textSecondary uppercase tracking-wider mt-0.5">Evidence</p>
         </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-center">
+        <div className="bg-subtle border border-border rounded-xl px-3 py-2 text-center">
           <p className="text-lg font-semibold text-textPrimary tabular-nums">
             {counts['tool_call'] ?? 0}
           </p>
-          <p className="text-[10px] text-textTertiary uppercase tracking-wider mt-0.5">Tools</p>
+          <p className="text-[10px] text-textSecondary uppercase tracking-wider mt-0.5">Tools</p>
         </div>
       </div>
 
       {/* Live log - capped at 300 entries by the store */}
       <div className="flex-1 min-h-0">
-        <p className="text-[10px] text-textTertiary uppercase tracking-wider mb-1.5">Live log</p>
-        <div className="max-h-48 overflow-y-auto flex flex-col gap-0.5 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10">
+        <p className="text-[10px] text-textSecondary uppercase tracking-wider mb-1.5">Live log</p>
+        <div className="max-h-48 overflow-y-auto flex flex-col gap-0.5 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border">
           {log.length === 0 ? (
-            <p className="text-xs text-textTertiary italic">Waiting for events...</p>
+            <p className="text-xs text-textSecondary italic">Waiting for events...</p>
           ) : (
             log.map((entry, i) => (
               <div key={i} className="flex items-start gap-2 text-xs text-textSecondary py-0.5">
-                <span className="text-textTertiary flex-shrink-0 font-mono text-[10px] mt-px">{entry.type}</span>
+                <span className="text-textSecondary flex-shrink-0 font-mono text-[10px] mt-px">{entry.type}</span>
                 <span className="text-textSecondary truncate">{entry.label}</span>
               </div>
             ))
@@ -97,10 +97,10 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
 function IdleState() {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
-      <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center">
-        <span className="text-textTertiary text-xs">-</span>
+      <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center">
+        <span className="text-textSecondary text-xs">-</span>
       </div>
-      <p className="text-xs text-textTertiary">No active run</p>
+      <p className="text-xs text-textSecondary">No active run</p>
     </div>
   );
 }

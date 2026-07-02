@@ -37,10 +37,10 @@ export function ResearchComposer({ onStart, recentRuns, onOpenRun }: ResearchCom
       </div>
 
       {/* Composer card */}
-      <div className="w-full max-w-2xl bg-surfaceElevated/60 backdrop-blur-sm border border-white/10 rounded-2xl p-6 shadow-xl">
+      <div className="w-full max-w-2xl bg-surface border border-border rounded-2xl p-6 shadow-sm">
         {/* Input */}
-        <div className="flex items-center gap-3 bg-surface/60 border border-white/10 rounded-xl px-4 py-3 mb-4 focus-within:border-primary/50 transition-colors">
-          <Search className="w-5 h-5 text-textTertiary flex-shrink-0" />
+        <div className="flex items-center gap-3 bg-subtle border border-border rounded-xl px-4 py-3 mb-4 focus-within:border-primary/50 transition-colors">
+          <Search className="w-5 h-5 text-textSecondary flex-shrink-0" />
           <input
             type="text"
             value={target}
@@ -55,7 +55,7 @@ export function ResearchComposer({ onStart, recentRuns, onOpenRun }: ResearchCom
         {/* Mode toggle */}
         <div className="flex items-center gap-2 mb-5">
           <span className="text-sm text-textSecondary">Mode:</span>
-          <div className="flex gap-1 bg-surface/60 border border-white/10 rounded-lg p-0.5">
+          <div className="flex gap-1 bg-subtle border border-border rounded-lg p-0.5">
             <button
               onClick={() => setMode('fast')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
@@ -92,12 +92,12 @@ export function ResearchComposer({ onStart, recentRuns, onOpenRun }: ResearchCom
 
         {/* Example chips */}
         <div className="flex items-center gap-2 mt-4 flex-wrap">
-          <span className="text-xs text-textTertiary">Try:</span>
+          <span className="text-xs text-textSecondary">Try:</span>
           {EXAMPLE_CHIPS.map((chip) => (
             <button
               key={chip}
               onClick={() => setTarget(chip)}
-              className="px-2.5 py-1 rounded-lg bg-surface/60 border border-white/10 text-xs text-textSecondary hover:text-textPrimary hover:border-primary/30 transition-colors"
+              className="px-2.5 py-1 rounded-lg bg-subtle border border-border text-xs text-textSecondary hover:text-textPrimary hover:border-primary/30 transition-colors"
             >
               {chip}
             </button>
@@ -108,17 +108,17 @@ export function ResearchComposer({ onStart, recentRuns, onOpenRun }: ResearchCom
       {/* Recent runs */}
       {recentRuns && recentRuns.length > 0 && (
         <div className="w-full max-w-2xl mt-6">
-          <p className="text-xs text-textTertiary font-medium tracking-wider uppercase mb-2 px-1">Recent</p>
+          <p className="text-xs text-textSecondary font-medium tracking-wider uppercase mb-2 px-1">Recent</p>
           <div className="space-y-1">
             {recentRuns.map((run) => (
               <button
                 key={run.runId}
                 onClick={() => onOpenRun?.(run.runId)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-surfaceElevated/40 border border-white/5 text-textSecondary hover:text-textPrimary hover:border-white/10 transition-colors text-left"
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl bg-subtle border border-border text-textSecondary hover:text-textPrimary hover:border-primary/30 transition-colors text-left"
               >
-                <Clock className="w-4 h-4 flex-shrink-0 text-textTertiary" />
+                <Clock className="w-4 h-4 flex-shrink-0 text-textSecondary" />
                 <span className="text-sm">{run.target}</span>
-                <span className="ml-auto text-xs text-textTertiary font-mono truncate max-w-[120px]">{run.runId}</span>
+                <span className="ml-auto text-xs text-textSecondary font-mono truncate max-w-[120px]">{run.runId}</span>
               </button>
             ))}
           </div>
