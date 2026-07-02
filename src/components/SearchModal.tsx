@@ -45,7 +45,7 @@ export default function SearchModal({ open, onClose, onSearch }: SearchModalProp
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();

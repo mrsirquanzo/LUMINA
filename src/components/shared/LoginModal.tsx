@@ -78,7 +78,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
       <div className="bg-surfaceElevated border border-white/10 rounded-xl shadow-2xl max-w-md w-full mx-4 p-6 relative">
         {/* Close Button */}
         <button

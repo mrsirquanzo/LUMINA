@@ -923,7 +923,7 @@ export default function SonnySidePanel({
       initial={false}
       animate={{ width: panelWidth }}
       transition={{ duration: isResizing ? 0 : 0.3 }}
-      className="fixed right-0 top-20 h-[calc(100vh-5rem)] bg-surface border-l border-white/10 shadow-2xl z-40 flex flex-col"
+      className="fixed right-0 top-20 h-[calc(100vh-5rem)] bg-surface border-l border-border shadow-2xl z-40 flex flex-col"
       style={{ width: `${panelWidth}px` }}
       role="complementary"
       aria-label="Sonny agent panel"
@@ -941,8 +941,8 @@ export default function SonnySidePanel({
           role="separator"
           aria-orientation="vertical"
         >
-          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-gradient-to-b from-purple-500/60 via-blue-500/60 to-cyan-500/60 transition-colors" />
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-transparent group-hover:bg-gradient-to-b from-purple-500/30 via-blue-500/30 to-cyan-500/30 rounded-full transition-colors" />
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-primary/60 transition-colors" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-transparent group-hover:bg-primary/60 rounded-full transition-colors" />
         </div>
       )}
 
