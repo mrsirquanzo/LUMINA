@@ -29,7 +29,7 @@ export default function ScientificValidationTile({ data, loading, onAgentClick, 
             { label: 'Clinical precedent', value: 'Validated', tone: 'good' },
             { label: 'Differentiation evidence', value: 'Early / unconfirmed', tone: 'watch' },
           ].map((row) => (
-            <div key={row.label} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+            <div key={row.label} className="bg-surfaceElevated rounded-lg p-4 border border-border">
               <div className="text-sm font-semibold text-textSecondary">{row.label}</div>
               <div
                 className={`mt-2 inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold border ${
@@ -44,7 +44,7 @@ export default function ScientificValidationTile({ data, loading, onAgentClick, 
           ))}
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">
             Validation Summary
           </p>
@@ -90,7 +90,7 @@ export default function ScientificValidationTile({ data, loading, onAgentClick, 
           </ul>
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">
             Differentiation Statement
           </p>

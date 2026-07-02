@@ -59,7 +59,7 @@ export default function StrategicRecommendationTile({
         {/* Three Column Layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Column 1: Key Diligence Questions */}
-          <div className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+          <div className="bg-surfaceElevated rounded-lg p-4 border border-border">
             <p className="text-sm font-semibold text-textTertiary mb-4 uppercase tracking-wider">
               Key Diligence Questions
             </p>
@@ -74,7 +74,7 @@ export default function StrategicRecommendationTile({
           </div>
 
           {/* Column 2: Proposed Next Steps */}
-          <div className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+          <div className="bg-surfaceElevated rounded-lg p-4 border border-border">
             <p className="text-sm font-semibold text-textTertiary mb-4 uppercase tracking-wider">
               Proposed Next Steps
             </p>
@@ -98,7 +98,7 @@ export default function StrategicRecommendationTile({
           </div>
 
           {/* Column 3: Deal Considerations */}
-          <div className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+          <div className="bg-surfaceElevated rounded-lg p-4 border border-border">
             <p className="text-sm font-semibold text-textTertiary mb-4 uppercase tracking-wider">
               Deal Considerations
             </p>
@@ -112,7 +112,7 @@ export default function StrategicRecommendationTile({
             </ul>
 
             {/* Walk-Away Criteria (Collapsible) */}
-            <div className="mt-5 pt-4 border-t border-white/10">
+            <div className="mt-5 pt-4 border-t border-border">
               <button
                 onClick={() => setShowWalkAway(!showWalkAway)}
                 className="flex items-center justify-between w-full text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors"
@@ -143,16 +143,16 @@ export default function StrategicRecommendationTile({
           <button className="px-4 py-2 bg-warning text-black rounded-lg hover:bg-warning/90 transition-colors font-semibold text-sm text-center">
             Request Data Room
           </button>
-          <button className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-sm font-medium text-textPrimary text-center flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surfaceElevated border border-border rounded-lg hover:bg-surface transition-colors text-sm font-medium text-textPrimary text-center flex items-center justify-center gap-2">
             <Calendar className="w-4 h-4" />
             Schedule
           </button>
-          <button className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-sm font-medium text-textPrimary text-center flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surfaceElevated border border-border rounded-lg hover:bg-surface transition-colors text-sm font-medium text-textPrimary text-center flex items-center justify-center gap-2">
             <FileText className="w-4 h-4" />
             Memo
           </button>
           <button
-            className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-textPrimary"
+            className="px-4 py-2 bg-surfaceElevated border border-border rounded-lg hover:bg-surface transition-colors text-textPrimary"
             aria-label="Export to PowerPoint"
           >
             <Download className="w-4 h-4" />

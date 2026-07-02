@@ -28,7 +28,7 @@ export default function SafetyAssessmentTile({ data, loading, onAgentClick, exte
           </p>
           <div className="space-y-3">
             {data.expressionConcerns.slice(0, 3).map((concern: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border">
                 <div className="flex items-start justify-between mb-2">
                   <p className="text-base font-semibold text-textPrimary">{concern.organ}</p>
                   <span
@@ -47,7 +47,7 @@ export default function SafetyAssessmentTile({ data, loading, onAgentClick, exte
             ))}
           </div>
         </div>
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wide">Therapeutic Index</p>
           <p className="text-base font-bold text-textPrimary mb-2">{data.therapeuticIndex.estimate}</p>
           <p className="text-base leading-relaxed text-textPrimary">{data.therapeuticIndex.basis}</p>

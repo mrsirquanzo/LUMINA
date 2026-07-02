@@ -64,7 +64,7 @@ export default function DealLandscapeTile({ data, loading, onAgentClick, extende
         </div>
 
         {/* Comparable Deals Table */}
-        <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-border">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-base">
               <thead className="bg-surface">
@@ -77,7 +77,7 @@ export default function DealLandscapeTile({ data, loading, onAgentClick, extende
               </thead>
               <tbody>
                 {data.comparableDeals.slice(0, 3).map((deal, idx) => (
-                  <tr key={idx} className="border-t border-white/5">
+                  <tr key={idx} className="border-t border-border">
                     <td className="px-4 py-3 text-textPrimary font-semibold align-middle text-base">{deal.asset}</td>
                     <td className="px-4 py-3 align-middle">
                       <span className="inline-flex items-center justify-center text-sm px-3 py-1.5 bg-primary/20 text-primary rounded-full font-semibold whitespace-nowrap">
@@ -95,7 +95,7 @@ export default function DealLandscapeTile({ data, loading, onAgentClick, extende
           </div>
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">
             Valuation Context
           </p>
@@ -110,7 +110,7 @@ export default function DealLandscapeTile({ data, loading, onAgentClick, extende
             {data.potentialPartners.slice(0, 4).map((partner, idx) => (
               <span
                 key={idx}
-                className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm font-medium text-textSecondary hover:bg-surface hover:text-textPrimary transition-colors cursor-pointer"
+                className="px-4 py-2 bg-surfaceElevated border border-border rounded-lg text-sm font-medium text-textSecondary hover:bg-surface hover:text-textPrimary transition-colors cursor-pointer"
               >
                 {partner}
               </span>

@@ -38,7 +38,7 @@ export default function MechanisticTile({ data, loading, onAgentClick, extendedI
           </p>
           <div className="space-y-3">
             {data.keyPublications.map((pub: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border">
                 <p className="text-base font-semibold text-textPrimary mb-2">{pub.title}</p>
                 <p className="text-base text-textPrimary font-medium">{pub.authors}, {pub.journal} ({pub.year})</p>
                 {pub.keyFinding && (

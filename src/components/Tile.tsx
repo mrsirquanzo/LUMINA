@@ -125,7 +125,7 @@ const Tile = memo(function Tile({
           >
             <span className="px-0.5">[{citationId}]</span>
             {citation && (
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-3 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 text-xs">
+              <div className="absolute bottom-full left-0 mb-2 w-64 p-3 bg-surfaceElevated border border-border rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 text-xs">
                 <p className="font-semibold text-textPrimary mb-1">{citation.title}</p>
                 <p className="text-textSecondary">{citation.authors}, {citation.journal} ({citation.year})</p>
               </div>
@@ -400,7 +400,7 @@ const Tile = memo(function Tile({
 
   if (loading) {
     return (
-      <div className={`glass rounded-3xl p-6 border border-white/5 ${className}`}>
+      <div className={`glass rounded-3xl p-6 border border-border ${className}`}>
         <div className="space-y-4">
           <Skeleton height={24} width="75%" />
           <Skeleton height={16} width="50%" />
@@ -418,7 +418,7 @@ const Tile = memo(function Tile({
         initial="hidden"
         animate="visible"
         data-ai-generated={aiGenerated ? 'true' : 'false'}
-        className={`group glass rounded-3xl p-6 border border-white/5 hover:border-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 relative card-hover overflow-hidden flex flex-col h-full ${onClick ? 'cursor-pointer' : ''} ${className}`}
+        className={`group glass rounded-3xl p-6 border border-border hover:border-border transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 relative card-hover overflow-hidden flex flex-col h-full ${onClick ? 'cursor-pointer' : ''} ${className}`}
         onClick={onClick}
         aria-label={`${title} ${subtitle ? `- ${subtitle}` : ''}`}
       >
@@ -461,14 +461,14 @@ const Tile = memo(function Tile({
             )}
             {headerRight}
             {dataFreshness && (
-              <div className="flex items-center gap-1 text-xs text-textTertiary">
+              <div className="flex items-center gap-1 text-xs text-textSecondary">
                 <Clock className="w-3 h-3" />
                 <span>{dataFreshness}</span>
               </div>
             )}
             <button
               onClick={() => setIsExpanded(true)}
-              className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-white/5 text-textSecondary hover:text-textPrimary focus-ring"
+              className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-subtle text-textSecondary hover:text-textPrimary focus-ring"
               aria-label={`Expand ${title} tile`}
               aria-expanded={isExpanded}
             >
@@ -514,7 +514,7 @@ const Tile = memo(function Tile({
                 aria-labelledby="modal-title"
               >
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b border-white/5">
+              <div className="flex items-center justify-between p-6 border-b border-border">
                 <div className="flex items-center gap-3">
                   {icon && <div className="text-primary">{icon}</div>}
                   <div>
@@ -525,14 +525,14 @@ const Tile = memo(function Tile({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleExportMenu}
-                    className="p-2 rounded-lg hover:bg-white/5 text-textSecondary hover:text-textPrimary transition-colors"
+                    className="p-2 rounded-lg hover:bg-subtle text-textSecondary hover:text-textPrimary transition-colors"
                     aria-label="Export options"
                   >
                     <MoreHorizontal className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => setIsExpanded(false)}
-                    className="p-2 rounded-lg hover:bg-white/5 text-textSecondary hover:text-textPrimary transition-colors"
+                    className="p-2 rounded-lg hover:bg-subtle text-textSecondary hover:text-textPrimary transition-colors"
                     aria-label="Close"
                   >
                     <X className="w-5 h-5" />
@@ -571,7 +571,7 @@ const Tile = memo(function Tile({
 
                     {/* Original content when extended intelligence exists */}
                     {extendedIntelligence && (
-                      <div className="flex-shrink-0 pt-6 border-t border-white/10">
+                      <div className="flex-shrink-0 pt-6 border-t border-border">
                         <h3 className="text-xl font-bold text-textPrimary mb-4">Overview</h3>
                         <div className="prose prose-invert max-w-none text-base leading-relaxed text-textSecondary">
                           {contentWithCitations}
@@ -581,7 +581,7 @@ const Tile = memo(function Tile({
 
                     {/* Methodology */}
                     {methodology && (
-                      <div className="flex-shrink-0 pt-6 border-t border-white/10">
+                      <div className="flex-shrink-0 pt-6 border-t border-border">
                         <button
                           onClick={() => setIsMethodologyOpen(!isMethodologyOpen)}
                           className="flex items-center gap-2 text-textPrimary hover:text-primary transition-colors mb-4"
@@ -602,7 +602,7 @@ const Tile = memo(function Tile({
 
                     {/* References */}
                     {references.length > 0 && (
-                      <div className="flex-shrink-0 pt-6 border-t border-white/10">
+                      <div className="flex-shrink-0 pt-6 border-t border-border">
                         <h3 className="text-xl font-bold text-textPrimary mb-4">References</h3>
                         <div className="max-h-[400px] overflow-y-auto custom-scrollbar space-y-3">
                         {(citationIds.length > 0
@@ -623,7 +623,7 @@ const Tile = memo(function Tile({
                                   <p className="text-sm text-textSecondary mb-2">
                                     {citation.authors}. <em>{citation.journal}</em> ({citation.year})
                                   </p>
-                                  <p className="text-sm text-textTertiary">{citation.keyFinding}</p>
+                                  <p className="text-sm text-textSecondary">{citation.keyFinding}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   {citation.doi && (
@@ -631,7 +631,7 @@ const Tile = memo(function Tile({
                                       href={`https://doi.org/${citation.doi}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="p-1.5 rounded-lg hover:bg-white/5 text-textSecondary hover:text-textPrimary transition-colors"
+                                      className="p-1.5 rounded-lg hover:bg-subtle text-textSecondary hover:text-textPrimary transition-colors"
                                       title="View DOI"
                                     >
                                       <ExternalLink className="w-4 h-4" />
@@ -642,7 +642,7 @@ const Tile = memo(function Tile({
                                       href={`https://pubmed.ncbi.nlm.nih.gov/${citation.pmid}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="p-1.5 rounded-lg hover:bg-white/5 text-textSecondary hover:text-textPrimary transition-colors"
+                                      className="p-1.5 rounded-lg hover:bg-subtle text-textSecondary hover:text-textPrimary transition-colors"
                                       title="View PubMed"
                                     >
                                       <ExternalLink className="w-4 h-4" />
@@ -659,8 +659,8 @@ const Tile = memo(function Tile({
                 </div>
 
                 {/* Right Panel - Chat */}
-                <div className="w-[350px] border-l border-white/10 flex flex-col bg-surface/30 flex-shrink-0">
-                  <div className="p-4 border-b border-white/10 flex-shrink-0">
+                <div className="w-[350px] border-l border-border flex flex-col bg-surface/30 flex-shrink-0">
+                  <div className="p-4 border-b border-border flex-shrink-0">
                     <div className="flex items-center gap-2">
                       <Bot className="w-5 h-5 text-primary" />
                       <h3 className="font-bold text-textPrimary text-lg">Ask Sonny</h3>
@@ -674,7 +674,7 @@ const Tile = memo(function Tile({
                   <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
                     {chatMessages.length === 0 && (
                       <div className="space-y-3">
-                        <p className="text-sm text-textTertiary mb-4">Suggested questions:</p>
+                        <p className="text-sm text-textSecondary mb-4">Suggested questions:</p>
                         {suggestedQuestions.map((question, idx) => (
                           <button
                             key={idx}
@@ -729,7 +729,7 @@ const Tile = memo(function Tile({
                   </div>
 
                   {/* Chat Input */}
-                  <div className="p-4 border-t border-white/10 flex-shrink-0">
+                  <div className="p-4 border-t border-border flex-shrink-0">
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
@@ -742,7 +742,7 @@ const Tile = memo(function Tile({
                           }
                         }}
                         placeholder="Ask a question..."
-                        className="flex-1 bg-surface border border-white/10 rounded-lg px-3 py-2 text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       />
                       <button
                         onClick={() => handleSendMessage(chatInput)}

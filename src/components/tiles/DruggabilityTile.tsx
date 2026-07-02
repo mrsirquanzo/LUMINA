@@ -81,7 +81,7 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
       onAgentClick={onAgentClick}
       extendedIntelligence={extendedIntelligence}
     >
-      <div className="flex gap-2 mb-4 border-b border-white/5 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
+      <div className="flex gap-2 mb-4 border-b border-border overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
         {(['overview', 'structure', 'compounds', 'modalities'] as const).map((tab) => (
           <button
             key={tab}
@@ -101,11 +101,11 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
           <div className="space-y-5 pb-4 px-1">
             <p className="text-base leading-relaxed text-textPrimary">{data.tractabilityAssessment}</p>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-border min-h-[100px] flex flex-col justify-center">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">PDB Count</p>
                 <p className="text-2xl font-bold text-textPrimary leading-tight">{data.structuralData.pdbCount}</p>
               </div>
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-border min-h-[100px] flex flex-col justify-center">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">AlphaFold</p>
                 <p className="text-2xl font-bold text-textPrimary leading-tight">
                   {data.structuralData.alphafoldConfidence}%
@@ -116,7 +116,7 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
         )}
         {activeTab === 'structure' && (
           <div className="space-y-5 pb-4 px-1 min-w-0">
-            <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-w-0 overflow-hidden">
+            <div className="bg-surfaceElevated rounded-lg p-5 border border-border min-w-0 overflow-hidden">
               <div className="flex items-start justify-between gap-3 min-w-0">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-textSecondary uppercase tracking-wide">PDB Structures</p>
@@ -160,10 +160,10 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div
                     key={i}
-                    className="bg-surfaceElevated rounded-lg border border-white/5 p-4 min-h-[120px] animate-pulse"
+                    className="bg-surfaceElevated rounded-lg border border-border p-4 min-h-[120px] animate-pulse"
                   >
-                    <div className="h-16 bg-white/5 rounded mb-3" />
-                    <div className="h-4 bg-white/5 rounded w-16" />
+                    <div className="h-16 bg-subtle rounded mb-3" />
+                    <div className="h-4 bg-subtle rounded w-16" />
                   </div>
                 ))}
               </div>
@@ -172,7 +172,7 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
             {!isLoadingPdb && !pdbError && (
               <>
                 {pdbIds.length === 0 ? (
-                  <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 text-base text-textSecondary">
+                  <div className="bg-surfaceElevated rounded-lg p-5 border border-border text-base text-textSecondary">
                     No PDB structures were found for this UniProt entry.
                   </div>
                 ) : (
@@ -183,10 +183,10 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
                         href={`https://www.rcsb.org/structure/${encodeURIComponent(pdbId)}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="group bg-surfaceElevated rounded-lg border border-white/5 p-4 hover:border-primary/30 transition-colors min-w-0 overflow-hidden"
+                        className="group bg-surfaceElevated rounded-lg border border-border p-4 hover:border-primary/30 transition-colors min-w-0 overflow-hidden"
                         title={`Open ${pdbId} on RCSB`}
                       >
-                        <div className="w-full h-20 rounded-md bg-black/30 overflow-hidden flex items-center justify-center mb-3">
+                        <div className="w-full h-20 rounded-md bg-subtle overflow-hidden flex items-center justify-center mb-3">
                           <img
                             src={`https://cdn.rcsb.org/images/structures/${pdbId.toLowerCase()}_assembly-1.jpeg`}
                             alt={`PDB ${pdbId} preview`}
@@ -216,7 +216,7 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
         {activeTab === 'compounds' && (
           <div className="space-y-3 pb-4 px-1">
             {data.existingCompounds.map((compound: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border">
                 <p className="text-base font-semibold text-textPrimary mb-2">{compound.name}</p>
                 <p className="text-base text-textPrimary font-medium mb-1">{compound.phase}</p>
                 {compound.mechanism && (
@@ -232,7 +232,7 @@ export default function DruggabilityTile({ data, loading, onAgentClick, extended
         {activeTab === 'modalities' && (
           <div className="space-y-3 pb-4 px-1">
             {data.modalityRecommendations.map((mod: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+              <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-base font-semibold text-textPrimary">{mod.modality}</p>
                   <span className={`text-sm px-3 py-1 rounded font-medium ${

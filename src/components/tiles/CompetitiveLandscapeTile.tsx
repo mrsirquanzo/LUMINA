@@ -68,7 +68,7 @@ export default function CompetitiveLandscapeTile({ data, loading, onAgentClick, 
         </div>
 
         {showTable && (
-          <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-white/5">
+          <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-border">
             <div className="overflow-x-auto custom-scrollbar">
               <table className="w-full text-base">
                 <thead className="bg-surface">
@@ -83,7 +83,7 @@ export default function CompetitiveLandscapeTile({ data, loading, onAgentClick, 
                   {data.competitors.slice(0, 4).map((competitor, idx) => (
                     <tr
                       key={idx}
-                      className={`border-t border-white/5 ${
+                      className={`border-t border-border ${
                         competitor.stage === 'Approved' || competitor.stage === 'Phase 3'
                           ? 'bg-warning/5'
                           : ''
