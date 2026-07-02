@@ -160,10 +160,10 @@ function AppContent() {
   useEffect(() => {
     const root = document.documentElement;
     if (activePersona === Persona.SCIENTIST) {
-      root.style.setProperty('--color-primary', '191 90 242'); // Purple
+      root.style.setProperty('--color-primary', '29 78 216'); // Trust blue (accent unified; persona concept unchanged)
       root.className = 'scientist-theme';
     } else {
-      root.style.setProperty('--color-primary', '255 159 10'); // Orange
+      root.style.setProperty('--color-primary', '29 78 216'); // Trust blue (accent unified; persona concept unchanged)
       root.className = 'scout-theme';
     }
   }, [activePersona]);
