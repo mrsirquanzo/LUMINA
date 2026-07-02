@@ -427,8 +427,8 @@ const Sidebar = memo(function Sidebar({
                 onClick={() => onPersonaChange(persona)}
                 className={`tactile group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
                   isActive
-                    ? 'bg-surfaceElevated/60 text-textPrimary'
-                    : 'text-textSecondary hover:text-textPrimary hover:bg-surface/30'
+                    ? 'bg-primary/10 text-textPrimary'
+                    : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
                 } ${collapsed ? 'justify-center' : ''}`}
                 style={
                   isActive
