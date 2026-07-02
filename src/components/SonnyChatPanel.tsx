@@ -80,10 +80,10 @@ function SonnyChatPanel({
             animate={{ x: isMinimized ? 'calc(100% - 400px)' : 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-4xl bg-surface border-l border-white/10 shadow-2xl z-50 flex flex-col"
+            className="fixed top-0 right-0 h-full w-full max-w-4xl bg-surface border-l border-border shadow-2xl z-50 flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-surfaceElevated">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-surfaceElevated">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
@@ -139,7 +139,7 @@ function SonnyChatPanel({
                           className={`flex-1 px-4 py-3 rounded-lg border transition-colors ${
                             mode === 'fast'
                               ? 'bg-primary/20 border-primary text-primary'
-                              : 'bg-surfaceElevated border-white/10 text-textSecondary hover:border-white/20'
+                              : 'bg-surfaceElevated border-border text-textSecondary hover:border-primary/30'
                           }`}
                         >
                           <div className="font-medium">Fast</div>
@@ -150,7 +150,7 @@ function SonnyChatPanel({
                           className={`flex-1 px-4 py-3 rounded-lg border transition-colors ${
                             mode === 'thorough'
                               ? 'bg-primary/20 border-primary text-primary'
-                              : 'bg-surfaceElevated border-white/10 text-textSecondary hover:border-white/20'
+                              : 'bg-surfaceElevated border-border text-textSecondary hover:border-primary/30'
                           }`}
                         >
                           <div className="font-medium">Thorough</div>
@@ -171,7 +171,7 @@ function SonnyChatPanel({
                           }
                         }}
                         placeholder={`Ask Sonny about ${targetName}...`}
-                        className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
+                        className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
                         rows={4}
                       />
                       <p className="text-xs text-textTertiary mt-2">
@@ -195,7 +195,7 @@ function SonnyChatPanel({
                               setQuery(example);
                               setTimeout(() => handleStartAnalysis(), 100);
                             }}
-                            className="w-full text-left px-4 py-2 text-sm text-textSecondary bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 hover:text-textPrimary transition-colors"
+                            className="w-full text-left px-4 py-2 text-sm text-textSecondary bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 hover:text-textPrimary transition-colors"
                           >
                             {example}
                           </button>
@@ -219,7 +219,7 @@ function SonnyChatPanel({
               ) : (
                 // Analysis View
                 <div className="h-full overflow-y-auto">
-                  <div className="p-4 border-b border-white/10 bg-surfaceElevated flex items-center justify-between">
+                  <div className="p-4 border-b border-border bg-surfaceElevated flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <button
                         onClick={handleReset}
@@ -227,7 +227,7 @@ function SonnyChatPanel({
                       >
                         ← New Query
                       </button>
-                      <div className="h-4 w-px bg-white/10" />
+                      <div className="h-4 w-px bg-border" />
                       <span className="text-sm text-textSecondary">
                         Mode: <span className="text-textPrimary font-medium capitalize">{mode}</span>
                       </span>

@@ -40,7 +40,7 @@ export default function ExportModal({ open, onClose, onExport }: ExportModalProp
         }
       }}
     >
-      <div className="w-full max-w-md bg-surfaceElevated border border-white/10 rounded-2xl shadow-2xl animate-modal-enter">
+      <div className="w-full max-w-md bg-surfaceElevated border border-border rounded-2xl shadow-2xl animate-modal-enter">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-textPrimary">Export Report</h2>

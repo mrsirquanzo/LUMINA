@@ -116,23 +116,23 @@ export default function CreateTileModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-surface rounded-xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-              <Plus className="w-5 h-5 text-purple-600" />
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Plus className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Create New Tile</h2>
-              <p className="text-sm text-gray-500">Add this analysis to your dashboard</p>
+              <h2 className="text-lg font-semibold text-textPrimary">Create New Tile</h2>
+              <p className="text-sm text-textSecondary">Add this analysis to your dashboard</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-subtle rounded-lg transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-textSecondary" />
           </button>
         </div>
 
@@ -140,7 +140,7 @@ export default function CreateTileModal({
         <div className="p-6 space-y-6">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-textSecondary mb-2">
               Tile Title *
             </label>
             <input
@@ -148,14 +148,14 @@ export default function CreateTileModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter tile title"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               autoFocus
             />
           </div>
 
           {/* Subtitle */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-textSecondary mb-2">
               Subtitle (optional)
             </label>
             <input
@@ -163,32 +163,32 @@ export default function CreateTileModal({
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
               placeholder="Brief description"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
           {/* Workspace Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-textSecondary mb-3">
               Add to Workspace(s)
             </label>
             <div className="space-y-2">
               {availableWorkspaces.map((workspace) => (
                 <label
                   key={workspace.id}
-                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="flex items-center gap-3 p-3 border border-border rounded-lg hover:bg-subtle cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={selectedWorkspaces.includes(String(workspace.id))}
                     onChange={() => toggleWorkspace(String(workspace.id))}
-                    className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                    className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{workspace.name}</p>
+                    <p className="text-sm font-medium text-textPrimary">{workspace.name}</p>
                   </div>
                   {selectedWorkspaces.includes(String(workspace.id)) && (
-                    <CheckCircle2 className="w-5 h-5 text-purple-600" />
+                    <CheckCircle2 className="w-5 h-5 text-primary" />
                   )}
                 </label>
               ))}
@@ -197,7 +197,7 @@ export default function CreateTileModal({
 
           {/* Size Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-textSecondary mb-3">
               Tile Size
             </label>
             <div className="grid grid-cols-4 gap-2">
@@ -207,8 +207,8 @@ export default function CreateTileModal({
                   onClick={() => setSize(s)}
                   className={`px-4 py-2 rounded-lg border-2 transition-all text-sm font-medium ${
                     size === s
-                      ? 'border-purple-500 bg-purple-50 text-purple-700'
-                      : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border text-textSecondary hover:border-primary/30'
                   }`}
                 >
                   {s === 'full-width' ? 'Full' : s.charAt(0).toUpperCase() + s.slice(1)}
@@ -218,14 +218,14 @@ export default function CreateTileModal({
           </div>
 
           {/* Preview Info */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-subtle rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <FileText className="w-4 h-4 text-gray-500" />
-              <p className="text-sm font-medium text-gray-700">Analysis Type</p>
+              <FileText className="w-4 h-4 text-textSecondary" />
+              <p className="text-sm font-medium text-textSecondary">Analysis Type</p>
             </div>
-            <p className="text-sm text-gray-600 capitalize">{initialData.type} Analysis</p>
+            <p className="text-sm text-textSecondary capitalize">{initialData.type} Analysis</p>
             {initialData.analysisData?.document_info?.patent_number && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-textSecondary mt-1">
                 Patent: {initialData.analysisData.document_info.patent_number}
               </p>
             )}
@@ -233,17 +233,17 @@ export default function CreateTileModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-end gap-3 p-6 border-t border-border bg-subtle">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors font-medium"
+            className="px-4 py-2 text-textSecondary hover:bg-border rounded-lg transition-colors font-medium"
           >
             Cancel
           </button>
           <button
             onClick={handleCreate}
             disabled={!title.trim() || isCreating}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center gap-2"
+            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center gap-2"
           >
             {isCreating ? (
               <>

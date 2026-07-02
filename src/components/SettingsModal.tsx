@@ -130,21 +130,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-gray-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
+          className="bg-surface border border-border shadow-card rounded-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
         >
           {/* Header */}
-          <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-white">Settings</h2>
+          <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-textPrimary">Settings</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 hover:bg-subtle rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-gray-400" />
+              <X className="w-5 h-5 text-textSecondary" />
             </button>
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-white/10">
+          <div className="flex border-b border-border">
             {[
               { id: 'general', label: 'General' },
               { id: 'appearance', label: 'Appearance' },
@@ -155,8 +155,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                   activeTab === tab.id
-                    ? 'border-purple-500 text-purple-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-textSecondary hover:text-textPrimary'
                 }`}
               >
                 {tab.label}
@@ -169,15 +169,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             {activeTab === 'general' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-300 mb-4">Animation</h3>
+                  <h3 className="text-sm font-medium text-textSecondary mb-4">Animation</h3>
                   <button
                     onClick={onReplayLanding}
-                    className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors group"
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-subtle hover:bg-border border border-border rounded-lg transition-colors group"
                   >
-                    <Play className="w-5 h-5 text-gray-400 group-hover:text-purple-400" />
+                    <Play className="w-5 h-5 text-textSecondary group-hover:text-primary" />
                     <div className="flex-1 text-left">
-                      <div className="text-sm font-medium text-white">Replay Landing Animation</div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-sm font-medium text-textPrimary">Replay Landing Animation</div>
+                      <div className="text-xs text-textSecondary mt-1">
                         Watch the intro animation again
                       </div>
                     </div>
@@ -185,9 +185,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-300 mb-2">Import agent responses</h3>
-                  <p className="text-xs text-gray-500 mb-3">
-                    Upload exported agent Markdown (e.g. <code className="text-gray-400">*_live.md</code>) to populate/update tiles.
+                  <h3 className="text-sm font-medium text-textSecondary mb-2">Import agent responses</h3>
+                  <p className="text-xs text-textSecondary mb-3">
+                    Upload exported agent Markdown (e.g. <code className="text-textSecondary">*_live.md</code>) to populate/update tiles.
                   </p>
 
                   <div className="flex items-center gap-3">
@@ -197,13 +197,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       multiple
                       accept=".md,.txt"
                       onChange={(e) => handleImportAgentExports(e.target.files)}
-                      className="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-white/10 file:bg-white/5 file:text-gray-300 hover:file:bg-white/10"
+                      className="block w-full text-xs text-textSecondary file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-border file:bg-subtle file:text-textSecondary hover:file:bg-border"
                       disabled={importStatus === 'importing'}
                     />
                     <button
                       onClick={() => fileInputRef.current?.click()}
                       disabled={importStatus === 'importing'}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-sm disabled:opacity-50"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-subtle hover:bg-border border border-border text-textSecondary text-sm disabled:opacity-50"
                       title="Choose files"
                     >
                       <Upload className="w-4 h-4" />
@@ -223,7 +223,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
             {activeTab === 'shortcuts' && (
               <div className="space-y-4">
-                <h3 className="text-sm font-medium text-gray-300 mb-4">Keyboard Shortcuts</h3>
+                <h3 className="text-sm font-medium text-textSecondary mb-4">Keyboard Shortcuts</h3>
                 <div className="space-y-3">
                   {[
                     { keys: '⌘/Ctrl + K', action: 'Search / Toggle Sonny panel' },
@@ -236,10 +236,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   ].map((shortcut, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-lg"
+                      className="flex items-center justify-between px-4 py-3 bg-subtle rounded-lg"
                     >
-                      <span className="text-sm text-gray-300">{shortcut.action}</span>
-                      <kbd className="px-2 py-1 bg-white/10 border border-white/20 rounded text-xs font-mono text-gray-400">
+                      <span className="text-sm text-textSecondary">{shortcut.action}</span>
+                      <kbd className="px-2 py-1 bg-surface border border-border rounded text-xs font-mono text-textSecondary">
                         {shortcut.keys}
                       </kbd>
                     </div>
@@ -250,8 +250,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
             {activeTab === 'appearance' && (
               <div className="space-y-4">
-                <h3 className="text-sm font-medium text-gray-300 mb-4">Appearance</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="text-sm font-medium text-textSecondary mb-4">Appearance</h3>
+                <p className="text-sm text-textSecondary">
                   Appearance settings coming soon...
                 </p>
               </div>
