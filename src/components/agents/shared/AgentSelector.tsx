@@ -102,9 +102,9 @@ export const AgentSelector: React.FC<AgentSelectorProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+        className={`w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-left flex items-center justify-between transition-colors ${
           isOpen ? themeClasses.border : ''
-        } hover:border-white/20`}
+        } hover:border-border`}
       >
         <div className="flex items-center gap-3">
           <span className="text-lg">{currentAgentInfo.icon}</span>
@@ -119,7 +119,7 @@ export const AgentSelector: React.FC<AgentSelectorProps> = ({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
           >
             {/* Sonny Option */}
             <button

@@ -68,7 +68,7 @@ export default function VerificationPrompt({
       </div>
 
       {/* Verification Card */}
-      <div className="bg-surface border border-white/10 rounded-lg p-4 mb-4">
+      <div className="bg-surface border border-border rounded-lg p-4 mb-4">
         <div className="mb-3">
           <div className="text-sm font-medium text-textSecondary mb-1">{item.label}</div>
           {item.section && (
@@ -99,7 +99,7 @@ export default function VerificationPrompt({
           )}
 
           {item.context && (
-            <div className="pt-3 border-t border-white/10">
+            <div className="pt-3 border-t border-border">
               <div className="text-xs text-textSecondary mb-1">Context:</div>
               <div className="text-xs text-textPrimary font-mono bg-surfaceElevated p-2 rounded">
                 {item.context}
@@ -113,7 +113,7 @@ export default function VerificationPrompt({
       {onViewOriginal && (
         <button
           onClick={onViewOriginal}
-          className="mb-4 w-full px-4 py-2 bg-surface border border-white/10 rounded-lg hover:border-primary/50 transition-colors text-sm text-textSecondary hover:text-textPrimary flex items-center justify-center gap-2"
+          className="mb-4 w-full px-4 py-2 bg-surface border border-border rounded-lg hover:border-primary/50 transition-colors text-sm text-textSecondary hover:text-textPrimary flex items-center justify-center gap-2"
         >
           <FileText className="w-4 h-4" />
           View Original PDF Section
@@ -136,7 +136,7 @@ export default function VerificationPrompt({
               className={`px-3 py-2 rounded-lg border transition-colors text-sm ${
                 selectedValue === value
                   ? 'bg-primary/20 border-primary text-primary'
-                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20'
+                  : 'bg-surface border-border text-textSecondary hover:border-border'
               }`}
             >
               {value}
@@ -147,7 +147,7 @@ export default function VerificationPrompt({
             className={`px-3 py-2 rounded-lg border transition-colors text-sm ${
               selectedValue === 'other'
                 ? 'bg-primary/20 border-primary text-primary'
-                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20'
+                : 'bg-surface border-border text-textSecondary hover:border-border'
             }`}
           >
             Other...
@@ -161,7 +161,7 @@ export default function VerificationPrompt({
             value={customValue}
             onChange={(e) => setCustomValue(e.target.value)}
             placeholder="Enter correct value..."
-            className="w-full px-4 py-2 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50"
+            className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50"
             autoFocus
           />
         )}
@@ -179,7 +179,7 @@ export default function VerificationPrompt({
         </button>
         <button
           onClick={onSkip}
-          className="px-4 py-2 bg-surface border border-white/10 rounded-lg hover:border-white/20 transition-colors text-sm text-textSecondary hover:text-textPrimary"
+          className="px-4 py-2 bg-surface border border-border rounded-lg hover:border-border transition-colors text-sm text-textSecondary hover:text-textPrimary"
         >
           Skip - Use Best Guess
         </button>

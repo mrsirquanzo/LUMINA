@@ -23,7 +23,7 @@ interface TrialDetailPanelProps {
 
 // Design Quality Indicator
 const DesignQualityItem = ({ label, value, checked }: { label: string; value: string; checked: boolean }) => (
-  <div className="flex flex-col items-center p-3 bg-surfaceElevated rounded-lg border border-white/10">
+  <div className="flex flex-col items-center p-3 bg-surfaceElevated rounded-lg border border-border">
     <span className="text-xs text-textSecondary mb-1">{label}</span>
     <span className="text-sm font-medium text-textPrimary">{value}</span>
     {checked && <Check size={16} className="text-emerald-400 mt-1" />}
@@ -63,7 +63,7 @@ export default function TrialDetailPanel({ trial, onClose }: TrialDetailPanelPro
       className="absolute inset-0 bg-surface z-50 flex flex-col"
     >
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-textPrimary">{trialData.nctNumber}</h2>
@@ -91,7 +91,7 @@ export default function TrialDetailPanel({ trial, onClose }: TrialDetailPanelPro
         {/* Trial Overview */}
         <div>
           <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Trial Overview</h3>
-          <div className="bg-surfaceElevated rounded-lg p-4 space-y-2 border border-white/10">
+          <div className="bg-surfaceElevated rounded-lg p-4 space-y-2 border border-border">
             <div className="flex justify-between">
               <span className="text-sm text-textSecondary">Sponsor</span>
               <span className="text-sm font-medium text-textPrimary">{trialData.sponsor}</span>
@@ -152,7 +152,7 @@ export default function TrialDetailPanel({ trial, onClose }: TrialDetailPanelPro
               <p className="text-sm font-medium text-blue-400">Primary</p>
               <p className="text-sm text-textSecondary mt-1">NASH resolution without worsening fibrosis (histologic)</p>
             </div>
-            <div className="p-3 bg-surfaceElevated rounded-lg border border-white/10">
+            <div className="p-3 bg-surfaceElevated rounded-lg border border-border">
               <p className="text-sm font-medium text-textPrimary">Key Secondary</p>
               <p className="text-sm text-textSecondary mt-1">≥1 stage fibrosis improvement, HbA1c, body weight</p>
             </div>
@@ -161,17 +161,17 @@ export default function TrialDetailPanel({ trial, onClose }: TrialDetailPanelPro
       </div>
 
       {/* Actions Footer */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         <div className="flex gap-2">
           <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <BarChart3 size={16} />
             Full Analysis
           </button>
-          <button className="px-4 py-2 bg-surface border border-white/10 text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surface border border-border text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
             <Download size={16} />
             Download
           </button>
-          <button className="px-4 py-2 bg-surface border border-white/10 text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surface border border-border text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
             <Bell size={16} />
             Set Alert
           </button>

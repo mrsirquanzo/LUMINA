@@ -138,7 +138,7 @@ export default function DocumentAnalysisPanel({
   return (
     <div className="h-full flex flex-col bg-surface">
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-sm text-textSecondary hover:text-textPrimary mb-3 transition-colors"
@@ -166,7 +166,7 @@ export default function DocumentAnalysisPanel({
       </div>
 
       {/* Document Preview */}
-      <div className="p-4 border-b border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-b border-border bg-surfaceElevated">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-textSecondary uppercase tracking-wide">
             Document Preview
@@ -176,7 +176,7 @@ export default function DocumentAnalysisPanel({
             Full View
           </button>
         </div>
-        <div className="h-24 bg-surface rounded-lg border border-white/10 flex items-center justify-center">
+        <div className="h-24 bg-surface rounded-lg border border-border flex items-center justify-center">
           <div className="text-center text-textTertiary">
             <FileText size={24} className="mx-auto mb-1" />
             <p className="text-xs">PDF document ready for analysis</p>
@@ -186,7 +186,7 @@ export default function DocumentAnalysisPanel({
 
       {/* Processing State */}
       {isProcessing && (
-        <div className="p-4 border-b border-white/10 bg-green-500/10">
+        <div className="p-4 border-b border-border bg-green-500/10">
           <div className="flex items-center gap-3 mb-2">
             <Loader2 size={16} className="text-green-400 animate-spin" />
             <span className="text-sm font-medium text-textPrimary">Analyzing document...</span>
@@ -232,7 +232,7 @@ export default function DocumentAnalysisPanel({
                     className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all ${
                       selectedAnalyses.includes(analysis.id)
                         ? 'border-green-500/50 bg-green-500/10'
-                        : 'border-white/10 hover:border-white/20 bg-surfaceElevated'
+                        : 'border-border hover:border-border bg-surfaceElevated'
                     }`}
                   >
                     <div
@@ -255,7 +255,7 @@ export default function DocumentAnalysisPanel({
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedAnalyses.includes(analysis.id)
                           ? 'border-green-500 bg-green-500'
-                          : 'border-white/20'
+                          : 'border-border'
                       }`}
                     >
                       {selectedAnalyses.includes(analysis.id) && (
@@ -271,7 +271,7 @@ export default function DocumentAnalysisPanel({
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-textSecondary">
             {selectedAnalyses.length} analyses selected

@@ -109,7 +109,7 @@ export default function RNPVCalculatorPanel({
   return (
     <div className="h-full flex flex-col bg-surface">
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-sm text-textSecondary hover:text-textPrimary mb-3 transition-colors"
@@ -129,7 +129,7 @@ export default function RNPVCalculatorPanel({
       </div>
 
       {/* Step Indicator */}
-      <div className="px-4 py-3 bg-surfaceElevated border-b border-white/10">
+      <div className="px-4 py-3 bg-surfaceElevated border-b border-border">
         <div className="flex items-center justify-between">
           {STEPS.map((step, index) => (
             <React.Fragment key={step.id}>
@@ -176,7 +176,7 @@ export default function RNPVCalculatorPanel({
                     className={`p-3 rounded-lg border text-left transition-all ${
                       inputs.currentStage === stage.id
                         ? 'border-green-500/50 bg-green-500/10'
-                        : 'border-white/10 hover:border-white/20 bg-surfaceElevated'
+                        : 'border-border hover:border-border bg-surfaceElevated'
                     }`}
                   >
                     <p className="text-sm font-medium text-textPrimary">{stage.label}</p>
@@ -198,7 +198,7 @@ export default function RNPVCalculatorPanel({
                     className={`p-3 rounded-lg border text-left transition-all ${
                       inputs.indication === ind.id
                         ? 'border-green-500/50 bg-green-500/10'
-                        : 'border-white/10 hover:border-white/20 bg-surfaceElevated'
+                        : 'border-border hover:border-border bg-surfaceElevated'
                     }`}
                   >
                     <p className="text-sm font-medium text-textPrimary">{ind.label}</p>
@@ -215,7 +215,7 @@ export default function RNPVCalculatorPanel({
               <select
                 value={inputs.modality}
                 onChange={(e) => setInputs({ ...inputs, modality: e.target.value })}
-                className="w-full p-3 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                className="w-full p-3 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
               >
                 {MODALITIES.map((mod) => (
                   <option key={mod.id} value={mod.id}>
@@ -239,7 +239,7 @@ export default function RNPVCalculatorPanel({
                   type="number"
                   value={inputs.peakSales}
                   onChange={(e) => setInputs({ ...inputs, peakSales: Number(e.target.value) })}
-                  className="w-full pl-10 pr-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                  className="w-full pl-10 pr-4 py-3 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
                 />
               </div>
               <p className="text-xs text-textTertiary mt-1">Annual peak sales in millions USD</p>
@@ -257,7 +257,7 @@ export default function RNPVCalculatorPanel({
                   onChange={(e) => setInputs({ ...inputs, launchYear: Number(e.target.value) })}
                   min={2024}
                   max={2040}
-                  className="w-full pl-10 pr-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                  className="w-full pl-10 pr-4 py-3 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
                 />
               </div>
             </div>
@@ -285,14 +285,14 @@ export default function RNPVCalculatorPanel({
             <div className="space-y-3">
               <div
                 className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
-                  inputs.hasGeneticValidation ? 'border-green-500/50 bg-green-500/10' : 'border-white/10'
+                  inputs.hasGeneticValidation ? 'border-green-500/50 bg-green-500/10' : 'border-border'
                 }`}
                 onClick={() => setInputs({ ...inputs, hasGeneticValidation: !inputs.hasGeneticValidation })}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-5 h-5 rounded flex items-center justify-center ${
-                      inputs.hasGeneticValidation ? 'bg-green-500' : 'border-2 border-white/20'
+                      inputs.hasGeneticValidation ? 'bg-green-500' : 'border-2 border-border'
                     }`}
                   >
                     {inputs.hasGeneticValidation && <Check size={12} className="text-white" />}
@@ -307,14 +307,14 @@ export default function RNPVCalculatorPanel({
 
               <div
                 className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
-                  inputs.hasBiomarker ? 'border-green-500/50 bg-green-500/10' : 'border-white/10'
+                  inputs.hasBiomarker ? 'border-green-500/50 bg-green-500/10' : 'border-border'
                 }`}
                 onClick={() => setInputs({ ...inputs, hasBiomarker: !inputs.hasBiomarker })}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-5 h-5 rounded flex items-center justify-center ${
-                      inputs.hasBiomarker ? 'bg-green-500' : 'border-2 border-white/20'
+                      inputs.hasBiomarker ? 'bg-green-500' : 'border-2 border-border'
                     }`}
                   >
                     {inputs.hasBiomarker && <Check size={12} className="text-white" />}
@@ -329,14 +329,14 @@ export default function RNPVCalculatorPanel({
 
               <div
                 className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
-                  inputs.priorFailures ? 'border-danger/50 bg-danger/10' : 'border-white/10'
+                  inputs.priorFailures ? 'border-danger/50 bg-danger/10' : 'border-border'
                 }`}
                 onClick={() => setInputs({ ...inputs, priorFailures: !inputs.priorFailures })}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-5 h-5 rounded flex items-center justify-center ${
-                      inputs.priorFailures ? 'bg-danger' : 'border-2 border-white/20'
+                      inputs.priorFailures ? 'bg-danger' : 'border-2 border-border'
                     }`}
                   >
                     {inputs.priorFailures && <Check size={12} className="text-white" />}
@@ -371,7 +371,7 @@ export default function RNPVCalculatorPanel({
             </div>
 
             {/* PoS Breakdown */}
-            <div className="p-4 bg-surfaceElevated rounded-lg border border-white/10">
+            <div className="p-4 bg-surfaceElevated rounded-lg border border-border">
               <h4 className="text-sm font-semibold text-textPrimary mb-3">PoS Breakdown</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -396,7 +396,7 @@ export default function RNPVCalculatorPanel({
                     <span className="font-medium text-danger">-12%</span>
                   </div>
                 )}
-                <div className="flex justify-between text-sm pt-2 border-t border-white/10">
+                <div className="flex justify-between text-sm pt-2 border-t border-border">
                   <span className="font-semibold text-textPrimary">Adjusted PoS</span>
                   <span className="font-bold text-green-400">{results.adjustedPoS}%</span>
                 </div>
@@ -404,7 +404,7 @@ export default function RNPVCalculatorPanel({
             </div>
 
             {/* Sensitivities */}
-            <div className="p-4 bg-surfaceElevated rounded-lg border border-white/10">
+            <div className="p-4 bg-surfaceElevated rounded-lg border border-border">
               <h4 className="text-sm font-semibold text-textPrimary mb-3">Key Sensitivities</h4>
               <div className="space-y-2">
                 {results.sensitivities.map((sens: any, i: number) => (
@@ -418,7 +418,7 @@ export default function RNPVCalculatorPanel({
 
             {/* Actions */}
             <div className="flex gap-2">
-              <button className="flex-1 py-2 px-4 bg-surfaceElevated border border-white/10 rounded-lg text-sm font-medium text-textPrimary hover:border-white/20 flex items-center justify-center gap-2 transition-colors">
+              <button className="flex-1 py-2 px-4 bg-surfaceElevated border border-border rounded-lg text-sm font-medium text-textPrimary hover:border-border flex items-center justify-center gap-2 transition-colors">
                 <Download size={16} />
                 Export
               </button>
@@ -433,12 +433,12 @@ export default function RNPVCalculatorPanel({
 
       {/* Navigation Footer */}
       {activeStep < 4 && (
-        <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+        <div className="p-4 border-t border-border bg-surfaceElevated">
           <div className="flex gap-3">
             {activeStep > 1 && (
               <button
                 onClick={() => setActiveStep(activeStep - 1)}
-                className="flex-1 py-3 border border-white/10 rounded-xl font-semibold text-sm text-textPrimary hover:bg-surface transition-colors"
+                className="flex-1 py-3 border border-border rounded-xl font-semibold text-sm text-textPrimary hover:bg-surface transition-colors"
               >
                 Back
               </button>

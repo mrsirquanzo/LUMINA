@@ -385,7 +385,7 @@ export default function FinancialAgentInterface({
         <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Header - Only show if onBackToChat is provided (meaning we're in analysis view, not tabbed interface) */}
           {onBackToChat && (
-            <div className="p-4 border-b border-white/10">
+            <div className="p-4 border-b border-border">
               {/* Back Button - Only show when in detail panel view, not in main tabbed interface */}
               {activeDetailPanel && (
                 <button
@@ -414,7 +414,7 @@ export default function FinancialAgentInterface({
                   placeholder="Search company or ticker..."
                   value={selectedCompany || ''}
                   onChange={(e) => setSelectedCompany(e.target.value || null)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-transparent"
                 />
               </div>
 
@@ -504,7 +504,7 @@ export default function FinancialAgentInterface({
                     className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${
                       isDragging
                         ? 'border-green-500/50 bg-green-500/10'
-                        : 'border-white/20 hover:border-white/30 bg-surfaceElevated'
+                        : 'border-border hover:border-border bg-surfaceElevated'
                     }`}
                   >
                     <Upload size={24} className="mx-auto text-textTertiary mb-2" />
@@ -533,7 +533,7 @@ export default function FinancialAgentInterface({
                       {uploadedFiles.map((file, i) => (
                         <div
                           key={i}
-                          className="flex items-center gap-3 p-3 bg-surfaceElevated rounded-lg border border-white/10 hover:border-green-500/30 cursor-pointer transition-colors"
+                          className="flex items-center gap-3 p-3 bg-surfaceElevated rounded-lg border border-border hover:border-green-500/30 cursor-pointer transition-colors"
                           onClick={() => setActiveDetailPanel('document')}
                         >
                           <FileText size={16} className="text-green-400" />
@@ -572,19 +572,19 @@ export default function FinancialAgentInterface({
                     </button>
                     <button
                       onClick={() => setActiveDetailPanel('comps')}
-                      className="p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 transition-colors text-center"
+                      className="p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 transition-colors text-center"
                     >
                       <Building2 size={20} className="text-textSecondary mx-auto mb-2" />
                       <p className="text-sm font-semibold text-textPrimary">Find Comps</p>
                     </button>
                     <button
-                      className="p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 transition-colors text-center"
+                      className="p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 transition-colors text-center"
                     >
                       <Wallet size={20} className="text-textSecondary mx-auto mb-2" />
                       <p className="text-sm font-semibold text-textPrimary">Runway Check</p>
                     </button>
                     <button
-                      className="p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 transition-colors text-center"
+                      className="p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 transition-colors text-center"
                     >
                       <TrendingUp size={20} className="text-textSecondary mx-auto mb-2" />
                       <p className="text-sm font-semibold text-textPrimary">Cap Table</p>
@@ -605,7 +605,7 @@ export default function FinancialAgentInterface({
                         <button
                           key={i}
                           onClick={module.onClick}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
@@ -644,7 +644,7 @@ export default function FinancialAgentInterface({
                       return (
                         <button
                           key={i}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
@@ -683,7 +683,7 @@ export default function FinancialAgentInterface({
                       return (
                         <button
                           key={i}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
@@ -722,7 +722,7 @@ export default function FinancialAgentInterface({
                       return (
                         <button
                           key={i}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
@@ -791,7 +791,7 @@ export default function FinancialAgentInterface({
                       return (
                         <button
                           key={i}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
@@ -832,7 +832,7 @@ export default function FinancialAgentInterface({
                     ].map((model, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-3 p-3 bg-surfaceElevated rounded-lg border border-white/10 hover:border-green-500/30 cursor-pointer transition-colors"
+                        className="flex items-center gap-3 p-3 bg-surfaceElevated rounded-lg border border-border hover:border-green-500/30 cursor-pointer transition-colors"
                       >
                         <FileSpreadsheet size={16} className="text-green-400" />
                         <div className="flex-1">
@@ -862,7 +862,7 @@ export default function FinancialAgentInterface({
                       return (
                         <button
                           key={i}
-                          className="p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/30 transition-colors text-left"
+                          className="p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/30 transition-colors text-left"
                         >
                           <Icon size={20} className="text-green-400 mb-2" />
                           <p className="text-sm font-semibold text-textPrimary">{item.label}</p>
@@ -895,7 +895,7 @@ export default function FinancialAgentInterface({
                       return (
                         <button
                           key={i}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-green-500/50 hover:shadow-md transition-all text-left group"
                         >
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
@@ -933,17 +933,17 @@ export default function FinancialAgentInterface({
                       <button className="flex-1 px-3 py-2 bg-green-500/20 border border-green-500/30 text-green-400 text-xs font-medium rounded-lg">
                         All Deals
                       </button>
-                      <button className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 text-textSecondary text-xs font-medium rounded-lg hover:border-green-500/30">
+                      <button className="flex-1 px-3 py-2 bg-surfaceElevated border border-border text-textSecondary text-xs font-medium rounded-lg hover:border-green-500/30">
                         M&A
                       </button>
-                      <button className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 text-textSecondary text-xs font-medium rounded-lg hover:border-green-500/30">
+                      <button className="flex-1 px-3 py-2 bg-surfaceElevated border border-border text-textSecondary text-xs font-medium rounded-lg hover:border-green-500/30">
                         Licensing
                       </button>
                     </div>
                     <input
                       type="text"
                       placeholder="Search deals by company, indication..."
-                      className="w-full px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                      className="w-full px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-green-500/50"
                     />
                     <p className="text-xs text-textSecondary text-center py-2">
                       2,847 deals in database • Updated Dec 2024
@@ -967,7 +967,7 @@ export default function FinancialAgentInterface({
                     ].map((deal, i) => (
                       <div
                         key={i}
-                        className="p-4 bg-surfaceElevated rounded-xl border border-white/10 hover:border-green-500/30 cursor-pointer transition-colors"
+                        className="p-4 bg-surfaceElevated rounded-xl border border-border hover:border-green-500/30 cursor-pointer transition-colors"
                       >
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-sm font-medium text-textPrimary">{deal.acquirer} → {deal.target}</span>
@@ -1002,7 +1002,7 @@ export default function FinancialAgentInterface({
                     ].map((stock, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-white/10"
+                        className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-border"
                       >
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
@@ -1019,7 +1019,7 @@ export default function FinancialAgentInterface({
                         </div>
                       </div>
                     ))}
-                    <button className="w-full p-2 border border-dashed border-white/20 rounded-lg text-sm text-textSecondary hover:border-green-500/50 hover:text-green-400 transition-colors flex items-center justify-center gap-2">
+                    <button className="w-full p-2 border border-dashed border-border rounded-lg text-sm text-textSecondary hover:border-green-500/50 hover:text-green-400 transition-colors flex items-center justify-center gap-2">
                       <Plus size={16} />
                       Add to Watchlist
                     </button>
@@ -1081,7 +1081,7 @@ export default function FinancialAgentInterface({
                       { label: 'Sector EV/Sales', value: '4.2x', change: '↓ 0.3x vs 5Y avg', positive: false },
                       { label: 'M&A Premium', value: '68%', change: '↑ 12% vs 2023', positive: true },
                     ].map((kpi, i) => (
-                      <div key={i} className="p-4 bg-surfaceElevated rounded-xl border border-white/10">
+                      <div key={i} className="p-4 bg-surfaceElevated rounded-xl border border-border">
                         <p className="text-xs text-textSecondary mb-1">{kpi.label}</p>
                         <p className="text-lg font-bold text-textPrimary">{kpi.value}</p>
                         <p className={`text-xs ${kpi.positive ? 'text-success' : 'text-danger'}`}>{kpi.change}</p>
@@ -1114,7 +1114,7 @@ export default function FinancialAgentInterface({
           </div>
 
           {/* Chat Input at Bottom - Padding matches parent container when in tabbed view */}
-          <div className={`border-t border-white/10 bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
+          <div className={`border-t border-border bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
             <div className="relative mb-3">
               <FileText className="absolute left-4 top-4 w-5 h-5 text-textTertiary pointer-events-none" />
               <textarea
@@ -1122,7 +1122,7 @@ export default function FinancialAgentInterface({
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about valuations, deal structures, financial analysis..."
-                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 resize-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 resize-none transition-colors"
                 rows={3}
                 disabled={isProcessing}
               />

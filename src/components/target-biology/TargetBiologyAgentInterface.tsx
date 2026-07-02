@@ -263,7 +263,7 @@ export default function TargetBiologyAgentInterface({
             >
               <div className="p-4 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-textPrimary">Expression Analysis</h3>
-                <div className="flex items-center gap-2 px-3 py-1 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="flex items-center gap-2 px-3 py-1 bg-surfaceElevated border border-border rounded-lg">
                   <span className="text-xs text-textSecondary">Modality:</span>
                   <select
                     value={modality}
@@ -279,7 +279,7 @@ export default function TargetBiologyAgentInterface({
 
               {/* Therapeutic Window Score */}
               {analysisResults && (
-                <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-textPrimary">
                       Therapeutic Window Score
@@ -297,7 +297,7 @@ export default function TargetBiologyAgentInterface({
               )}
 
               {/* Tumor vs Normal Heatmap */}
-              <div className="p-4 bg-surfaceElevated border-x-0 border-y border-white/10 rounded-none">
+              <div className="p-4 bg-surfaceElevated border-x-0 border-y border-border rounded-none">
                 <h4 className="text-sm font-semibold text-textPrimary mb-4">
                   Tumor vs. Normal Heatmap
                 </h4>
@@ -311,7 +311,7 @@ export default function TargetBiologyAgentInterface({
                   ].map((row) => (
                     <div
                       key={row.tissue}
-                      className="flex items-center gap-4 p-3 bg-surface rounded-lg border border-white/10"
+                      className="flex items-center gap-4 p-3 bg-surface rounded-lg border border-border"
                     >
                       <div className="w-20 text-sm font-medium text-textPrimary">{row.tissue}</div>
                       <div className="flex-1 flex items-center gap-2">
@@ -366,14 +366,14 @@ export default function TargetBiologyAgentInterface({
 
               {/* Cell Surface Info */}
               <div className="p-4 grid grid-cols-2 gap-4">
-                <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle className="w-4 h-4 text-success" />
                     <span className="text-sm font-medium text-textPrimary">Cell Surface</span>
                   </div>
                   <p className="text-xs text-textSecondary">Confirmed (HPA)</p>
                 </div>
-                <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Activity className="w-4 h-4 text-textSecondary" />
                     <span className="text-sm font-medium text-textPrimary">Internalization</span>
@@ -395,7 +395,7 @@ export default function TargetBiologyAgentInterface({
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-textPrimary">Literature Analysis</h3>
-                <div className="px-3 py-1 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="px-3 py-1 bg-surfaceElevated border border-border rounded-lg">
                   <span className="text-sm text-textSecondary">
                     {uploadedFiles.length} doc{uploadedFiles.length !== 1 ? 's' : ''}
                   </span>
@@ -412,7 +412,7 @@ export default function TargetBiologyAgentInterface({
                 className={`border-2 border-dashed rounded-xl p-8 transition-all ${
                   isDragging
                     ? 'border-primary bg-primary/10'
-                    : 'border-white/20 hover:border-primary/50'
+                    : 'border-border hover:border-primary/50'
                 }`}
               >
                 <input
@@ -439,7 +439,7 @@ export default function TargetBiologyAgentInterface({
                   </div>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textSecondary hover:text-textPrimary hover:border-primary/50 transition-colors"
+                    className="px-4 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textSecondary hover:text-textPrimary hover:border-primary/50 transition-colors"
                   >
                     Browse Files
                   </button>
@@ -452,7 +452,7 @@ export default function TargetBiologyAgentInterface({
                   {uploadedFiles.map((file, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 bg-surfaceElevated border border-white/10 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-surfaceElevated border border-border rounded-lg"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <FileText className="w-4 h-4 text-textTertiary flex-shrink-0" />
@@ -482,7 +482,7 @@ export default function TargetBiologyAgentInterface({
                   ].map((mode) => (
                     <button
                       key={mode.id}
-                      className="px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary hover:border-primary/50 transition-colors"
+                      className="px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary hover:border-primary/50 transition-colors"
                     >
                       {mode.label}
                     </button>
@@ -501,7 +501,7 @@ export default function TargetBiologyAgentInterface({
                     value={literatureQuery}
                     onChange={(e) => setLiteratureQuery(e.target.value)}
                     placeholder="What resistance mechanisms have been observed in preclinical models?"
-                    className="w-full pl-4 pr-12 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50"
+                    className="w-full pl-4 pr-12 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         handleLiteratureQuery();
@@ -525,7 +525,7 @@ export default function TargetBiologyAgentInterface({
                     {literatureInsights.map((insight, idx) => (
                       <div
                         key={idx}
-                        className="p-3 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textSecondary"
+                        className="p-3 bg-surfaceElevated border border-border rounded-lg text-sm text-textSecondary"
                       >
                         {insight}
                       </div>
@@ -547,7 +547,7 @@ export default function TargetBiologyAgentInterface({
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-textPrimary">Target Validation</h3>
-                <div className="flex items-center gap-2 px-3 py-1 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="flex items-center gap-2 px-3 py-1 bg-surfaceElevated border border-border rounded-lg">
                   <span className="text-xs text-textSecondary">Modality:</span>
                   <select
                     value={modality}
@@ -562,7 +562,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Validation Score */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-textPrimary">Validation Score</span>
                   <div className="flex items-center gap-2">
@@ -579,7 +579,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Direction of Effect */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">
                   DIRECTION OF EFFECT
                 </h4>
@@ -587,7 +587,7 @@ export default function TargetBiologyAgentInterface({
                   <div className="text-sm text-textSecondary">
                     Proposed MOA: <span className="text-textPrimary font-medium">Inhibition</span>
                   </div>
-                  <div className="p-3 bg-surface rounded-lg border border-white/10 space-y-2">
+                  <div className="p-3 bg-surface rounded-lg border border-border space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-textSecondary">LoF Evidence</span>
                       <div className="flex items-center gap-2">
@@ -602,7 +602,7 @@ export default function TargetBiologyAgentInterface({
                         <CheckCircle className="w-4 h-4 text-success" />
                       </div>
                     </div>
-                    <div className="pt-2 border-t border-white/10">
+                    <div className="pt-2 border-t border-border">
                       <span className="text-xs text-textSecondary">Confidence: </span>
                       <span className="text-xs font-medium text-success">HIGH</span>
                     </div>
@@ -611,7 +611,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Genetic Constraint */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">
                   GENETIC CONSTRAINT (gnomAD)
                 </h4>
@@ -633,7 +633,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Somatic Alterations */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">
                   SOMATIC ALTERATIONS (Oncology)
                 </h4>
@@ -660,7 +660,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Tumor Dependency */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">
                   TUMOR DEPENDENCY (DepMap)
                 </h4>
@@ -689,13 +689,13 @@ export default function TargetBiologyAgentInterface({
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-textPrimary">Competitive Landscape</h3>
-                <div className="px-3 py-1 bg-surfaceElevated border border-white/10 rounded-lg">
+                <div className="px-3 py-1 bg-surfaceElevated border border-border rounded-lg">
                   <span className="text-sm text-textSecondary">7 programs</span>
                 </div>
               </div>
 
               {/* Pipeline by Phase */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">PIPELINE BY PHASE</h4>
                 <div className="space-y-2">
                   {[
@@ -723,7 +723,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* By Modality */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">BY MODALITY</h4>
                 <div className="flex items-center gap-4 text-sm">
                   <span className="text-textSecondary">Small Molecule:</span>
@@ -738,7 +738,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Key Programs */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">KEY PROGRAMS</h4>
                 <div className="space-y-2">
                   {[
@@ -748,7 +748,7 @@ export default function TargetBiologyAgentInterface({
                   ].map((program, idx) => (
                     <div
                       key={idx}
-                      className="p-3 bg-surface rounded-lg border border-white/10 flex items-center justify-between"
+                      className="p-3 bg-surface rounded-lg border border-border flex items-center justify-between"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-sm font-medium text-textPrimary">{program.company}</span>
@@ -756,7 +756,7 @@ export default function TargetBiologyAgentInterface({
                         <span className="text-sm text-textPrimary">{program.drug}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs px-2 py-1 bg-surfaceElevated border border-white/10 rounded">
+                        <span className="text-xs px-2 py-1 bg-surfaceElevated border border-border rounded">
                           {program.phase}
                         </span>
                         <span className="text-sm text-textSecondary">{program.orr}</span>
@@ -793,7 +793,7 @@ export default function TargetBiologyAgentInterface({
               </div>
 
               {/* Differentiation Opportunity */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-lg">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-lg">
                 <h4 className="text-sm font-semibold text-textPrimary mb-3">
                   DIFFERENTIATION OPPORTUNITY
                 </h4>
@@ -813,7 +813,7 @@ export default function TargetBiologyAgentInterface({
       </div>
 
       {/* Chat Interface for Agent Interaction */}
-      <div className="border-t border-white/10 bg-surfaceElevated flex flex-col">
+      <div className="border-t border-border bg-surfaceElevated flex flex-col">
         {/* Chat Messages */}
         {chatMessages.length > 0 && (
           <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
@@ -834,7 +834,7 @@ export default function TargetBiologyAgentInterface({
                 <div className={`max-w-[80%] p-3 rounded-lg ${
                   message.role === 'user'
                     ? 'bg-primary/10 border border-primary/20'
-                    : 'bg-surface border border-white/10'
+                    : 'bg-surface border border-border'
                 }`}>
                   <p className="text-sm text-textPrimary whitespace-pre-wrap">{message.content}</p>
                 </div>
@@ -861,7 +861,7 @@ export default function TargetBiologyAgentInterface({
                     setTimeout(() => handleChatSend(), 100);
                   }}
                   disabled={isChatProcessing || !isAuthenticated}
-                  className="text-left px-3 py-2 text-xs text-textSecondary bg-surface border border-white/10 rounded-lg hover:border-primary/50 hover:text-textPrimary transition-colors disabled:opacity-50"
+                  className="text-left px-3 py-2 text-xs text-textSecondary bg-surface border border-border rounded-lg hover:border-primary/50 hover:text-textPrimary transition-colors disabled:opacity-50"
                 >
                   {example}
                 </button>
@@ -871,7 +871,7 @@ export default function TargetBiologyAgentInterface({
         )}
 
         {/* Chat Input - Full width at bottom */}
-        <div className="border-t border-white/10 p-4 space-y-3">
+        <div className="border-t border-border p-4 space-y-3">
           <textarea
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
@@ -883,7 +883,7 @@ export default function TargetBiologyAgentInterface({
             }}
             placeholder={`Ask about ${targetSymbol || 'the target'}...`}
             rows={3}
-            className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 resize-none transition-colors"
+            className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 resize-none transition-colors"
             disabled={isChatProcessing || !targetSymbol}
           />
           <button

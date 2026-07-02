@@ -192,7 +192,7 @@ export const RegulatoryAgentInterfaceV2: React.FC<RegulatoryAgentInterfaceV2Prop
           }
         }}
         placeholder="Ask about regulatory pathways, designations, or FDA guidance..."
-        className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20"
+        className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-border text-textPrimary placeholder-gray-500 focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20"
       />
       <button
         onClick={handleChatSend}
@@ -250,7 +250,7 @@ export const RegulatoryAgentInterfaceV2: React.FC<RegulatoryAgentInterfaceV2Prop
           <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
             Analysis Results
           </h3>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <div className="prose prose-invert max-w-none">
               <pre className="whitespace-pre-wrap text-sm text-gray-300">
                 {typeof analysisResults.data === 'string' 

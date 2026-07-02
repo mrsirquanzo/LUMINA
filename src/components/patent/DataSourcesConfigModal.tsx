@@ -83,10 +83,10 @@ export default function DataSourcesConfigModal({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-2xl mx-4 bg-surface border border-white/10 rounded-2xl shadow-2xl"
+          className="relative w-full max-w-2xl mx-4 bg-surface border border-border rounded-2xl shadow-2xl"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/10">
+          <div className="flex items-center justify-between p-6 border-b border-border">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/20 rounded-lg">
                 <Database size={20} className="text-primary" />
@@ -109,7 +109,7 @@ export default function DataSourcesConfigModal({
             {sources.map((source) => (
               <div
                 key={source.id}
-                className="p-4 bg-surfaceElevated border border-white/10 rounded-xl"
+                className="p-4 bg-surfaceElevated border border-border rounded-xl"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -147,7 +147,7 @@ export default function DataSourcesConfigModal({
                 </div>
 
                 {source.status === 'connected' && (
-                  <div className="mt-3 pt-3 border-t border-white/10 space-y-2">
+                  <div className="mt-3 pt-3 border-t border-border space-y-2">
                     <div className="text-xs text-textSecondary">
                       <strong>Endpoint:</strong> {source.endpoint || 'Default API endpoint'}
                     </div>
@@ -176,10 +176,10 @@ export default function DataSourcesConfigModal({
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 p-6 border-t border-white/10">
+          <div className="flex items-center justify-end gap-3 p-6 border-t border-border">
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary hover:border-white/20 transition-colors"
+              className="px-4 py-2 bg-surfaceElevated border border-border rounded-lg text-textPrimary hover:border-border transition-colors"
             >
               Cancel
             </button>

@@ -551,7 +551,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className="absolute right-0 mt-2 w-64 rounded-xl bg-gray-900 border border-white/10 shadow-xl z-50 overflow-hidden"
+            className="absolute right-0 mt-2 w-64 rounded-xl bg-gray-900 border border-border shadow-xl z-50 overflow-hidden"
           >
             <div className="p-2">
               {[
@@ -593,7 +593,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
           }
         }}
         placeholder="Ask Sonny anything about this target..."
-        className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
+        className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-border text-textPrimary placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
       />
       <button
         onClick={handleChatSend}
@@ -610,13 +610,13 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
       initial={{ x: 400, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 400, opacity: 0 }}
-      className="h-full flex flex-col bg-gray-900/95 backdrop-blur-xl border-l border-white/10"
+      className="h-full flex flex-col bg-gray-900/95 backdrop-blur-xl border-l border-border"
     >
       {/* Header with gradient theme */}
-      <div className="relative px-6 py-4 bg-gradient-to-b from-purple-500/20 via-blue-500/10 to-transparent border-b border-white/10">
+      <div className="relative px-6 py-4 bg-gradient-to-b from-purple-500/20 via-blue-500/10 to-transparent border-b border-border">
         {/* Agent Icon Navigation - Show if enabled */}
         {onAgentSelect && (
-          <div className="mb-4 pb-4 border-b border-white/10">
+          <div className="mb-4 pb-4 border-b border-border">
             <AgentIconNavigation
               currentAgent={currentAgent}
               onAgentSelect={onAgentSelect}
@@ -735,7 +735,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
       </div>
 
       {/* Chat Input */}
-      <div className="border-t border-white/10 p-4">
+      <div className="border-t border-border p-4">
         {chatSection}
       </div>
     </motion.div>
@@ -792,7 +792,7 @@ const AnalysisResultsView: React.FC<{
                     ? 'bg-green-500/10 border-green-500/30'
                     : status === 'active'
                     ? 'bg-purple-500/20 border-purple-500/50'
-                    : 'bg-white/5 border-white/10'
+                    : 'bg-white/5 border-border'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
@@ -833,7 +833,7 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Key Findings */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <h4 className="text-sm font-medium text-gray-300 mb-3">Key Findings</h4>
             <ul className="space-y-2">
               {result.sections.keyFindings.map((finding: string, idx: number) => (
@@ -846,7 +846,7 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Risk Summary */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <h4 className="text-sm font-medium text-gray-300 mb-3">Risk Summary</h4>
             <div className="grid grid-cols-5 gap-2">
               {Object.entries(result.sections.riskSummary).map(([key, value]) => (
@@ -863,7 +863,7 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Decision support */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <h4 className="text-sm font-medium text-gray-300 mb-3">Decision Support</h4>
             <div className="space-y-4">
               <div>
@@ -951,7 +951,7 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Decision Support */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <h4 className="text-sm font-medium text-gray-300 mb-3">Decision Support</h4>
             <div className="space-y-4">
               <div>
@@ -988,7 +988,7 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Comparable Deals */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <h4 className="text-sm font-medium text-gray-300 mb-3">Comparable Deals</h4>
             <div className="space-y-2">
               {result.sections.comparableDeals.map((deal: any, idx: number) => (
@@ -1004,7 +1004,7 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Key Risks Table */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <h4 className="text-sm font-medium text-gray-300 mb-3">Key Risks & Mitigants</h4>
             <div className="space-y-2">
               {result.sections.keyRisks.map((risk: any, idx: number) => (

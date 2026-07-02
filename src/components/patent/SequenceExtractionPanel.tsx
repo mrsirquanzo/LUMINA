@@ -109,7 +109,7 @@ export default function SequenceExtractionPanel({
   return (
     <div className="h-full flex flex-col bg-surface">
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-sm text-textSecondary hover:text-textPrimary mb-3 transition-colors"
@@ -135,7 +135,7 @@ export default function SequenceExtractionPanel({
 
       {/* Verification Alert */}
       {verificationNeeded && (
-        <div className="p-4 border-b border-white/10 bg-warning/10">
+        <div className="p-4 border-b border-border bg-warning/10">
           <VerificationPrompt
             item={verificationNeeded}
             onVerify={(value) => {
@@ -163,7 +163,7 @@ export default function SequenceExtractionPanel({
 
       {/* Processing State */}
       {isProcessing && (
-        <div className="p-4 border-b border-white/10 bg-purple-500/10">
+        <div className="p-4 border-b border-border bg-purple-500/10">
           <div className="flex items-center gap-3 mb-2">
             <Loader2 size={16} className="text-purple-400 animate-spin" />
             <span className="text-sm font-medium text-textPrimary">Extracting sequences...</span>
@@ -199,7 +199,7 @@ export default function SequenceExtractionPanel({
                       className={`p-3 rounded-lg border transition-all text-left ${
                         selectedTypes.includes(type.id)
                           ? 'border-purple-500/50 bg-purple-500/10'
-                          : 'border-white/10 hover:border-white/20 bg-surfaceElevated'
+                          : 'border-border hover:border-border bg-surfaceElevated'
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
@@ -223,7 +223,7 @@ export default function SequenceExtractionPanel({
                 {['Kabat', 'Chothia', 'IMGT'].map((system) => (
                   <button
                     key={system}
-                    className="flex-1 py-2 px-3 rounded-lg border border-white/10 text-sm font-medium text-textSecondary hover:border-purple-500/50 hover:text-purple-400 transition-colors"
+                    className="flex-1 py-2 px-3 rounded-lg border border-border text-sm font-medium text-textSecondary hover:border-purple-500/50 hover:text-purple-400 transition-colors"
                   >
                     {system}
                   </button>
@@ -232,7 +232,7 @@ export default function SequenceExtractionPanel({
             </div>
 
             {/* Validation Options */}
-            <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+            <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
               <h4 className="text-sm font-semibold text-textPrimary mb-3">Validation Options</h4>
               <div className="space-y-2">
                 <label className="flex items-center gap-3">
@@ -286,7 +286,7 @@ export default function SequenceExtractionPanel({
                     className={`p-3 rounded-lg border ${
                       seq.status === 'review'
                         ? 'bg-warning/10 border-warning/20'
-                        : 'bg-surfaceElevated border-white/10'
+                        : 'bg-surfaceElevated border-border'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -342,7 +342,7 @@ export default function SequenceExtractionPanel({
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         {!extractedSequences ? (
           <button
             onClick={handleExtract}
@@ -363,7 +363,7 @@ export default function SequenceExtractionPanel({
           </button>
         ) : (
           <div className="flex gap-2">
-            <button className="flex-1 py-3 bg-surface border border-white/10 text-textPrimary rounded-xl font-semibold text-sm hover:bg-surfaceElevated flex items-center justify-center gap-2 transition-colors">
+            <button className="flex-1 py-3 bg-surface border border-border text-textPrimary rounded-xl font-semibold text-sm hover:bg-surfaceElevated flex items-center justify-center gap-2 transition-colors">
               <RefreshCw size={16} />
               Re-extract
             </button>

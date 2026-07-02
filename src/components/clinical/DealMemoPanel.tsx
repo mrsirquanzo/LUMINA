@@ -27,7 +27,7 @@ export default function DealMemoPanel({ deal, onClose }: DealMemoPanelProps) {
       className="absolute inset-0 bg-surface z-50 flex flex-col"
     >
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-textPrimary">Deal Memo: {dealData.asset}</h2>
@@ -66,7 +66,7 @@ export default function DealMemoPanel({ deal, onClose }: DealMemoPanelProps) {
         <div>
           <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Probability of Technical Success</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-surfaceElevated rounded-lg text-center border border-white/10">
+            <div className="p-4 bg-surfaceElevated rounded-lg text-center border border-border">
               <p className="text-xs text-textSecondary mb-1">Baseline PTS</p>
               <p className="text-3xl font-bold text-textPrimary">15%</p>
               <p className="text-xs text-textSecondary">Phase 2 oncology</p>
@@ -142,13 +142,13 @@ export default function DealMemoPanel({ deal, onClose }: DealMemoPanelProps) {
       </div>
 
       {/* Actions Footer */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         <div className="flex gap-2">
           <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <FileText size={16} />
             Export PDF
           </button>
-          <button className="px-4 py-2 bg-surface border border-white/10 text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surface border border-border text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
             <Download size={16} />
             Download
           </button>

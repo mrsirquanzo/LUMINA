@@ -329,7 +329,7 @@ export default function ClinicalAgentInterface({
         <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Header - Only show if onBackToChat is provided (meaning we're in analysis view, not tabbed interface) */}
           {onBackToChat && (
-            <div className="p-4 border-b border-white/10">
+            <div className="p-4 border-b border-border">
               {/* Back Button - Only show when in detail panel view, not in main tabbed interface */}
               {activeDetailPanel && (
                 <button
@@ -424,7 +424,7 @@ export default function ClinicalAgentInterface({
                       className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${
                         isDragging
                           ? 'border-blue-500/50 bg-blue-500/10'
-                          : 'border-white/20 hover:border-white/30 bg-surfaceElevated'
+                          : 'border-border hover:border-border bg-surfaceElevated'
                       }`}
                     >
                       <Upload size={24} className="mx-auto text-textTertiary mb-2" />
@@ -469,7 +469,7 @@ export default function ClinicalAgentInterface({
                         {uploadedFiles.map((file, i) => (
                           <div
                             key={i}
-                            className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-white/10 hover:border-blue-500/30 cursor-pointer transition-colors"
+                            className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-border hover:border-blue-500/30 cursor-pointer transition-colors"
                           >
                             <FileText size={16} className="text-blue-400" />
                             <div className="flex-1 min-w-0">
@@ -497,7 +497,7 @@ export default function ClinicalAgentInterface({
                         value={targetInput}
                         onChange={(e) => setTargetInput(e.target.value)}
                         placeholder="Enter target (e.g., HER2, TIGIT)"
-                        className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+                        className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
                       />
                       <button
                         onClick={() => {
@@ -528,13 +528,13 @@ export default function ClinicalAgentInterface({
                 </CollapsibleSection>
 
                 {/* Loaded Targets */}
-                <div className="mt-4 pt-4 border-t border-white/10 space-y-2">
+                <div className="mt-4 pt-4 border-t border-border space-y-2">
                   <h4 className="text-xs font-semibold text-textSecondary uppercase tracking-wide">Loaded Targets</h4>
                   {loadedTargets.map((target, i) => (
                     <div
                       key={i}
                       className={`p-4 bg-surfaceElevated border rounded-xl ${
-                        target.loaded ? 'border-blue-500/30' : 'border-white/10'
+                        target.loaded ? 'border-blue-500/30' : 'border-border'
                       }`}
                     >
                       <div className="flex items-start justify-between">
@@ -552,7 +552,7 @@ export default function ClinicalAgentInterface({
                 </div>
 
                 {/* Analysis Modules */}
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="Analysis Modules"
                   icon={BarChart3}
@@ -617,7 +617,7 @@ export default function ClinicalAgentInterface({
                               }
                             }
                           }}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-blue-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-blue-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                         >
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-blue-600/20 rounded-lg group-hover:bg-blue-600/30 transition-colors">
@@ -639,7 +639,7 @@ export default function ClinicalAgentInterface({
                 </div>
 
                 {/* Recent Analyses */}
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="Recent Analyses"
                   icon={Clock}
@@ -675,16 +675,16 @@ export default function ClinicalAgentInterface({
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search by target, drug, indication..."
-                      className="w-full px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                      className="w-full px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                     />
                     <div className="flex gap-2">
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
                         <option>All Phases</option>
                         <option>Phase 1</option>
                         <option>Phase 2</option>
                         <option>Phase 3</option>
                       </select>
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
                         <option>All Indications</option>
                         <option>Oncology</option>
                         <option>Metabolic</option>
@@ -736,7 +736,7 @@ export default function ClinicalAgentInterface({
                 </CollapsibleSection>
 
                 {/* Active Monitoring */}
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="Active Monitoring"
                   icon={Activity}
@@ -751,7 +751,7 @@ export default function ClinicalAgentInterface({
                 </div>
 
                 {/* Upcoming Catalysts */}
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="Upcoming Catalysts"
                   icon={Calendar}
@@ -786,16 +786,16 @@ export default function ClinicalAgentInterface({
                     <input
                       type="text"
                       placeholder="Search by target, indication..."
-                      className="w-full px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                      className="w-full px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                     />
                     <div className="flex gap-2">
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
                         <option>All Modalities</option>
                         <option>Small Molecule</option>
                         <option>Antibody</option>
                         <option>Cell Therapy</option>
                       </select>
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-blue-500/50">
                         <option>All Stages</option>
                         <option>Preclinical</option>
                         <option>Phase 1-2</option>
@@ -848,7 +848,7 @@ export default function ClinicalAgentInterface({
                 </CollapsibleSection>
 
                 {/* Saved Landscapes */}
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="PD-1/PD-L1 Landscape"
                   icon={FileText}
@@ -865,7 +865,7 @@ export default function ClinicalAgentInterface({
                 </CollapsibleSection>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="GLP-1 RA Landscape"
                   icon={FileText}
@@ -947,13 +947,13 @@ export default function ClinicalAgentInterface({
                 </CollapsibleSection>
 
                 {/* Target Validation */}
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="Target Validation"
                   icon={AlertTriangle}
                   defaultOpen={true}
                 >
-                  <div className="space-y-1 border border-white/10 rounded-lg overflow-hidden">
+                  <div className="space-y-1 border border-border rounded-lg overflow-hidden">
                     {validationItems.map((item, i) => (
                       <button
                         key={i}
@@ -1011,7 +1011,7 @@ export default function ClinicalAgentInterface({
                 </div>
 
                 {/* Key Risks */}
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                 <CollapsibleSection
                   title="Key Risks"
                   icon={AlertTriangle}
@@ -1035,8 +1035,8 @@ export default function ClinicalAgentInterface({
                 </div>
 
                 {/* PTS Calculator */}
-                <div className="mt-4 pt-4 border-t border-white/10">
-                <div className="border border-white/10 rounded-xl overflow-hidden bg-surfaceElevated">
+                <div className="mt-4 pt-4 border-t border-border">
+                <div className="border border-border rounded-xl overflow-hidden bg-surfaceElevated">
                   <div className="p-4">
                     <div className="flex items-center gap-2 mb-3">
                       <TrendingUp size={16} className="text-blue-400" />
@@ -1081,7 +1081,7 @@ export default function ClinicalAgentInterface({
 
           {/* Chat Messages Display */}
           {chatMessages.length > 0 && (
-            <div className={`border-t border-white/10 ${onBackToChat ? 'p-4' : 'p-4'}`}>
+            <div className={`border-t border-border ${onBackToChat ? 'p-4' : 'p-4'}`}>
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {chatMessages.map((msg, i) => (
                   <div
@@ -1092,7 +1092,7 @@ export default function ClinicalAgentInterface({
                       className={`max-w-[80%] rounded-lg p-3 ${
                         msg.role === 'user'
                           ? 'bg-blue-600/20 text-textPrimary'
-                          : 'bg-surfaceElevated text-textPrimary border border-white/10'
+                          : 'bg-surfaceElevated text-textPrimary border border-border'
                       }`}
                     >
                       <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -1107,7 +1107,7 @@ export default function ClinicalAgentInterface({
           )}
 
           {/* Chat Input at Bottom - Padding matches parent container when in tabbed view */}
-          <div className={`border-t border-white/10 bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
+          <div className={`border-t border-border bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
             <div className="relative mb-3">
               <FileText className="absolute left-4 top-4 w-5 h-5 text-textTertiary pointer-events-none" />
               <textarea
@@ -1115,7 +1115,7 @@ export default function ClinicalAgentInterface({
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about clinical trials, safety, efficacy, or targets..."
-                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 resize-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 resize-none transition-colors"
                 rows={3}
                 disabled={isProcessing}
               />

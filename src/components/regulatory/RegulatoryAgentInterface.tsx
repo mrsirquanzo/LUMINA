@@ -346,7 +346,7 @@ export default function RegulatoryAgentInterface({
                       className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${
                         isDragging
                           ? 'border-orange-500/50 bg-orange-500/10'
-                          : 'border-white/20 hover:border-white/30 bg-surfaceElevated'
+                          : 'border-border hover:border-border bg-surfaceElevated'
                       }`}
                     >
                       <Upload size={24} className="mx-auto text-textTertiary mb-2" />
@@ -375,7 +375,7 @@ export default function RegulatoryAgentInterface({
                         {uploadedFiles.map((file, i) => (
                           <div
                             key={i}
-                            className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-white/10 hover:border-orange-500/30 cursor-pointer transition-colors"
+                            className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-border hover:border-orange-500/30 cursor-pointer transition-colors"
                           >
                             <FileText size={16} className="text-orange-400" />
                             <div className="flex-1 min-w-0">
@@ -403,7 +403,7 @@ export default function RegulatoryAgentInterface({
                         value={assetInput}
                         onChange={(e) => setAssetInput(e.target.value)}
                         placeholder="Enter asset name or indication..."
-                        className="flex-1 px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-orange-500/50"
+                        className="flex-1 px-4 py-2 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-orange-500/50"
                       />
                       <button
                         onClick={() => {
@@ -437,7 +437,7 @@ export default function RegulatoryAgentInterface({
                         {loadedAssets.map((asset, i) => (
                           <div
                             key={i}
-                            className="flex items-center justify-between p-3 bg-surfaceElevated rounded-lg border border-white/10"
+                            className="flex items-center justify-between p-3 bg-surfaceElevated rounded-lg border border-border"
                           >
                             <div>
                               <p className="text-sm font-medium text-textPrimary">{asset.name}</p>
@@ -453,7 +453,7 @@ export default function RegulatoryAgentInterface({
                   </div>
                 </CollapsibleSection>
 
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                   {/* Analysis Modules */}
                   <CollapsibleSection
                     title="Analysis Modules"
@@ -466,7 +466,7 @@ export default function RegulatoryAgentInterface({
                         return (
                           <button
                             key={idx}
-                            className="p-3 bg-surfaceElevated rounded-lg border border-white/10 hover:border-orange-500/30 transition-colors text-left group"
+                            className="p-3 bg-surfaceElevated rounded-lg border border-border hover:border-orange-500/30 transition-colors text-left group"
                           >
                             <div className="flex items-center gap-2 mb-1">
                               <ModuleIcon size={16} className="text-orange-400" />
@@ -480,7 +480,7 @@ export default function RegulatoryAgentInterface({
                   </CollapsibleSection>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                   {/* Recent Analyses */}
                   <CollapsibleSection
                     title="Recent Analyses"
@@ -491,7 +491,7 @@ export default function RegulatoryAgentInterface({
                       {recentAnalyses.map((analysis, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between p-3 bg-surfaceElevated rounded-lg border border-white/10 hover:border-orange-500/30 cursor-pointer transition-colors"
+                          className="flex items-center justify-between p-3 bg-surfaceElevated rounded-lg border border-border hover:border-orange-500/30 cursor-pointer transition-colors"
                         >
                           <div>
                             <p className="text-sm font-medium text-textPrimary">{analysis.name}</p>
@@ -504,12 +504,12 @@ export default function RegulatoryAgentInterface({
                   </CollapsibleSection>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                   {/* Data Sources */}
                   <RegulatoryDataSourcesSection defaultOpen={false} />
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="mt-4 pt-4 border-t border-border">
                   {/* Generate Report */}
                   <RegulatoryGenerateReportSection defaultOpen={false} />
                 </div>
@@ -518,7 +518,7 @@ export default function RegulatoryAgentInterface({
 
             {activeTab === 'timeline' && (
               <div className="space-y-4">
-                <div className="p-4 bg-surfaceElevated rounded-lg border border-white/10">
+                <div className="p-4 bg-surfaceElevated rounded-lg border border-border">
                   <h3 className="text-sm font-semibold text-textPrimary mb-2">Development Timeline</h3>
                   <p className="text-xs text-textSecondary">Timeline visualization and milestone tracking will appear here</p>
                 </div>
@@ -527,7 +527,7 @@ export default function RegulatoryAgentInterface({
 
             {activeTab === 'risks' && (
               <div className="space-y-4">
-                <div className="p-4 bg-surfaceElevated rounded-lg border border-white/10">
+                <div className="p-4 bg-surfaceElevated rounded-lg border border-border">
                   <h3 className="text-sm font-semibold text-textPrimary mb-2">Regulatory Risks</h3>
                   <p className="text-xs text-textSecondary">Safety assessment, CMC risks, and regulatory risk analysis will appear here</p>
                 </div>
@@ -536,7 +536,7 @@ export default function RegulatoryAgentInterface({
           </div>
 
           {/* Chat Input - Match Clinical/Financial Agent styling - Fixed at bottom */}
-          <div className={`border-t border-white/10 bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
+          <div className={`border-t border-border bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
             <div className="relative mb-3">
               <FileText className="absolute left-4 top-4 w-5 h-5 text-textTertiary pointer-events-none" />
               <textarea
@@ -544,7 +544,7 @@ export default function RegulatoryAgentInterface({
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about regulatory pathways, approval timelines, or compliance..."
-                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 resize-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 resize-none transition-colors"
                 rows={3}
                 disabled={isProcessing}
               />

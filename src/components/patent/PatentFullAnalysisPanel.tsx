@@ -147,10 +147,10 @@ export default function PatentFullAnalysisPanel({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-7xl h-[90vh] bg-surface border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+        className="w-full max-w-7xl h-[90vh] bg-surface border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-surfaceElevated">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surfaceElevated">
           <div className="flex items-center gap-4">
             {onBack && (
               <button
@@ -195,7 +195,7 @@ export default function PatentFullAnalysisPanel({
         <div className="flex-1 overflow-y-auto custom-scrollbar">
           <div className="p-6 space-y-6">
             {/* Overview Section */}
-            <div className="bg-surfaceElevated border border-white/10 rounded-xl p-6">
+            <div className="bg-surfaceElevated border border-border rounded-xl p-6">
               <h3 className="text-lg font-semibold text-textPrimary mb-4">Overview</h3>
               
               <div className="space-y-4">
@@ -225,7 +225,7 @@ export default function PatentFullAnalysisPanel({
                 {/* Metrics Cards */}
                 <div className="grid grid-cols-3 gap-4 mt-6">
                   {/* IP Strength */}
-                  <div className="bg-surface border border-white/10 rounded-lg p-4">
+                  <div className="bg-surface border border-border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-textSecondary">IP Strength</span>
                       <span className="text-sm font-semibold text-textPrimary">{ipStrength}/100</span>
@@ -239,7 +239,7 @@ export default function PatentFullAnalysisPanel({
                   </div>
 
                   {/* FTO Risk */}
-                  <div className="bg-surface border border-white/10 rounded-lg p-4">
+                  <div className="bg-surface border border-border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-textSecondary">FTO Risk</span>
                       <span className={`text-sm font-semibold ${
@@ -257,7 +257,7 @@ export default function PatentFullAnalysisPanel({
                   </div>
 
                   {/* Expiry */}
-                  <div className="bg-surface border border-white/10 rounded-lg p-4">
+                  <div className="bg-surface border border-border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-textSecondary">Expiry</span>
                     </div>
@@ -270,7 +270,7 @@ export default function PatentFullAnalysisPanel({
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-white/10">
+            <div className="border-b border-border">
               <div className="flex gap-1">
                 {[
                   { id: 'overview' as TabType, label: 'Overview', icon: FileText },
@@ -358,7 +358,7 @@ export default function PatentFullAnalysisPanel({
         </div>
 
         {/* Chat Interface */}
-        <div className="border-t border-white/10 bg-surfaceElevated p-4">
+        <div className="border-t border-border bg-surfaceElevated p-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-textSecondary mb-2">Ask Patent Expert about this analysis...</div>
             <div className="flex items-end gap-2">
@@ -374,19 +374,19 @@ export default function PatentFullAnalysisPanel({
                   }}
                   placeholder="Ask a question about this patent..."
                   rows={2}
-                  className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
+                  className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
                 />
               </div>
               <button
                 onClick={() => {}}
-                className="p-3 bg-surface border border-white/10 rounded-lg hover:border-primary/50 transition-colors"
+                className="p-3 bg-surface border border-border rounded-lg hover:border-primary/50 transition-colors"
                 title="Attach file"
               >
                 <Paperclip className="w-4 h-4 text-textSecondary" />
               </button>
               <button
                 onClick={() => {}}
-                className="p-3 bg-surface border border-white/10 rounded-lg hover:border-primary/50 transition-colors"
+                className="p-3 bg-surface border border-border rounded-lg hover:border-primary/50 transition-colors"
                 title="Voice input"
               >
                 <Mic className="w-4 h-4 text-textSecondary" />
@@ -413,7 +413,7 @@ export default function PatentFullAnalysisPanel({
                       className={`max-w-[80%] px-4 py-2 rounded-lg ${
                         msg.role === 'user'
                           ? 'bg-primary text-white'
-                          : 'bg-surface border border-white/10 text-textPrimary'
+                          : 'bg-surface border border-border text-textPrimary'
                       }`}
                     >
                       <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -444,7 +444,7 @@ function OverviewTab({
   return (
     <div className="space-y-6">
       {llmAnalysis && llmAnalysis.content ? (
-        <div className="bg-surfaceElevated border border-white/10 rounded-lg p-6">
+        <div className="bg-surfaceElevated border border-border rounded-lg p-6">
           <h3 className="text-lg font-semibold text-textPrimary mb-4">Expert Analysis</h3>
           <div 
             className="prose prose-invert max-w-none text-textPrimary"
@@ -460,25 +460,25 @@ function OverviewTab({
             }}
           />
           {llmAnalysis.usage && (
-            <div className="mt-4 pt-4 border-t border-white/10 text-xs text-textSecondary">
+            <div className="mt-4 pt-4 border-t border-border text-xs text-textSecondary">
               Analysis generated using {llmAnalysis.usage.inputTokens + llmAnalysis.usage.outputTokens} tokens
             </div>
           )}
         </div>
       ) : (
-        <div className="bg-surfaceElevated border border-white/10 rounded-lg p-6">
+        <div className="bg-surfaceElevated border border-border rounded-lg p-6">
           <p className="text-textSecondary">LLM analysis is being generated or is unavailable. The structured extraction data is available in other tabs.</p>
         </div>
       )}
       
       {/* Quick Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-surface border border-white/10 rounded-lg p-4">
+        <div className="bg-surface border border-border rounded-lg p-4">
           <p className="text-sm text-textSecondary mb-1">Claims</p>
           <p className="text-2xl font-bold text-textPrimary">{patentData.claims_analysis.total_claims}</p>
           <p className="text-xs text-textSecondary">{patentData.claims_analysis.independent_claims} independent</p>
         </div>
-        <div className="bg-surface border border-white/10 rounded-lg p-4">
+        <div className="bg-surface border border-border rounded-lg p-4">
           <p className="text-sm text-textSecondary mb-1">Sequences</p>
           <p className="text-2xl font-bold text-textPrimary">
             {patentData.molecular_data.sequences.antibodies.length +
@@ -486,7 +486,7 @@ function OverviewTab({
           </p>
           <p className="text-xs text-textSecondary">extracted</p>
         </div>
-        <div className="bg-surface border border-white/10 rounded-lg p-4">
+        <div className="bg-surface border border-border rounded-lg p-4">
           <p className="text-sm text-textSecondary mb-1">Quality</p>
           <p className="text-2xl font-bold text-textPrimary">
             {qualityData ? `${(qualityData.overall_confidence * 100).toFixed(0)}%` : 'N/A'}
@@ -521,7 +521,7 @@ function ClaimsTab({ patentData }: { patentData: PatentExtractionResult }) {
           );
           
           return (
-            <div key={idx} className="bg-surfaceElevated border border-white/10 rounded-lg p-4">
+            <div key={idx} className="bg-surfaceElevated border border-border rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                   <FileText className="w-4 h-4 text-primary" />
@@ -545,7 +545,7 @@ function ClaimsTab({ patentData }: { patentData: PatentExtractionResult }) {
                   </div>
 
                   {dependent.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-white/10 space-y-2">
+                    <div className="mt-3 pt-3 border-t border-border space-y-2">
                       {dependent.slice(0, 3).map((dep: any, depIdx: number) => (
                         <div key={depIdx} className="flex items-start gap-2 text-sm text-textSecondary">
                           <span className="text-primary">├──</span>
@@ -588,7 +588,7 @@ function SequencesTab({ patentData }: { patentData: PatentExtractionResult }) {
           </h4>
           <div className="space-y-4">
             {antibodies.slice(0, 5).map((ab: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated border border-white/10 rounded-lg p-4">
+              <div key={idx} className="bg-surfaceElevated border border-border rounded-lg p-4">
                 <div className="flex items-start gap-3 mb-3">
                   <Dna className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
                   <div className="flex-1">
@@ -645,7 +645,7 @@ function SequencesTab({ patentData }: { patentData: PatentExtractionResult }) {
           </h4>
           <div className="space-y-4">
             {nucleicAcids.slice(0, 5).map((na: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated border border-white/10 rounded-lg p-4">
+              <div key={idx} className="bg-surfaceElevated border border-border rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <Dna className="w-5 h-5 text-cyan-500 flex-shrink-0 mt-1" />
                   <div className="flex-1">
@@ -681,7 +681,7 @@ function SequencesTab({ patentData }: { patentData: PatentExtractionResult }) {
           </h4>
           <div className="space-y-4">
             {smallMolecules.slice(0, 5).map((sm: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated border border-white/10 rounded-lg p-4">
+              <div key={idx} className="bg-surfaceElevated border border-border rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
                     <div className="w-2 h-2 rounded-full bg-green-500" />
@@ -726,7 +726,7 @@ function FTOTab({
   return (
     <div className="space-y-6">
       {/* Risk Summary */}
-      <div className="bg-surfaceElevated border border-white/10 rounded-lg p-6">
+      <div className="bg-surfaceElevated border border-border rounded-lg p-6">
         <h4 className="text-base font-semibold text-textPrimary mb-4">FTO Risk Assessment</h4>
         
         <div className="grid grid-cols-2 gap-4 mb-6">
@@ -766,7 +766,7 @@ function FTOTab({
                     ? 'border-danger/50 bg-danger/5'
                     : concern.severity === 'moderate'
                     ? 'border-warning/50 bg-warning/5'
-                    : 'border-white/10'
+                    : 'border-border'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -820,7 +820,7 @@ function FTOTab({
             {ftoRiskData.recommendations.map((rec, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-3 bg-surfaceElevated border border-white/10 rounded-lg p-4"
+                className="flex items-start gap-3 bg-surfaceElevated border border-border rounded-lg p-4"
               >
                 <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
                   <span className="text-xs font-semibold text-primary">{idx + 1}</span>
@@ -971,7 +971,7 @@ function ExportTab({
       <div className="grid grid-cols-3 gap-4">
         <button
           onClick={() => handleExport('pdf')}
-          className="p-6 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 transition-colors text-left"
+          className="p-6 bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 transition-colors text-left"
         >
           <Download className="w-8 h-8 text-primary mb-3" />
           <div className="text-sm font-semibold text-textPrimary mb-1">PDF Report</div>
@@ -980,7 +980,7 @@ function ExportTab({
 
         <button
           onClick={() => handleExport('json')}
-          className="p-6 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 transition-colors text-left"
+          className="p-6 bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 transition-colors text-left"
         >
           <Download className="w-8 h-8 text-cyan-500 mb-3" />
           <div className="text-sm font-semibold text-textPrimary mb-1">JSON Data</div>
@@ -989,7 +989,7 @@ function ExportTab({
 
         <button
           onClick={() => handleExport('markdown')}
-          className="p-6 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 transition-colors text-left"
+          className="p-6 bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 transition-colors text-left"
         >
           <Download className="w-8 h-8 text-green-500 mb-3" />
           <div className="text-sm font-semibold text-textPrimary mb-1">Markdown</div>

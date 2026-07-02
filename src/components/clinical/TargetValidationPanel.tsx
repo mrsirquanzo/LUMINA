@@ -81,7 +81,7 @@ export default function TargetValidationPanel({ target, onClose }: TargetValidat
       className="absolute inset-0 bg-surface z-50 flex flex-col"
     >
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-textPrimary">{targetData.name} Target Validation</h2>
@@ -118,7 +118,7 @@ export default function TargetValidationPanel({ target, onClose }: TargetValidat
         {/* Evidence Breakdown */}
         <div>
           <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Evidence Breakdown</h3>
-          <div className="space-y-1 border border-white/10 rounded-lg overflow-hidden">
+          <div className="space-y-1 border border-border rounded-lg overflow-hidden">
             <EvidenceItem
               title="Human Genetics"
               rating="weak"
@@ -198,17 +198,17 @@ export default function TargetValidationPanel({ target, onClose }: TargetValidat
       </div>
 
       {/* Actions Footer */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         <div className="flex gap-2">
           <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <FileText size={16} />
             Full Report
           </button>
-          <button className="px-4 py-2 bg-surface border border-white/10 text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surface border border-border text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
             <Swords size={16} />
             Competitive
           </button>
-          <button className="px-4 py-2 bg-surface border border-white/10 text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surface border border-border text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
             <ClipboardList size={16} />
             Deal Memo
           </button>

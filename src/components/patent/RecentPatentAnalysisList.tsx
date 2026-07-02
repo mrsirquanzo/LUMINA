@@ -95,7 +95,7 @@ export default function RecentPatentAnalysisList({ onRestoreAnalysis }: RecentPa
         <button
           key={patent.id}
           onClick={() => onRestoreAnalysis(patent)}
-          className="w-full p-3 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 transition-colors text-left flex items-center gap-3 group"
+          className="w-full p-3 bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 transition-colors text-left flex items-center gap-3 group"
         >
           <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
             <FileText className="w-4 h-4 text-primary" />

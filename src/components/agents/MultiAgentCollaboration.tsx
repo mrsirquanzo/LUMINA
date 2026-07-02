@@ -568,7 +568,7 @@ ${synthesis}
   return (
     <div className="w-full min-w-0">
       {/* Header */}
-      <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/10 bg-surfaceElevated/50 p-4 shadow-md backdrop-blur-md">
+      <div className="relative mb-6 overflow-hidden rounded-2xl border border-border bg-surfaceElevated/50 p-4 shadow-md backdrop-blur-md">
         <div aria-hidden="true" className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${sonnyTheme.gradient}`} />
         <div className="relative flex items-start justify-between mb-4">
           <div>
@@ -591,7 +591,7 @@ ${synthesis}
                 <span className="font-medium uppercase text-textPrimary">{mode} Mode</span>
                 {isRunning && !synthesis ? (
                   <span className="ml-1 inline-flex items-center gap-1 text-xs text-textTertiary">
-                    <span className="inline-block h-2.5 w-2.5 rounded-full border border-white/30 border-t-transparent animate-spin" />
+                    <span className="inline-block h-2.5 w-2.5 rounded-full border border-border border-t-transparent animate-spin" />
                   </span>
                 ) : null}
               </div>
@@ -626,7 +626,7 @@ ${synthesis}
 
             {agentActivities.size === 0 && !timeoutWarning && !synthesisStep ? (
               <div className="mb-3 flex items-center gap-2 text-xs text-textSecondary">
-                <div className="w-4 h-4 border-2 border-white/30 border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-border border-t-transparent rounded-full animate-spin" />
                 <span>Initializing orchestration… preparing agents</span>
               </div>
             ) : null}
@@ -649,9 +649,9 @@ ${synthesis}
                   {activity.status === 'complete' ? (
                     <FiCheck className="w-4 h-4 text-green-600" />
                   ) : activity.status === 'thinking' ? (
-                    <div className="w-4 h-4 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-border border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <div className="w-4 h-4 border-2 border-white/20 rounded-full" />
+                    <div className="w-4 h-4 border-2 border-border rounded-full" />
                   )}
                   <span className={activity.status === 'complete' ? 'text-textPrimary font-medium' : 'text-textSecondary'}>
                     {activity.agent.split(' ')[0]}
@@ -665,7 +665,7 @@ ${synthesis}
               ))}
               {synthesisStep && (
                 <div className="flex items-center gap-2 ml-4">
-                  <div className="w-4 h-4 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-border border-t-transparent rounded-full animate-spin" />
                   <span className="text-textPrimary font-medium">Synthesis</span>
                 </div>
               )}
@@ -675,7 +675,7 @@ ${synthesis}
 
         {/* Execution Plan */}
         {plan && (
-          <div className="mt-4 p-3 bg-white/5 border border-white/10 rounded-md relative overflow-hidden">
+          <div className="mt-4 p-3 bg-white/5 border border-border rounded-md relative overflow-hidden">
             <div aria-hidden="true" className={`absolute inset-0 bg-gradient-to-br ${sonnyTheme.gradient} opacity-50`} />
             <div className="relative">
               <p className="text-sm font-medium text-textPrimary">Execution Plan:</p>
@@ -704,7 +704,7 @@ ${synthesis}
             return (
             <div
               key={activity.agent}
-              className={`relative rounded-xl border border-white/10 bg-surfaceElevated/50 shadow-sm backdrop-blur-md transition-all duration-300 min-w-0 overflow-hidden`}
+              className={`relative rounded-xl border border-border bg-surfaceElevated/50 shadow-sm backdrop-blur-md transition-all duration-300 min-w-0 overflow-hidden`}
             >
               <div aria-hidden="true" className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${theme.gradient}`} />
               {/* Agent Header */}
@@ -729,7 +729,7 @@ ${synthesis}
                       </div>
 
                       {activity.currentThought && activity.status === 'thinking' && (
-                        <p className="text-sm text-textSecondary italic mt-2 bg-surface border border-white/10 p-2 rounded">
+                        <p className="text-sm text-textSecondary italic mt-2 bg-surface border border-border p-2 rounded">
                           💭 {activity.currentThought}
                         </p>
                       )}
@@ -752,7 +752,7 @@ ${synthesis}
                     {activity.response && (
                       <button
                         onClick={() => toggleAgentExpansion(activity.agent)}
-                        className="p-2 hover:bg-surface/60 rounded-md transition-colors bg-surface border border-white/10 flex-shrink-0"
+                        className="p-2 hover:bg-surface/60 rounded-md transition-colors bg-surface border border-border flex-shrink-0"
                         aria-label={activity.isExpanded ? 'Collapse response' : 'Expand response'}
                         title={activity.isExpanded ? 'Collapse response' : 'Expand response'}
                       >
@@ -785,7 +785,7 @@ ${synthesis}
               {/* Interactive Chat Section */}
               {activity.status === 'complete' && activity.isExpanded && (
                 <div className="px-4 pb-4">
-                  <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="mt-4 pt-4 border-t border-border">
                     <div className="flex items-center gap-2 mb-3">
                       <FiMessageSquare className="w-4 h-4 text-textSecondary flex-shrink-0" />
                       <h5 className="text-sm font-semibold text-textPrimary">Ask Follow-up Questions</h5>
@@ -800,7 +800,7 @@ ${synthesis}
                             className={`p-3 rounded-lg shadow-sm min-w-0 ${
                               msg.role === 'user'
                                 ? 'bg-primary/10 border-l-4 border-primary ml-8'
-                                : 'bg-surface/40 border border-white/10 mr-8'
+                                : 'bg-surface/40 border border-border mr-8'
                             }`}
                           >
                             <div className={`text-xs mb-1 ${msg.role === 'user' ? 'text-primary font-medium' : 'text-textSecondary font-medium'}`}>
@@ -828,7 +828,7 @@ ${synthesis}
                         }}
                         placeholder="Ask a follow-up question..."
                         disabled={activity.isProcessingChat}
-                        className="flex-1 px-3 py-2 text-sm border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/40 bg-surfaceElevated text-textPrimary placeholder:text-textTertiary"
+                        className="flex-1 px-3 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/40 bg-surfaceElevated text-textPrimary placeholder:text-textTertiary"
                       />
                       <button
                         onClick={() => sendChatToAgent(activity.agent)}
@@ -872,13 +872,13 @@ ${synthesis}
 
       {/* Synthesis Progress */}
       {synthesisStep && (
-        <div className="mb-6 relative overflow-hidden rounded-xl border border-white/10 bg-surfaceElevated/60 p-4 shadow-sm backdrop-blur-md">
+        <div className="mb-6 relative overflow-hidden rounded-xl border border-border bg-surfaceElevated/60 p-4 shadow-sm backdrop-blur-md">
           <div
             aria-hidden="true"
             className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${getAgentTheme('sonny').gradient}`}
           />
           <div className="flex items-center gap-3">
-            <div className="relative animate-spin rounded-full h-6 w-6 border-b-2 border-white/70"></div>
+            <div className="relative animate-spin rounded-full h-6 w-6 border-b-2 border-border"></div>
             <div className="relative">
               <p className="text-sm font-semibold text-textPrimary">🤖 Sonny Synthesizing Results</p>
               <p className="text-sm text-textSecondary mt-1">{synthesisStep}</p>
@@ -889,7 +889,7 @@ ${synthesis}
 
       {/* Final Synthesis */}
       {synthesis && (
-        <div className="mb-6 relative overflow-hidden rounded-2xl border border-white/10 bg-surfaceElevated/50 p-4 shadow-md backdrop-blur-md">
+        <div className="mb-6 relative overflow-hidden rounded-2xl border border-border bg-surfaceElevated/50 p-4 shadow-md backdrop-blur-md">
           <div
             aria-hidden="true"
             className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${getAgentTheme('sonny').gradient}`}
@@ -899,13 +899,13 @@ ${synthesis}
             <h3 className="text-xl font-bold text-textPrimary relative">Analysis Complete</h3>
             <div className="ml-auto flex items-center gap-2">
               {cost > 0 && (
-                <span className="text-sm font-medium text-textSecondary bg-surfaceElevated/60 border border-white/10 px-3 py-1 rounded-full relative">
+                <span className="text-sm font-medium text-textSecondary bg-surfaceElevated/60 border border-border px-3 py-1 rounded-full relative">
                   Cost: ${cost.toFixed(4)}
                 </span>
               )}
               <button
                 onClick={() => setSynthesisExpanded(!synthesisExpanded)}
-                className="p-2 hover:bg-surface/60 rounded-md transition-colors bg-surface/60 border border-white/10 relative"
+                className="p-2 hover:bg-surface/60 rounded-md transition-colors bg-surface/60 border border-border relative"
                 aria-label={synthesisExpanded ? 'Collapse analysis' : 'Expand analysis'}
                 title={synthesisExpanded ? 'Collapse analysis' : 'Expand analysis'}
               >

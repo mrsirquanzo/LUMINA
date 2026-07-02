@@ -103,7 +103,7 @@ export default function ClaimsExtractionPanel({
   return (
     <div className="h-full flex flex-col bg-surface">
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-sm text-textSecondary hover:text-textPrimary mb-3 transition-colors"
@@ -131,7 +131,7 @@ export default function ClaimsExtractionPanel({
       </div>
 
       {/* Document Preview */}
-      <div className="p-4 border-b border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-b border-border bg-surfaceElevated">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-textSecondary uppercase tracking-wide">
             Patent Preview
@@ -141,7 +141,7 @@ export default function ClaimsExtractionPanel({
             Full View
           </button>
         </div>
-        <div className="h-24 bg-surface rounded-lg border border-white/10 flex items-center justify-center">
+        <div className="h-24 bg-surface rounded-lg border border-border flex items-center justify-center">
           <div className="text-center text-textTertiary">
             <FileText size={24} className="mx-auto mb-1" />
             <p className="text-xs">
@@ -153,7 +153,7 @@ export default function ClaimsExtractionPanel({
 
       {/* Processing State */}
       {isProcessing && (
-        <div className="p-4 border-b border-white/10 bg-primary/10">
+        <div className="p-4 border-b border-border bg-primary/10">
           <div className="flex items-center gap-3 mb-2">
             <Loader2 size={16} className="text-primary animate-spin" />
             <span className="text-sm font-medium text-textPrimary">Extracting claims...</span>
@@ -199,7 +199,7 @@ export default function ClaimsExtractionPanel({
                     className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all ${
                       selectedAnalyses.includes(analysis.id)
                         ? 'border-primary bg-primary/10'
-                        : 'border-white/10 hover:border-white/20 bg-surfaceElevated'
+                        : 'border-border hover:border-border bg-surfaceElevated'
                     }`}
                   >
                     <div
@@ -222,7 +222,7 @@ export default function ClaimsExtractionPanel({
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedAnalyses.includes(analysis.id)
                           ? 'border-primary bg-primary'
-                          : 'border-white/20'
+                          : 'border-border'
                       }`}
                     >
                       {selectedAnalyses.includes(analysis.id) && (
@@ -238,7 +238,7 @@ export default function ClaimsExtractionPanel({
 
         {/* Results Preview */}
         {confidence && patent && (
-          <div className="mt-4 p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+          <div className="mt-4 p-4 bg-surfaceElevated border border-border rounded-xl">
             <h4 className="text-sm font-semibold text-textPrimary mb-3">Extraction Results</h4>
             <div className="space-y-2">
               <div className="flex items-center justify-between p-2 bg-surface rounded-lg">
@@ -268,7 +268,7 @@ export default function ClaimsExtractionPanel({
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-textSecondary">
             {selectedAnalyses.length} options selected

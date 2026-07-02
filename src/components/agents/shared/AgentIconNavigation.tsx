@@ -110,7 +110,7 @@ export const AgentIconNavigation: React.FC<AgentIconNavigationProps> = ({
               border-2 transition-all duration-200
               ${isActive 
                 ? `${themeClasses.bg} ${themeClasses.border} shadow-lg` 
-                : 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10'
+                : 'bg-white/5 border-border hover:border-border hover:bg-white/10'
               }
               group cursor-pointer
               z-0 hover:z-50 focus-visible:z-50
@@ -137,7 +137,7 @@ export const AgentIconNavigation: React.FC<AgentIconNavigationProps> = ({
             <div
               className={[
                 'absolute left-1/2 -translate-x-1/2 px-2.5 py-1.5',
-                'bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-lg',
+                'bg-gray-900/95 backdrop-blur-sm border border-border rounded-lg',
                 'text-xs font-medium text-white whitespace-nowrap',
                 'opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-xl',
                 isBottomTooltipAgent ? 'top-full mt-2' : 'bottom-full mb-2',
@@ -148,7 +148,7 @@ export const AgentIconNavigation: React.FC<AgentIconNavigationProps> = ({
                 className={[
                   'absolute left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900/95 rotate-45',
                   isBottomTooltipAgent ? '-top-1 border-l border-t' : '-bottom-1 border-r border-b',
-                  'border-white/20',
+                  'border-border',
                 ].join(' ')}
               />
             </div>

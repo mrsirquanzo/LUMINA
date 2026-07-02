@@ -110,7 +110,7 @@ export default function AgentContextSummary({
           </button>
           <button
             onClick={onStartFresh}
-            className="flex-1 px-3 py-2 bg-surface border border-white/10 rounded-lg hover:border-white/20 transition-colors text-sm text-textSecondary hover:text-textPrimary"
+            className="flex-1 px-3 py-2 bg-surface border border-border rounded-lg hover:border-border transition-colors text-sm text-textSecondary hover:text-textPrimary"
           >
             Start Fresh
           </button>
