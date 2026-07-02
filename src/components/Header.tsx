@@ -162,7 +162,7 @@ export default function Header({
 
 
   return (
-    <header className="sticky top-0 z-50 h-20 bg-surface/80 backdrop-blur-xl border-b border-white/5">
+    <header className="sticky top-0 z-50 h-20 glass border-b border-border">
       <div className="h-full px-6 flex items-center justify-between gap-6">
         {/* Left Section - Simplified Context */}
         <div className="flex items-center gap-4 flex-shrink-0">
@@ -185,7 +185,7 @@ export default function Header({
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
               placeholder="Search targets, assets, companies..."
-              className="w-full pl-10 pr-10 py-2.5 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+              className="w-full pl-10 pr-10 py-2.5 bg-background border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
             />
             {searchQuery ? (
               <button
@@ -198,8 +198,8 @@ export default function Header({
               </button>
             ) : (
               <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1.5 text-xs text-textTertiary">
-                <kbd className="px-1.5 py-0.5 bg-surface border border-white/10 rounded text-textSecondary">⌘</kbd>
-                <kbd className="px-1.5 py-0.5 bg-surface border border-white/10 rounded text-textSecondary">K</kbd>
+                <kbd className="px-1.5 py-0.5 bg-subtle border border-border rounded text-textSecondary">⌘</kbd>
+                <kbd className="px-1.5 py-0.5 bg-subtle border border-border rounded text-textSecondary">K</kbd>
               </div>
             )}
           </form>

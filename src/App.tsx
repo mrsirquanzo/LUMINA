@@ -507,8 +507,6 @@ function AppContent() {
                 maxWidth: '100%',
               }}
             >
-              {/* Background gradient blob */}
-              <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2" aria-hidden="true" />
 
               {/* Content area */}
               <div className="min-h-full relative z-10 p-4 md:p-6 pb-20 w-full">
