@@ -193,7 +193,7 @@ function getSourceBadgeConfig(kind: SourceBadgeKind) {
       icon: Shield,
       bg: 'bg-emerald-500/15',
       border: 'border-emerald-500/30',
-      text: 'text-emerald-300',
+      text: 'text-go-text',
       iconText: 'text-emerald-400',
     };
   if (kind === 'trade')
@@ -202,7 +202,7 @@ function getSourceBadgeConfig(kind: SourceBadgeKind) {
       icon: Newspaper,
       bg: 'bg-amber-500/15',
       border: 'border-amber-500/30',
-      text: 'text-amber-300',
+      text: 'text-watch-text',
       iconText: 'text-amber-400',
     };
   return {
@@ -216,8 +216,8 @@ function getSourceBadgeConfig(kind: SourceBadgeKind) {
 }
 
 function getPriorityConfig(priority: FeedPriority) {
-  if (priority === 'breaking') return { dot: 'bg-red-500', label: 'Breaking', pulse: true, text: 'text-red-300' };
-  if (priority === 'high') return { dot: 'bg-amber-500', label: 'High', pulse: false, text: 'text-amber-300' };
+  if (priority === 'breaking') return { dot: 'bg-red-500', label: 'Breaking', pulse: true, text: 'text-nogo-text' };
+  if (priority === 'high') return { dot: 'bg-amber-500', label: 'High', pulse: false, text: 'text-watch-text' };
   return { dot: 'bg-slate-500', label: 'Medium', pulse: false, text: 'text-textSecondary' };
 }
 
@@ -1964,7 +1964,7 @@ export default function IntelligenceFeed() {
                 type="button"
                 onClick={() => setCuratedOnly(!isCuratedOnly)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                  isCuratedOnly ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
+                  isCuratedOnly ? 'bg-go-tint border-emerald-500/30 text-go-text' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
                 }`}
                 title="Curated-only sources"
               >
@@ -2065,9 +2065,9 @@ export default function IntelligenceFeed() {
           <div
             className={`glass-elevated rounded-xl px-4 py-3 text-sm font-medium border ${
               toast.tone === 'success'
-                ? 'border-emerald-500/30 text-emerald-200'
+                ? 'border-emerald-500/30 text-go-text'
                 : toast.tone === 'error'
-                  ? 'border-red-500/30 text-red-200'
+                  ? 'border-red-500/30 text-nogo-text'
                   : 'border-border text-textPrimary'
             }`}
           >
@@ -2203,7 +2203,7 @@ export default function IntelligenceFeed() {
                 {filteredItems.length} items
               </span>
               {pinnedItems.length > 0 ? (
-                <span className="text-xs px-2 py-1 bg-amber-500/10 text-amber-300 rounded-lg border border-amber-500/20">
+                <span className="text-xs px-2 py-1 bg-watch-tint text-watch-text rounded-lg border border-amber-500/20">
                   {pinnedItems.length} pinned
                 </span>
               ) : null}
@@ -2255,7 +2255,7 @@ export default function IntelligenceFeed() {
                       <div className="flex items-center justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
                           {pinned ? (
-                            <div className="flex items-center gap-1 text-amber-300">
+                            <div className="flex items-center gap-1 text-watch-text">
                               <Pin className="w-3.5 h-3.5" />
                               <span className="text-[10px] font-semibold uppercase tracking-wider">Pinned</span>
                             </div>
@@ -2269,7 +2269,7 @@ export default function IntelligenceFeed() {
                             type="button"
                             onClick={() => togglePinned(item.id)}
                             className={`p-2 rounded-xl hover:bg-subtle transition-colors ${
-                              pinned ? 'text-amber-300' : 'text-textTertiary hover:text-textPrimary'
+                              pinned ? 'text-watch-text' : 'text-textTertiary hover:text-textPrimary'
                             }`}
                             title={pinned ? 'Unpin' : 'Pin'}
                             aria-label={pinned ? 'Unpin' : 'Pin'}
@@ -2403,8 +2403,8 @@ export default function IntelligenceFeed() {
 
                         {analysisError ? (
                           <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                            <p className="text-sm text-red-200">Couldn’t generate analysis.</p>
-                            <p className="text-xs text-red-200/70 mt-1 line-clamp-2">{analysisError}</p>
+                            <p className="text-sm text-nogo-text">Couldn’t generate analysis.</p>
+                            <p className="text-xs text-nogo-text/70 mt-1 line-clamp-2">{analysisError}</p>
                             <div className="mt-3">
                               <button
                                 type="button"
@@ -2480,9 +2480,9 @@ export default function IntelligenceFeed() {
                                   key={`${t.theme}-${idx}`}
                                   className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
                                     t.direction === 'positive'
-                                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+                                      ? 'bg-go-tint border-emerald-500/20 text-go-text'
                                       : t.direction === 'watch'
-                                        ? 'bg-amber-500/10 border-amber-500/20 text-amber-200'
+                                        ? 'bg-watch-tint border-amber-500/20 text-watch-text'
                                         : 'bg-subtle border-border text-textSecondary'
                                   }`}
                                   title={t.rationale}

@@ -6,16 +6,16 @@ interface Props { briefing: BriefingView; }
 
 function verdictColor(verdict: string): string {
   const v = verdict.toUpperCase();
-  if (v === 'GO') return 'text-teal-400';
-  if (v === 'NO-GO') return 'text-red-400';
-  if (v === 'WATCH') return 'text-amber-400';
+  if (v === 'GO') return 'text-go';
+  if (v === 'NO-GO') return 'text-nogo-text';
+  if (v === 'WATCH') return 'text-watch-text';
   return 'text-textPrimary';
 }
 
 function ragChipClass(rag?: 'red' | 'amber' | 'green'): string {
-  if (rag === 'green') return 'bg-teal-500/20 text-teal-300 border border-teal-500/30';
-  if (rag === 'amber') return 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
-  if (rag === 'red') return 'bg-red-500/20 text-red-300 border border-red-500/30';
+  if (rag === 'green') return 'bg-go-tint text-go-text border border-teal-500/30';
+  if (rag === 'amber') return 'bg-watch-tint text-watch-text border border-amber-500/30';
+  if (rag === 'red') return 'bg-nogo-tint text-nogo-text border border-red-500/30';
   return 'bg-subtle text-textSecondary border border-border';
 }
 
@@ -92,12 +92,12 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       {((rec?.bull ?? []).length > 0 || (rec?.bear ?? []).length > 0) && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {(rec?.bull ?? []).length > 0 && (
-            <div className="bg-teal-500/10 border border-teal-500/20 rounded-xl p-4">
-              <p className="text-xs text-teal-400 font-semibold uppercase tracking-wider mb-2">Bull Case</p>
+            <div className="bg-go-tint border border-teal-500/20 rounded-xl p-4">
+              <p className="text-xs text-go-text font-semibold uppercase tracking-wider mb-2">Bull Case</p>
               <ul className="space-y-2">
                 {(rec?.bull ?? []).map((b, i) => (
                   <li key={i} className="text-textSecondary flex gap-1">
-                    <span className="shrink-0 text-teal-400/60">+</span>
+                    <span className="shrink-0 text-go-text/60">+</span>
                     <span>
                       {b.point ?? ''}
                       {(b.citations ?? []).length > 0 && (
@@ -112,12 +112,12 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
             </div>
           )}
           {(rec?.bear ?? []).length > 0 && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
-              <p className="text-xs text-red-400 font-semibold uppercase tracking-wider mb-2">Bear Case</p>
+            <div className="bg-nogo-tint border border-red-500/20 rounded-xl p-4">
+              <p className="text-xs text-nogo-text font-semibold uppercase tracking-wider mb-2">Bear Case</p>
               <ul className="space-y-2">
                 {(rec?.bear ?? []).map((b, i) => (
                   <li key={i} className="text-textSecondary flex gap-1">
-                    <span className="shrink-0 text-red-400/60">-</span>
+                    <span className="shrink-0 text-nogo-text/60">-</span>
                     <span>
                       {b.point ?? ''}
                       {(b.citations ?? []).length > 0 && (
@@ -136,12 +136,12 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
 
       {/* Conditions */}
       {(rec?.conditions ?? []).length > 0 && (
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
-          <p className="text-xs text-amber-400 font-semibold uppercase tracking-wider mb-2">Conditions</p>
+        <div className="bg-watch-tint border border-amber-500/20 rounded-xl p-4">
+          <p className="text-xs text-watch-text font-semibold uppercase tracking-wider mb-2">Conditions</p>
           <ul className="space-y-1">
             {(rec?.conditions ?? []).map((cond, i) => (
               <li key={i} className="text-textSecondary flex gap-1">
-                <span className="shrink-0 text-amber-400/60">*</span>
+                <span className="shrink-0 text-watch-text/60">*</span>
                 <span>{cond}</span>
               </li>
             ))}

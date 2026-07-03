@@ -81,7 +81,7 @@ export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMa
       </a>
     ),
     table: ({ children, ...props }: any) => (
-      <div className="w-full overflow-x-auto rounded-lg border border-white/10 bg-black/30">
+      <div className="w-full overflow-x-auto rounded-lg border border-border bg-subtle">
         <table className="min-w-full border-collapse text-sm" {...props}>
           {children}
         </table>
@@ -93,28 +93,28 @@ export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMa
       </thead>
     ),
     th: ({ children, ...props }: any) => (
-      <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-white/85 uppercase border-b border-white/10 align-top whitespace-nowrap" {...props}>
+      <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-textPrimary uppercase border-b border-border align-top whitespace-nowrap" {...props}>
         {children}
       </th>
     ),
     td: ({ children, ...props }: any) => (
-      <td className="px-4 py-3 text-left text-sm text-white border-b border-white/5 align-top break-words" {...props}>
+      <td className="px-4 py-3 text-left text-sm text-textSecondary border-b border-border align-top break-words" {...props}>
         {children}
       </td>
     ),
     code: ({ inline, children, ...props }: any) => (
       inline ? (
-        <code className="px-1 py-0.5 rounded bg-black/30 border border-white/10 text-white text-xs" {...props}>
+        <code className="px-1 py-0.5 rounded bg-subtle border border-border text-textPrimary text-xs" {...props}>
           {children}
         </code>
       ) : (
-        <code className="text-white text-xs" {...props}>
+        <code className="text-textPrimary text-xs" {...props}>
           {children}
         </code>
       )
     ),
     pre: ({ children, ...props }: any) => (
-      <pre className="p-4 rounded-lg bg-black/30 border border-white/10 overflow-x-auto text-xs text-white" {...props}>
+      <pre className="p-4 rounded-lg bg-subtle border border-border overflow-x-auto text-xs text-textPrimary" {...props}>
         {children}
       </pre>
     ),
@@ -137,7 +137,7 @@ export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMa
         return child;
       });
 
-      return <p className="text-white mb-3 leading-relaxed" {...props}>{processedChildren}</p>;
+      return <p className="text-textSecondary mb-3 leading-relaxed" {...props}>{processedChildren}</p>;
     },
     li: ({ children, ...props }: any) => {
       // Process list items similarly
@@ -157,13 +157,13 @@ export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMa
         return child;
       });
 
-      return <li className="text-white mb-2" {...props}>{processedChildren}</li>;
+      return <li className="text-textSecondary mb-2" {...props}>{processedChildren}</li>;
     },
-    h1: ({ children, ...props }: any) => <h1 className="text-white text-2xl font-bold mb-4 mt-6" {...props}>{children}</h1>,
-    h2: ({ children, ...props }: any) => <h2 className="text-white text-xl font-bold mb-3 mt-5" {...props}>{children}</h2>,
-    h3: ({ children, ...props }: any) => <h3 className="text-white text-lg font-semibold mb-2 mt-4" {...props}>{children}</h3>,
-    strong: ({ children, ...props }: any) => <strong className="text-white font-semibold" {...props}>{children}</strong>,
-    em: ({ children, ...props }: any) => <em className="text-white/90" {...props}>{children}</em>,
+    h1: ({ children, ...props }: any) => <h1 className="text-textPrimary text-2xl font-bold mb-4 mt-6" {...props}>{children}</h1>,
+    h2: ({ children, ...props }: any) => <h2 className="text-textPrimary text-xl font-bold mb-3 mt-5" {...props}>{children}</h2>,
+    h3: ({ children, ...props }: any) => <h3 className="text-textPrimary text-lg font-semibold mb-2 mt-4" {...props}>{children}</h3>,
+    strong: ({ children, ...props }: any) => <strong className="text-textPrimary font-semibold" {...props}>{children}</strong>,
+    em: ({ children, ...props }: any) => <em className="text-textSecondary" {...props}>{children}</em>,
   };
 
   return (
@@ -171,8 +171,8 @@ export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMa
       {/* Main content with citation parsing */}
       <div
         className={`agent-output relative max-w-none break-words overflow-x-hidden rounded-lg border p-4 ${
-          tone?.border ?? 'border-white/10'
-        } bg-black/25`}
+          tone?.border ?? 'border-border'
+        } bg-subtle`}
       >
         {tone && (
           <div
