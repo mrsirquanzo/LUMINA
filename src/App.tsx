@@ -305,10 +305,6 @@ function AppContent() {
     };
   }, []);
 
-  const handleQueryProcessed = () => {
-    setSonnyQuery('');
-  };
-
   const handleExport = (format: 'pdf' | 'pptx' | 'docx') => {
     try {
       const tiles = useTileStore.getState().tiles;

@@ -276,7 +276,9 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
         </div>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-semibold bg-white border border-border text-textSecondary hover:border-[#C7D2E4] transition-colors active:scale-[.98]"
+          disabled
+          title="Coming soon"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-semibold bg-white border border-border text-textTertiary cursor-not-allowed opacity-60"
         >
           Export
         </button>
