@@ -30,58 +30,22 @@ export function formatRelativeDate(ts: number): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+function verdictPillClass(normalized: 'GO' | 'WATCH' | 'NO-GO' | 'UNKNOWN'): string {
+  if (normalized === 'GO') return 'bg-go text-white';
+  if (normalized === 'WATCH') return 'bg-watch text-white';
+  if (normalized === 'NO-GO') return 'bg-nogo text-white';
+  return 'bg-subtle text-textSecondary';
+}
+
 function VerdictPill({ verdict }: { verdict: string | undefined }) {
   const normalized = normalizeVerdict(verdict);
+  const label = normalized === 'UNKNOWN' ? '-' : normalized;
 
-  if (normalized === 'GO') {
-    return (
-      <span
-        className="inline-flex items-center flex-none font-bold text-xs tracking-wide text-white rounded-full px-3 py-1"
-        style={{
-          background: 'linear-gradient(135deg, #1FB257, #12833F)',
-          boxShadow: '0 2px 8px rgba(22,163,74,.26)',
-        }}
-      >
-        GO
-      </span>
-    );
-  }
-
-  if (normalized === 'WATCH') {
-    return (
-      <span
-        className="inline-flex items-center flex-none font-bold text-xs tracking-wide text-white rounded-full px-3 py-1"
-        style={{
-          background: 'linear-gradient(135deg, #E8920B, #C2740A)',
-          boxShadow: '0 2px 8px rgba(217,119,6,.26)',
-        }}
-      >
-        WATCH
-      </span>
-    );
-  }
-
-  if (normalized === 'NO-GO') {
-    return (
-      <span
-        className="inline-flex items-center flex-none font-bold text-xs tracking-wide text-white rounded-full px-3 py-1"
-        style={{
-          background: 'linear-gradient(135deg, #E23B3B, #B91C1C)',
-          boxShadow: '0 2px 8px rgba(220,38,38,.26)',
-        }}
-      >
-        NO-GO
-      </span>
-    );
-  }
-
-  // UNKNOWN verdict - neutral pill
   return (
     <span
-      className="inline-flex items-center flex-none font-bold text-xs tracking-wide rounded-full px-3 py-1"
-      style={{ background: '#F1F5F9', color: '#475569' }}
+      className={`inline-flex items-center flex-none font-bold text-xs tracking-wide rounded-full px-3 py-1 ${verdictPillClass(normalized)}`}
     >
-      -
+      {label}
     </span>
   );
 }
@@ -107,36 +71,14 @@ export function DossierCard({ item, onClick, animationDelay = 0 }: DossierCardPr
           onClick();
         }
       }}
-      className="flex items-center gap-4 px-5 py-4 cursor-pointer"
+      className="tactile flex items-center gap-4 px-5 py-4 cursor-pointer transition-transform motion-safe:hover:-translate-y-0.5"
       style={{
         animationDelay: `${animationDelay}ms`,
         background: '#fff',
         border: '1px solid #E6EBF2',
         borderRadius: 14,
         boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)',
-        transition:
-          'box-shadow 0.2s cubic-bezier(.33,0,.2,1), transform 0.2s cubic-bezier(.33,0,.2,1), border-color 0.2s',
         outline: 'none',
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget;
-        el.style.transform = 'translateY(-2px)';
-        el.style.boxShadow =
-          '0 10px 30px rgba(15,23,42,.10), 0 2px 8px rgba(15,23,42,.05)';
-        el.style.borderColor = '#C3D4F2';
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget;
-        el.style.transform = '';
-        el.style.boxShadow =
-          '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)';
-        el.style.borderColor = '#E6EBF2';
-      }}
-      onMouseDown={(e) => {
-        e.currentTarget.style.transform = 'scale(0.98)';
-      }}
-      onMouseUp={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
       }}
       onFocus={(e) => {
         e.currentTarget.style.outline = '2px solid rgba(29,78,216,0.5)';
@@ -149,7 +91,7 @@ export function DossierCard({ item, onClick, animationDelay = 0 }: DossierCardPr
       <VerdictPill verdict={item.verdict} />
 
       <div className="flex-1 min-w-0">
-        <div className="font-display text-[17px] font-semibold text-textPrimary truncate">
+        <div className="text-[17px] font-semibold text-textPrimary truncate">
           {item.target ?? (
             <span className="text-textSecondary italic">Untitled</span>
           )}

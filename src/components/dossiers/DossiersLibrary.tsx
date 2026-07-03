@@ -205,13 +205,6 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
       </div>
 
       {/* selectedRunId is held in state for Task 4's DossierDrawer */}
-      {selectedRunId !== null && (
-        <span
-          aria-hidden="true"
-          style={{ display: 'none' }}
-          data-selected-run-id={selectedRunId}
-        />
-      )}
     </div>
   );
 }
