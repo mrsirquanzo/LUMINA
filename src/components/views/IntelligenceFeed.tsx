@@ -1707,7 +1707,7 @@ export default function IntelligenceFeed() {
     <section className="relative max-w-6xl mx-auto">
       {/* Outer rounded container (matches dashboard section styling) */}
       <div className="relative overflow-hidden rounded-3xl border border-border bg-surface shadow-2xl shadow-black/10">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(191,90,242,0.18),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(34,211,238,0.12),transparent_40%)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(29,78,216,0.08),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(29,78,216,0.05),transparent_40%)]" />
         <div className="relative">
       {/* Sticky glass header */}
       <header className="sticky top-0 z-40 glass border-b border-border">

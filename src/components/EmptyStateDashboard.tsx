@@ -66,7 +66,7 @@ export default function EmptyStateDashboard({
     >
       {/* Animated background */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(191,90,242,0.12),transparent_55%),radial-gradient(circle_at_bottom,rgba(34,211,238,0.10),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(29,78,216,0.08),transparent_55%),radial-gradient(circle_at_bottom,rgba(29,78,216,0.05),transparent_55%)]" />
         <motion.div
           aria-hidden="true"
           className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/15 blur-3xl"
@@ -114,7 +114,7 @@ export default function EmptyStateDashboard({
               className="flex justify-center mb-6"
             >
               <motion.div
-                className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 via-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-primary/30 shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_0_40px_rgba(191,90,242,0.18)]"
+                className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 via-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-primary/30 shadow-[0_0_0_1px_rgba(15,23,42,0.05),0_0_40px_rgba(29,78,216,0.15)]"
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
               >

@@ -73,7 +73,7 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
       initial={{ x: 400, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 400, opacity: 0 }}
-      className="h-full flex flex-col bg-gray-900/95 backdrop-blur-xl border-l border-border"
+      className="h-full flex flex-col bg-surface/95 backdrop-blur-xl border-l border-border"
     >
       {/* Header */}
       <div className={`relative px-6 py-4 bg-gradient-to-b ${headerGradients[themeColor]}`}>
@@ -106,9 +106,9 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
               <AgentIcon className={`w-6 h-6 ${iconColors[themeColor]}`} />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-white">{agentName}</h2>
+              <h2 className="text-lg font-semibold text-textPrimary">{agentName}</h2>
               {targetName && (
-                <p className="text-sm text-gray-400">Analyzing: {targetName}</p>
+                <p className="text-sm text-textSecondary">Analyzing: {targetName}</p>
               )}
             </div>
           </div>
@@ -117,9 +117,9 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 hover:bg-subtle rounded-lg transition-colors"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-textSecondary" />
               </button>
             )}
           </div>
@@ -132,7 +132,7 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
         
         {/* Export Section - At bottom of content, after document upload */}
         <section className="pt-4 border-t border-border">
-          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+          <h3 className="text-sm font-medium text-textSecondary uppercase tracking-wider mb-4">
             Export Analysis
           </h3>
           <div className="w-full">
