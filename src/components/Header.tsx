@@ -7,7 +7,6 @@ import {
   Trash2,
   Radio,
   RotateCcw,
-  FolderPlus,
 } from 'lucide-react';
 import type { Persona } from '../types';
 import { useTileStore } from '../lib/tiles/store';
@@ -60,26 +59,6 @@ export default function Header({
     return tiles.filter((tile) => tile.workspaceIds.includes(activeWorkspaceId));
   }, [tiles, activeWorkspaceId]);
 
-  const canSaveWorkspace = useMemo(() => {
-    if (!activeWorkspaceId) return false;
-    return visibleTiles.length > 0;
-  }, [activeWorkspaceId, visibleTiles.length]);
-  
-  // Check if there are any tiles to clear (either dynamic tiles or baseline tiles for TROP2)
-  const hasTilesToClear = useMemo(() => {
-    // Always show if there are any dynamic tiles
-    if (tiles.length > 0) return true;
-    
-    // For TROP2 workspace, also consider baseline tiles exist
-    if (activeWorkspaceId) {
-      const activeWorkspace = getWorkspaceById(activeWorkspaceId);
-      if (activeWorkspace?.target?.toUpperCase() === 'TROP2') {
-        return true; // TROP2 always has baseline tiles
-      }
-    }
-    
-    return false;
-  }, [tiles.length, activeWorkspaceId, getWorkspaceById]);
 
   // Keep header toggle synced with Sonny panel mode
   useEffect(() => onAgentModeUpdated(setAgentMode), []);
@@ -259,22 +238,6 @@ export default function Header({
           {/* Clear All Tiles - Show in all workspaces if there are any tiles */}
           {(tiles.length > 0 || activeWorkspaceId) && (
             <>
-              {/* Save workspace (hidden in demo mode to keep investor flow clean) */}
-              {agentMode !== 'demo' && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Dispatch save-workspace event.
-                    setTimeout(() => window.dispatchEvent(new Event('open-save-workspace')), 50);
-                  }}
-                  disabled={!canSaveWorkspace}
-                  className="tactile flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-border rounded-lg hover:bg-surfaceElevated/70 hover:border-slate-300 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  title={canSaveWorkspace ? 'Save this analysis as a workspace' : 'No workspace/tiles to save yet'}
-                >
-                  <FolderPlus className="w-4 h-4 text-textSecondary" />
-                  <span className="hidden md:inline">Save workspace</span>
-                </button>
-              )}
               <button
                 onClick={handleClearAllTiles}
                 disabled={visibleTiles.length === 0}
