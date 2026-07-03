@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { useBriefingStore } from '../../lib/research/briefingStore';
 import { DossierCard, normalizeVerdict, type DossierItem } from './DossierCard';
+import { DossierDrawer } from './DossierDrawer';
 
 type FilterTab = 'all' | 'GO' | 'WATCH' | 'NO-GO';
 
@@ -205,6 +206,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
       </div>
 
       {/* selectedRunId is held in state for Task 4's DossierDrawer */}
+      <DossierDrawer runId={selectedRunId} onClose={() => setSelectedRunId(null)} />
     </div>
   );
 }
