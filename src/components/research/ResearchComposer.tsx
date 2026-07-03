@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Zap, Clock, Upload } from 'lucide-react';
 
 interface ResearchComposerProps {
@@ -11,9 +11,6 @@ const EXAMPLE_CHIPS = ['CDCP1', 'TROP2', 'KRAS G12C'];
 export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProps) {
   const [target, setTarget] = useState(initialQuery ?? '');
   const [mode, setMode] = useState<'fast' | 'thorough'>('fast');
-  const [uploadTooltipVisible, setUploadTooltipVisible] = useState(false);
-  const tooltipRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   // Sync initialQuery if parent passes one
   useEffect(() => {
     if (initialQuery) setTarget(initialQuery);
@@ -27,12 +24,6 @@ export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProp
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleStart();
-  };
-
-  const showUploadTooltip = () => {
-    if (tooltipRef.current) clearTimeout(tooltipRef.current);
-    setUploadTooltipVisible(true);
-    tooltipRef.current = setTimeout(() => setUploadTooltipVisible(false), 2000);
   };
 
   return (
@@ -68,31 +59,28 @@ export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProp
         <div className="bg-surface rounded-[15.5px]">
           {/* Input row */}
           <div className="flex items-center gap-3 px-3 py-2.5">
-            {/* Disabled upload button */}
-            <div className="relative flex-none">
+            {/* Disabled upload button with hover tooltip */}
+            <span className="group relative inline-flex flex-none">
               <button
                 type="button"
                 disabled
-                onClick={showUploadTooltip}
                 aria-label="Upload document (coming soon)"
                 className="w-[42px] h-[42px] flex items-center justify-center rounded-[11px] bg-subtle border border-border text-textSecondary cursor-not-allowed opacity-60"
               >
                 <Upload className="w-[19px] h-[19px]" />
               </button>
-              {uploadTooltipVisible && (
-                <div
-                  role="tooltip"
-                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-ink text-white text-xs font-medium whitespace-nowrap z-50 pointer-events-none"
-                  style={{ boxShadow: '0 4px 12px rgba(15,23,42,.22)' }}
-                >
-                  Coming soon
-                  <span
-                    aria-hidden="true"
-                    className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink"
-                  />
-                </div>
-              )}
-            </div>
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-ink text-white text-xs font-medium whitespace-nowrap z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                style={{ boxShadow: '0 4px 12px rgba(15,23,42,.22)' }}
+              >
+                Coming soon
+                <span
+                  aria-hidden="true"
+                  className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink"
+                />
+              </span>
+            </span>
 
             {/* Text input */}
             <input

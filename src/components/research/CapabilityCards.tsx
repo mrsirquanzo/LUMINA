@@ -3,12 +3,14 @@
  * Active cards lift on hover; coming-soon cards are inert (dashed, muted, cursor-default).
  */
 
+import type { ReactNode } from 'react';
+
 interface Capability {
   id: string;
   title: string;
   description: string;
   status: 'available' | 'coming-soon';
-  icon: React.ReactNode;
+  icon: ReactNode;
 }
 
 function BeakerIcon() {

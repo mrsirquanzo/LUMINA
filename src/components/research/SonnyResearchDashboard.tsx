@@ -30,8 +30,7 @@ export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardP
   if (s.status === 'idle') {
     return (
       <div
-        className="w-full min-h-full overflow-auto"
-        style={{ background: '#F6F8FB' }}
+        className="w-full min-h-full overflow-auto bg-page"
       >
         <div
           style={{
@@ -73,7 +72,7 @@ export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardP
 
   // ---- ACTIVE RUN (hydrating / running / done / error) ----
   return (
-    <div className="w-full min-h-full p-6" style={{ background: '#F6F8FB' }}>
+    <div className="w-full min-h-full p-6 bg-page">
       {/* Error banner */}
       {s.status === 'error' && s.error && (
         <div className="mb-4 flex items-start gap-3 bg-danger/10 border border-danger/20 rounded-xl px-4 py-3 text-danger text-sm">
