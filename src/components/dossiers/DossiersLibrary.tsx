@@ -137,6 +137,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           return (
             <button
               key={tab.key}
+              type="button"
               onClick={() => setFilter(tab.key)}
               className="text-[12px] font-semibold rounded-full px-3 py-1.5 cursor-pointer"
               style={{

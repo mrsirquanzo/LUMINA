@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useBriefingStore } from '../../lib/research/briefingStore';
 import ResearchDossier from '../research/ResearchDossier';
@@ -40,6 +41,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        e.stopPropagation();
         e.preventDefault();
         onClose();
       }
@@ -85,7 +87,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
     ? `${briefing.target} dossier`
     : 'Dossier';
 
-  return (
+  const drawerContent = (
     <>
       {/* Inject keyframe once */}
       <style>{`
@@ -202,6 +204,12 @@ export function DossierDrawer({ runId, onClose }: Props) {
       </div>
     </>
   );
+
+  // Portal to document.body so the drawer escapes any ancestor stacking context
+  // (e.g. the sticky app Header) and sits above it at its declared z-index.
+  // Guard for SSR environments even though this is a Vite/browser-only app.
+  if (typeof document === 'undefined') return drawerContent;
+  return createPortal(drawerContent, document.body);
 }
 
 export default DossierDrawer;
