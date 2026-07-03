@@ -487,7 +487,7 @@ function AppContent() {
                 )}
 
                 {currentView === 'dossiers' && (
-                  <DossiersLibrary />
+                  <DossiersLibrary onOpenSonny={() => setCurrentView('research')} />
                 )}
               </div>
             </div>
