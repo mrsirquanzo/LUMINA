@@ -160,6 +160,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
           </div>
           {/* Close button */}
           <button
+            type="button"
             onClick={onClose}
             aria-label="Close dossier"
             style={{

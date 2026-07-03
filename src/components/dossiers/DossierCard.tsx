@@ -53,10 +53,9 @@ function VerdictPill({ verdict }: { verdict: string | undefined }) {
 interface DossierCardProps {
   item: DossierItem;
   onClick: () => void;
-  animationDelay?: number;
 }
 
-export function DossierCard({ item, onClick, animationDelay = 0 }: DossierCardProps) {
+export function DossierCard({ item, onClick }: DossierCardProps) {
   const relDate = item.savedAt ? formatRelativeDate(item.savedAt) : '';
 
   return (
@@ -73,7 +72,6 @@ export function DossierCard({ item, onClick, animationDelay = 0 }: DossierCardPr
       }}
       className="tactile flex items-center gap-4 px-5 py-4 cursor-pointer transition-transform motion-safe:hover:-translate-y-0.5"
       style={{
-        animationDelay: `${animationDelay}ms`,
         background: '#fff',
         border: '1px solid #E6EBF2',
         borderRadius: 14,

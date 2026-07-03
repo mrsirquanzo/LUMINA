@@ -87,6 +87,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
 
         {onOpenSonny && (
           <button
+            type="button"
             onClick={onOpenSonny}
             className="inline-flex items-center gap-2 text-[13px] font-semibold text-white rounded-lg px-4 py-2.5"
             style={{
@@ -195,11 +196,10 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
             </p>
           </div>
         ) : (
-          visibleItems.map((item, i) => (
+          visibleItems.map((item) => (
             <DossierCard
               key={item.runId}
               item={item}
-              animationDelay={180 + i * 50}
               onClick={() => setSelectedRunId(item.runId)}
             />
           ))
