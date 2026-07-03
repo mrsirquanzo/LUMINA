@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import {
-  Sparkles,
   Grid,
   List,
   Search,
@@ -24,9 +23,6 @@ interface HeaderProps {
   onExport: (format: 'pdf' | 'pptx' | 'docx') => void;
   viewMode?: 'grid' | 'list';
   onViewModeChange?: (mode: 'grid' | 'list') => void;
-  onOpenSonnyPanel?: () => void;
-  sonnyPanelCollapsed?: boolean;
-  onToggleSonnyPanel?: () => void;
 }
 
 export default function Header({
@@ -37,9 +33,6 @@ export default function Header({
   onSearch,
   viewMode = 'grid',
   onViewModeChange,
-  onOpenSonnyPanel,
-  sonnyPanelCollapsed = false,
-  onToggleSonnyPanel,
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -93,10 +86,6 @@ export default function Header({
 
   const handleSearch = async (query: string) => {
     if (query.trim()) {
-      // Open Sonny panel if provided
-      if (onOpenSonnyPanel) {
-        onOpenSonnyPanel();
-      }
       // Pass query to Sonny via onSearch callback
       onSearch?.(query);
       // Clear the search input after submitting
@@ -223,7 +212,6 @@ export default function Header({
             <button
               type="button"
               onClick={() => {
-                onOpenSonnyPanel?.();
                 requestAgentMode('live');
               }}
               className={`tactile px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
@@ -276,9 +264,7 @@ export default function Header({
                 <button
                   type="button"
                   onClick={() => {
-                    // Ensure the modal host (Sonny panel) is mounted.
-                    onOpenSonnyPanel?.();
-                    // Dispatch after a short tick so the panel can mount its listener.
+                    // Dispatch save-workspace event.
                     setTimeout(() => window.dispatchEvent(new Event('open-save-workspace')), 50);
                   }}
                   disabled={!canSaveWorkspace}
@@ -312,30 +298,6 @@ export default function Header({
             </>
           )}
 
-          {/* Sonny Panel Toggle - Enhanced with glassmorphism and gradient */}
-          {onToggleSonnyPanel && (
-            <button
-              onClick={onToggleSonnyPanel}
-              className={`tactile relative p-2.5 rounded-xl transition-all duration-300 group ${
-                sonnyPanelCollapsed
-                  ? 'bg-surfaceElevated/50 border border-border hover:border-slate-300 hover:bg-surfaceElevated/70'
-                  : 'bg-gradient-to-br from-primary/20 via-primary/15 to-cyan-500/20 border border-primary/30 shadow-lg shadow-primary/20 backdrop-blur-md'
-              }`}
-              aria-label={sonnyPanelCollapsed ? 'Show Sonny panel' : 'Hide Sonny panel'}
-              title={sonnyPanelCollapsed ? 'Show Sonny panel (⌘J)' : 'Hide Sonny panel (⌘J)'}
-            >
-              <Sparkles 
-                className={`w-5 h-5 transition-all duration-300 ${
-                  sonnyPanelCollapsed
-                    ? 'text-textSecondary group-hover:text-primary'
-                    : 'text-primary drop-shadow-sm'
-                }`}
-              />
-              {!sonnyPanelCollapsed && (
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              )}
-            </button>
-          )}
         </div>
       </div>
 
