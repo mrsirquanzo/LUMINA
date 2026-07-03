@@ -485,7 +485,7 @@ function AppContent() {
 
                 {currentView === 'research' && (
                   <Suspense fallback={<DashboardSkeleton />}>
-                    <SonnyResearchDashboard />
+                    <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} />
                   </Suspense>
                 )}
               </div>

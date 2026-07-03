@@ -1,12 +1,17 @@
 import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { useDeepResearchStream } from '../../hooks/useDeepResearchStream';
 import { useBriefingStore } from '../../lib/research/briefingStore';
 import { ResearchComposer } from './ResearchComposer';
+import { CapabilityCards } from './CapabilityCards';
 import GlassBoxTrace from './GlassBoxTrace.js';
 import ResearchDossier from './ResearchDossier.js';
-import { AlertTriangle } from 'lucide-react';
 
-export function SonnyResearchDashboard() {
+interface SonnyResearchDashboardProps {
+  initialQuery?: string;
+}
+
+export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardProps) {
   const s = useDeepResearchStream();
 
   // On mount: hydrate from URL ?runId=
@@ -21,18 +26,54 @@ export function SonnyResearchDashboard() {
   // Select briefing for current run from persistent store
   const briefing = useBriefingStore((st) => (s.runId ? st.briefings[s.runId] : undefined));
 
+  // ---- HOME (idle) ----
   if (s.status === 'idle') {
     return (
-      <div className="w-full min-h-full">
-        <ResearchComposer
-          onStart={(t, m) => s.start(t, m)}
-        />
+      <div
+        className="w-full min-h-full overflow-auto"
+        style={{ background: '#F6F8FB' }}
+      >
+        <div
+          style={{
+            maxWidth: 760,
+            margin: '0 auto',
+            padding: '52px 40px 64px',
+            position: 'relative',
+          }}
+        >
+          {/* Wordmark */}
+          <div className="text-center mb-10" style={{ position: 'relative', zIndex: 1 }}>
+            <h1
+              className="font-display text-textPrimary"
+              style={{ fontSize: 34, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 8 }}
+            >
+              Ask Sonny
+            </h1>
+            <p className="text-textSecondary" style={{ fontSize: 15 }}>
+              Grounded biomedical intelligence. Enter a target to start.
+            </p>
+          </div>
+
+          {/* Composer */}
+          <div style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
+            <ResearchComposer
+              onStart={(t, m) => s.start(t, m)}
+              initialQuery={initialQuery}
+            />
+          </div>
+
+          {/* Capability cards */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <CapabilityCards />
+          </div>
+        </div>
       </div>
     );
   }
 
+  // ---- ACTIVE RUN (hydrating / running / done / error) ----
   return (
-    <div className="w-full min-h-full p-6">
+    <div className="w-full min-h-full p-6" style={{ background: '#F6F8FB' }}>
       {/* Error banner */}
       {s.status === 'error' && s.error && (
         <div className="mb-4 flex items-start gap-3 bg-danger/10 border border-danger/20 rounded-xl px-4 py-3 text-danger text-sm">
