@@ -50,7 +50,7 @@ function isReloadNavigation(): boolean {
 
 function AppContent() {
   const [activePersona, setActivePersona] = useState<Persona>(Persona.SCIENTIST);
-  const [currentView, setCurrentView] = useState<ViewState>('dashboard');
+  const [currentView, setCurrentView] = useState<ViewState>('research');
   const [showLandingAnimation, setShowLandingAnimation] = useState(() => {
     // Check if user has seen the intro in this session
     if (typeof window !== 'undefined') {
