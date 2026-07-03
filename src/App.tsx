@@ -8,6 +8,7 @@ import IntelligenceFeed from './components/views/IntelligenceFeed';
 import Workspaces from './components/views/Workspaces';
 import Recent from './components/views/Recent';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
+import DossiersLibrary from './components/dossiers/DossiersLibrary';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import SearchModal from './components/SearchModal';
 import ExportModal from './components/ExportModal';
@@ -483,6 +484,10 @@ function AppContent() {
                   <Suspense fallback={<DashboardSkeleton />}>
                     <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} />
                   </Suspense>
+                )}
+
+                {currentView === 'dossiers' && (
+                  <DossiersLibrary />
                 )}
               </div>
             </div>

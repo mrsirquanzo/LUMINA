@@ -6,7 +6,7 @@ export const Persona = {
   BD: 'bd' as const,
 };
 
-export type ViewState = 'dashboard' | 'feed' | 'workspaces' | 'history' | 'research';
+export type ViewState = 'dashboard' | 'feed' | 'workspaces' | 'history' | 'research' | 'dossiers';
 
 // Scoring types
 export type ValidationScore = 'Strong' | 'Moderate' | 'Limited' | 'Insufficient';
