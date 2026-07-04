@@ -2384,7 +2384,7 @@ export default function IntelligenceFeed() {
                               <span className="text-[10px] font-bold text-primary uppercase tracking-wide block mb-1">The Implication</span>
                               <p className="text-sm text-textSecondary leading-relaxed">
                                 {analysis?.sections?.theImplication?.text ||
-                                  (analysisState === 'loading' ? 'Deriving second/third-order implications (persona-aware)…' : 'Generate analysis to view this section.')}
+                                  (analysisState === 'loading' ? 'Deriving second/third-order implications…' : 'Generate analysis to view this section.')}
                               </p>
                             </div>
                           </div>

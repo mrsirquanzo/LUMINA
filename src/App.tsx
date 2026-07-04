@@ -105,9 +105,6 @@ function AppContent() {
         <Sidebar
           currentView={currentView}
           onViewChange={setCurrentView}
-          collapsed={sidebarCollapsed}
-          setCollapsed={setSidebarCollapsed}
-          onOpenSettings={() => setSettingsOpen(true)}
         />
 
         <main className="flex-1 flex flex-col min-w-0">

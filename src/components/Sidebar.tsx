@@ -5,9 +5,6 @@ import type { ViewState } from '../types';
 interface SidebarProps {
   currentView: ViewState;
   onViewChange: (v: ViewState) => void;
-  collapsed: boolean;
-  setCollapsed: (c: boolean) => void;
-  onOpenSettings?: () => void;
 }
 
 interface NavItem {
