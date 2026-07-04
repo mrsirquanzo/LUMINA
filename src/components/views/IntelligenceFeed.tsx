@@ -1315,7 +1315,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     return [
       // NOTE: "All" needs an icon because the dropdown renders `f.icon` for every option.
       { id: 'All' as const, label: 'All', icon: Filter, count: feedItems.length },
-      { id: 'publication' as const, label: 'Papers', icon: FileText, count: counts.publication },
+      { id: 'publication' as const, label: 'Publications', icon: FileText, count: counts.publication },
       { id: 'news' as const, label: 'News', icon: Newspaper, count: counts.news },
       { id: 'clinical' as const, label: 'Trials', icon: FileText, count: counts.clinical },
       { id: 'deal' as const, label: 'Deals', icon: Handshake, count: counts.deal },
@@ -1642,14 +1642,17 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                 <Sparkles className="w-5 h-5 text-primary" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-xl font-semibold tracking-tight text-textPrimary">Intelligence Feed</h1>
-                <p className="text-xs text-textTertiary truncate">
-                  {data?.fetchedAt
-                    ? `Last updated ${(() => {
-                        const dt = parseISO(data.fetchedAt);
-                        return Number.isNaN(dt.getTime()) ? '—' : format(dt, 'MMM d • h:mm a');
-                      })()}${data.cached ? ' (cached)' : ''}`
-                    : 'Live signal monitoring • click a headline to open source'}
+                <h1 className="text-xl font-semibold tracking-tight text-textPrimary flex items-center gap-2">
+                  Intelligence feed
+                  {isDemoMode && (
+                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{background:'linear-gradient(135deg,#FEF3C7,#FCE4A8)',border:'1px solid rgba(217,119,6,.18)',color:'#92400E'}}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+                      DEMO DATA
+                    </span>
+                  )}
+                </h1>
+                <p className="text-xs text-textSecondary mt-0.5">
+                  Latest papers, trials, and patents across your watchlist, each read by Sonny for what it changes.
                 </p>
               </div>
             </div>
@@ -1860,12 +1863,12 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   key={f.id}
                   type="button"
                   onClick={() => setTypeFilter(f.id)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                    typeFilter === f.id ? 'bg-primary/15 border-primary/30 text-primary' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-colors ${
+                    typeFilter === f.id ? 'bg-primary/10 border-transparent text-primary' : 'bg-white border-border text-textSecondary hover:text-textPrimary hover:border-primary/30'
                   }`}
                 >
                   {f.label}
-                  <span className="ml-1.5 text-[10px] text-textTertiary">{f.count}</span>
+                  <span className="ml-1.5 text-[10px] opacity-60">{f.count}</span>
                 </button>
               ))}
               <span className="w-px h-4 bg-border" />
