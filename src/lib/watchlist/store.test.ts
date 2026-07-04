@@ -27,7 +27,8 @@ describe('watchlist store', () => {
     for (let i = 1; i <= 10; i++) useWatchlistStore.getState().add(`T${i}`);
     const { targets } = useWatchlistStore.getState();
     expect(targets.length).toBe(8);
-    expect(targets[targets.length - 1]).toBe(useWatchlistStore.getState().targets.at(-1));
+    expect(targets).toContain('T10'); // newest kept
+    expect(targets).toContain('T3');  // 8th-newest kept
     expect(targets).not.toContain('T1'); // oldest dropped
     expect(targets).not.toContain('T2');
   });

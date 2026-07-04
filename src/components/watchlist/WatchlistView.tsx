@@ -75,9 +75,9 @@ function EmptyState({
       <div className="mb-5 w-14 h-14 rounded-xl bg-subtle border border-border flex items-center justify-center">
         <Eye className="w-6 h-6 text-textSecondary" />
       </div>
-      <h2 className="font-display text-2xl font-semibold text-textPrimary mb-2 tracking-tight">
+      <h1 className="font-display text-2xl font-semibold text-textPrimary mb-2 tracking-tight">
         Your watchlist is empty
-      </h2>
+      </h1>
       <p className="text-sm text-textSecondary max-w-sm leading-relaxed mb-6">
         Add a target and Sonny will monitor it for new papers, trials, and patents.
       </p>
