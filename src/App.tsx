@@ -2,11 +2,7 @@ import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import ScientistDashboard from './components/ScientistDashboard';
-import ScoutDashboard from './components/ScoutDashboard';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
-import Workspaces from './components/views/Workspaces';
-import Recent from './components/views/Recent';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
 import DossiersLibrary from './components/dossiers/DossiersLibrary';
 import DashboardSkeleton from './components/DashboardSkeleton';
@@ -452,31 +448,9 @@ function AppContent() {
               <div className="min-h-full relative z-10 p-4 md:p-6 pb-20 w-full">
                 {isLoading && <DashboardSkeleton />}
 
-                {!isLoading && currentView === 'dashboard' && (
-                  <Suspense fallback={<DashboardSkeleton />}>
-                    {activePersona === Persona.SCIENTIST ? (
-                      <ScientistDashboard viewMode={viewMode} />
-                    ) : (
-                      <ScoutDashboard viewMode={viewMode} />
-                    )}
-                  </Suspense>
-                )}
-
                 {currentView === 'feed' && (
                   <Suspense fallback={<DashboardSkeleton />}>
                     <IntelligenceFeed />
-                  </Suspense>
-                )}
-
-                {currentView === 'workspaces' && (
-                  <Suspense fallback={<DashboardSkeleton />}>
-                    <Workspaces />
-                  </Suspense>
-                )}
-                
-                {currentView === 'history' && (
-                  <Suspense fallback={<DashboardSkeleton />}>
-                    <Recent />
                   </Suspense>
                 )}
 
