@@ -1,4 +1,4 @@
-export type ViewState = 'dashboard' | 'feed' | 'workspaces' | 'history' | 'research' | 'dossiers';
+export type ViewState = 'research' | 'feed' | 'dossiers' | 'watchlist';
 
 // Scoring types
 export type ValidationScore = 'Strong' | 'Moderate' | 'Limited' | 'Insufficient';

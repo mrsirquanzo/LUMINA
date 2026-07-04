@@ -5,6 +5,7 @@ import Header from './components/Header';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
 import DossiersLibrary from './components/dossiers/DossiersLibrary';
+import WatchlistView from './components/watchlist/WatchlistView';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import SearchModal from './components/SearchModal';
 import SettingsModal from './components/SettingsModal';
@@ -65,7 +66,7 @@ function AppContent() {
       // Reset the Sonny query to prevent auto-start effect from re-triggering
       setSonnyQuery('');
 
-      toast.success('Reset complete: returned to lobby.');
+      toast.success('Reset complete.');
     };
 
     window.addEventListener('reset-demo', handleResetDemo as EventListener);
@@ -141,6 +142,10 @@ function AppContent() {
 
               {currentView === 'dossiers' && (
                 <DossiersLibrary onOpenSonny={() => setCurrentView('research')} />
+              )}
+
+              {currentView === 'watchlist' && (
+                <WatchlistView />
               )}
             </div>
           </div>
