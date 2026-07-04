@@ -1,6 +1,8 @@
 import { memo } from 'react';
 import { Sparkles, Bell, Library, Eye } from 'lucide-react';
 import type { ViewState } from '../types';
+import { useWatchlistStore } from '../lib/watchlist/store';
+import { useUnreadCounts } from '../hooks/useUnreadCounts';
 
 interface SidebarProps {
   currentView: ViewState;
@@ -24,6 +26,9 @@ const Sidebar = memo(function Sidebar({
   currentView,
   onViewChange,
 }: SidebarProps) {
+  const targets = useWatchlistStore((s) => s.targets);
+  const unread = useUnreadCounts(targets);
+
   return (
     <aside
       className="w-[248px] flex-shrink-0 bg-surface border-r border-border flex flex-col"
@@ -61,6 +66,26 @@ const Sidebar = memo(function Sidebar({
           );
         })}
       </nav>
+
+      {/* Watched-target list */}
+      {targets.length > 0 && (
+        <div className="px-3 pb-2 space-y-0.5">
+          {targets.map((t) => (
+            <button
+              key={t}
+              onClick={() => onViewChange('feed')}
+              className="tactile w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors duration-150"
+            >
+              <span className="text-xs font-medium truncate leading-relaxed">{t}</span>
+              {unread[t] > 0 && (
+                <span className="flex-shrink-0 text-[10px] font-semibold leading-none px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                  {unread[t]} new
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Engine status pill */}
       <div className="px-5 py-4 border-t border-border">
