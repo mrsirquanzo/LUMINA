@@ -16,11 +16,7 @@ import { PersonaProvider } from './contexts/PersonaContext';
 import { TargetProvider, type TargetData } from './contexts/TargetContext';
 import { useToast } from './hooks/useToast';
 import { Persona, type ViewState } from './types';
-import { WORKSPACES } from './constants';
-import { useWorkspaceStore } from './lib/workspaces/store';
-import { useTileStore } from './lib/tiles/store';
-import { buildTilesMarkdownReport, exportMarkdownReport } from './lib/reportExport';
-import { formatTargetDisplayName } from './lib/targetNaming';
+
 
 export interface Notification {
   id: string;
@@ -76,59 +72,17 @@ function AppContent() {
   // Detect once at boot and reuse consistently.
   const forceLobbyOnLoadRef = useRef(typeof window !== 'undefined' && isReloadNavigation());
 
-  // Clean up old/duplicate workspaces on first load and ensure empty state shows when appropriate
+  // On a browser refresh, always land in the lobby.
   const initializedRef = useRef(false);
   useEffect(() => {
     if (initializedRef.current) return;
     initializedRef.current = true;
-    
-    // Use setTimeout to defer cleanup and prevent blocking render
-    setTimeout(() => {
-      // Clean up old/duplicate workspaces
-      useWorkspaceStore.getState().cleanupWorkspaces();
 
-      // On a browser refresh, always land in the lobby (do NOT restore the last active workspace).
-      if (forceLobbyOnLoadRef.current && typeof window !== 'undefined') {
-        sessionStorage.removeItem('lumina-has-selected-target');
-        sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
-        useTileStore.getState().setActiveWorkspace(null);
-        useWorkspaceStore.getState().setActiveWorkspace(null);
-        console.log('[App] Forced lobby on refresh (cleared active workspace).');
-      }
-
-      // On first-time entry, show the lobby (recommended targets) instead of auto-loading demo TROP2 baseline.
-      // We gate on session selection to ensure the app lands in the lobby after intro,
-      // even if a previous workspace was persisted from earlier sessions.
-      const hasSelectedTargetThisSession =
-        typeof window !== 'undefined' && sessionStorage.getItem('lumina-has-selected-target') === 'true';
-      const tiles = useTileStore.getState().tiles;
-
-      if (!hasSelectedTargetThisSession) {
-        useTileStore.getState().setActiveWorkspace(null);
-        useWorkspaceStore.getState().setActiveWorkspace(null);
-        console.log('[App] Cleared restored workspace to show lobby (new session).', { tiles: tiles.length });
-      }
-      
-      // Check if we should show empty state
-      const activeWorkspaceAfter = useTileStore.getState().activeWorkspace;
-      const activeWorkspaceIdAfter = useWorkspaceStore.getState().activeWorkspaceId;
-      
-      // If no tiles exist, clear active workspace to show empty state
-      if (tiles.length === 0) {
-        if (activeWorkspaceAfter || activeWorkspaceIdAfter) {
-          useTileStore.getState().setActiveWorkspace(null);
-          useWorkspaceStore.getState().setActiveWorkspace(null);
-          console.log('[App] Cleared active workspace to show empty state (no tiles)');
-        }
-      } else {
-        // If tiles exist but no active workspace, we might want to show them
-        // But for now, let's still clear to show empty state on first load
-        if (!activeWorkspaceAfter && !activeWorkspaceIdAfter) {
-          console.log('[App] Tiles exist but no active workspace - tiles will show');
-        }
-      }
-    }, 100); // Small delay to ensure stores are ready
-  }, []); // Empty dependency array - only run once on mount
+    if (forceLobbyOnLoadRef.current && typeof window !== 'undefined') {
+      sessionStorage.removeItem('lumina-has-selected-target');
+      sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
+    }
+  }, []);
 
   // Theme switching effect
   useEffect(() => {
@@ -143,66 +97,6 @@ function AppContent() {
   }, [activePersona]);
 
 
-  // Subscribe to active workspace changes
-  const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
-  const getWorkspaceById = useWorkspaceStore((state) => state.getWorkspaceById);
-  const tileActiveWorkspaceId = useTileStore((state) => state.activeWorkspace);
-  const isLobby = !tileActiveWorkspaceId && !activeWorkspaceId;
-  const lobbyLayoutAppliedRef = useRef(false);
-
-  // Keep workspace store + tile store active workspace IDs in sync.
-  // They both persist to the same localStorage key, but don't automatically notify each other.
-  useEffect(() => {
-    if (tileActiveWorkspaceId === activeWorkspaceId) return;
-
-    // Prefer whichever store currently has a value.
-    if (tileActiveWorkspaceId) {
-      useWorkspaceStore.getState().setActiveWorkspace(tileActiveWorkspaceId);
-      return;
-    }
-
-    if (activeWorkspaceId) {
-      useTileStore.getState().setActiveWorkspace(activeWorkspaceId);
-    }
-  }, [tileActiveWorkspaceId, activeWorkspaceId]);
-
-  // Lobby layout preset: when we land in the lobby (no active workspace) after the intro,
-  // minimize side panels to match the intended first impression.
-  // We only apply this once per "lobby entry" so users can expand panels manually if they want.
-  useEffect(() => {
-    if (showLandingAnimation) return;
-
-    if (!isLobby) {
-      lobbyLayoutAppliedRef.current = false;
-      return;
-    }
-
-    if (lobbyLayoutAppliedRef.current) return;
-    lobbyLayoutAppliedRef.current = true;
-
-    setSidebarCollapsed(true);
-  }, [isLobby, showLandingAnimation]);
-  
-  // Update currentTarget when active workspace changes
-  useEffect(() => {
-    const effectiveWorkspaceId = tileActiveWorkspaceId || activeWorkspaceId;
-    if (effectiveWorkspaceId) {
-      const activeWorkspace = getWorkspaceById(effectiveWorkspaceId);
-      if (activeWorkspace) {
-        setCurrentTarget({
-          id: String(activeWorkspace.id),
-          name: formatTargetDisplayName(activeWorkspace.target),
-          indication: 'Oncology', // Default indication
-          dataFreshness: 'Just now',
-        });
-      } else {
-        setCurrentTarget(null);
-      }
-    } else {
-      // No active workspace - clear target
-      setCurrentTarget(null);
-    }
-  }, [tileActiveWorkspaceId, activeWorkspaceId, getWorkspaceById]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -246,11 +140,6 @@ function AppContent() {
   // Global reset for investor demo reruns (single action).
   useEffect(() => {
     const handleResetDemo = () => {
-      // Clear dynamic tiles and return to lobby (no active workspace).
-      useTileStore.getState().clearAllTiles();
-      useTileStore.getState().setActiveWorkspace(null);
-      useWorkspaceStore.getState().setActiveWorkspace(null);
-
       // Mark session as "no selected target" so the lobby renders.
       sessionStorage.removeItem('lumina-has-selected-target');
 
@@ -302,57 +191,6 @@ function AppContent() {
     };
   }, []);
 
-  const handleExport = (format: 'pdf' | 'pptx' | 'docx') => {
-    try {
-      const tiles = useTileStore.getState().tiles;
-      const activeWsId = useWorkspaceStore.getState().activeWorkspaceId;
-      const getWs = useWorkspaceStore.getState().getWorkspaceById;
-      const activeWs = activeWsId ? getWs(activeWsId) : undefined;
-
-      const visibleTiles = activeWsId
-        ? tiles.filter((t) => t.workspaceIds.includes(activeWsId))
-        : tiles;
-
-      if (visibleTiles.length === 0) {
-        toast.error('Nothing to export yet. Create a few tiles first.');
-        return;
-      }
-
-      const now = new Date();
-      const dateStamp = now.toISOString().split('T')[0];
-
-      const title = activeWs?.target
-        ? `${activeWs.target} • Lumina Report`
-        : 'Lumina Report';
-
-      const markdown = buildTilesMarkdownReport(
-        {
-          title,
-          subtitle: activeWs?.name ? `Workspace: ${activeWs.name}` : undefined,
-          generatedAt: now,
-          persona: String(activePersona),
-          workspaceName: activeWs?.name,
-          target: activeWs?.target,
-        },
-        visibleTiles
-      );
-
-      const filenameBase = `${activeWs?.target || 'lumina'}-report-${dateStamp}`;
-      exportMarkdownReport(format, filenameBase, title, markdown);
-
-      toast.success(
-        format === 'pptx'
-          ? 'Exported as Markdown outline (PPTX generator coming soon).'
-          : format === 'docx'
-            ? 'Exported as Word-compatible document.'
-            : 'Opened print preview for PDF export.'
-      );
-    } catch (err) {
-      console.error('Export failed:', err);
-      toast.error(err instanceof Error ? err.message : 'Export failed.');
-    }
-  };
-
   const handleLandingComplete = () => {
     // Mark as seen in session storage
     if (typeof window !== 'undefined') {
@@ -362,8 +200,6 @@ function AppContent() {
       // unless user has already selected a target this session
       const hasSelectedTargetThisSession = sessionStorage.getItem('lumina-has-selected-target') === 'true';
       if (!hasSelectedTargetThisSession || forceLobbyOnLoadRef.current) {
-        useTileStore.getState().setActiveWorkspace(null);
-        useWorkspaceStore.getState().setActiveWorkspace(null);
         sessionStorage.removeItem('lumina-has-selected-target');
         sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
 
@@ -378,13 +214,11 @@ function AppContent() {
     // Mark as seen in session storage
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('lumina-has-seen-intro', 'true');
-      
+
       // Ensure we show the lobby after skipping (not restore previous workspace)
       // unless user has already selected a target this session
       const hasSelectedTargetThisSession = sessionStorage.getItem('lumina-has-selected-target') === 'true';
       if (!hasSelectedTargetThisSession || forceLobbyOnLoadRef.current) {
-        useTileStore.getState().setActiveWorkspace(null);
-        useWorkspaceStore.getState().setActiveWorkspace(null);
         sessionStorage.removeItem('lumina-has-selected-target');
         sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
 
@@ -432,7 +266,6 @@ function AppContent() {
             <Header
               persona={activePersona}
               onSearch={handleSearch}
-              onExport={handleExport}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
             />
@@ -476,7 +309,6 @@ function AppContent() {
           <ExportModal
             open={exportOpen}
             onClose={() => setExportOpen(false)}
-            onExport={handleExport}
           />
           <SettingsModal
             isOpen={settingsOpen}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo, useMemo } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { motion } from 'framer-motion';
 import {
   FlaskConical,
@@ -17,9 +17,7 @@ import {
   Library,
 } from 'lucide-react';
 import type { Persona, ViewState } from '../types';
-import { useWorkspaceStore } from '../lib/workspaces/store';
-import { useTileStore } from '../lib/tiles/store';
-import { formatTargetDisplayName, toTargetKey } from '../lib/targetNaming';
+import { formatTargetDisplayName } from '../lib/targetNaming';
 import { useQuery } from '@tanstack/react-query';
 
 export interface Workspace {
@@ -99,23 +97,8 @@ const Sidebar = memo(function Sidebar({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
-  
-  // Get workspaces from store
-  const workspaces = useWorkspaceStore((state) => state.workspaces);
-  const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
-  const getWorkspaceById = useWorkspaceStore((state) => state.getWorkspaceById);
-  const setActiveWorkspace = useWorkspaceStore((state) => state.setActiveWorkspace);
-  
-  // Get current target from active workspace or use prop
-  // Return empty string if no target is selected (initial load)
-  const currentTarget = useMemo(() => {
-    if (currentTargetProp) return currentTargetProp;
-    if (activeWorkspaceId) {
-      const activeWorkspace = getWorkspaceById(activeWorkspaceId);
-      return activeWorkspace?.target ? formatTargetDisplayName(activeWorkspace.target) : '';
-    }
-    return ''; // Empty on initial load when no workspace is active
-  }, [currentTargetProp, activeWorkspaceId, getWorkspaceById]);
+
+  const currentTarget = currentTargetProp ? formatTargetDisplayName(currentTargetProp) : '';
 
   const { data: unreadData } = useQuery<{ unreadCount: number }>({
     queryKey: ['intelligence-unread', currentTarget],
@@ -131,72 +114,8 @@ const Sidebar = memo(function Sidebar({
     refetchOnWindowFocus: true,
   });
   const unreadCount = unreadData?.unreadCount ?? 0;
-  
-  // Get recent workspaces from store (sorted by lastModified, deduplicated, limit to 5)
-  const recentWorkspaces = useMemo(() => {
-    if (recentWorkspacesProp && recentWorkspacesProp.length > 0) {
-      return recentWorkspacesProp;
-    }
-    
-    // Deduplicate workspaces by target (keep most recent)
-    // For KRAS G12C, use a more specific key that includes the query
-    const workspaceMap = new Map<string, Workspace>();
-    workspaces.forEach(ws => {
-      // Create unique key: for KRAS G12C, use target + name; for others, just target
-      let key: string;
-      if (toTargetKey(ws.target) === 'kras' || ws.name.toLowerCase().includes('kras')) {
-        // For KRAS, use target + normalized name to distinguish G12C from other variants
-        const normalizedName = ws.name.toLowerCase().replace(/\s*analysis\s*$/i, '').trim();
-        key = `${toTargetKey(ws.target)}-${normalizedName}`;
-      } else {
-        // For other targets like TROP2, just use target
-        key = toTargetKey(ws.target);
-      }
-      
-      const existing = workspaceMap.get(key);
-      if (!existing || new Date(ws.lastModified) > new Date(existing.lastModified)) {
-        workspaceMap.set(key, ws);
-      }
-    });
-    
-    // Clean up workspace names (remove "Analysis" suffix and handle duplicate patterns)
-    const cleanedWorkspaces = Array.from(workspaceMap.values()).map(ws => {
-      let cleanName = ws.name
-        .replace(/\s*-\s*[^-]*Analysis\s*$/i, '') // Remove " - Analysis" suffix
-        .replace(/\s*Analysis\s*$/i, '') // Remove "Analysis" suffix
-        .trim();
-      
-      // Handle duplicate patterns like "KRAS G12C - KRAS G12C" -> "KRAS G12C"
-      const parts = cleanName.split(/\s*-\s*/);
-      if (parts.length === 2 && parts[0].trim().toLowerCase() === parts[1].trim().toLowerCase()) {
-        cleanName = parts[0].trim();
-      }
-      
-      return {
-        ...ws,
-        name: cleanName,
-      };
-    });
-    
-    // Filter to only show TROP2 and KRAS G12C workspaces
-    const filteredWorkspaces = cleanedWorkspaces.filter(ws => {
-      const targetKey = toTargetKey(ws.target);
-      const nameLower = ws.name.toLowerCase();
-      
-      // Include TROP2
-      if (targetKey === 'trop2') return true;
-      
-      // Include KRAS G12C (check both target and name)
-      if (targetKey.includes('kras') && nameLower.includes('g12c')) return true;
-      if (nameLower.includes('kras') && nameLower.includes('g12c')) return true;
-      
-      return false;
-    });
-    
-    return filteredWorkspaces
-      .sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
-      .slice(0, 5);
-  }, [workspaces, recentWorkspacesProp]);
+
+  const recentWorkspaces = recentWorkspacesProp ?? [];
 
   // Load collapsed state and width from localStorage on mount
   useEffect(() => {
@@ -353,17 +272,6 @@ const Sidebar = memo(function Sidebar({
   const bottomNavItems: NavItem[] = [
     { id: 'feed' as ViewState, icon: Bell, label: 'Intelligence Feed', badge: unreadCount > 0 ? unreadCount : undefined },
   ];
-
-  const getWorkspaceStatusColor = (status: Workspace['status']) => {
-    switch (status) {
-      case 'active':
-        return 'bg-primary';
-      case 'completed':
-        return 'bg-success';
-      case 'archived':
-        return 'bg-textTertiary';
-    }
-  };
 
   const currentWidth = collapsed ? COLLAPSED_WIDTH : sidebarWidth;
 
@@ -572,38 +480,6 @@ const Sidebar = memo(function Sidebar({
           })}
         </div>
 
-        {/* Saved Workspaces - Notion Style */}
-        {!collapsed && recentWorkspaces.length > 0 && (
-          <div className="mt-4 px-2">
-            <div className="flex items-center gap-2 px-2 mb-2">
-              <span className="text-xs text-textSecondary font-medium tracking-wider uppercase">WORKSPACES</span>
-            </div>
-            <div className="space-y-1">
-              {recentWorkspaces.map((workspace) => {
-                const isActive = String(workspace.id) === String(activeWorkspaceId);
-                return (
-                  <button
-                    key={workspace.id}
-                    onClick={() => {
-                      sessionStorage.setItem('lumina-has-selected-target', 'true');
-                      setActiveWorkspace(String(workspace.id));
-                    }}
-                    className={`tactile w-full flex items-center gap-2.5 px-2 py-2 rounded transition-colors group ${
-                      isActive
-                        ? 'text-textPrimary bg-primary/10 border border-primary/20'
-                        : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
-                    }`}
-                  >
-                    <div className={`w-2 h-2 rounded-full ${getWorkspaceStatusColor(workspace.status)}`} />
-                    <div className="flex-1 min-w-0 text-left">
-                      <p className="text-base leading-relaxed truncate">{workspace.name}</p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </nav>
 
       {/* Footer - Notion Style */}

@@ -1,15 +1,4 @@
-import type { UserTile } from './tiles/types';
-
 export type ExportFormat = 'pdf' | 'pptx' | 'docx' | 'markdown' | 'json';
-
-interface ReportMeta {
-  title: string;
-  subtitle?: string;
-  generatedAt?: Date;
-  persona?: string;
-  workspaceName?: string;
-  target?: string;
-}
 
 function safeJson(value: unknown): string {
   try {
@@ -36,59 +25,6 @@ export function downloadTextFile(filename: string, content: string, mimeType = '
 
 export function downloadJsonFile(filename: string, data: unknown): void {
   downloadTextFile(filename, safeJson(data), 'application/json;charset=utf-8');
-}
-
-export function buildTilesMarkdownReport(meta: ReportMeta, tiles: UserTile[]): string {
-  const generatedAt = meta.generatedAt ?? new Date();
-  const lines: string[] = [];
-
-  lines.push(`# ${meta.title}`);
-  if (meta.subtitle) lines.push(meta.subtitle);
-  lines.push('');
-  lines.push(`Generated: ${generatedAt.toLocaleString()}`);
-  if (meta.persona) lines.push(`Persona: ${meta.persona}`);
-  if (meta.workspaceName) lines.push(`Workspace: ${meta.workspaceName}`);
-  if (meta.target) lines.push(`Target: ${meta.target}`);
-  lines.push(`Tiles: ${tiles.length}`);
-  lines.push('');
-  lines.push('---');
-  lines.push('');
-
-  const sorted = [...tiles].sort((a, b) => {
-    // pinned first, then createdAt
-    const ap = a.isPinned ? 0 : 1;
-    const bp = b.isPinned ? 0 : 1;
-    if (ap !== bp) return ap - bp;
-    return a.createdAt.localeCompare(b.createdAt);
-  });
-
-  for (const tile of sorted) {
-    lines.push(`## ${tile.title}`);
-    if (tile.subtitle) lines.push(`*${tile.subtitle}*`);
-    lines.push('');
-    lines.push(`- Agent: ${tile.agent}`);
-    lines.push(`- Type: ${tile.type}`);
-    lines.push(`- Created: ${new Date(tile.createdAt).toLocaleString()}`);
-    lines.push('');
-
-    const response =
-      (typeof (tile.data as any)?.detailed?.fullResponse === 'string' && (tile.data as any).detailed.fullResponse) ||
-      (typeof (tile.data as any)?.summary?.fullResponse === 'string' && (tile.data as any).summary.fullResponse) ||
-      (typeof (tile.source as any)?.sourceData?.response === 'string' && (tile.source as any).sourceData.response);
-
-    if (typeof response === 'string' && response.trim()) {
-      lines.push(response.trim());
-    } else {
-      lines.push('```json');
-      lines.push(safeJson(tile.data));
-      lines.push('```');
-    }
-    lines.push('');
-    lines.push('---');
-    lines.push('');
-  }
-
-  return lines.join('\n');
 }
 
 function escapeHtml(text: string): string {

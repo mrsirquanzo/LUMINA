@@ -31,7 +31,6 @@ import { formatTargetDisplayName } from '../../lib/targetNaming';
 import { usePersona } from '../../contexts/PersonaContext';
 import { getStoredAgentMode, onAgentModeUpdated } from '../../lib/agentMode';
 import { buildDemoFeedResponse, DEMO_FEED_PACKS } from '../../lib/intelligence/demoFeedPacks';
-import { useWorkspaceStore } from '../../lib/workspaces/store';
 import { CitedMarkdown } from '../shared/CitedMarkdown';
 
 type FeedItemType = 'publication' | 'deal' | 'regulatory' | 'news' | 'clinical';
@@ -598,12 +597,6 @@ export default function IntelligenceFeed() {
   const [articleAnalysisById, setArticleAnalysisById] = useState<Record<string, ArticleAnalysis>>({});
   const [articleAnalysisStatus, setArticleAnalysisStatus] = useState<Record<string, { status: 'idle' | 'loading' | 'error'; error?: string }>>({});
 
-  const workspaces = useWorkspaceStore((s) => s.workspaces);
-  const activeWorkspaceId = useWorkspaceStore((s) => s.activeWorkspaceId);
-  const setActiveWorkspace = useWorkspaceStore((s) => s.setActiveWorkspace);
-  const getOrCreateWorkspace = useWorkspaceStore((s) => s.getOrCreateWorkspace);
-  const addFlag = useWorkspaceStore((s) => s.addFlag);
-
   useEffect(() => onAgentModeUpdated(setAgentMode), []);
 
   useEffect(() => {
@@ -656,9 +649,8 @@ export default function IntelligenceFeed() {
 
   const defaultTrackedTargets = useMemo(() => {
     const fromCurrent = currentTarget?.name?.trim() ? [formatTargetDisplayName(currentTarget.name)] : [];
-    const fromWorkspaces = (workspaces || []).map((ws) => formatTargetDisplayName(ws.target)).filter(Boolean);
     const fromDemo = DEMO_FEED_PACKS.map((p) => formatTargetDisplayName(p.target)).filter(Boolean);
-    const merged = [...fromCurrent, ...fromWorkspaces, ...fromDemo].filter(Boolean);
+    const merged = [...fromCurrent, ...fromDemo].filter(Boolean);
     const out: string[] = [];
     const seen = new Set<string>();
     for (const t of merged) {
@@ -668,7 +660,7 @@ export default function IntelligenceFeed() {
       out.push(t);
     }
     return out.slice(0, 8);
-  }, [currentTarget?.name, workspaces]);
+  }, [currentTarget?.name]);
 
   // If nothing is stored yet, seed tracked targets from workspaces + demo packs.
   useEffect(() => {
@@ -1065,25 +1057,8 @@ export default function IntelligenceFeed() {
     URL.revokeObjectURL(url);
   };
 
-  const addToWorkspace = (item: FeedItem) => {
-    try {
-      const target = requestParams.target || data?.queryPack?.target || currentTarget?.name || 'Intelligence';
-      const ws = getOrCreateWorkspace(target, requestParams.q || target);
-      if (!activeWorkspaceId || String(activeWorkspaceId) !== String(ws.id)) setActiveWorkspace(String(ws.id));
-
-      const priority = computePriority(item);
-      const severity = priority === 'breaking' ? 'high' : priority === 'high' ? 'medium' : 'low';
-      const ctx = requestParams.target || requestParams.q || data?.queryPack?.target || currentTarget?.name || 'global';
-      addFlag(`intelligence:${String(ctx).toLowerCase()}:${item.id}`, {
-        title: item.title,
-        severity,
-        note: `${item.link}\n\n${item.summary}`.trim(),
-      });
-
-      setToast({ tone: 'success', message: 'Added to workspace' });
-    } catch {
-      setToast({ tone: 'error', message: 'Could not add to workspace' });
-    }
+  const addToWorkspace = (_item: FeedItem) => {
+    setToast({ tone: 'info', message: 'Workspace flagging is not available in this version.' });
   };
 
   const mapKindToSourceType = (kind: FeedItemType): string => {
