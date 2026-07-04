@@ -38,26 +38,22 @@ interface FeedResponse {
 }
 
 async function fetchLatest(target: string | undefined, limit: number): Promise<LatestSignal[]> {
-  try {
-    const url = new URL('/api/intelligence/feed', window.location.origin);
-    if (target) url.searchParams.set('target', target);
-    url.searchParams.set('limit', String(limit));
-    const res = await fetch(url.toString());
-    if (!res.ok) return [];
-    const data = (await res.json()) as FeedResponse;
-    const items = Array.isArray(data.items) ? data.items : [];
-    const resolvedTarget = data.queryPack?.target ?? target;
-    return items.slice(0, limit).map((item) => ({
-      id: item.id,
-      title: item.title,
-      source: item.source,
-      target: resolvedTarget,
-      date: item.publishedAt ?? '',
-      url: item.url || undefined,
-    }));
-  } catch {
-    return [];
-  }
+  const url = new URL('/api/intelligence/feed', window.location.origin);
+  if (target) url.searchParams.set('target', target);
+  url.searchParams.set('limit', String(limit));
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`feed request failed (${res.status})`);
+  const data = (await res.json()) as FeedResponse;
+  const items = Array.isArray(data.items) ? data.items : [];
+  const resolvedTarget = data.queryPack?.target ?? target;
+  return items.slice(0, limit).map((item) => ({
+    id: item.id,
+    title: item.title,
+    source: item.source,
+    target: resolvedTarget,
+    date: item.publishedAt ?? '',
+    url: item.url || undefined,
+  }));
 }
 
 export function useLatestSignals(limit = 3): { items: LatestSignal[]; isLoading: boolean; isError: boolean } {

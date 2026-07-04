@@ -155,7 +155,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
   // Determine if still spinning up (no trace events yet).
   const isHydrating = s.status === 'hydrating';
 
-  const runCount = s.runId ? '1 run' : '0 runs';
+  const runCount = (s.status === 'running' || s.status === 'done' || !!s.runId) ? '1 run' : '0 runs';
 
   return (
     <div className="w-full min-h-full p-6 bg-page">

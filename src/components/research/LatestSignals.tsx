@@ -57,7 +57,7 @@ function SkeletonRow() {
 // ---------------------------------------------------------------------------
 
 export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }) {
-  const { items, isLoading, isError } = useLatestSignals(5);
+  const { items, isLoading, isError } = useLatestSignals(3);
 
   return (
     <div>
