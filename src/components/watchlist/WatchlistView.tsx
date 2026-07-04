@@ -4,7 +4,7 @@ import { useWatchlistStore } from '../../lib/watchlist/store';
 import { useUnreadCounts } from '../../hooks/useUnreadCounts';
 
 interface WatchlistViewProps {
-  onViewInFeed?: () => void;
+  onViewInFeed?: (target?: string) => void;
 }
 
 function AddTargetInput({
@@ -95,7 +95,7 @@ function EmptyState({
 interface TargetCardProps {
   target: string;
   unreadCount: number;
-  onViewInFeed?: () => void;
+  onViewInFeed?: (target?: string) => void;
 }
 
 function TargetCard({ target, unreadCount, onViewInFeed }: TargetCardProps) {
@@ -134,7 +134,7 @@ function TargetCard({ target, unreadCount, onViewInFeed }: TargetCardProps) {
       <div className="flex items-center gap-2 pt-1 border-t border-border-soft mt-auto">
         <button
           type="button"
-          onClick={onViewInFeed}
+          onClick={() => onViewInFeed?.(target)}
           className="
             inline-flex items-center h-8 px-3 rounded-md text-sm font-medium
             text-textSecondary bg-transparent border border-border

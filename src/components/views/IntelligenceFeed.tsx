@@ -530,7 +530,11 @@ async function fetchJob(jobId: string) {
   return (await res.json()) as { status: string; progress?: number; message?: string; error?: string; entryKey: string };
 }
 
-export default function IntelligenceFeed() {
+interface IntelligenceFeedProps {
+  initialTarget?: string;
+}
+
+export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProps = {}) {
   const { currentTarget } = useTarget();
   const [agentMode, setAgentMode] = useState(() => getStoredAgentMode());
   const isDemoMode = agentMode === 'demo';
@@ -643,6 +647,13 @@ export default function IntelligenceFeed() {
     if (/^cmet$/i.test(compact)) return 'MET';
     return compact.toUpperCase();
   }
+
+  useEffect(() => {
+    const t = (initialTarget ?? '').trim();
+    if (!t) return;
+    setTargetOverride(normalizeTargetInput(t));
+    setHasCustomTopic(false);
+  }, [initialTarget]);
 
   function submitFeedSearch() {
     const raw = feedSearchInput.trim();
