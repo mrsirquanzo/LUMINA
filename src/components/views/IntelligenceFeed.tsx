@@ -29,6 +29,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { useTarget } from '../../contexts/TargetContext';
 import { formatTargetDisplayName } from '../../lib/targetNaming';
 import { getStoredAgentMode, onAgentModeUpdated } from '../../lib/agentMode';
+import { useWatchlistStore } from '../../lib/watchlist/store';
 import { buildDemoFeedResponse, DEMO_FEED_PACKS } from '../../lib/intelligence/demoFeedPacks';
 import { CitedMarkdown } from '../shared/CitedMarkdown';
 
@@ -39,7 +40,6 @@ const BLACKLIST_PREFIX = 'lumina:intelligence:blacklist:';
 const HIDDEN_ITEMS_PREFIX = 'lumina:intelligence:hiddenItems:';
 const PINNED_PREFIX = 'lumina:intelligence:pinned:';
 const CURATED_ONLY_PREFIX = 'lumina:intelligence:curatedOnly:';
-const TRACKED_TARGETS_KEY = 'lumina:intelligence:trackedTargets:v1';
 
 const CURATED_SOURCES = new Set([
   'PubMed',
@@ -549,16 +549,7 @@ export default function IntelligenceFeed() {
   const [showFilters, setShowFilters] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const [trackedTargets, setTrackedTargets] = useState<string[]>(() => {
-    try {
-      const raw = localStorage.getItem(TRACKED_TARGETS_KEY);
-      const parsed = raw ? (JSON.parse(raw) as unknown) : [];
-      const next = Array.isArray(parsed) ? parsed.map((s) => formatTargetDisplayName(String(s))).filter(Boolean) : [];
-      return next.slice(0, 8);
-    } catch {
-      return [];
-    }
-  });
+  const trackedTargets = useWatchlistStore((s) => s.targets);
   const [isAddingTarget, setIsAddingTarget] = useState(false);
   const [addTargetInput, setAddTargetInput] = useState('');
   const [refreshToken, setRefreshToken] = useState(0);
@@ -642,18 +633,8 @@ export default function IntelligenceFeed() {
 
   // If nothing is stored yet, seed tracked targets from workspaces + demo packs.
   useEffect(() => {
-    if (trackedTargets.length > 0) return;
-    setTrackedTargets(defaultTrackedTargets);
-  }, [defaultTrackedTargets, trackedTargets.length]);
-
-  useEffect(() => {
-    if (trackedTargets.length === 0) return;
-    try {
-      localStorage.setItem(TRACKED_TARGETS_KEY, JSON.stringify(trackedTargets));
-    } catch {
-      // ignore
-    }
-  }, [trackedTargets]);
+    useWatchlistStore.getState().seedIfEmpty(defaultTrackedTargets);
+  }, [defaultTrackedTargets]);
 
   function normalizeTargetInput(raw: string): string {
     const v = raw.trim();
@@ -1780,10 +1761,8 @@ export default function IntelligenceFeed() {
                         if (e.key === 'Enter') {
                           const next = formatTargetDisplayName(addTargetInput);
                           if (next) {
-                            setTrackedTargets((prev) => {
-                              const has = prev.some((p) => p.toLowerCase() === next.toLowerCase());
-                              return has ? prev : [next, ...prev].slice(0, 8);
-                            });
+                            const has = trackedTargets.some((p) => p.toLowerCase() === next.toLowerCase());
+                            if (!has) useWatchlistStore.getState().add(next);
                           }
                           setIsAddingTarget(false);
                           setAddTargetInput('');
