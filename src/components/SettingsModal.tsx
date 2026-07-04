@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Play } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onReplayLanding: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
-  onReplayLanding,
 }) => {
   const [activeTab, setActiveTab] = useState<'general' | 'appearance' | 'shortcuts'>('general');
 
@@ -69,22 +67,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <div className="flex-1 overflow-y-auto p-6">
             {activeTab === 'general' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-sm font-medium text-textSecondary mb-4">Animation</h3>
-                  <button
-                    onClick={onReplayLanding}
-                    className="w-full flex items-center gap-3 px-4 py-3 bg-subtle hover:bg-border border border-border rounded-lg transition-colors group"
-                  >
-                    <Play className="w-5 h-5 text-textSecondary group-hover:text-primary" />
-                    <div className="flex-1 text-left">
-                      <div className="text-sm font-medium text-textPrimary">Replay Landing Animation</div>
-                      <div className="text-xs text-textSecondary mt-1">
-                        Watch the intro animation again
-                      </div>
-                    </div>
-                  </button>
-                </div>
-
+                <p className="text-sm text-textSecondary">General settings coming soon...</p>
               </div>
             )}
 
@@ -93,12 +76,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <h3 className="text-sm font-medium text-textSecondary mb-4">Keyboard Shortcuts</h3>
                 <div className="space-y-3">
                   {[
-                    { keys: '⌘/Ctrl + K', action: 'Search / Toggle Sonny panel' },
-                    { keys: '⌘/Ctrl + 1', action: 'Switch to Scientist view' },
-                    { keys: '⌘/Ctrl + 2', action: 'Switch to Scout view' },
-                    { keys: '⌘/Ctrl + E', action: 'Open Export modal' },
-                    { keys: '⌘/Ctrl + J', action: 'Toggle Sonny panel' },
-                    { keys: '⌘/Ctrl + R', action: 'Replay landing animation' },
+                    { keys: '⌘/Ctrl + K', action: 'Open search' },
                     { keys: 'Esc', action: 'Close modals' },
                   ].map((shortcut, idx) => (
                     <div

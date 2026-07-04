@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, memo } from 'react';
 import { motion } from 'framer-motion';
 import {
-  FlaskConical,
-  Briefcase,
   LayoutGrid,
   FolderOpen,
   History,
@@ -12,11 +10,10 @@ import {
   User,
   LogOut,
   Target,
-  Microscope,
   Sparkles,
   Library,
 } from 'lucide-react';
-import type { Persona, ViewState } from '../types';
+import type { ViewState } from '../types';
 import { formatTargetDisplayName } from '../lib/targetNaming';
 import { useQuery } from '@tanstack/react-query';
 
@@ -24,7 +21,7 @@ export interface Workspace {
   id: string | number;
   name: string;
   target: string;
-  persona: Persona;
+  persona: string;
   createdDate: string;
   lastModified: string;
   status: 'active' | 'completed' | 'archived';
@@ -45,8 +42,6 @@ export interface Workspace {
 }
 
 interface SidebarProps {
-  activePersona: Persona;
-  onPersonaChange: (p: Persona) => void;
   currentView: ViewState;
   onViewChange: (v: ViewState) => void;
   collapsed: boolean;
@@ -81,8 +76,6 @@ const PanelIcon = ({ className }: { className?: string }) => (
 );
 
 const Sidebar = memo(function Sidebar({
-  activePersona,
-  onPersonaChange,
   currentView,
   onViewChange,
   collapsed,
@@ -239,21 +232,6 @@ const Sidebar = memo(function Sidebar({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [collapsed, currentView, onViewChange]);
 
-  const personaConfig = {
-    scientist: {
-      label: 'Scientist',
-      icon: FlaskConical,
-      color: '#1D4ED8',
-      description: 'Deep scientific analysis and target validation',
-    },
-    bd: {
-      label: 'Scout',
-      icon: Briefcase,
-      color: '#1D4ED8',
-      description: 'Business development and deal analysis',
-    },
-  };
-
   interface NavItem {
     id: ViewState;
     icon: typeof LayoutGrid;
@@ -318,61 +296,6 @@ const Sidebar = memo(function Sidebar({
               </h1>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Persona Switcher - Vertical Notion Style */}
-      <div className="px-3 py-2 border-b border-border">
-        {!collapsed && (
-          <p className="text-xs text-textSecondary mb-2 px-2 font-medium tracking-wider uppercase">PERSONA</p>
-        )}
-        <div className={collapsed ? 'flex flex-col gap-2' : 'flex flex-col gap-1.5'}>
-          {(Object.keys(personaConfig) as Persona[]).map((persona) => {
-            const config = personaConfig[persona];
-            const Icon = config.icon;
-            const isActive = activePersona === persona;
-
-            return (
-              <button
-                key={persona}
-                onClick={() => onPersonaChange(persona)}
-                className={`tactile group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
-                  isActive
-                    ? 'bg-primary/10 text-textPrimary'
-                    : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
-                } ${collapsed ? 'justify-center' : ''}`}
-                style={
-                  isActive
-                    ? {
-                        boxShadow: `inset 0 0 0 1px ${config.color}30`,
-                      }
-                    : {}
-                }
-                title={collapsed ? config.description : undefined}
-              >
-                <Icon
-                  className="w-5 h-5 transition-colors flex-shrink-0"
-                  style={{ color: isActive ? config.color : undefined }}
-                />
-                {!collapsed && (
-                  <span
-                    className="text-base transition-colors font-medium"
-                    style={{ color: isActive ? config.color : undefined }}
-                  >
-                    {config.label}
-                  </span>
-                )}
-                {collapsed && (
-                  <div className="absolute left-full ml-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
-                    <div className="bg-surface border border-border rounded-lg px-3 py-2 shadow-card whitespace-nowrap">
-                      <p className="text-sm font-medium text-textPrimary">{config.label}</p>
-                      <p className="text-xs text-textSecondary mt-1">{config.description}</p>
-                    </div>
-                  </div>
-                )}
-              </button>
-            );
-          })}
         </div>
       </div>
 

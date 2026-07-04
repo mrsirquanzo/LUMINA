@@ -7,11 +7,9 @@ import {
   Radio,
   RotateCcw,
 } from 'lucide-react';
-import type { Persona } from '../types';
 import { getStoredAgentMode, onAgentModeUpdated, requestAgentMode, type AgentMode } from '../lib/agentMode';
 
 interface HeaderProps {
-  persona: Persona;
   targetName?: string; // Optional, will use active workspace if not provided
   indication?: string;
   dataFreshness?: string;
@@ -21,7 +19,6 @@ interface HeaderProps {
 }
 
 export default function Header({
-  persona,
   targetName: targetNameProp,
   indication,
   dataFreshness = '2h ago',
@@ -81,22 +78,13 @@ export default function Header({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const getPersonaTitle = () => {
-    if (persona === 'scientist') {
-      return currentTarget || ''; // Empty string when no target selected
-    } else {
-      return `TargetCo / TRX-101`; // Example BD format
-    }
-  };
-
-
   return (
     <header className="sticky top-0 z-50 h-20 glass border-b border-border">
       <div className="h-full px-6 flex items-center justify-between gap-6">
         {/* Left Section - Simplified Context */}
         <div className="flex items-center gap-4 flex-shrink-0">
           <div className="min-w-0">
-            <h1 className="text-lg font-semibold text-textPrimary truncate">{getPersonaTitle()}</h1>
+            <h1 className="text-lg font-semibold text-textPrimary truncate">{currentTarget}</h1>
           </div>
         </div>
 

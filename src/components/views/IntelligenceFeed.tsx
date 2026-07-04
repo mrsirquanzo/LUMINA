@@ -28,7 +28,6 @@ import { format, formatDistanceToNowStrict, parseISO } from 'date-fns';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { useTarget } from '../../contexts/TargetContext';
 import { formatTargetDisplayName } from '../../lib/targetNaming';
-import { usePersona } from '../../contexts/PersonaContext';
 import { getStoredAgentMode, onAgentModeUpdated } from '../../lib/agentMode';
 import { buildDemoFeedResponse, DEMO_FEED_PACKS } from '../../lib/intelligence/demoFeedPacks';
 import { CitedMarkdown } from '../shared/CitedMarkdown';
@@ -287,8 +286,6 @@ function inferThemeDirection(text: string): ThemeDirection {
   return 'neutral';
 }
 
-type PersonaKey = 'SCIENTIST' | 'SCOUT' | 'VC' | 'GENERAL';
-
 function buildContextSentence(kind: FeedItemType): string {
   if (kind === 'regulatory')
     return 'Regulatory/label-grade signal. Treat as constraints on defensible claims and monitoring burden.';
@@ -297,29 +294,12 @@ function buildContextSentence(kind: FeedItemType): string {
   if (kind === 'publication')
     return 'Peer-reviewed scientific anchor. Use to ground biology assumptions and avoid over-weighting narrative.';
   if (kind === 'deal')
-    return 'Capital/BD signal. Less about “truth” and more about what sophisticated counterparties will underwrite right now.';
+    return 'Capital/BD signal. Less about "truth" and more about what sophisticated counterparties will underwrite right now.';
   return 'Market narrative signal. Treat as contextual until corroborated by primary data and label-grade sources.';
 }
 
-function buildImplicationSentence(kind: FeedItemType, persona: PersonaKey): string {
-  if (persona === 'SCIENTIST') {
-    if (kind === 'publication') return 'Convert this into a falsifiable hypothesis for patient selection, durability, and AE phenotype.';
-    if (kind === 'clinical') return 'Re-evaluate endpoints, biomarker rigor, and whether sustained dosing is feasible at active exposure.';
-    if (kind === 'regulatory') return 'Assume label/monitoring expectations shape exposure and therefore durability—plan translational work accordingly.';
-    return 'Treat as hypothesis-generating; define what data would confirm or falsify the implied mechanistic edge.';
-  }
-  if (persona === 'SCOUT') {
-    if (kind === 'deal') return 'Translate this into a negotiation surface: what risk is being priced, and what proof point shifts leverage next?';
-    if (kind === 'regulatory') return 'Map label language and monitoring expectations to a defensible sequencing/positioning wedge.';
-    return 'Convert this into a crisp positioning statement: where do we force adoption, and what must be true for it to hold?';
-  }
-  if (persona === 'VC') {
-    if (kind === 'deal') return 'Update underwriting: where is capital flowing, what execution risk remains, and what catalyst compresses time-to-proof?';
-    if (kind === 'regulatory') return 'Adjust timelines and adoption risk assumptions based on regulatory framing and monitoring burden.';
-    return 'Update probability-of-success and identify the next catalyst that would actually change the model.';
-  }
-  // GENERAL
-  if (kind === 'regulatory') return 'This sets the “rules of the road” (definitions, monitoring, claims) and can create a durable strategy advantage.';
+function buildImplicationSentence(kind: FeedItemType): string {
+  if (kind === 'regulatory') return 'This sets the "rules of the road" (definitions, monitoring, claims) and can create a durable strategy advantage.';
   if (kind === 'clinical') return 'This reframes what counts as meaningful evidence: sustained dosing, comparators, durability, and sequencing relevance.';
   if (kind === 'deal') return 'This signals partnering appetite and what risk profile is being underwritten.';
   return 'Translate this into a decision-grade watchpoint that would change a plan (not just confirm priors).';
@@ -329,10 +309,10 @@ function buildQuestionSentence(kind: FeedItemType): string {
   if (kind === 'regulatory')
     return 'Which specific label language (definition + monitoring expectations) is the precedent—and how does it constrain trial design?';
   if (kind === 'clinical')
-    return 'What single missing datum would convert this from “interesting” to “decision-changing” (endpoint, subgroup, durability, tolerability)?';
+    return 'What single missing datum would convert this from "interesting" to "decision-changing" (endpoint, subgroup, durability, tolerability)?';
   if (kind === 'publication')
     return 'Which translation assumption is most likely wrong (assay, heterogeneity, exposure-response, resistance), and how would we test it quickly?';
-  if (kind === 'deal') return 'What proof point shifts leverage materially in the next negotiation window—and what’s the shortest path to it?';
+  if (kind === 'deal') return "What proof point shifts leverage materially in the next negotiation window—and what's the shortest path to it?";
   return 'What primary data would validate (or falsify) the implied narrative before it hardens into consensus?';
 }
 
@@ -552,10 +532,8 @@ async function fetchJob(jobId: string) {
 
 export default function IntelligenceFeed() {
   const { currentTarget } = useTarget();
-  const { activePersona } = usePersona();
   const [agentMode, setAgentMode] = useState(() => getStoredAgentMode());
   const isDemoMode = agentMode === 'demo';
-  const personaKey: PersonaKey = activePersona === 'scientist' ? 'SCIENTIST' : activePersona === 'bd' ? 'SCOUT' : 'GENERAL';
 
   const [typeFilter, setTypeFilter] = useState<FeedItemType | 'All'>('All');
   const [relevanceFilter, setRelevanceFilter] = useState<RelevanceFilter>('All');
@@ -1057,10 +1035,6 @@ export default function IntelligenceFeed() {
     URL.revokeObjectURL(url);
   };
 
-  const addToWorkspace = (_item: FeedItem) => {
-    setToast({ tone: 'info', message: 'Workspace flagging is not available in this version.' });
-  };
-
   const mapKindToSourceType = (kind: FeedItemType): string => {
     if (kind === 'publication') return 'PUB';
     if (kind === 'clinical') return 'CTR';
@@ -1101,7 +1075,7 @@ export default function IntelligenceFeed() {
       const res = await fetch('/api/intelligence/article-analysis', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ persona: personaKey, targetContext, item: rawItem }),
+        body: JSON.stringify({ persona: 'GENERAL', targetContext, item: rawItem }),
       });
       const text = await res.text();
       if (!res.ok) throw new Error(text || `Analysis request failed (${res.status})`);
@@ -1409,45 +1383,28 @@ export default function IntelligenceFeed() {
 
       const buildContextSentence = (kind: FeedItemType) => {
         if (kind === 'regulatory')
-          return 'This is a regulatory/label-grade signal that constrains what claims are defensible and what monitoring burden becomes “standard of care”.';
+          return 'This is a regulatory/label-grade signal that constrains what claims are defensible and what monitoring burden becomes "standard of care".';
         if (kind === 'clinical')
           return 'This is a trial-design/endpoint signal; interpret through patient selection, comparator, and what would constitute a true value-inflection versus noise.';
         if (kind === 'publication')
           return 'This is a peer-reviewed scientific anchor; use it to ground biomarker/biology assumptions and avoid over-reading trade-press narratives.';
         if (kind === 'deal')
-          return 'This is a capital/BD signal; it’s less about “truth” than about what sophisticated counterparties are willing to underwrite right now.';
+          return "This is a capital/BD signal; it's less about \"truth\" than about what sophisticated counterparties are willing to underwrite right now.";
         return 'This is a market narrative signal; treat it as contextual until corroborated by primary data and label-grade sources.';
       };
 
       const buildImplicationSentence = (kind: FeedItemType) => {
-        if (p === 'SCIENTIST') {
-          if (kind === 'publication') return 'Mechanistically, the highest leverage next step is to translate this into a testable hypothesis for patient selection, durability, and AE phenotype.';
-          if (kind === 'clinical') return 'Scientifically, this should redirect focus to endpoint choice, biomarker rigor, and whether dosing continuity is feasible at effective exposure.';
-          if (kind === 'regulatory') return 'Scientifically, assume label/monitoring expectations will shape exposure and therefore observed durability—plan translational work accordingly.';
-          return 'Scientifically, treat this as hypothesis-generating: define what data would falsify (or confirm) the implied mechanistic edge.';
-        }
-        if (p === 'SCOUT') {
-          if (kind === 'deal') return 'Commercially, this changes the negotiation surface: counterparties will price execution risk and demand a clear wedge + timing story.';
-          if (kind === 'regulatory') return 'Commercially, label language and monitoring expectations can create (or erase) a wedge—design studies to “earn” the sequencing claim you want.';
-          return 'Commercially, this should be translated into a sequencing/positioning statement: where do we force adoption, and what must be true for that to hold?';
-        }
-        if (p === 'VC') {
-          if (kind === 'deal') return 'From a returns lens, this is a signal about where capital is flowing and how quickly the market expects value-inflection; align catalyst design to compress time-to-proof.';
-          if (kind === 'regulatory') return 'From a returns lens, regulatory framing affects time-to-label and post-approval adoption risk; it should feed directly into thesis sizing and timelines.';
-          return 'From a returns lens, this should update the thesis on probability-of-success and the next catalyst that truly changes underwriting.';
-        }
-        // GENERAL
-        if (kind === 'regulatory') return 'Strategically, this sets constraints on claims and may create a “rules-of-the-road” advantage for teams that anticipate monitoring and biomarker expectations.';
+        if (kind === 'regulatory') return "Strategically, this sets constraints on claims and may create a 'rules-of-the-road' advantage for teams that anticipate monitoring and biomarker expectations.";
         if (kind === 'clinical') return 'Strategically, this reframes what constitutes a meaningful readout: not just efficacy headlines, but sustained dosing, comparators, and sequencing relevance.';
         if (kind === 'deal') return 'Strategically, this signals where partnering appetite exists and what risk profile is being underwritten.';
-        return 'Strategically, this should be converted into a concrete watchpoint that would change a decision-maker’s model, not just confirm priors.';
+        return "Strategically, this should be converted into a concrete watchpoint that would change a decision-maker's model, not just confirm priors.";
       };
 
       const buildQuestionSentence = (kind: FeedItemType) => {
         if (kind === 'regulatory') return 'What exact label language (biomarker definition + monitoring expectations) will become the precedent—and how does it constrain the next trial design?';
-        if (kind === 'clinical') return 'What is the single missing piece of data that would convert this from “interesting” to “decision-changing” (endpoint, subgroup, durability, or tolerability)?';
+        if (kind === 'clinical') return 'What is the single missing piece of data that would convert this from "interesting" to "decision-changing" (endpoint, subgroup, durability, or tolerability)?';
         if (kind === 'publication') return 'Which assumption is most likely wrong when translating this into the clinic (assay, heterogeneity, exposure-response, resistance), and how would we test it quickly?';
-        if (kind === 'deal') return 'What specific proof point would shift leverage materially in the next negotiation window—and what’s the shortest path to that proof?';
+        if (kind === 'deal') return "What specific proof point would shift leverage materially in the next negotiation window—and what's the shortest path to that proof?";
         return 'What primary data or label-grade confirmation would validate (or invalidate) the implied narrative before it hardens into consensus?';
       };
 
@@ -1478,7 +1435,7 @@ export default function IntelligenceFeed() {
           kindKey === 'publication'
             ? `Synthesis: Use the scientific anchors above to sanity-check biomarker and mechanism assumptions before over-weighting market narrative. ${cite(items[0])}`.trim()
             : kindKey === 'clinical'
-              ? `Synthesis: Treat the trial items as a roadmap for what the field considers “decision-grade” evidence—endpoint choices and patient selection will determine whether a readout changes practice. ${cite(items[0])}`.trim()
+              ? `Synthesis: Treat the trial items as a roadmap for what the field considers "decision-grade" evidence—endpoint choices and patient selection will determine whether a readout changes practice. ${cite(items[0])}`.trim()
               : kindKey === 'regulatory'
                 ? `Synthesis: Regulatory items set the constraint set: label language, definitions, and monitoring expectations that shape both development strategy and adoption. ${cite(items[0])}`.trim()
                 : kindKey === 'deal'
@@ -1526,9 +1483,9 @@ export default function IntelligenceFeed() {
         seedSentenceCount >= 6
           ? ''
           : [
-              `The decision-relevant question is not “what happened,” but which single uncertainty would most change a board-level call on timing, sequencing, or capital allocation. [gap:${makeGapSlug(`${titleTarget}-highest-leverage-uncertainty`)}]`,
+              `The decision-relevant question is not "what happened," but which single uncertainty would most change a board-level call on timing, sequencing, or capital allocation. [gap:${makeGapSlug(`${titleTarget}-highest-leverage-uncertainty`)}]`,
               `If the next data point does not resolve that uncertainty, treat subsequent updates as noise and avoid narrative drift. ${cite(topDevelopments[0])}`.trim(),
-              `I would change my view if the strongest “wedge” implied by these sources is invalidated by either label constraints or a competitor readout that closes the gap. ${cite(topDevelopments[0])}`.trim(),
+              `I would change my view if the strongest "wedge" implied by these sources is invalidated by either label constraints or a competitor readout that closes the gap. ${cite(topDevelopments[0])}`.trim(),
             ].slice(0, Math.max(0, 6 - seedSentenceCount)).join(' ');
 
       const sonnyRead = `${seedRead} ${readPad} ${cite(topDevelopments[0])}`.trim();
@@ -1603,7 +1560,7 @@ export default function IntelligenceFeed() {
     setDigestMarkdown('');
     try {
       const now = new Date().toISOString();
-      const persona = activePersona === 'scientist' ? 'SCIENTIST' : activePersona === 'bd' ? 'SCOUT' : 'GENERAL';
+      const persona = 'GENERAL' as const;
 
       // Demo mode: generate digest locally from curated feed items (no API calls).
       if (isDemoMode) {
@@ -2193,7 +2150,7 @@ export default function IntelligenceFeed() {
 
           {isError ? (
             <div className="glass rounded-2xl p-5">
-              <p className="text-textPrimary font-semibold mb-1">Couldn’t load feed</p>
+              <p className="text-textPrimary font-semibold mb-1">Couldn't load feed</p>
               <p className="text-sm text-textSecondary">{error instanceof Error ? error.message : 'Unknown error'}</p>
               <div className="mt-4">
                 <button
@@ -2378,7 +2335,7 @@ export default function IntelligenceFeed() {
 
                         {analysisError ? (
                           <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                            <p className="text-sm text-nogo-text">Couldn’t generate analysis.</p>
+                            <p className="text-sm text-nogo-text">Couldn't generate analysis.</p>
                             <p className="text-xs text-nogo-text/70 mt-1 line-clamp-2">{analysisError}</p>
                             <div className="mt-3">
                               <button
@@ -2494,13 +2451,6 @@ export default function IntelligenceFeed() {
                             Read full source
                           </a>
                           <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => addToWorkspace(item)}
-                              className="px-3 py-1.5 text-xs text-textSecondary hover:text-textPrimary hover:bg-subtle rounded-lg transition-colors"
-                            >
-                              Add to workspace
-                            </button>
                           </div>
                         </div>
                       </div>
