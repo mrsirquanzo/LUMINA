@@ -1,8 +1,9 @@
 import { memo } from 'react';
-import { Sparkles, Bell, Library, Eye } from 'lucide-react';
+import { Sparkles, Bell, Library, Eye, Plus } from 'lucide-react';
 import type { ViewState } from '../types';
 import { useWatchlistStore } from '../lib/watchlist/store';
 import { useUnreadCounts } from '../hooks/useUnreadCounts';
+import { useBriefingStore } from '../lib/research/briefingStore';
 
 interface SidebarProps {
   currentView: ViewState;
@@ -28,6 +29,8 @@ const Sidebar = memo(function Sidebar({
 }: SidebarProps) {
   const targets = useWatchlistStore((s) => s.targets);
   const unread = useUnreadCounts(targets);
+  const dossierCount = useBriefingStore((s) => Object.keys(s.briefings).length);
+  const feedUnread = targets.reduce((n, t) => n + (unread[t] ?? 0), 0);
 
   return (
     <aside
@@ -61,15 +64,36 @@ const Sidebar = memo(function Sidebar({
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
               )}
               <Icon className="w-5 h-5 flex-shrink-0" />
-              <span className="text-sm font-medium leading-relaxed">{label}</span>
+              <span className="text-sm font-medium leading-relaxed flex-1">{label}</span>
+              {id === 'feed' && feedUnread > 0 && (
+                <span className="flex-shrink-0 text-[10px] font-semibold leading-none px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                  {feedUnread}
+                </span>
+              )}
+              {id === 'dossiers' && dossierCount > 0 && (
+                <span className="flex-shrink-0 text-[10px] font-semibold leading-none px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                  {dossierCount}
+                </span>
+              )}
             </button>
           );
         })}
       </nav>
 
-      {/* Watched-target list */}
-      {targets.length > 0 && (
-        <div className="px-3 pb-2 space-y-0.5">
+      {/* Watchlist section */}
+      <div className="px-3 pb-2">
+        {/* Section header */}
+        <div className="flex items-center justify-between px-3 py-1.5">
+          <span className="text-[11px] font-semibold tracking-wider uppercase text-textTertiary">
+            Watchlist
+          </span>
+          {targets.length > 0 && (
+            <span className="text-[11px] font-semibold text-textTertiary">{targets.length}</span>
+          )}
+        </div>
+
+        {/* Watched-target list */}
+        <div className="space-y-0.5">
           {targets.map((t) => (
             <button
               key={t}
@@ -85,7 +109,16 @@ const Sidebar = memo(function Sidebar({
             </button>
           ))}
         </div>
-      )}
+
+        {/* Add-to-watchlist row */}
+        <button
+          onClick={() => onViewChange('watchlist')}
+          className="tactile w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-textSecondary hover:text-textPrimary transition-colors duration-150"
+        >
+          <Plus className="w-4 h-4 flex-shrink-0" />
+          <span className="text-sm">Add to watchlist</span>
+        </button>
+      </div>
 
       {/* Engine status pill */}
       <div className="px-5 py-4 border-t border-border">
