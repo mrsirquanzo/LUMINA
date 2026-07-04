@@ -133,7 +133,7 @@ function AppContent() {
 
               {currentView === 'research' && (
                 <Suspense fallback={<DashboardSkeleton />}>
-                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} />
+                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => setCurrentView('feed')} />
                 </Suspense>
               )}
 
