@@ -1493,7 +1493,7 @@ export default function IntelligenceFeed() {
       return [
         `## Intelligence Digest — ${titleTarget}`,
         '',
-        `**Generated:** ${now} | **Items analyzed:** ${sourcesRows.length} | **Persona:** ${persona} (demo)`,
+        `**Generated:** ${now} | **Items analyzed:** ${sourcesRows.length} | **Voice:** ${persona} (demo)`,
         '',
         '---',
         '',
