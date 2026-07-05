@@ -142,7 +142,7 @@ function AppContent() {
               )}
 
               {currentView === 'watchlist' && (
-                <WatchlistView />
+                <WatchlistView onViewInFeed={() => setCurrentView('feed')} />
               )}
             </div>
           </div>
