@@ -2159,7 +2159,6 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                 const Icon = getTypeIcon(item.type);
                 const confidence = computeItemConfidencePct(item);
                 const pinned = pinnedIdSet.has(item.id);
-                const priority = computePriority(item);
                 const analysis = articleAnalysisById[item.id];
                 const analysisState = articleAnalysisStatus[item.id]?.status ?? 'idle';
                 const analysisError = articleAnalysisStatus[item.id]?.error;
@@ -2231,7 +2230,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                       'active:translate-y-0 motion-reduce:hover:translate-y-0 motion-reduce:transition-none',
                       pinned
                         ? 'border-amber-500/30 ring-1 ring-amber-500/10 bg-white hover:border-amber-500/40'
-                        : 'border-border bg-white hover:border-[#C3D4F2]',
+                        : 'border-border bg-white hover:border-blue-200',
                     ].join(' ')}
                   >
                     <div className="p-[17px_19px]">
@@ -2310,7 +2309,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           <span className="text-[10px] font-semibold uppercase tracking-[.05em] text-textTertiary block mb-0.5">
                             {"Sonny's read"}
                           </span>
-                          <p className="font-display text-[14.5px] leading-[1.6] text-[#3A4658] m-0 max-w-[64ch]">
+                          <p className="font-display text-[14.5px] leading-[1.6] text-textSecondary m-0 max-w-[64ch]">
                             {sonnysRead}
                           </p>
                         </div>
@@ -2367,7 +2366,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           href={item.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] bg-white border border-border text-[12.5px] font-semibold text-textPrimary hover:border-[#C7D2E4] hover:shadow-[0_1px_3px_rgba(15,23,42,.05)] transition-all active:scale-[.98]"
+                          className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] bg-white border border-border text-[12.5px] font-semibold text-textPrimary hover:border-blue-200 hover:shadow-[0_1px_3px_rgba(15,23,42,.05)] transition-all active:scale-[.98]"
                         >
                           {openLabel}
                           <ExternalLink className="w-3 h-3" />
