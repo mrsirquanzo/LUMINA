@@ -649,7 +649,13 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
   useEffect(() => {
     const t = (initialTarget ?? '').trim();
-    if (!t) return;
+    if (!t) {
+      setTargetOverride('');
+      setHasCustomTopic(false);
+      setTopicQuery(defaultTopic);
+      setFeedSearchInput('');
+      return;
+    }
     setTargetOverride(normalizeTargetInput(t));
     setHasCustomTopic(false);
     setTopicQuery(defaultTopic);

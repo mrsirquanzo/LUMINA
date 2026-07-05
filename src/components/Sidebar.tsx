@@ -54,7 +54,7 @@ const Sidebar = memo(function Sidebar({
           return (
             <button
               key={id}
-              onClick={() => onViewChange(id)}
+              onClick={() => (id === 'feed' && onOpenFeedForTarget) ? onOpenFeedForTarget() : onViewChange(id)}
               className={`tactile relative w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-150 ${
                 isActive
                   ? 'bg-primary/10 text-textPrimary'
