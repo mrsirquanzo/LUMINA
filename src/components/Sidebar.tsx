@@ -14,6 +14,7 @@ import {
   Target,
   Microscope,
   Sparkles,
+  Library,
 } from 'lucide-react';
 import type { Persona, ViewState } from '../types';
 import { useWorkspaceStore } from '../lib/workspaces/store';
@@ -346,6 +347,7 @@ const Sidebar = memo(function Sidebar({
     { id: 'workspaces' as ViewState, icon: FolderOpen, label: 'Workspaces' },
     { id: 'history' as ViewState, icon: History, label: 'Recent' },
     { id: 'research' as ViewState, icon: Sparkles, label: 'Sonny' },
+    { id: 'dossiers' as ViewState, icon: Library, label: 'Dossiers' },
   ];
 
   const bottomNavItems: NavItem[] = [
