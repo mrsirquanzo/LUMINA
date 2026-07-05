@@ -19,7 +19,6 @@ import type {
   ComparableDeal,
   Competitor,
   Citation,
-  Persona,
 } from '../types';
 
 export * from './her2Baseline';
@@ -1213,7 +1212,7 @@ export const WORKSPACES: Array<{
   id: string | number;
   name: string;
   target: string;
-  persona: Persona;
+  persona: string;
   createdDate: string;
   lastModified: string;
   status: 'active' | 'completed' | 'archived';

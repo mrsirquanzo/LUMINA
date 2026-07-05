@@ -1,31 +1,24 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Grid,
   List,
   Search,
   X,
-  Trash2,
   Radio,
   RotateCcw,
 } from 'lucide-react';
-import type { Persona } from '../types';
-import { useTileStore } from '../lib/tiles/store';
-import { useWorkspaceStore } from '../lib/workspaces/store';
 import { getStoredAgentMode, onAgentModeUpdated, requestAgentMode, type AgentMode } from '../lib/agentMode';
 
 interface HeaderProps {
-  persona: Persona;
   targetName?: string; // Optional, will use active workspace if not provided
   indication?: string;
   dataFreshness?: string;
   onSearch?: (query: string) => void;
-  onExport: (format: 'pdf' | 'pptx' | 'docx') => void;
   viewMode?: 'grid' | 'list';
   onViewModeChange?: (mode: 'grid' | 'list') => void;
 }
 
 export default function Header({
-  persona,
   targetName: targetNameProp,
   indication,
   dataFreshness = '2h ago',
@@ -37,27 +30,8 @@ export default function Header({
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [agentMode, setAgentMode] = useState<AgentMode>(() => getStoredAgentMode());
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const clearAllTiles = useTileStore((state) => state.clearAllTiles);
-  const tiles = useTileStore((state) => state.tiles);
-  const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
-  const getWorkspaceById = useWorkspaceStore((state) => state.getWorkspaceById);
-  
-  // Get current target from active workspace or use prop
-  // Return empty string if no target is selected (initial load)
-  const currentTarget = useMemo(() => {
-    if (targetNameProp) return targetNameProp;
-    if (activeWorkspaceId) {
-      const activeWorkspace = getWorkspaceById(activeWorkspaceId);
-      return activeWorkspace?.target || '';
-    }
-    return ''; // Empty on initial load when no workspace is active
-  }, [targetNameProp, activeWorkspaceId, getWorkspaceById]);
-  
-  // Memoize visible tiles to prevent infinite loops
-  const visibleTiles = useMemo(() => {
-    if (!activeWorkspaceId) return tiles;
-    return tiles.filter((tile) => tile.workspaceIds.includes(activeWorkspaceId));
-  }, [tiles, activeWorkspaceId]);
+
+  const currentTarget = targetNameProp || '';
 
 
   // Keep header toggle synced with Sonny panel mode
@@ -84,22 +58,6 @@ export default function Header({
     searchInputRef.current?.focus();
   };
 
-  const handleClearAllTiles = () => {
-    // Count tiles for current workspace, or all tiles if no workspace
-    const tileCount = visibleTiles.length;
-    if (tileCount === 0) {
-      return; // No tiles to clear
-    }
-    
-    const workspaceName = activeWorkspaceId 
-      ? getWorkspaceById(activeWorkspaceId)?.name || 'workspace'
-      : 'dashboard';
-    
-    if (window.confirm(`Are you sure you want to clear all ${tileCount} tile${tileCount > 1 ? 's' : ''} from ${workspaceName}? This action cannot be undone.`)) {
-      clearAllTiles();
-    }
-  };
-
   const handleResetDemo = () => {
     if (!window.confirm('Reset demo state?\n\nThis will clear generated tiles and reset analysis panels so you can rerun the investor flow cleanly.')) {
       return;
@@ -120,22 +78,13 @@ export default function Header({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const getPersonaTitle = () => {
-    if (persona === 'scientist') {
-      return currentTarget || ''; // Empty string when no target selected
-    } else {
-      return `TargetCo / TRX-101`; // Example BD format
-    }
-  };
-
-
   return (
     <header className="sticky top-0 z-50 h-20 glass border-b border-border">
       <div className="h-full px-6 flex items-center justify-between gap-6">
         {/* Left Section - Simplified Context */}
         <div className="flex items-center gap-4 flex-shrink-0">
           <div className="min-w-0">
-            <h1 className="text-lg font-semibold text-textPrimary truncate">{getPersonaTitle()}</h1>
+            <h1 className="text-lg font-semibold text-textPrimary truncate">{currentTarget}</h1>
           </div>
         </div>
 
@@ -235,30 +184,15 @@ export default function Header({
 
           <div className="w-px h-6 bg-border" />
 
-          {/* Clear All Tiles - Show in all workspaces if there are any tiles */}
-          {(tiles.length > 0 || activeWorkspaceId) && (
-            <>
-              <button
-                onClick={handleClearAllTiles}
-                disabled={visibleTiles.length === 0}
-                className="tactile flex items-center gap-2 px-3 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 hover:border-red-500/30 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                title={visibleTiles.length > 0 ? "Clear all tiles" : "No tiles to clear"}
-              >
-                <Trash2 className="w-4 h-4" />
-                <span className="hidden md:inline">Clear Tiles</span>
-              </button>
-              {agentMode === 'demo' && (
-                <button
-                  onClick={handleResetDemo}
-                  className="tactile flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-border rounded-lg hover:bg-surfaceElevated/70 hover:border-slate-300 transition-colors font-medium text-sm"
-                  title="Reset demo (clear generated tiles + analysis state)"
-                >
-                  <RotateCcw className="w-4 h-4 text-textSecondary" />
-                  <span className="hidden md:inline">Reset Demo</span>
-                </button>
-              )}
-              <div className="w-px h-6 bg-border" />
-            </>
+          {agentMode === 'demo' && (
+            <button
+              onClick={handleResetDemo}
+              className="tactile flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-border rounded-lg hover:bg-surfaceElevated/70 hover:border-slate-300 transition-colors font-medium text-sm"
+              title="Reset demo (clear analysis state)"
+            >
+              <RotateCcw className="w-4 h-4 text-textSecondary" />
+              <span className="hidden md:inline">Reset Demo</span>
+            </button>
           )}
 
         </div>
