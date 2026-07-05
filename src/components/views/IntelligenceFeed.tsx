@@ -652,6 +652,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     if (!t) return;
     setTargetOverride(normalizeTargetInput(t));
     setHasCustomTopic(false);
+    setTopicQuery(defaultTopic);
+    setFeedSearchInput('');
+    triggerRefresh(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialTarget]);
 
   function submitFeedSearch() {
