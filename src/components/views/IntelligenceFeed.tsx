@@ -193,7 +193,7 @@ function getSourceBadgeConfig(kind: SourceBadgeKind) {
       icon: Shield,
       bg: 'bg-emerald-500/15',
       border: 'border-emerald-500/30',
-      text: 'text-emerald-300',
+      text: 'text-go-text',
       iconText: 'text-emerald-400',
     };
   if (kind === 'trade')
@@ -202,23 +202,23 @@ function getSourceBadgeConfig(kind: SourceBadgeKind) {
       icon: Newspaper,
       bg: 'bg-amber-500/15',
       border: 'border-amber-500/30',
-      text: 'text-amber-300',
+      text: 'text-watch-text',
       iconText: 'text-amber-400',
     };
   return {
     label: 'Other',
     icon: FileText,
     bg: 'bg-slate-500/10',
-    border: 'border-white/10',
+    border: 'border-border',
     text: 'text-textTertiary',
     iconText: 'text-textTertiary',
   };
 }
 
 function getPriorityConfig(priority: FeedPriority) {
-  if (priority === 'breaking') return { dot: 'bg-red-500', label: 'Breaking', pulse: true, text: 'text-red-300' };
-  if (priority === 'high') return { dot: 'bg-amber-500', label: 'High', pulse: false, text: 'text-amber-300' };
-  return { dot: 'bg-slate-500', label: 'Medium', pulse: false, text: 'text-textTertiary' };
+  if (priority === 'breaking') return { dot: 'bg-red-500', label: 'Breaking', pulse: true, text: 'text-nogo-text' };
+  if (priority === 'high') return { dot: 'bg-amber-500', label: 'High', pulse: false, text: 'text-watch-text' };
+  return { dot: 'bg-slate-500', label: 'Medium', pulse: false, text: 'text-textSecondary' };
 }
 
 function ConfidenceMeter({ value }: { value: number }) {
@@ -226,7 +226,7 @@ function ConfidenceMeter({ value }: { value: number }) {
   const bar = v >= 85 ? 'bg-emerald-500' : v >= 70 ? 'bg-amber-500' : 'bg-slate-500';
   return (
     <div className="flex items-center gap-2">
-      <div className="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden">
+      <div className="w-16 h-1.5 bg-subtle rounded-full overflow-hidden">
         <div className={`h-full rounded-full ${bar}`} style={{ width: `${v}%` }} />
       </div>
       <span className="text-[10px] font-mono text-textTertiary">{v}%</span>
@@ -1706,15 +1706,15 @@ export default function IntelligenceFeed() {
   return (
     <section className="relative max-w-6xl mx-auto">
       {/* Outer rounded container (matches dashboard section styling) */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] via-black/30 to-black/40 shadow-2xl shadow-black/50">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(191,90,242,0.18),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(34,211,238,0.12),transparent_40%)]" />
+      <div className="relative overflow-hidden rounded-3xl border border-border bg-surface shadow-2xl shadow-black/10">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(29,78,216,0.08),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(29,78,216,0.05),transparent_40%)]" />
         <div className="relative">
       {/* Sticky glass header */}
-      <header className="sticky top-0 z-40 glass border-b border-white/10">
-        <div className="px-6 py-4 border-b border-white/10">
+      <header className="sticky top-0 z-40 glass border-b border-border">
+        <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/25 via-primary/10 to-cyan-500/10 border border-white/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/25 via-primary/10 to-cyan-500/10 border border-border flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary" />
               </div>
               <div className="min-w-0">
@@ -1734,7 +1734,7 @@ export default function IntelligenceFeed() {
               <button
                 onClick={() => triggerRefresh(true)}
                 disabled={isFetching}
-                className="p-2.5 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-white/5 transition-colors disabled:opacity-50"
+                className="p-2.5 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors disabled:opacity-50"
                 title="Refresh"
                 aria-label="Refresh"
               >
@@ -1743,7 +1743,7 @@ export default function IntelligenceFeed() {
               <button
                 onClick={() => setShowFilters((v) => !v)}
                 className={`p-2.5 rounded-xl transition-colors ${
-                  showFilters ? 'bg-primary/15 text-primary border border-primary/30' : 'text-textSecondary hover:text-textPrimary hover:bg-white/5'
+                  showFilters ? 'bg-primary/15 text-primary border border-primary/30' : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
                 }`}
                 title="Filters"
                 aria-label="Filters"
@@ -1753,7 +1753,7 @@ export default function IntelligenceFeed() {
               <button
                 onClick={startSonnyDigest}
                 disabled={!data || isDigestLoading}
-                className="p-2.5 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-white/5 transition-colors disabled:opacity-50"
+                className="p-2.5 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors disabled:opacity-50"
                 title="Generate Sonny synthesis"
                 aria-label="Generate Sonny synthesis"
               >
@@ -1771,14 +1771,14 @@ export default function IntelligenceFeed() {
                   Export
                 </button>
                 {showExportMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-56 glass-elevated rounded-xl shadow-2xl overflow-hidden border border-white/10">
+                  <div className="absolute right-0 top-full mt-2 w-56 glass-elevated rounded-xl shadow-2xl overflow-hidden border border-border">
                     <button
                       type="button"
                       onClick={() => {
                         setShowExportMenu(false);
                         exportFeedCsv();
                       }}
-                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-white/5"
+                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-subtle"
                     >
                       Export feed (.csv)
                     </button>
@@ -1789,7 +1789,7 @@ export default function IntelligenceFeed() {
                         setShowExportMenu(false);
                         exportDigest();
                       }}
-                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-white/5 disabled:opacity-50"
+                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-subtle disabled:opacity-50"
                     >
                       Export Sonny digest (.md)
                     </button>
@@ -1819,16 +1819,16 @@ export default function IntelligenceFeed() {
                       triggerRefresh(true);
                     }}
                     className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
-                      active ? 'bg-primary/15 text-primary border border-primary/30' : 'bg-white/5 text-textSecondary hover:text-textPrimary border border-transparent hover:border-white/10'
+                      active ? 'bg-primary/15 text-primary border border-primary/30' : 'bg-subtle text-textSecondary hover:text-textPrimary border border-transparent hover:border-border'
                     }`}
                     title={t}
                   >
                     {t}
                     {unread > 0 ? (
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${active ? 'bg-primary/25' : 'bg-white/10'}`}>{unread}</span>
+                      <span className={`text-xs px-1.5 py-0.5 rounded ${active ? 'bg-primary/25' : 'bg-subtle'}`}>{unread}</span>
                     ) : null}
                     {unread > 0 ? (
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-black" />
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface" />
                     ) : null}
                   </button>
                 );
@@ -1858,7 +1858,7 @@ export default function IntelligenceFeed() {
                         }
                       }}
                       placeholder="Add target…"
-                      className="w-40 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
+                      className="w-40 px-3 py-2 rounded-xl bg-subtle border border-border text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
                       autoFocus
                     />
                     <button
@@ -1867,7 +1867,7 @@ export default function IntelligenceFeed() {
                         setIsAddingTarget(false);
                         setAddTargetInput('');
                       }}
-                      className="p-2 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-white/5"
+                      className="p-2 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-subtle"
                       aria-label="Cancel add target"
                     >
                       <X className="w-4 h-4" />
@@ -1877,7 +1877,7 @@ export default function IntelligenceFeed() {
                   <button
                     type="button"
                     onClick={() => setIsAddingTarget(true)}
-                    className="p-2 text-textTertiary hover:text-textPrimary hover:bg-white/5 rounded-xl transition-colors border border-dashed border-white/15 hover:border-primary/30"
+                    className="p-2 text-textSecondary hover:text-textPrimary hover:bg-subtle rounded-xl transition-colors border border-dashed border-border hover:border-primary/30"
                     aria-label="Add target"
                     title="Add target"
                   >
@@ -1901,13 +1901,13 @@ export default function IntelligenceFeed() {
                     }
                   }}
                   placeholder="Search targets or topics (e.g., TROP2, HER3, Nectin-4)…"
-                  className="w-full pl-10 pr-20 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
+                  className="w-full pl-10 pr-20 py-2.5 bg-subtle border border-border rounded-xl text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
                 />
                 {feedSearchInput ? (
                   <button
                     type="button"
                     onClick={() => setFeedSearchInput('')}
-                    className="absolute right-14 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-textTertiary hover:text-textPrimary hover:bg-white/5"
+                    className="absolute right-14 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-textSecondary hover:text-textPrimary hover:bg-subtle"
                     aria-label="Clear search"
                   >
                     <X className="w-4 h-4" />
@@ -1917,7 +1917,7 @@ export default function IntelligenceFeed() {
                   type="button"
                   onClick={() => submitFeedSearch()}
                   disabled={!feedSearchInput.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-textPrimary text-xs font-semibold disabled:opacity-50"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-subtle hover:bg-subtle text-textPrimary text-xs font-semibold disabled:opacity-50"
                 >
                   Fetch
                 </button>
@@ -1939,32 +1939,32 @@ export default function IntelligenceFeed() {
                   type="button"
                   onClick={() => setTypeFilter(f.id)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                    typeFilter === f.id ? 'bg-primary/15 border-primary/30 text-primary' : 'bg-white/5 border-white/10 text-textSecondary hover:text-textPrimary hover:bg-white/10'
+                    typeFilter === f.id ? 'bg-primary/15 border-primary/30 text-primary' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
                   }`}
                 >
                   {f.label}
                   <span className="ml-1.5 text-[10px] text-textTertiary">{f.count}</span>
                 </button>
               ))}
-              <span className="w-px h-4 bg-white/10" />
+              <span className="w-px h-4 bg-border" />
               {relevanceOptions.map((r) => (
                 <button
                   key={r.id}
                   type="button"
                   onClick={() => setRelevanceFilter(r.id)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                    relevanceFilter === r.id ? 'bg-primary/15 border-primary/30 text-primary' : 'bg-white/5 border-white/10 text-textSecondary hover:text-textPrimary hover:bg-white/10'
+                    relevanceFilter === r.id ? 'bg-primary/15 border-primary/30 text-primary' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
                   }`}
                 >
                   {r.label}
                 </button>
               ))}
-              <span className="w-px h-4 bg-white/10" />
+              <span className="w-px h-4 bg-border" />
               <button
                 type="button"
                 onClick={() => setCuratedOnly(!isCuratedOnly)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                  isCuratedOnly ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'bg-white/5 border-white/10 text-textSecondary hover:text-textPrimary hover:bg-white/10'
+                  isCuratedOnly ? 'bg-go-tint border-emerald-500/30 text-go-text' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
                 }`}
                 title="Curated-only sources"
               >
@@ -1973,7 +1973,7 @@ export default function IntelligenceFeed() {
               <button
                 type="button"
                 onClick={applyDemoPreset}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg border bg-white/5 border-white/10 text-textSecondary hover:text-textPrimary hover:bg-white/10 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg border bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors"
                 title="Demo preset (curated + target-specific)"
               >
                 Demo preset
@@ -1982,7 +1982,7 @@ export default function IntelligenceFeed() {
               <button
                 type="button"
                 onClick={() => setShowAdvanced((v) => !v)}
-                className="ml-auto px-3 py-1.5 text-xs font-medium rounded-lg border bg-white/5 border-white/10 text-textSecondary hover:text-textPrimary hover:bg-white/10 transition-colors flex items-center gap-2"
+                className="ml-auto px-3 py-1.5 text-xs font-medium rounded-lg border bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors flex items-center gap-2"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" />
                 Advanced
@@ -1997,7 +1997,7 @@ export default function IntelligenceFeed() {
                   value={feedFilterInput}
                   onChange={(e) => setFeedFilterInput(e.target.value)}
                   placeholder="Search within loaded items…"
-                  className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
+                  className="w-full px-3 py-2.5 bg-subtle border border-border rounded-xl text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
                 />
                 <div className="flex items-center gap-2">
                   <button
@@ -2007,7 +2007,7 @@ export default function IntelligenceFeed() {
                       setRelevanceFilter('All');
                       setFeedFilterInput('');
                     }}
-                    className="px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-textSecondary hover:text-textPrimary hover:bg-white/10 transition-colors"
+                    className="px-3 py-2.5 rounded-xl bg-subtle border border-border text-sm text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors"
                   >
                     Clear
                   </button>
@@ -2032,7 +2032,7 @@ export default function IntelligenceFeed() {
                     <button
                       type="button"
                       onClick={clearHiddenSources}
-                      className="px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-textSecondary hover:text-textPrimary hover:bg-white/10"
+                      className="px-2 py-1 rounded-lg bg-subtle border border-border text-textSecondary hover:text-textPrimary hover:bg-subtle"
                     >
                       Clear hidden sources
                     </button>
@@ -2041,7 +2041,7 @@ export default function IntelligenceFeed() {
                     <button
                       type="button"
                       onClick={clearHiddenItems}
-                      className="px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-textSecondary hover:text-textPrimary hover:bg-white/10"
+                      className="px-2 py-1 rounded-lg bg-subtle border border-border text-textSecondary hover:text-textPrimary hover:bg-subtle"
                     >
                       Clear hidden items
                     </button>
@@ -2065,10 +2065,10 @@ export default function IntelligenceFeed() {
           <div
             className={`glass-elevated rounded-xl px-4 py-3 text-sm font-medium border ${
               toast.tone === 'success'
-                ? 'border-emerald-500/30 text-emerald-200'
+                ? 'border-emerald-500/30 text-go-text'
                 : toast.tone === 'error'
-                  ? 'border-red-500/30 text-red-200'
-                  : 'border-white/10 text-textPrimary'
+                  ? 'border-red-500/30 text-nogo-text'
+                  : 'border-border text-textPrimary'
             }`}
           >
             {toast.message}
@@ -2079,24 +2079,24 @@ export default function IntelligenceFeed() {
       <main className="px-6 py-8 space-y-6">
         {/* Sonny synthesis */}
         <section>
-          <div className="bg-gradient-to-br from-primary/10 via-black/30 to-black/30 border border-primary/20 rounded-2xl overflow-hidden">
+          <div className="bg-surface border border-primary/20 rounded-2xl overflow-hidden">
             <button
               type="button"
               onClick={() => setIsSynthesisExpanded((v) => !v)}
-              className="w-full flex items-center justify-between p-5 hover:bg-white/[0.02] transition-colors text-left"
+              className="w-full flex items-center justify-between p-5 hover:bg-subtle transition-colors text-left"
             >
               <div className="flex items-center gap-4 min-w-0">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shadow-primary/25">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/25">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+                  <h2 className="text-sm font-semibold text-textPrimary flex items-center gap-2">
                     Sonny Synthesis
                     <span className="text-[10px] px-2 py-0.5 bg-primary/20 text-primary rounded-full font-medium">
                       {isDemoMode ? 'DEMO' : 'AI'}
                     </span>
                   </h2>
-                  <p className="text-xs text-textTertiary mt-0.5 truncate">
+                  <p className="text-xs text-textSecondary mt-0.5 truncate">
                     {digestJobStatus
                       ? `Status: ${digestJobStatus.status}${typeof digestJobStatus.progress === 'number' ? ` • ${(digestJobStatus.progress * 100).toFixed(0)}%` : ''}${digestJobStatus.message ? ` • ${digestJobStatus.message}` : ''}`
                       : digestMeta
@@ -2117,11 +2117,11 @@ export default function IntelligenceFeed() {
                 {digestError ? <p className="text-sm text-danger">{digestError}</p> : null}
 
                 {digestSynthesis.summary ? (
-                  <div className="p-4 bg-black/20 rounded-xl border border-white/5">
+                  <div className="p-4 bg-subtle rounded-xl border border-border">
                     <p className="text-sm text-textSecondary leading-relaxed">{digestSynthesis.summary}</p>
                   </div>
                 ) : (
-                  <div className="p-4 bg-black/20 rounded-xl border border-white/5">
+                  <div className="p-4 bg-subtle rounded-xl border border-border">
                     <p className="text-sm text-textSecondary leading-relaxed">
                       Generate a synthesis to get a structured, decision-grade summary (with source links).
                     </p>
@@ -2131,7 +2131,7 @@ export default function IntelligenceFeed() {
                 {digestSynthesis.keyThemes.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {digestSynthesis.keyThemes.map((t, idx) => (
-                      <div key={idx} className="p-3 bg-black/20 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+                      <div key={idx} className="p-3 bg-subtle rounded-xl border border-border hover:border-border transition-colors">
                         <div className="flex items-center gap-2 mb-2">
                           <span
                             className={`w-2 h-2 rounded-full ${
@@ -2142,8 +2142,8 @@ export default function IntelligenceFeed() {
                             {t.direction === 'positive' ? 'Tailwind' : t.direction === 'watch' ? 'Monitor' : 'Neutral'}
                           </span>
                         </div>
-                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-2">{t.theme}</h3>
-                        <p className="text-xs text-textTertiary leading-relaxed line-clamp-3">{t.detail}</p>
+                        <h3 className="text-sm font-semibold text-textPrimary mb-1 line-clamp-2">{t.theme}</h3>
+                        <p className="text-xs text-textSecondary leading-relaxed line-clamp-3">{t.detail}</p>
                       </div>
                     ))}
                   </div>
@@ -2155,7 +2155,7 @@ export default function IntelligenceFeed() {
                       type="button"
                       onClick={startSonnyDigest}
                       disabled={!data || isDigestLoading}
-                      className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-textPrimary text-sm font-semibold disabled:opacity-50"
+                      className="px-4 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textPrimary text-sm font-semibold disabled:opacity-50"
                     >
                       {digestMarkdown ? 'Regenerate' : 'Generate'}
                     </button>
@@ -2163,7 +2163,7 @@ export default function IntelligenceFeed() {
                       type="button"
                       disabled={!digestMarkdown}
                       onClick={() => setIsFullDigestExpanded((v) => !v)}
-                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-textSecondary text-sm font-medium disabled:opacity-50 flex items-center gap-2"
+                      className="px-4 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textSecondary text-sm font-medium disabled:opacity-50 flex items-center gap-2"
                     >
                       {isFullDigestExpanded ? 'Hide full digest' : 'View full digest'}
                       {isFullDigestExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -2184,7 +2184,7 @@ export default function IntelligenceFeed() {
                     <CitedMarkdown
                       content={digestMarkdownLinked}
                       className="w-full"
-                      tone={{ gradient: 'from-primary/15 via-purple-500/10 to-cyan-500/10', border: 'border-white/10' }}
+                      tone={{ gradient: 'from-primary/15 via-purple-500/10 to-cyan-500/10', border: 'border-border' }}
                       isDemo={isDemoMode}
                     />
                   </div>
@@ -2199,11 +2199,11 @@ export default function IntelligenceFeed() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <h2 className="text-lg font-semibold text-textPrimary">Latest updates</h2>
-              <span className="text-xs px-2 py-1 bg-white/5 text-textTertiary rounded-lg border border-white/10">
+              <span className="text-xs px-2 py-1 bg-subtle text-textSecondary rounded-lg border border-border">
                 {filteredItems.length} items
               </span>
               {pinnedItems.length > 0 ? (
-                <span className="text-xs px-2 py-1 bg-amber-500/10 text-amber-300 rounded-lg border border-amber-500/20">
+                <span className="text-xs px-2 py-1 bg-watch-tint text-watch-text rounded-lg border border-amber-500/20">
                   {pinnedItems.length} pinned
                 </span>
               ) : null}
@@ -2223,7 +2223,7 @@ export default function IntelligenceFeed() {
               <div className="mt-4">
                 <button
                   onClick={() => triggerRefresh(true)}
-                  className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-textPrimary text-sm font-semibold"
+                  className="px-4 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textPrimary text-sm font-semibold"
                 >
                   Try again
                 </button>
@@ -2247,15 +2247,15 @@ export default function IntelligenceFeed() {
                     key={item.id}
                     className={`group border rounded-2xl overflow-hidden transition-all ${
                       pinned
-                        ? 'border-amber-500/30 ring-1 ring-amber-500/10 bg-white/5'
-                        : 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/15'
+                        ? 'border-amber-500/30 ring-1 ring-amber-500/10 bg-subtle'
+                        : 'border-border bg-subtle/50 hover:bg-subtle hover:border-border'
                     }`}
                   >
                     <div className="p-5">
                       <div className="flex items-center justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
                           {pinned ? (
-                            <div className="flex items-center gap-1 text-amber-300">
+                            <div className="flex items-center gap-1 text-watch-text">
                               <Pin className="w-3.5 h-3.5" />
                               <span className="text-[10px] font-semibold uppercase tracking-wider">Pinned</span>
                             </div>
@@ -2268,8 +2268,8 @@ export default function IntelligenceFeed() {
                           <button
                             type="button"
                             onClick={() => togglePinned(item.id)}
-                            className={`p-2 rounded-xl hover:bg-white/5 transition-colors ${
-                              pinned ? 'text-amber-300' : 'text-textTertiary hover:text-textPrimary'
+                            className={`p-2 rounded-xl hover:bg-subtle transition-colors ${
+                              pinned ? 'text-watch-text' : 'text-textTertiary hover:text-textPrimary'
                             }`}
                             title={pinned ? 'Unpin' : 'Pin'}
                             aria-label={pinned ? 'Unpin' : 'Pin'}
@@ -2279,7 +2279,7 @@ export default function IntelligenceFeed() {
                           <button
                             type="button"
                             onClick={() => setWhyOpenId((prev) => (prev === item.id ? '' : item.id))}
-                            className="p-2 rounded-xl hover:bg-white/5 transition-colors text-textTertiary hover:text-textPrimary"
+                            className="p-2 rounded-xl hover:bg-subtle transition-colors text-textSecondary hover:text-textPrimary"
                             title="Why included?"
                             aria-label="Why included"
                           >
@@ -2288,7 +2288,7 @@ export default function IntelligenceFeed() {
                           <button
                             type="button"
                             onClick={() => hideItemUrlForContext(item.link)}
-                            className="p-2 rounded-xl hover:bg-white/5 transition-colors text-textTertiary hover:text-textPrimary"
+                            className="p-2 rounded-xl hover:bg-subtle transition-colors text-textSecondary hover:text-textPrimary"
                             title="Hide this item"
                             aria-label="Hide this item"
                           >
@@ -2297,7 +2297,7 @@ export default function IntelligenceFeed() {
                           <button
                             type="button"
                             onClick={() => hideSourceForContext(item.link)}
-                            className="p-2 rounded-xl hover:bg-white/5 transition-colors text-textTertiary hover:text-textPrimary"
+                            className="p-2 rounded-xl hover:bg-subtle transition-colors text-textSecondary hover:text-textPrimary"
                             title="Hide this source (not relevant)"
                             aria-label="Hide this source"
                           >
@@ -2307,7 +2307,7 @@ export default function IntelligenceFeed() {
                       </div>
 
                       <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-subtle border border-border flex items-center justify-center shrink-0">
                           <Icon className="w-5 h-5 text-textSecondary" />
                         </div>
 
@@ -2319,7 +2319,7 @@ export default function IntelligenceFeed() {
                           </div>
 
                           <a href={item.link} target="_blank" rel="noopener noreferrer" className="block mt-2 group/link">
-                            <h3 className="text-base font-semibold text-white leading-snug hover:text-primary transition-colors">
+                            <h3 className="text-base font-semibold text-textPrimary leading-snug hover:text-primary transition-colors">
                               {highlightText(item.title, item.matchedTerms || [])}
                             </h3>
                             <span className="inline-flex items-center gap-1 text-xs text-textTertiary mt-1 group-hover/link:text-primary transition-colors">
@@ -2334,7 +2334,7 @@ export default function IntelligenceFeed() {
                               {item.tags.slice(0, 6).map((tag) => (
                                 <span
                                   key={tag}
-                                  className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[10px] text-textTertiary font-medium hover:bg-white/10 hover:text-white transition-colors cursor-default"
+                                  className="px-2 py-0.5 bg-subtle border border-border rounded text-[10px] text-textSecondary font-medium hover:bg-subtle hover:text-textPrimary transition-colors cursor-default"
                                 >
                                   {tag}
                                 </span>
@@ -2345,7 +2345,7 @@ export default function IntelligenceFeed() {
                       </div>
 
                       {whyOpenId === item.id ? (
-                        <div className="mt-4 p-4 rounded-xl bg-black/30 border border-white/10 text-xs text-textSecondary">
+                        <div className="mt-4 p-4 rounded-xl bg-subtle border border-border text-xs text-textSecondary">
                           <div className="flex items-center justify-between gap-2">
                             <p className="font-semibold text-textPrimary">Why included</p>
                             <button
@@ -2359,11 +2359,11 @@ export default function IntelligenceFeed() {
                           </div>
                           <div className="mt-2 space-y-1">
                             <div>
-                              <span className="text-textTertiary">Matched:</span>{' '}
+                              <span className="text-textSecondary">Matched:</span>{' '}
                               <span className="font-mono">{uniqueTerms(item.matchedTerms || []).slice(0, 8).join(', ') || '—'}</span>
                             </div>
                             <div>
-                              <span className="text-textTertiary">Field:</span>{' '}
+                              <span className="text-textSecondary">Field:</span>{' '}
                               <span>
                                 {item.matchedFields?.includes('title')
                                   ? 'title'
@@ -2373,7 +2373,7 @@ export default function IntelligenceFeed() {
                               </span>
                             </div>
                             <div>
-                              <span className="text-textTertiary">Score:</span>{' '}
+                              <span className="text-textSecondary">Score:</span>{' '}
                               <span className="font-mono">{typeof item.score === 'number' ? item.score.toFixed(2) : '—'}</span>
                             </div>
                           </div>
@@ -2383,17 +2383,17 @@ export default function IntelligenceFeed() {
 
                     {/* Expandable Sonny Analysis */}
                     <div
-                      className={`border-t border-white/10 overflow-hidden transition-all duration-300 ${
+                      className={`border-t border-border overflow-hidden transition-all duration-300 ${
                         expanded ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'
                       }`}
                     >
-                      <div className="p-5 bg-black/30 space-y-4">
+                      <div className="p-5 bg-subtle space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-xs font-semibold text-white">Sonny Analysis</span>
+                            <span className="text-xs font-semibold text-textPrimary">Sonny Analysis</span>
                             {analysisState === 'loading' ? (
-                              <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-textTertiary animate-pulse">
+                              <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-subtle border border-border text-textTertiary animate-pulse">
                                 generating…
                               </span>
                             ) : null}
@@ -2403,13 +2403,13 @@ export default function IntelligenceFeed() {
 
                         {analysisError ? (
                           <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                            <p className="text-sm text-red-200">Couldn’t generate analysis.</p>
-                            <p className="text-xs text-red-200/70 mt-1 line-clamp-2">{analysisError}</p>
+                            <p className="text-sm text-nogo-text">Couldn’t generate analysis.</p>
+                            <p className="text-xs text-nogo-text/70 mt-1 line-clamp-2">{analysisError}</p>
                             <div className="mt-3">
                               <button
                                 type="button"
                                 onClick={() => void ensureArticleAnalysis(item)}
-                                className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-textPrimary text-sm font-semibold"
+                                className="px-3 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textPrimary text-sm font-semibold"
                               >
                                 Retry
                               </button>
@@ -2432,12 +2432,12 @@ export default function IntelligenceFeed() {
                           </div>
 
                           <div className="flex items-start gap-3">
-                            <div className="w-7 h-7 rounded-lg bg-slate-700/40 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-7 h-7 rounded-lg bg-subtle border border-border flex items-center justify-center shrink-0 mt-0.5">
                               <Target className="w-3 h-3 text-slate-300" />
                             </div>
                             <div className="flex-1">
                               <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wide block mb-1">The Context</span>
-                              <p className="text-sm text-textTertiary leading-relaxed">
+                              <p className="text-sm text-textSecondary leading-relaxed">
                                 {analysis?.sections?.theContext?.text ||
                                   (analysisState === 'loading' ? 'Weighting this signal by source tier + landscape…' : 'Generate analysis to view this section.')}
                               </p>
@@ -2480,10 +2480,10 @@ export default function IntelligenceFeed() {
                                   key={`${t.theme}-${idx}`}
                                   className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
                                     t.direction === 'positive'
-                                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+                                      ? 'bg-go-tint border-emerald-500/20 text-go-text'
                                       : t.direction === 'watch'
-                                        ? 'bg-amber-500/10 border-amber-500/20 text-amber-200'
-                                        : 'bg-white/5 border-white/10 text-textSecondary'
+                                        ? 'bg-watch-tint border-amber-500/20 text-watch-text'
+                                        : 'bg-subtle border-border text-textSecondary'
                                   }`}
                                   title={t.rationale}
                                 >
@@ -2500,15 +2500,15 @@ export default function IntelligenceFeed() {
                             <ul className="space-y-2">
                               {analysis.actions.slice(0, 3).map((a, idx) => (
                                 <li key={`${a.action}-${idx}`} className="text-sm text-textSecondary leading-relaxed">
-                                  <span className="font-semibold text-white">{a.action}</span>
-                                  <span className="text-textTertiary"> — {a.why}</span>
+                                  <span className="font-semibold text-textPrimary">{a.action}</span>
+                                  <span className="text-textSecondary"> — {a.why}</span>
                                 </li>
                               ))}
                             </ul>
                           </div>
                         ) : null}
 
-                        <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                        <div className="flex items-center justify-between pt-3 border-t border-border">
                           <a
                             href={item.link}
                             target="_blank"
@@ -2522,7 +2522,7 @@ export default function IntelligenceFeed() {
                             <button
                               type="button"
                               onClick={() => addToWorkspace(item)}
-                              className="px-3 py-1.5 text-xs text-textSecondary hover:text-textPrimary hover:bg-white/10 rounded-lg transition-colors"
+                              className="px-3 py-1.5 text-xs text-textSecondary hover:text-textPrimary hover:bg-subtle rounded-lg transition-colors"
                             >
                               Add to workspace
                             </button>
@@ -2538,7 +2538,7 @@ export default function IntelligenceFeed() {
                         setExpandedItemId(next);
                         if (next) void ensureArticleAnalysis(item);
                       }}
-                      className="w-full px-5 py-3 flex items-center justify-center gap-2 text-xs font-medium text-textSecondary hover:text-white bg-black/20 hover:bg-black/30 transition-all border-t border-white/10"
+                      className="w-full px-5 py-3 flex items-center justify-center gap-2 text-xs font-medium text-textSecondary hover:text-textPrimary bg-subtle hover:bg-subtle transition-all border-t border-border"
                     >
                       {expanded ? (
                         <>
@@ -2563,7 +2563,7 @@ export default function IntelligenceFeed() {
             <div className="text-center py-16">
               <FileText className="w-12 h-12 text-textTertiary mx-auto mb-4 opacity-50" />
               <p className="text-lg font-medium text-textSecondary mb-2">{isLoading ? 'Loading…' : 'No results'}</p>
-              <p className="text-sm text-textTertiary">{isLoading ? 'Fetching the latest items…' : 'Try adjusting filters or search.'}</p>
+              <p className="text-sm text-textSecondary">{isLoading ? 'Fetching the latest items…' : 'Try adjusting filters or search.'}</p>
             </div>
           )}
         </section>

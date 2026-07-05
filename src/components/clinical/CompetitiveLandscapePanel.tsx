@@ -26,7 +26,7 @@ const CompetitorRow = ({ drug, company, stage, efficacy, status }: { drug: strin
   const config = statusConfig[status] || statusConfig.watch;
   
   return (
-    <tr className="border-b border-white/10 hover:bg-surfaceElevated transition-colors">
+    <tr className="border-b border-border hover:bg-surfaceElevated transition-colors">
       <td className="py-2 px-3 text-sm font-medium text-textPrimary">{drug}</td>
       <td className="py-2 px-3 text-sm text-textSecondary">{company}</td>
       <td className="py-2 px-3 text-sm text-textSecondary">{stage}</td>
@@ -56,7 +56,7 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
       className="absolute inset-0 bg-surface z-50 flex flex-col"
     >
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-textPrimary">{landscapeData.title}</h2>
@@ -76,7 +76,7 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
         {/* Market Leaders Table */}
         <div>
           <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Market Leaders</h3>
-          <div className="border border-white/10 rounded-lg overflow-hidden">
+          <div className="border border-border rounded-lg overflow-hidden">
             <table className="w-full">
               <thead className="bg-surfaceElevated">
                 <tr>
@@ -101,7 +101,7 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
         {/* Differentiation Matrix */}
         <div>
           <h3 className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-3">Differentiation Axes</h3>
-          <div className="bg-surfaceElevated rounded-lg p-4 border border-white/10">
+          <div className="bg-surfaceElevated rounded-lg p-4 border border-border">
             <div className="aspect-square relative max-w-[300px] mx-auto">
               {/* Axes */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 text-xs font-medium text-textSecondary">Efficacy</div>
@@ -182,17 +182,17 @@ export default function CompetitiveLandscapePanel({ landscape, onClose }: Compet
       </div>
 
       {/* Actions Footer */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         <div className="flex gap-2">
           <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
             <BarChart3 size={16} />
             Full Analysis
           </button>
-          <button className="px-4 py-2 bg-surface border border-white/10 text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surface border border-border text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
             <Calendar size={16} />
             Timeline
           </button>
-          <button className="px-4 py-2 bg-surface border border-white/10 text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
+          <button className="px-4 py-2 bg-surface border border-border text-textPrimary rounded-lg font-medium text-sm hover:bg-surfaceElevated transition-colors flex items-center justify-center gap-2">
             <Download size={16} />
             Export
           </button>

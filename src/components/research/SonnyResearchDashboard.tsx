@@ -44,19 +44,19 @@ export function SonnyResearchDashboard() {
       {/* Active-run two-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: trace / reasoning steps */}
-        <div className="bg-surfaceElevated/60 backdrop-blur-sm border border-white/10 rounded-2xl p-4 min-h-[400px]">
-          <p className="text-xs text-textTertiary font-medium tracking-wider uppercase mb-3">Reasoning Trace</p>
+        <div className="bg-surface border border-border rounded-2xl p-4 min-h-[400px]">
+          <p className="text-xs text-textSecondary font-medium tracking-wider uppercase mb-3">Reasoning Trace</p>
           <GlassBoxTrace traceStore={s.traceStore} status={s.status} />
         </div>
 
         {/* Right: dossier / briefing */}
-        <div className="bg-surfaceElevated/60 backdrop-blur-sm border border-white/10 rounded-2xl p-4 min-h-[400px]">
-          <p className="text-xs text-textTertiary font-medium tracking-wider uppercase mb-3">Dossier</p>
+        <div className="bg-surface border border-border rounded-2xl p-4 min-h-[400px]">
+          <p className="text-xs text-textSecondary font-medium tracking-wider uppercase mb-3">Dossier</p>
           {briefing ? (
             <ResearchDossier briefing={briefing} />
           ) : (
             <div className="flex flex-col items-center justify-center h-[300px] gap-3">
-              <div className="w-6 h-6 rounded-full border-2 border-primary/40 border-t-primary animate-spin" />
+              <div className="w-6 h-6 rounded-full border-2 border-border border-t-primary animate-spin" />
               <p className="text-sm text-textSecondary">Researching...</p>
             </div>
           )}

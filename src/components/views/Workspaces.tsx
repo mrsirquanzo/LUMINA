@@ -70,7 +70,7 @@ export default function Workspaces() {
       });
   }, [allWorkspaces]);
   
-  const primaryColor = activePersona === 'scientist' ? '#BF5AF2' : '#FF9F0A';
+  const primaryColor = '#1D4ED8';
 
   const filteredAndSortedWorkspaces = useMemo(() => {
     let filtered = [...workspaces];
@@ -155,7 +155,7 @@ export default function Workspaces() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search workspaces..."
-            className="w-full pl-10 pr-4 py-2 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
 
@@ -189,7 +189,7 @@ export default function Workspaces() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className="px-3 py-2 bg-surface border border-white/10 rounded-lg text-textPrimary text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="px-3 py-2 bg-surface border border-border rounded-lg text-textPrimary text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         >
           <option value="recent">Recent</option>
           <option value="alphabetical">Alphabetical</option>
@@ -204,7 +204,7 @@ export default function Workspaces() {
             {filteredAndSortedWorkspaces.map((workspace) => (
               <div
                 key={workspace.id}
-                className="group relative bg-surface border border-white/5 rounded-xl p-5 hover:border-white/10 hover:shadow-lg transition-all"
+                className="group relative bg-surface border border-border rounded-xl p-5 hover:shadow-lg transition-all"
               >
                 {/* Status Indicator */}
                 <div className="absolute top-4 right-4 flex items-center gap-2">
@@ -311,7 +311,7 @@ export default function Workspaces() {
                     // Navigate to dashboard
                     window.dispatchEvent(new CustomEvent('navigate-to-dashboard'));
                   }}
-                  className="w-full mt-4 px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-textPrimary text-sm font-medium"
+                  className="w-full mt-4 px-4 py-2 bg-surfaceElevated border border-border rounded-lg hover:bg-surface transition-colors text-textPrimary text-sm font-medium"
                 >
                   Open Workspace
                 </button>
@@ -319,9 +319,9 @@ export default function Workspaces() {
             ))}
           </div>
         ) : (
-          <div className="bg-surfaceElevated border border-white/5 rounded-xl overflow-hidden">
+          <div className="bg-surfaceElevated border border-border rounded-xl overflow-hidden">
             <table className="w-full">
-              <thead className="bg-surface border-b border-white/5">
+              <thead className="bg-surface border-b border-border">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-textTertiary uppercase tracking-wider">
                     Project
@@ -347,7 +347,7 @@ export default function Workspaces() {
                 {filteredAndSortedWorkspaces.map((workspace) => (
                   <tr
                     key={workspace.id}
-                    className="border-b border-white/5 hover:bg-surface/50 transition-colors cursor-pointer"
+                    className="border-b border-border hover:bg-surface/50 transition-colors cursor-pointer"
                     onClick={() => {
                       setActiveWorkspace(String(workspace.id));
                       window.dispatchEvent(new CustomEvent('navigate-to-dashboard'));
@@ -405,7 +405,7 @@ export default function Workspaces() {
                             setActiveWorkspace(String(workspace.id));
                             window.dispatchEvent(new CustomEvent('navigate-to-dashboard'));
                           }}
-                          className="px-3 py-1.5 text-sm bg-surfaceElevated border border-white/10 rounded-lg hover:bg-surface transition-colors text-textPrimary font-medium"
+                          className="px-3 py-1.5 text-sm bg-surfaceElevated border border-border rounded-lg hover:bg-surface transition-colors text-textPrimary font-medium"
                         >
                           Open
                         </button>

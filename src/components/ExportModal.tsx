@@ -33,14 +33,14 @@ export default function ExportModal({ open, onClose, onExport }: ExportModalProp
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
         }
       }}
     >
-      <div className="w-full max-w-md bg-surfaceElevated border border-white/10 rounded-2xl shadow-2xl animate-modal-enter">
+      <div className="w-full max-w-md bg-surfaceElevated border border-border rounded-2xl shadow-2xl animate-modal-enter">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-textPrimary">Export Report</h2>

@@ -94,10 +94,10 @@ const SonnyHeroSkillCard: React.FC<{
         )}
       </div>
 
-      <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-white/90">
+      <h3 className="text-lg font-semibold text-textPrimary mb-2 group-hover:text-textPrimary/90">
         {title}
       </h3>
-      <p className="text-sm text-gray-400 leading-relaxed">
+      <p className="text-sm text-textSecondary leading-relaxed">
         {description}
       </p>
 
@@ -551,7 +551,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className="absolute right-0 mt-2 w-64 rounded-xl bg-gray-900 border border-white/10 shadow-xl z-50 overflow-hidden"
+            className="absolute right-0 mt-2 w-64 rounded-xl bg-surface border border-border shadow-xl z-50 overflow-hidden"
           >
             <div className="p-2">
               {[
@@ -564,11 +564,11 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
                 <button
                   key={option.id}
                   onClick={() => handleExport(option.id)}
-                  className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors text-left"
+                  className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-subtle transition-colors text-left"
                 >
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-white">{option.label}</p>
-                    <p className="text-xs text-gray-500">{option.desc}</p>
+                    <p className="text-sm font-medium text-textPrimary">{option.label}</p>
+                    <p className="text-xs text-textTertiary">{option.desc}</p>
                   </div>
                 </button>
               ))}
@@ -593,7 +593,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
           }
         }}
         placeholder="Ask Sonny anything about this target..."
-        className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
+        className="flex-1 px-4 py-2 rounded-lg bg-subtle border border-border text-textPrimary placeholder-textTertiary focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
       />
       <button
         onClick={handleChatSend}
@@ -610,13 +610,13 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
       initial={{ x: 400, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 400, opacity: 0 }}
-      className="h-full flex flex-col bg-gray-900/95 backdrop-blur-xl border-l border-white/10"
+      className="h-full flex flex-col bg-surface/95 backdrop-blur-xl border-l border-border"
     >
       {/* Header with gradient theme */}
-      <div className="relative px-6 py-4 bg-gradient-to-b from-purple-500/20 via-blue-500/10 to-transparent border-b border-white/10">
+      <div className="relative px-6 py-4 bg-gradient-to-b from-purple-500/20 via-blue-500/10 to-transparent border-b border-border">
         {/* Agent Icon Navigation - Show if enabled */}
         {onAgentSelect && (
-          <div className="mb-4 pb-4 border-b border-white/10">
+          <div className="mb-4 pb-4 border-b border-border">
             <AgentIconNavigation
               currentAgent={currentAgent}
               onAgentSelect={onAgentSelect}
@@ -639,7 +639,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
               <h2 className="text-lg font-semibold bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Sonny
               </h2>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-textSecondary">
                 {targetName?.trim() ? `Analyzing: ${targetName.trim()}` : ''}
               </p>
             </div>
@@ -649,9 +649,9 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 hover:bg-subtle rounded-lg transition-colors"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-textSecondary" />
               </button>
             )}
           </div>
@@ -665,7 +665,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
           <>
             {/* Hero Skills Section */}
             <section>
-              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+              <h3 className="text-sm font-medium text-textSecondary uppercase tracking-wider mb-4">
                 Intelligence Reports
               </h3>
               <div className="grid grid-cols-1 gap-4">
@@ -690,7 +690,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
 
             {/* Document Upload Section */}
             <section>
-              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+              <h3 className="text-sm font-medium text-textSecondary uppercase tracking-wider mb-4">
                 Add Context Documents
               </h3>
               <DocumentUploadZone
@@ -698,7 +698,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
                 onFilesUploaded={handleFilesUploaded}
                 acceptedTypes={['.pdf', '.docx', '.xlsx', '.csv', '.txt', '.pptx']}
               />
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-textTertiary mt-2">
                 Upload existing reports, deal memos, or research documents to enrich analysis
               </p>
             </section>
@@ -706,7 +706,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
             {/* Export Section - Moved to bottom */}
             {exportButton && (
               <section>
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+                <h3 className="text-sm font-medium text-textSecondary uppercase tracking-wider mb-4">
                   Export Analysis
                 </h3>
                 <div className="w-full">
@@ -735,7 +735,7 @@ export const SonnyHeroInterface: React.FC<SonnyHeroInterfaceProps> = ({
       </div>
 
       {/* Chat Input */}
-      <div className="border-t border-white/10 p-4">
+      <div className="border-t border-border p-4">
         {chatSection}
       </div>
     </motion.div>
@@ -760,14 +760,14 @@ const AnalysisResultsView: React.FC<{
           >
             <Sparkles className="w-8 h-8 text-purple-400" />
           </motion.div>
-          <h3 className="text-xl font-semibold text-white mb-2">
+          <h3 className="text-xl font-semibold text-textPrimary mb-2">
             {result.type === 'executive-brief' ? 'Generating Executive Brief' : 'Building Investment Thesis'}
           </h3>
-          <p className="text-gray-400">Coordinating 6 specialized agents...</p>
+          <p className="text-textSecondary">Coordinating 6 specialized agents...</p>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-subtle rounded-full h-2 overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${result.progress}%` }}
@@ -792,15 +792,15 @@ const AnalysisResultsView: React.FC<{
                     ? 'bg-green-500/10 border-green-500/30'
                     : status === 'active'
                     ? 'bg-purple-500/20 border-purple-500/50'
-                    : 'bg-white/5 border-white/10'
+                    : 'bg-subtle border-border'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-white">{agent.name}</span>
+                  <span className="text-sm font-medium text-textPrimary">{agent.name}</span>
                   {status === 'complete' && <CheckCircle className="w-4 h-4 text-green-400" />}
                   {status === 'active' && <Loader2 className="w-4 h-4 text-purple-400 animate-spin" />}
                 </div>
-                <div className="text-xs text-gray-500 capitalize">{status}</div>
+                <div className="text-xs text-textTertiary capitalize">{status}</div>
               </motion.div>
             );
           })}
@@ -820,7 +820,7 @@ const AnalysisResultsView: React.FC<{
             </h3>
             <button
               onClick={onReset}
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-sm text-textSecondary hover:text-textPrimary transition-colors"
             >
               ← New Analysis
             </button>
@@ -829,15 +829,15 @@ const AnalysisResultsView: React.FC<{
           {/* Overview */}
           <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 border border-purple-500/20">
             <h4 className="text-sm font-medium text-purple-300 mb-2">Overview</h4>
-            <p className="text-white">{result.sections.overview}</p>
+            <p className="text-textPrimary">{result.sections.overview}</p>
           </div>
 
           {/* Key Findings */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Key Findings</h4>
+          <div className="p-4 rounded-xl bg-subtle border border-border">
+            <h4 className="text-sm font-medium text-textSecondary mb-3">Key Findings</h4>
             <ul className="space-y-2">
               {result.sections.keyFindings.map((finding: string, idx: number) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                <li key={idx} className="flex items-start gap-2 text-sm text-textPrimary">
                   <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                   {finding}
                 </li>
@@ -846,8 +846,8 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Risk Summary */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Risk Summary</h4>
+          <div className="p-4 rounded-xl bg-subtle border border-border">
+            <h4 className="text-sm font-medium text-textSecondary mb-3">Risk Summary</h4>
             <div className="grid grid-cols-5 gap-2">
               {Object.entries(result.sections.riskSummary).map(([key, value]) => (
                 <div key={key} className="text-center">
@@ -856,21 +856,21 @@ const AnalysisResultsView: React.FC<{
                   }`}>
                     {value as string}
                   </div>
-                  <div className="text-xs text-gray-500 capitalize">{key}</div>
+                  <div className="text-xs text-textTertiary capitalize">{key}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Decision support */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Decision Support</h4>
+          <div className="p-4 rounded-xl bg-subtle border border-border">
+            <h4 className="text-sm font-medium text-textSecondary mb-3">Decision Support</h4>
             <div className="space-y-4">
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Key uncertainties</div>
+                <div className="text-xs font-semibold text-textSecondary mb-2 uppercase tracking-wide">Key uncertainties</div>
                 <ul className="space-y-2">
                   {(result.sections.keyUncertainties || []).map((u: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                    <li key={idx} className="flex items-start gap-2 text-sm text-textPrimary">
                       <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
                       {u}
                     </li>
@@ -878,10 +878,10 @@ const AnalysisResultsView: React.FC<{
                 </ul>
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Decision triggers</div>
+                <div className="text-xs font-semibold text-textSecondary mb-2 uppercase tracking-wide">Decision triggers</div>
                 <ul className="space-y-2">
                   {(result.sections.decisionTriggers || []).map((t: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                    <li key={idx} className="flex items-start gap-2 text-sm text-textPrimary">
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       {t}
                     </li>
@@ -889,10 +889,10 @@ const AnalysisResultsView: React.FC<{
                 </ul>
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Next steps</div>
+                <div className="text-xs font-semibold text-textSecondary mb-2 uppercase tracking-wide">Next steps</div>
                 <ol className="space-y-2 list-decimal list-inside">
                   {(result.sections.nextSteps || []).map((step: string, idx: number) => (
-                    <li key={idx} className="text-sm text-white">{step}</li>
+                    <li key={idx} className="text-sm text-textPrimary">{step}</li>
                   ))}
                 </ol>
               </div>
@@ -912,7 +912,7 @@ const AnalysisResultsView: React.FC<{
             </h3>
             <button
               onClick={onReset}
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-sm text-textSecondary hover:text-textPrimary transition-colors"
             >
               ← New Analysis
             </button>
@@ -921,7 +921,7 @@ const AnalysisResultsView: React.FC<{
           {/* Thesis Statement */}
           <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 border border-purple-500/20">
             <h4 className="text-sm font-medium text-purple-300 mb-2">Investment Thesis</h4>
-            <p className="text-white">{result.sections.thesis}</p>
+            <p className="text-textPrimary">{result.sections.thesis}</p>
           </div>
 
           {/* Bull/Bear Cases */}
@@ -930,7 +930,7 @@ const AnalysisResultsView: React.FC<{
               <h4 className="text-sm font-medium text-green-300 mb-3">Bull Case</h4>
               <ul className="space-y-2">
                 {result.sections.bullCase.map((point: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-2 text-xs text-white">
+                  <li key={idx} className="flex items-start gap-2 text-xs text-textPrimary">
                     <span className="text-green-400">+</span>
                     {point}
                   </li>
@@ -941,7 +941,7 @@ const AnalysisResultsView: React.FC<{
               <h4 className="text-sm font-medium text-red-300 mb-3">Bear Case</h4>
               <ul className="space-y-2">
                 {result.sections.bearCase.map((point: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-2 text-xs text-white">
+                  <li key={idx} className="flex items-start gap-2 text-xs text-textPrimary">
                     <span className="text-red-400">-</span>
                     {point}
                   </li>
@@ -951,14 +951,14 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Decision Support */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Decision Support</h4>
+          <div className="p-4 rounded-xl bg-subtle border border-border">
+            <h4 className="text-sm font-medium text-textSecondary mb-3">Decision Support</h4>
             <div className="space-y-4">
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Key uncertainties</div>
+                <div className="text-xs font-semibold text-textSecondary mb-2 uppercase tracking-wide">Key uncertainties</div>
                 <ul className="space-y-2">
                   {(result.sections.keyUncertainties || []).map((u: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                    <li key={idx} className="flex items-start gap-2 text-sm text-textPrimary">
                       <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
                       {u}
                     </li>
@@ -966,10 +966,10 @@ const AnalysisResultsView: React.FC<{
                 </ul>
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Decision triggers</div>
+                <div className="text-xs font-semibold text-textSecondary mb-2 uppercase tracking-wide">Decision triggers</div>
                 <ul className="space-y-2">
                   {(result.sections.decisionTriggers || []).map((t: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-white">
+                    <li key={idx} className="flex items-start gap-2 text-sm text-textPrimary">
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       {t}
                     </li>
@@ -977,10 +977,10 @@ const AnalysisResultsView: React.FC<{
                 </ul>
               </div>
               <div>
-                <div className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Next steps</div>
+                <div className="text-xs font-semibold text-textSecondary mb-2 uppercase tracking-wide">Next steps</div>
                 <ol className="space-y-2 list-decimal list-inside">
                   {(result.sections.nextSteps || []).map((step: string, idx: number) => (
-                    <li key={idx} className="text-sm text-white">{step}</li>
+                    <li key={idx} className="text-sm text-textPrimary">{step}</li>
                   ))}
                 </ol>
               </div>
@@ -988,14 +988,14 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Comparable Deals */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Comparable Deals</h4>
+          <div className="p-4 rounded-xl bg-subtle border border-border">
+            <h4 className="text-sm font-medium text-textSecondary mb-3">Comparable Deals</h4>
             <div className="space-y-2">
               {result.sections.comparableDeals.map((deal: any, idx: number) => (
-                <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-subtle">
                   <div>
-                    <div className="text-sm text-white">{deal.target}</div>
-                    <div className="text-xs text-gray-500">{deal.acquirer} • {deal.stage} • {deal.year}</div>
+                    <div className="text-sm text-textPrimary">{deal.target}</div>
+                    <div className="text-xs text-textTertiary">{deal.acquirer} • {deal.stage} • {deal.year}</div>
                   </div>
                   <div className="text-lg font-semibold text-green-400">{deal.value}</div>
                 </div>
@@ -1004,13 +1004,13 @@ const AnalysisResultsView: React.FC<{
           </div>
 
           {/* Key Risks Table */}
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Key Risks & Mitigants</h4>
+          <div className="p-4 rounded-xl bg-subtle border border-border">
+            <h4 className="text-sm font-medium text-textSecondary mb-3">Key Risks & Mitigants</h4>
             <div className="space-y-2">
               {result.sections.keyRisks.map((risk: any, idx: number) => (
-                <div key={idx} className="p-3 rounded-lg bg-white/5">
+                <div key={idx} className="p-3 rounded-lg bg-subtle">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-white">{risk.risk}</span>
+                    <span className="text-sm font-medium text-textPrimary">{risk.risk}</span>
                     <div className="flex items-center gap-2">
                       <span className="text-xs px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400">{risk.probability}</span>
                       <span className={`text-xs px-2 py-0.5 rounded ${
@@ -1018,7 +1018,7 @@ const AnalysisResultsView: React.FC<{
                       }`}>{risk.impact}</span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-400">Mitigant: {risk.mitigant}</p>
+                  <p className="text-xs text-textSecondary">Mitigant: {risk.mitigant}</p>
                 </div>
               ))}
             </div>

@@ -923,7 +923,7 @@ export default function SonnySidePanel({
       initial={false}
       animate={{ width: panelWidth }}
       transition={{ duration: isResizing ? 0 : 0.3 }}
-      className="fixed right-0 top-20 h-[calc(100vh-5rem)] bg-surface border-l border-white/10 shadow-2xl z-40 flex flex-col"
+      className="fixed right-0 top-20 h-[calc(100vh-5rem)] bg-surface border-l border-border shadow-2xl z-40 flex flex-col"
       style={{ width: `${panelWidth}px` }}
       role="complementary"
       aria-label="Sonny agent panel"
@@ -941,8 +941,8 @@ export default function SonnySidePanel({
           role="separator"
           aria-orientation="vertical"
         >
-          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-gradient-to-b from-purple-500/60 via-blue-500/60 to-cyan-500/60 transition-colors" />
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-transparent group-hover:bg-gradient-to-b from-purple-500/30 via-blue-500/30 to-cyan-500/30 rounded-full transition-colors" />
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-primary/60 transition-colors" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-transparent group-hover:bg-primary/60 rounded-full transition-colors" />
         </div>
       )}
 
@@ -963,9 +963,9 @@ export default function SonnySidePanel({
          !(USE_HERO_SKILLS && selectedAgent === 'target_biology') &&
          !(USE_HERO_SKILLS && selectedAgent === 'patent' && !showPatentAnalysis) &&
          !(USE_HERO_SKILLS && selectedAgent === 'sonny') && (
-          <div className="px-6 py-4 border-b border-white/10">
+          <div className="px-6 py-4 border-b border-border">
             {/* Enhanced Agent Selector Header - Card-based design */}
-            <div className="bg-surfaceElevated border border-white/10 rounded-lg p-4 mb-4">
+            <div className="bg-surfaceElevated border border-border rounded-lg p-4 mb-4">
               {/* Agent Name and Description */}
               <div className="relative mb-4">
                 <div className="flex items-center justify-between mb-2">
@@ -989,7 +989,7 @@ export default function SonnySidePanel({
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                    className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
                   >
                     {/* Sonny Option */}
                     <button
@@ -1044,7 +1044,7 @@ export default function SonnySidePanel({
                           className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                             isDemo
                               ? `${themeClasses.bgLight} ${themeClasses.border} text-white`
-                              : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                           } disabled:opacity-50`}
                         >
                           <div className="flex items-center justify-center gap-1.5">
@@ -1058,7 +1058,7 @@ export default function SonnySidePanel({
                           className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                             !isDemo
                               ? `${themeClasses.bgLight} ${themeClasses.border} text-white`
-                              : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                              : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                           } disabled:opacity-50 relative`}
                         >
                           <div className="flex items-center justify-center gap-1.5">
@@ -1084,7 +1084,7 @@ export default function SonnySidePanel({
                             className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium ${
                               mode === 'fast'
                                 ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                             }`}
                           >
                             <span>Fast</span>
@@ -1095,7 +1095,7 @@ export default function SonnySidePanel({
                             className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium ${
                               mode === 'thorough'
                                 ? `${themeClasses.bgLight} ${themeClasses.border} ${themeClasses.text}`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                             }`}
                           >
                             <span>Thorough</span>
@@ -1133,13 +1133,13 @@ export default function SonnySidePanel({
           // Patent Agent Interface (shown when "Analyze Patent" is clicked)
           <div className="flex-1 overflow-y-auto relative">
             {/* Agent Selector - Show even in analysis mode */}
-            <div className="px-6 pt-4 pb-4 border-b border-white/10 bg-surfaceElevated sticky top-0 z-20">
+            <div className="px-6 pt-4 pb-4 border-b border-border bg-surfaceElevated sticky top-0 z-20">
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                  className={`w-full px-4 py-3 bg-surface border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                  className={`w-full px-4 py-3 bg-surface border border-border rounded-lg text-left flex items-center justify-between transition-colors ${
                     isAgentDropdownOpen ? getThemeClasses('purple').border : ''
-                  } hover:border-white/20`}
+                  } hover:border-border`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-lg">{currentAgentInfo.icon}</span>
@@ -1153,7 +1153,7 @@ export default function SonnySidePanel({
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                    className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
                   >
                     {/* Sonny Option */}
                     <button
@@ -1212,7 +1212,7 @@ export default function SonnySidePanel({
                   // Dispatch event to reset detail panels
                   window.dispatchEvent(new CustomEvent('reset-patent-interface'));
                 }}
-                className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:border-green-500/50 hover:bg-surface transition-colors text-sm text-textSecondary hover:text-textPrimary"
+                className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-border rounded-lg hover:border-green-500/50 hover:bg-surface transition-colors text-sm text-textSecondary hover:text-textPrimary"
               >
                 <ChevronLeft size={16} />
                 Back to Patent Expert
@@ -1230,13 +1230,13 @@ export default function SonnySidePanel({
           // Financial Agent Interface (shown when in analysis/detail view)
           <div className="flex-1 overflow-y-auto relative">
             {/* Agent Selector - Show even in analysis mode */}
-            <div className="px-6 pt-4 pb-4 border-b border-white/10 bg-surfaceElevated sticky top-0 z-20">
+            <div className="px-6 pt-4 pb-4 border-b border-border bg-surfaceElevated sticky top-0 z-20">
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                  className={`w-full px-4 py-3 bg-surface border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                  className={`w-full px-4 py-3 bg-surface border border-border rounded-lg text-left flex items-center justify-between transition-colors ${
                     isAgentDropdownOpen ? getThemeClasses('green').border : ''
-                  } hover:border-white/20`}
+                  } hover:border-border`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-lg">{currentAgentInfo.icon}</span>
@@ -1250,7 +1250,7 @@ export default function SonnySidePanel({
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                    className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
                   >
                     {/* Sonny Option */}
                     <button
@@ -1309,7 +1309,7 @@ export default function SonnySidePanel({
                   // Dispatch event to reset detail panels
                   window.dispatchEvent(new CustomEvent('reset-financial-interface'));
                 }}
-                className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg hover:border-green-500/50 hover:bg-surface transition-colors text-sm text-textSecondary hover:text-textPrimary"
+                className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-border rounded-lg hover:border-green-500/50 hover:bg-surface transition-colors text-sm text-textSecondary hover:text-textPrimary"
               >
                 <ChevronLeft size={16} />
                 Back to Financial Analyst
@@ -1380,7 +1380,7 @@ export default function SonnySidePanel({
               {!USE_HERO_SKILLS && selectedAgent !== 'patent' && selectedAgent !== 'financial' && selectedAgent !== 'clinical' && selectedAgent !== 'market_research' && selectedAgent !== 'regulatory' && selectedAgent !== 'target_biology' && (
                 <div className="mb-4">
                   {/* Query Input Card */}
-                  <div className="bg-surfaceElevated border border-white/10 rounded-lg p-4 mb-4">
+                  <div className="bg-surfaceElevated border border-border rounded-lg p-4 mb-4">
                     <label className="block text-sm font-semibold text-textPrimary mb-3">
                       Ask {selectedAgent === 'sonny' ? 'Sonny' : currentAgentInfo.name}
                     </label>
@@ -1401,7 +1401,7 @@ export default function SonnySidePanel({
                           ? `Ask about market size, competitors, or pricing...`
                           : `Ask ${currentAgentInfo.name}...`
                       }
-                        className="w-full pl-11 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none transition-colors"
+                        className="w-full pl-11 pr-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none transition-colors"
                         rows={4}
                       disabled={isProcessing}
                     />
@@ -1431,9 +1431,9 @@ export default function SonnySidePanel({
                       <div className="relative" ref={dropdownRef}>
                         <button
                           onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-left flex items-center justify-between transition-colors ${
                             isAgentDropdownOpen ? getThemeClasses('blue').border : ''
-                          } hover:border-white/20`}
+                          } hover:border-border`}
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-lg">{currentAgentInfo.icon}</span>
@@ -1447,7 +1447,7 @@ export default function SonnySidePanel({
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
                           >
                             {/* Sonny Option */}
                             <button
@@ -1490,7 +1490,7 @@ export default function SonnySidePanel({
                     </div>
 
                     {/* Agent Mode Controls */}
-                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="mb-4 bg-surfaceElevated border border-border rounded-lg p-4">
                       <div className="space-y-3">
                         {/* Agent Mode: Demo/Live */}
                         <div>
@@ -1504,7 +1504,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 isDemo
                                   ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1518,7 +1518,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 !isDemo
                                   ? `${getThemeClasses('blue').bgLight} ${getThemeClasses('blue').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50 relative`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1560,9 +1560,9 @@ export default function SonnySidePanel({
                       <div className="relative" ref={dropdownRef}>
                         <button
                           onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-left flex items-center justify-between transition-colors ${
                             isAgentDropdownOpen ? getThemeClasses('green').border : ''
-                          } hover:border-white/20`}
+                          } hover:border-border`}
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-lg">{currentAgentInfo.icon}</span>
@@ -1576,7 +1576,7 @@ export default function SonnySidePanel({
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
                           >
                             {/* Sonny Option */}
                             <button
@@ -1619,7 +1619,7 @@ export default function SonnySidePanel({
                     </div>
 
                     {/* Agent Mode Controls */}
-                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="mb-4 bg-surfaceElevated border border-border rounded-lg p-4">
                       <div className="space-y-3">
                         {/* Agent Mode: Demo/Live */}
                         <div>
@@ -1633,7 +1633,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 isDemo
                                   ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1647,7 +1647,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 !isDemo
                                   ? 'bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-500/20 border-purple-500/50 text-white'
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50 relative`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1689,9 +1689,9 @@ export default function SonnySidePanel({
                       <div className="relative" ref={dropdownRef}>
                         <button
                           onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-left flex items-center justify-between transition-colors ${
                             isAgentDropdownOpen ? getThemeClasses('teal').border : ''
-                          } hover:border-white/20`}
+                          } hover:border-border`}
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-lg">{currentAgentInfo.icon}</span>
@@ -1705,7 +1705,7 @@ export default function SonnySidePanel({
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
                           >
                             {/* Sonny Option */}
                             <button
@@ -1748,7 +1748,7 @@ export default function SonnySidePanel({
                     </div>
 
                     {/* Agent Mode Controls */}
-                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="mb-4 bg-surfaceElevated border border-border rounded-lg p-4">
                       <div className="space-y-3">
                         {/* Agent Mode: Demo/Live */}
                         <div>
@@ -1762,7 +1762,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 isDemo
                                   ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1776,7 +1776,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 !isDemo
                                   ? `${getThemeClasses('teal').bgLight} ${getThemeClasses('teal').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50 relative`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1818,9 +1818,9 @@ export default function SonnySidePanel({
                       <div className="relative" ref={dropdownRef}>
                         <button
                           onClick={() => setIsAgentDropdownOpen(!isAgentDropdownOpen)}
-                          className={`w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-left flex items-center justify-between transition-colors ${
+                          className={`w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-left flex items-center justify-between transition-colors ${
                             isAgentDropdownOpen ? getThemeClasses('orange').border : ''
-                          } hover:border-white/20`}
+                          } hover:border-border`}
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-lg">{currentAgentInfo.icon}</span>
@@ -1834,7 +1834,7 @@ export default function SonnySidePanel({
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden"
+                            className="absolute z-50 w-full mt-2 bg-surfaceElevated border border-border rounded-lg shadow-xl overflow-hidden"
                           >
                             {/* Sonny Option */}
                             <button
@@ -1877,7 +1877,7 @@ export default function SonnySidePanel({
                     </div>
 
                     {/* Agent Mode Controls */}
-                    <div className="mb-4 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="mb-4 bg-surfaceElevated border border-border rounded-lg p-4">
                       <div className="space-y-3">
                         {/* Agent Mode: Demo/Live */}
                         <div>
@@ -1891,7 +1891,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 isDemo
                                   ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1905,7 +1905,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 !isDemo
                                   ? `${getThemeClasses('orange').bgLight} ${getThemeClasses('orange').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50 relative`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1940,7 +1940,7 @@ export default function SonnySidePanel({
                 ) : (
                   <>
                     {/* Agent Mode Controls */}
-                    <div className="mb-4 px-6 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                    <div className="mb-4 px-6 bg-surfaceElevated border border-border rounded-lg p-4">
                       <div className="space-y-3">
                         {/* Agent Mode: Demo/Live */}
                         <div>
@@ -1954,7 +1954,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 isDemo
                                   ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -1968,7 +1968,7 @@ export default function SonnySidePanel({
                               className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                                 !isDemo
                                   ? `${getThemeClasses('emerald').bgLight} ${getThemeClasses('emerald').border} text-white`
-                                  : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                  : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                               } disabled:opacity-50 relative`}
                             >
                               <div className="flex items-center justify-center gap-1.5">
@@ -2003,7 +2003,7 @@ export default function SonnySidePanel({
                 ) : (
                   <>
                   {/* Agent Mode Controls */}
-                  <div className="mb-4 px-6 bg-surfaceElevated border border-white/10 rounded-lg p-4">
+                  <div className="mb-4 px-6 bg-surfaceElevated border border-border rounded-lg p-4">
                     <div className="space-y-3">
                       {/* Agent Mode: Demo/Live */}
                       <div>
@@ -2017,7 +2017,7 @@ export default function SonnySidePanel({
                             className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                               isDemo
                                 ? `${getThemeClasses('purple').bgLight} ${getThemeClasses('purple').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                             } disabled:opacity-50`}
                           >
                             <div className="flex items-center justify-center gap-1.5">
@@ -2031,7 +2031,7 @@ export default function SonnySidePanel({
                             className={`flex-1 px-3 py-2 rounded-lg border transition-all text-sm font-medium text-center ${
                               !isDemo
                                 ? `${getThemeClasses('purple').bgLight} ${getThemeClasses('purple').border} text-white`
-                                : 'bg-surface border-white/10 text-textSecondary hover:border-white/20 hover:text-textPrimary'
+                                : 'bg-surface border-border text-textSecondary hover:border-border hover:text-textPrimary'
                             } disabled:opacity-50 relative`}
                           >
                             <div className="flex items-center justify-center gap-1.5">
@@ -2088,7 +2088,7 @@ export default function SonnySidePanel({
                                 window.dispatchEvent(new CustomEvent('show-claims-extraction'));
                               }, 100);
                             }}
-                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
+                            className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative overflow-visible"
                           >
                             <div className="flex items-start gap-3">
                               <div className="p-2 bg-purple-600/20 rounded-lg group-hover:bg-purple-600/30 transition-colors">
@@ -2118,7 +2118,7 @@ export default function SonnySidePanel({
                                 window.dispatchEvent(new CustomEvent('show-sequence-extraction'));
                               }, 100);
                             }}
-                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative"
+                            className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative"
                           >
                             <div className="flex items-start gap-3">
                               <div className="p-2 bg-purple-600/20 rounded-lg group-hover:bg-purple-600/30 transition-colors">
@@ -2145,7 +2145,7 @@ export default function SonnySidePanel({
                               setShowPatentAnalysis(true);
                               // TODO: Navigate to FTO analysis
                             }}
-                            className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative"
+                            className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-purple-500/50 hover:shadow-md transition-all text-left group relative"
                           >
                             <div className="flex items-start gap-3">
                               <div className="p-2 bg-amber-500/20 rounded-lg group-hover:bg-amber-500/30 transition-colors">
@@ -2196,17 +2196,17 @@ export default function SonnySidePanel({
                           <input
                             type="text"
                             placeholder="Search by target, company, indication..."
-                            className="w-full px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-full px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50"
                           />
                           <div className="flex gap-2">
-                            <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/50">
                               <option>All Modalities</option>
                               <option>Small Molecule</option>
                               <option>Antibody</option>
                               <option>Cell Therapy</option>
                               <option>Gene Therapy</option>
                             </select>
-                            <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/50">
                               <option>All Jurisdictions</option>
                               <option>US</option>
                               <option>EP</option>
@@ -2229,7 +2229,7 @@ export default function SonnySidePanel({
                         icon={Shield}
                         defaultOpen={true}
                       >
-                        <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl mb-4">
+                        <div className="p-4 bg-surfaceElevated border border-border rounded-xl mb-4">
                             <div className="flex items-center justify-between mb-4">
                               <div>
                                 <h4 className="text-sm font-semibold text-textPrimary">Overall FTO Risk</h4>
@@ -2257,11 +2257,11 @@ export default function SonnySidePanel({
                       >
                         <div className="px-6">
                           <div className="grid grid-cols-2 gap-2 mb-4">
-                            <div className="p-3 bg-surfaceElevated border border-white/10 rounded-lg">
+                            <div className="p-3 bg-surfaceElevated border border-border rounded-lg">
                               <p className="text-xs text-textSecondary mb-1">Total Patents</p>
                               <p className="text-2xl font-bold text-textPrimary">0</p>
                             </div>
-                            <div className="p-3 bg-surfaceElevated border border-white/10 rounded-lg">
+                            <div className="p-3 bg-surfaceElevated border border-border rounded-lg">
                               <p className="text-xs text-textSecondary mb-1">Portfolio Score</p>
                               <p className="text-2xl font-bold text-purple-400">0</p>
                             </div>
@@ -2290,7 +2290,7 @@ export default function SonnySidePanel({
                   />
 
                   {/* Chat Input - Match other agents */}
-                  <div className="border-t border-white/10 bg-surfaceElevated p-6 mt-6">
+                  <div className="border-t border-border bg-surfaceElevated p-6 mt-6">
                     <div className="relative mb-3">
                       <FileText className="absolute left-4 top-4 w-5 h-5 text-textTertiary pointer-events-none" />
                       <textarea
@@ -2304,7 +2304,7 @@ export default function SonnySidePanel({
                         }}
                         placeholder="Ask about patents, IP strength, FTO analysis, or patent landscape..."
                         rows={3}
-                        className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none transition-colors"
+                        className="w-full pl-12 pr-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none transition-colors"
                         disabled={isPatentProcessing}
                       />
                     </div>
@@ -2395,7 +2395,7 @@ export default function SonnySidePanel({
                                 setQuery(question);
                                 setShowSuggestions(false);
                               }}
-                              className="w-full text-left px-3 py-2 bg-surfaceElevated hover:bg-surface border border-white/10 rounded-lg transition-colors text-sm text-textSecondary hover:text-textPrimary"
+                              className="w-full text-left px-3 py-2 bg-surfaceElevated hover:bg-surface border border-border rounded-lg transition-colors text-sm text-textSecondary hover:text-textPrimary"
                             >
                               <span className="flex-1">{question}</span>
                             </button>
@@ -2448,7 +2448,7 @@ export default function SonnySidePanel({
                             }
                           }}
                           disabled={isProcessing}
-                            className="w-full text-left px-3 py-2.5 text-sm text-textSecondary bg-surfaceElevated border border-white/10 rounded-lg hover:border-purple-500/50 hover:text-textPrimary hover:bg-surface transition-all disabled:opacity-50 flex items-center gap-3 group"
+                            className="w-full text-left px-3 py-2.5 text-sm text-textSecondary bg-surfaceElevated border border-border rounded-lg hover:border-purple-500/50 hover:text-textPrimary hover:bg-surface transition-all disabled:opacity-50 flex items-center gap-3 group"
                         >
                             <span className="flex items-center justify-center w-5 h-5 shrink-0 text-textTertiary group-hover:text-purple-400 transition-colors">
                               {example.icon}
@@ -2491,7 +2491,7 @@ export default function SonnySidePanel({
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto flex flex-col">
-            <div className="p-4 border-b border-white/10 bg-surfaceElevated flex items-center justify-between sticky top-0 z-10">
+            <div className="p-4 border-b border-border bg-surfaceElevated flex items-center justify-between sticky top-0 z-10">
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleReset}

@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  /* Primary color - default to purple (can be overridden) */
-  --color-primary: 191 90 242;
+  /* Primary color - trust blue (persona accent unified) */
+  --color-primary: 29 78 216;
 }
 
 * {
@@ -15,15 +15,26 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  font-size: 14.4px; /* Reduced by 10% from default 16px */
+  font-family: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Helvetica Neue', sans-serif;
+  font-size: 14.4px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #000000;
-  color: #F5F5F7;
+  background-color: #F6F8FB;
+  color: #0F172A;
   min-height: 100vh;
+}
+
+/* Whisper grain + atmosphere - fixed, non-interactive, GPU-cheap */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: .028;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* Custom Scrollbar Styling */
@@ -37,18 +48,18 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.15);
   border-radius: 3px;
   transition: background 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(15, 23, 42, 0.28);
 }
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: rgba(15, 23, 42, 0.15) transparent;
 }
 
 /* Modal Animation Keyframes */
@@ -137,7 +148,7 @@ body {
 
 .agent-output code {
   color: inherit;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(15, 23, 42, 0.05);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-size: 0.875em;
@@ -145,7 +156,7 @@ body {
 
 .agent-output pre {
   color: inherit;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(15, 23, 42, 0.05);
   padding: 1rem;
   border-radius: 0.5rem;
   overflow-x: auto;
@@ -244,19 +255,23 @@ body {
   }
 }
 
-/* Glassmorphism Effects */
+/* Liquid-glass - light refraction for floating panels only */
 .glass {
-  background: rgba(28, 28, 30, 0.7);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035),
+    inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(226,232,240,.35);
 }
 
 .glass-elevated {
-  background: rgba(58, 58, 60, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(15,23,42,.06), 0 12px 32px rgba(15,23,42,.05),
+    inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(226,232,240,.4);
 }
 
 /* Utility Classes */
@@ -290,6 +305,10 @@ body {
     0 0 0 4px rgb(var(--color-primary) / 0.2);
 }
 
+/* Tactile press - physical confirmation on interactive elements */
+.tactile { transition: transform .12s cubic-bezier(.33,0,.2,1); }
+.tactile:active { transform: scale(.98); }
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -300,6 +319,9 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  body::after { display: none; }
+  .tactile, .tactile:active { transition: none; transform: none; }
+  .animate-fade-in, .animate-shimmer { animation: none !important; }
 }
 
 /* Micro-interactions */
@@ -314,7 +336,7 @@ button:active {
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 .badge-hover:hover {

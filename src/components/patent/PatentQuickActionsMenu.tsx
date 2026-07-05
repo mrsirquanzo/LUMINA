@@ -83,7 +83,7 @@ export default function PatentQuickActionsMenu({
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            className="absolute right-0 top-full mt-2 w-56 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden"
+            className="absolute right-0 top-full mt-2 w-56 bg-surfaceElevated border border-border rounded-lg shadow-xl z-50 overflow-hidden"
           >
             <div className="py-1">
               {/* View Actions */}
@@ -128,7 +128,7 @@ export default function PatentQuickActionsMenu({
               </div>
 
               {/* Divider */}
-              <div className="border-t border-white/10 my-1" />
+              <div className="border-t border-border my-1" />
 
               {/* Switch to Other Agents */}
               {onSwitchToAgent && (
@@ -155,7 +155,7 @@ export default function PatentQuickActionsMenu({
               )}
 
               {/* Divider */}
-              <div className="border-t border-white/10 my-1" />
+              <div className="border-t border-border my-1" />
 
               {/* Export & Remove */}
               <div className="px-2 py-1.5">

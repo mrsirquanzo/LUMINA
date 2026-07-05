@@ -269,7 +269,7 @@ export default function MarketResearchAgentInterface({
         <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Header - Only show if onBackToChat is provided */}
           {onBackToChat && (
-            <div className="p-4 border-b border-white/10">
+            <div className="p-4 border-b border-border">
               {activeDetailPanel && (
                 <button
                   onClick={onBackToChat}
@@ -396,7 +396,7 @@ export default function MarketResearchAgentInterface({
                               setIsProcessing(false);
                             }
                           }}
-                          className="w-full p-4 bg-surfaceElevated border border-white/10 rounded-xl hover:border-teal-500/50 hover:shadow-md transition-all text-left group relative"
+                          className="w-full p-4 bg-surfaceElevated border border-border rounded-xl hover:border-teal-500/50 hover:shadow-md transition-all text-left group relative"
                         >
                           <div className="flex items-start gap-3">
                             <div className="flex-shrink-0 p-2 bg-teal-500/20 rounded-lg group-hover:bg-teal-500/30 transition-colors">
@@ -433,7 +433,7 @@ export default function MarketResearchAgentInterface({
                       className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${
                         isDragging
                           ? 'border-teal-500/50 bg-teal-500/10'
-                          : 'border-white/20 hover:border-white/30 bg-surfaceElevated'
+                          : 'border-border hover:border-border bg-surfaceElevated'
                       }`}
                     >
                       <Upload size={24} className="mx-auto text-textTertiary mb-2" />
@@ -478,7 +478,7 @@ export default function MarketResearchAgentInterface({
                         {uploadedFiles.map((file, i) => (
                           <div
                             key={i}
-                            className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-white/10 hover:border-teal-500/30 cursor-pointer transition-colors"
+                            className="flex items-center gap-3 p-4 bg-surfaceElevated rounded-xl border border-border hover:border-teal-500/30 cursor-pointer transition-colors"
                           >
                             <FileText size={16} className="text-teal-400" />
                             <div className="flex-1 min-w-0">
@@ -506,7 +506,7 @@ export default function MarketResearchAgentInterface({
                         value={assetInput}
                         onChange={(e) => setAssetInput(e.target.value)}
                         placeholder="Enter asset, company, or indication"
-                        className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-transparent"
+                        className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-transparent"
                       />
                       <button
                         onClick={() => {
@@ -548,7 +548,7 @@ export default function MarketResearchAgentInterface({
                         <div
                           key={i}
                           className={`p-4 bg-surfaceElevated border rounded-xl ${
-                            asset.loaded ? 'border-teal-500/30' : 'border-white/10'
+                            asset.loaded ? 'border-teal-500/30' : 'border-border'
                           }`}
                         >
                           <div className="flex items-start justify-between">
@@ -602,16 +602,16 @@ export default function MarketResearchAgentInterface({
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search by indication, modality, geography..."
-                      className="w-full px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                      className="w-full px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                     />
                     <div className="flex gap-2">
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
                         <option>All Modalities</option>
                         <option>Small Molecule</option>
                         <option>Antibody</option>
                         <option>Cell Therapy</option>
                       </select>
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
                         <option>All Regions</option>
                         <option>US</option>
                         <option>EU5</option>
@@ -668,7 +668,7 @@ export default function MarketResearchAgentInterface({
                   icon={TrendingUp}
                   defaultOpen={true}
                 >
-                  <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+                  <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
                     <p className="text-sm text-textSecondary">Market sizing analysis will appear here</p>
                   </div>
                 </CollapsibleSection>
@@ -679,7 +679,7 @@ export default function MarketResearchAgentInterface({
                   icon={Users}
                   defaultOpen={false}
                 >
-                  <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+                  <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
                     <p className="text-sm text-textSecondary">Patient flow funnel will appear here</p>
                   </div>
                 </CollapsibleSection>
@@ -690,7 +690,7 @@ export default function MarketResearchAgentInterface({
                   icon={DollarSign}
                   defaultOpen={false}
                 >
-                  <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+                  <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
                     <p className="text-sm text-textSecondary">Pricing and access analysis will appear here</p>
                   </div>
                 </CollapsibleSection>
@@ -709,16 +709,16 @@ export default function MarketResearchAgentInterface({
                     <input
                       type="text"
                       placeholder="Search by target, indication, company..."
-                      className="w-full px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                      className="w-full px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                     />
                     <div className="flex gap-2">
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
                         <option>All Modalities</option>
                         <option>Small Molecule</option>
                         <option>Antibody</option>
                         <option>Cell Therapy</option>
                       </select>
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
                         <option>All Stages</option>
                         <option>Preclinical</option>
                         <option>Phase 1-2</option>
@@ -774,7 +774,7 @@ export default function MarketResearchAgentInterface({
                   icon={Target}
                   defaultOpen={true}
                 >
-                  <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+                  <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
                     <p className="text-sm text-textSecondary">Competitive landscape analysis will appear here</p>
                   </div>
                 </CollapsibleSection>
@@ -822,16 +822,16 @@ export default function MarketResearchAgentInterface({
                     <input
                       type="text"
                       placeholder="Search for deals, partnerships, M&A..."
-                      className="w-full px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                      className="w-full px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                     />
                     <div className="flex gap-2">
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
                         <option>All Deal Types</option>
                         <option>M&A</option>
                         <option>Licensing</option>
                         <option>Partnership</option>
                       </select>
-                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
+                      <select className="flex-1 px-3 py-2 bg-surfaceElevated border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-teal-500/50">
                         <option>All Stages</option>
                         <option>Preclinical</option>
                         <option>Phase 1-2</option>
@@ -887,7 +887,7 @@ export default function MarketResearchAgentInterface({
                   icon={FileText}
                   defaultOpen={true}
                 >
-                  <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+                  <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
                     <p className="text-sm text-textSecondary">Valuation analysis will appear here</p>
                   </div>
                 </CollapsibleSection>
@@ -898,7 +898,7 @@ export default function MarketResearchAgentInterface({
                   icon={Briefcase}
                   defaultOpen={false}
                 >
-                  <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+                  <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
                     <p className="text-sm text-textSecondary">Transaction intelligence will appear here</p>
                   </div>
                 </CollapsibleSection>
@@ -923,7 +923,7 @@ export default function MarketResearchAgentInterface({
           </div>
 
           {/* Chat Input - Match Clinical/Financial Agent styling - Always visible */}
-          <div className={`border-t border-white/10 bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
+          <div className={`border-t border-border bg-surfaceElevated ${onBackToChat ? 'p-4' : 'p-6'}`}>
             <div className="relative mb-3">
               <FileText className="absolute left-4 top-4 w-5 h-5 text-textTertiary pointer-events-none" />
               <textarea
@@ -932,7 +932,7 @@ export default function MarketResearchAgentInterface({
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about market sizing, competitive positioning, pricing strategy, revenue forecasts..."
                 rows={3}
-                className="w-full pl-12 pr-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 resize-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 resize-none transition-colors"
                 disabled={isProcessing}
               />
             </div>
@@ -966,7 +966,7 @@ export default function MarketResearchAgentInterface({
                     className={`p-3 rounded-lg ${
                       message.role === 'user'
                         ? 'bg-teal-500/10 border border-teal-500/20 ml-auto max-w-[80%]'
-                        : 'bg-surface border border-white/10'
+                        : 'bg-surface border border-border'
                     }`}
                   >
                     <p className="text-sm text-textPrimary whitespace-pre-wrap">{message.content}</p>

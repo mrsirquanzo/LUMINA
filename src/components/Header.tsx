@@ -162,7 +162,7 @@ export default function Header({
 
 
   return (
-    <header className="sticky top-0 z-50 h-20 bg-surface/80 backdrop-blur-xl border-b border-white/5">
+    <header className="sticky top-0 z-50 h-20 glass border-b border-border">
       <div className="h-full px-6 flex items-center justify-between gap-6">
         {/* Left Section - Simplified Context */}
         <div className="flex items-center gap-4 flex-shrink-0">
@@ -185,7 +185,7 @@ export default function Header({
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
               placeholder="Search targets, assets, companies..."
-              className="w-full pl-10 pr-10 py-2.5 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+              className="w-full pl-10 pr-10 py-2.5 bg-background border border-border rounded-lg text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
             />
             {searchQuery ? (
               <button
@@ -198,8 +198,8 @@ export default function Header({
               </button>
             ) : (
               <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1.5 text-xs text-textTertiary">
-                <kbd className="px-1.5 py-0.5 bg-surface border border-white/10 rounded text-textSecondary">⌘</kbd>
-                <kbd className="px-1.5 py-0.5 bg-surface border border-white/10 rounded text-textSecondary">K</kbd>
+                <kbd className="px-1.5 py-0.5 bg-subtle border border-border rounded text-textSecondary">⌘</kbd>
+                <kbd className="px-1.5 py-0.5 bg-subtle border border-border rounded text-textSecondary">K</kbd>
               </div>
             )}
           </form>
@@ -209,11 +209,11 @@ export default function Header({
         {/* Right Section - Actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
           {/* Demo/Live Toggle */}
-          <div className="hidden sm:flex items-center gap-1 p-1 bg-surface rounded-lg border border-white/10">
+          <div className="hidden sm:flex items-center gap-1 p-1 bg-surface rounded-lg border border-border">
             <button
               type="button"
               onClick={() => requestAgentMode('demo')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+              className={`tactile px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
                 agentMode === 'demo' ? 'bg-surfaceElevated text-textPrimary' : 'text-textSecondary hover:text-textPrimary'
               }`}
               aria-label="Use demo mode (no API calls)"
@@ -226,7 +226,7 @@ export default function Header({
                 onOpenSonnyPanel?.();
                 requestAgentMode('live');
               }}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
+              className={`tactile px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
                 agentMode === 'live'
                   ? 'bg-success/20 text-success'
                   : 'text-textSecondary hover:text-textPrimary'
@@ -240,10 +240,10 @@ export default function Header({
 
           {/* View Toggle */}
           {onViewModeChange && (
-            <div className="flex items-center gap-1 p-1 bg-surface rounded-lg border border-white/10">
+            <div className="flex items-center gap-1 p-1 bg-surface rounded-lg border border-border">
               <button
                 onClick={() => onViewModeChange('grid')}
-                className={`p-1.5 rounded transition-colors ${
+                className={`tactile p-1.5 rounded transition-colors ${
                   viewMode === 'grid'
                     ? 'bg-surfaceElevated text-textPrimary'
                     : 'text-textSecondary hover:text-textPrimary'
@@ -254,7 +254,7 @@ export default function Header({
               </button>
               <button
                 onClick={() => onViewModeChange('list')}
-                className={`p-1.5 rounded transition-colors ${
+                className={`tactile p-1.5 rounded transition-colors ${
                   viewMode === 'list'
                     ? 'bg-surfaceElevated text-textPrimary'
                     : 'text-textSecondary hover:text-textPrimary'
@@ -266,7 +266,7 @@ export default function Header({
             </div>
           )}
 
-          <div className="w-px h-6 bg-white/10" />
+          <div className="w-px h-6 bg-border" />
 
           {/* Clear All Tiles - Show in all workspaces if there are any tiles */}
           {(tiles.length > 0 || activeWorkspaceId) && (
@@ -282,7 +282,7 @@ export default function Header({
                     setTimeout(() => window.dispatchEvent(new Event('open-save-workspace')), 50);
                   }}
                   disabled={!canSaveWorkspace}
-                  className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-white/10 rounded-lg hover:bg-surfaceElevated/70 hover:border-white/20 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="tactile flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-border rounded-lg hover:bg-surfaceElevated/70 hover:border-slate-300 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   title={canSaveWorkspace ? 'Save this analysis as a workspace' : 'No workspace/tiles to save yet'}
                 >
                   <FolderPlus className="w-4 h-4 text-textSecondary" />
@@ -292,7 +292,7 @@ export default function Header({
               <button
                 onClick={handleClearAllTiles}
                 disabled={visibleTiles.length === 0}
-                className="flex items-center gap-2 px-3 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 hover:border-red-500/30 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="tactile flex items-center gap-2 px-3 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 hover:border-red-500/30 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 title={visibleTiles.length > 0 ? "Clear all tiles" : "No tiles to clear"}
               >
                 <Trash2 className="w-4 h-4" />
@@ -301,14 +301,14 @@ export default function Header({
               {agentMode === 'demo' && (
                 <button
                   onClick={handleResetDemo}
-                  className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-white/10 rounded-lg hover:bg-surfaceElevated/70 hover:border-white/20 transition-colors font-medium text-sm"
+                  className="tactile flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-border rounded-lg hover:bg-surfaceElevated/70 hover:border-slate-300 transition-colors font-medium text-sm"
                   title="Reset demo (clear generated tiles + analysis state)"
                 >
                   <RotateCcw className="w-4 h-4 text-textSecondary" />
                   <span className="hidden md:inline">Reset Demo</span>
                 </button>
               )}
-              <div className="w-px h-6 bg-white/10" />
+              <div className="w-px h-6 bg-border" />
             </>
           )}
 
@@ -316,9 +316,9 @@ export default function Header({
           {onToggleSonnyPanel && (
             <button
               onClick={onToggleSonnyPanel}
-              className={`relative p-2.5 rounded-xl transition-all duration-300 group ${
+              className={`tactile relative p-2.5 rounded-xl transition-all duration-300 group ${
                 sonnyPanelCollapsed
-                  ? 'bg-surfaceElevated/50 border border-white/10 hover:border-white/20 hover:bg-surfaceElevated/70'
+                  ? 'bg-surfaceElevated/50 border border-border hover:border-slate-300 hover:bg-surfaceElevated/70'
                   : 'bg-gradient-to-br from-primary/20 via-primary/15 to-cyan-500/20 border border-primary/30 shadow-lg shadow-primary/20 backdrop-blur-md'
               }`}
               aria-label={sonnyPanelCollapsed ? 'Show Sonny panel' : 'Hide Sonny panel'}

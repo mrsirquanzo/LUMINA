@@ -53,7 +53,7 @@ export default function ClinicalDataSourcesSection({
           return (
             <div
               key={source.id}
-              className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-white/10 rounded-lg"
+              className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated border border-border rounded-lg"
             >
               <Icon size={14} className="text-textSecondary" />
               <span className="text-sm text-textPrimary flex-1">{source.name}</span>

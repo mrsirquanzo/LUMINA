@@ -747,7 +747,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 {/* Upload Option */}
                 <button
                   onClick={() => setCurrentState('upload')}
-                  className="w-full p-4 bg-surfaceElevated border-2 border-dashed border-white/20 rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
+                  className="w-full p-4 bg-surfaceElevated border-2 border-dashed border-border rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
                 >
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
@@ -769,7 +769,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 {/* Patent Number Entry Option */}
                 <button
                   onClick={() => setCurrentState('entry')}
-                  className="w-full p-4 bg-surfaceElevated border-2 border-dashed border-white/20 rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
+                  className="w-full p-4 bg-surfaceElevated border-2 border-dashed border-border rounded-xl hover:border-primary/50 hover:bg-surface transition-all group"
                 >
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
@@ -795,7 +795,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                           setPatentNumbers(patent.number);
                           setCurrentState('entry');
                         }}
-                        className="w-full p-3 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 transition-colors flex items-center justify-between group"
+                        className="w-full p-3 bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 transition-colors flex items-center justify-between group"
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <FileText className="w-4 h-4 text-textTertiary flex-shrink-0" />
@@ -834,7 +834,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 className={`relative border-2 border-dashed rounded-xl p-12 transition-all ${
                   isDragging
                     ? 'border-primary bg-primary/10'
-                    : 'border-white/20 hover:border-primary/50'
+                    : 'border-border hover:border-primary/50'
                 }`}
               >
                 <input
@@ -861,7 +861,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                   </div>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-surfaceElevated border border-white/10 rounded-lg text-sm text-textSecondary hover:text-textPrimary hover:border-primary/50 transition-colors"
+                    className="px-4 py-2 bg-surfaceElevated border border-border rounded-lg text-sm text-textSecondary hover:text-textPrimary hover:border-primary/50 transition-colors"
                   >
                     Browse Files
                   </button>
@@ -885,7 +885,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                   value={patentNumbers}
                   onChange={(e) => setPatentNumbers(e.target.value)}
                   placeholder="US10808039, EP3456789..."
-                  className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50"
+                  className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50"
                   disabled={isProcessing}
                 />
                 <button
@@ -895,7 +895,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                     }
                   }}
                   disabled={!patentNumbers.trim() || isProcessing}
-                  className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary hover:border-primary/50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary hover:border-primary/50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Search className="w-4 h-4" />
                   <span>Fetch from USPTO/EPO</span>
@@ -914,7 +914,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                           setPatentNumbers(patent.number);
                           setCurrentState('entry');
                         }}
-                        className="w-full p-3 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 transition-colors flex items-center justify-between group"
+                        className="w-full p-3 bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 transition-colors flex items-center justify-between group"
                       >
                         <div className="flex items-center gap-3">
                           <FileText className="w-4 h-4 text-textTertiary" />
@@ -1012,7 +1012,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                   onChange={(e) => setPatentNumbers(e.target.value)}
                   placeholder="US10808039B2"
                   rows={4}
-                  className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
+                  className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
                   disabled={isProcessing}
                 />
                 <p className="text-xs text-textTertiary mt-2">
@@ -1069,7 +1069,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                       className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-all ${
                         analysisOptions.mode === mode
                           ? 'border-primary bg-primary/10'
-                          : 'border-white/10 hover:border-white/20'
+                          : 'border-border hover:border-border'
                       }`}
                     >
                       <input
@@ -1100,7 +1100,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 <select
                   value={analysisOptions.therapeuticArea || ''}
                   onChange={(e) => setAnalysisOptions((prev) => ({ ...prev, therapeuticArea: e.target.value || undefined }))}
-                  className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary focus:outline-none focus:border-primary/50"
+                  className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary focus:outline-none focus:border-primary/50"
                 >
                   <option value="">Select area...</option>
                   {THERAPEUTIC_AREAS.map((area) => (
@@ -1237,7 +1237,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                           ? 'bg-success/10 border border-success/20'
                           : step.status === 'in_progress'
                           ? 'bg-primary/10 border border-primary/20'
-                          : 'bg-surfaceElevated border border-white/10'
+                          : 'bg-surfaceElevated border border-border'
                       }`}
                     >
                       {step.status === 'completed' ? (
@@ -1264,7 +1264,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 {progressSteps.find((s) => s.id === 'sequences' && s.status === 'in_progress') && (
                   <div className="p-4 bg-surfaceElevated border border-primary/20 rounded-lg">
                     <p className="text-xs text-textSecondary mb-2">Live:</p>
-                    <div className="p-3 bg-surface rounded border border-white/10">
+                    <div className="p-3 bg-surface rounded border border-border">
                       <p className="text-sm text-textPrimary font-mono">
                         Extracted HCDR3 sequence ARDLGRGAFDI (SEQ ID NO: 3)
                       </p>
@@ -1278,13 +1278,13 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 )}
 
                 {/* Follow-up Question Input */}
-                <div className="pt-4 border-t border-white/10">
+                <div className="pt-4 border-t border-border">
                   <textarea
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     placeholder="Ask a follow-up question..."
                     rows={2}
-                    className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
+                    className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
                   />
                 </div>
 
@@ -1316,7 +1316,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
           >
             <div className="space-y-6">
               {/* Summary Card */}
-              <div className="p-4 bg-surfaceElevated border border-white/10 rounded-xl">
+              <div className="p-4 bg-surfaceElevated border border-border rounded-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <h3 className="text-lg font-semibold text-textPrimary">📋 PATENT EXPERT</h3>
@@ -1431,7 +1431,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 </div>
 
                 {/* Patent Info Card */}
-                <div className="p-4 bg-surface rounded-lg border border-white/10 mb-4">
+                <div className="p-4 bg-surface rounded-lg border border-border mb-4">
                   <div className="space-y-2">
                     <h4 className="font-semibold text-textPrimary">
                       {parsedResult.document_info.patent_number || 'Unknown Patent'}
@@ -1450,7 +1450,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                   </div>
 
                   {/* IP Strength & FTO Risk */}
-                  <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/10">
+                  <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border">
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs text-textSecondary">IP Strength</span>
@@ -1532,7 +1532,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
 
                 <button
                   onClick={() => setCurrentState('chat')}
-                  className="w-full mt-4 px-4 py-2 bg-surface border border-white/10 rounded-lg text-textPrimary hover:border-primary/50 transition-colors text-sm font-medium"
+                  className="w-full mt-4 px-4 py-2 bg-surface border border-border rounded-lg text-textPrimary hover:border-primary/50 transition-colors text-sm font-medium"
                 >
                   View Full Analysis
                 </button>
@@ -1560,7 +1560,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                         setChatInput(action.label);
                         setCurrentState('chat');
                       }}
-                      className="w-full p-3 bg-surfaceElevated border border-white/10 rounded-lg hover:border-primary/50 transition-colors text-left text-sm text-textPrimary"
+                      className="w-full p-3 bg-surfaceElevated border border-border rounded-lg hover:border-primary/50 transition-colors text-left text-sm text-textPrimary"
                     >
                       {action.icon} {action.label}
                     </button>
@@ -1581,7 +1581,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                   }}
                   placeholder="Ask about this patent..."
                   rows={3}
-                  className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
+                  className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
                 />
               </div>
             </div>
@@ -1640,7 +1640,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                   <div className={`max-w-[80%] p-4 rounded-lg ${
                     message.role === 'user'
                       ? 'bg-primary/10 border border-primary/20'
-                      : 'bg-surfaceElevated border border-white/10'
+                      : 'bg-surfaceElevated border border-border'
                   }`}>
                     <p className="text-sm text-textPrimary whitespace-pre-wrap">{message.content}</p>
                   </div>
@@ -1649,7 +1649,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
             </div>
 
             {/* Chat Input */}
-            <div className="border-t border-white/10 pt-4">
+            <div className="border-t border-border pt-4">
               <textarea
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
@@ -1661,7 +1661,7 @@ export default function PatentAgentInterface({ onResult, className = '', onBackT
                 }}
                 placeholder="Ask follow-up..."
                 rows={3}
-                className="w-full px-4 py-3 bg-surfaceElevated border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
+                className="w-full px-4 py-3 bg-surfaceElevated border border-border rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 resize-none"
               />
               <p className="text-xs text-textTertiary mt-2">
                 Press ⌘+Enter or Ctrl+Enter to send

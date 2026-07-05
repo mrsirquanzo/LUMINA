@@ -322,13 +322,13 @@ const Sidebar = memo(function Sidebar({
     scientist: {
       label: 'Scientist',
       icon: FlaskConical,
-      color: '#BF5AF2',
+      color: '#1D4ED8',
       description: 'Deep scientific analysis and target validation',
     },
     bd: {
       label: 'Scout',
       icon: Briefcase,
-      color: '#FF9F0A',
+      color: '#1D4ED8',
       description: 'Business development and deal analysis',
     },
   };
@@ -371,7 +371,7 @@ const Sidebar = memo(function Sidebar({
       animate={{ width: currentWidth }}
       transition={{ duration: isResizing ? 0 : 0.3 }}
       style={{ width: currentWidth }}
-      className="relative bg-surface border-r border-white/5 flex flex-col"
+      className="relative bg-surface border-r border-border flex flex-col"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -393,7 +393,7 @@ const Sidebar = memo(function Sidebar({
         </div>
       )}
       {/* Brand Header - Notion Style */}
-      <div className={`${collapsed ? 'p-3' : 'p-4'} border-b border-white/5`}>
+      <div className={`${collapsed ? 'p-3' : 'p-4'} border-b border-border`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
           <div className="relative flex-shrink-0">
             <div className={`${collapsed ? 'w-10 h-10' : 'w-12 h-12'} rounded-lg bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center`}>
@@ -402,7 +402,7 @@ const Sidebar = memo(function Sidebar({
           </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-semibold bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
+              <h1 className="text-xl font-display font-semibold bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
                 LUMINA
               </h1>
             </div>
@@ -411,9 +411,9 @@ const Sidebar = memo(function Sidebar({
       </div>
 
       {/* Persona Switcher - Vertical Notion Style */}
-      <div className="px-3 py-2 border-b border-white/5">
+      <div className="px-3 py-2 border-b border-border">
         {!collapsed && (
-          <p className="text-xs text-textTertiary mb-2 px-2 font-medium tracking-wider uppercase">PERSONA</p>
+          <p className="text-xs text-textSecondary mb-2 px-2 font-medium tracking-wider uppercase">PERSONA</p>
         )}
         <div className={collapsed ? 'flex flex-col gap-2' : 'flex flex-col gap-1.5'}>
           {(Object.keys(personaConfig) as Persona[]).map((persona) => {
@@ -425,10 +425,10 @@ const Sidebar = memo(function Sidebar({
               <button
                 key={persona}
                 onClick={() => onPersonaChange(persona)}
-                className={`group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
+                className={`tactile group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
                   isActive
-                    ? 'bg-surfaceElevated/60 text-textPrimary'
-                    : 'text-textSecondary hover:text-textPrimary hover:bg-surface/30'
+                    ? 'bg-primary/10 text-textPrimary'
+                    : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
                 } ${collapsed ? 'justify-center' : ''}`}
                 style={
                   isActive
@@ -453,7 +453,7 @@ const Sidebar = memo(function Sidebar({
                 )}
                 {collapsed && (
                   <div className="absolute left-full ml-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
-                    <div className="bg-surfaceElevated border border-white/10 rounded-lg px-3 py-2 shadow-xl whitespace-nowrap">
+                    <div className="bg-surface border border-border rounded-lg px-3 py-2 shadow-card whitespace-nowrap">
                       <p className="text-sm font-medium text-textPrimary">{config.label}</p>
                       <p className="text-xs text-textSecondary mt-1">{config.description}</p>
                     </div>
@@ -467,10 +467,10 @@ const Sidebar = memo(function Sidebar({
 
           {/* Current Context - Notion Style */}
           {!collapsed && currentTarget && (
-            <div className="px-3 py-3 border-b border-white/5">
+            <div className="px-3 py-3 border-b border-border">
               <div className="flex items-center gap-2 mb-2.5 px-2">
-                <Target className="w-4 h-4 text-textTertiary" />
-                <span className="text-xs text-textTertiary font-medium tracking-wider uppercase">CURRENT TARGET</span>
+                <Target className="w-4 h-4 text-textSecondary" />
+                <span className="text-xs text-textSecondary font-medium tracking-wider uppercase">CURRENT TARGET</span>
               </div>
               <h3 className="text-lg font-semibold text-textPrimary mb-2.5 px-2 leading-tight">{currentTarget}</h3>
             </div>
@@ -487,10 +487,10 @@ const Sidebar = memo(function Sidebar({
               <button
                 key={item.id}
                 onClick={() => onViewChange(item.id)}
-                className={`group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
+                className={`tactile group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
                   isActive
-                    ? 'bg-surfaceElevated/50 text-textPrimary'
-                    : 'text-textSecondary hover:text-textPrimary hover:bg-surface/30'
+                    ? 'bg-primary/10 text-textPrimary'
+                    : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
                 } ${collapsed ? 'justify-center' : ''}`}
                 title={collapsed ? item.label : undefined}
               >
@@ -501,7 +501,7 @@ const Sidebar = memo(function Sidebar({
                 {!collapsed && <span className="text-base leading-relaxed">{item.label}</span>}
                 {collapsed && (
                   <div className="absolute left-full ml-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
-                    <div className="bg-surfaceElevated border border-white/10 rounded-lg px-3 py-2 shadow-xl">
+                    <div className="bg-surface border border-border rounded-lg px-3 py-2 shadow-card">
                       <p className="text-sm text-textPrimary">{item.label}</p>
                     </div>
                   </div>
@@ -513,7 +513,7 @@ const Sidebar = memo(function Sidebar({
 
         {/* Divider */}
         <div className="my-2 px-2">
-          <div className="h-px bg-white/5" />
+          <div className="h-px bg-border" />
         </div>
 
         {/* Bottom Navigation */}
@@ -530,10 +530,10 @@ const Sidebar = memo(function Sidebar({
                   e.stopPropagation();
                   onViewChange(item.id);
                 }}
-                className={`group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
+                className={`tactile group relative w-full flex items-center gap-3 px-2.5 py-2 rounded transition-all duration-150 ${
                   isActive
-                    ? 'bg-surfaceElevated/50 text-textPrimary'
-                    : 'text-textSecondary hover:text-textPrimary hover:bg-surface/30'
+                    ? 'bg-primary/10 text-textPrimary'
+                    : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
                 } ${collapsed ? 'justify-center' : ''}`}
                 title={collapsed ? item.label : undefined}
               >
@@ -556,7 +556,7 @@ const Sidebar = memo(function Sidebar({
                 )}
                 {collapsed && (
                   <div className="absolute left-full ml-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
-                    <div className="bg-surfaceElevated border border-white/10 rounded-lg px-3 py-2 shadow-xl">
+                    <div className="bg-surface border border-border rounded-lg px-3 py-2 shadow-card">
                       <p className="text-sm text-textPrimary">{item.label}</p>
                       {item.badge && (
                         <span className="text-xs text-textSecondary mt-1">{item.badge} new items</span>
@@ -573,7 +573,7 @@ const Sidebar = memo(function Sidebar({
         {!collapsed && recentWorkspaces.length > 0 && (
           <div className="mt-4 px-2">
             <div className="flex items-center gap-2 px-2 mb-2">
-              <span className="text-xs text-textTertiary font-medium tracking-wider uppercase">WORKSPACES</span>
+              <span className="text-xs text-textSecondary font-medium tracking-wider uppercase">WORKSPACES</span>
             </div>
             <div className="space-y-1">
               {recentWorkspaces.map((workspace) => {
@@ -585,10 +585,10 @@ const Sidebar = memo(function Sidebar({
                       sessionStorage.setItem('lumina-has-selected-target', 'true');
                       setActiveWorkspace(String(workspace.id));
                     }}
-                    className={`w-full flex items-center gap-2.5 px-2 py-2 rounded transition-colors group ${
+                    className={`tactile w-full flex items-center gap-2.5 px-2 py-2 rounded transition-colors group ${
                       isActive
-                        ? 'text-textPrimary bg-surface/50 border border-primary/20'
-                        : 'text-textSecondary hover:text-textPrimary hover:bg-surface/30'
+                        ? 'text-textPrimary bg-primary/10 border border-primary/20'
+                        : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
                     }`}
                   >
                     <div className={`w-2 h-2 rounded-full ${getWorkspaceStatusColor(workspace.status)}`} />
@@ -604,7 +604,7 @@ const Sidebar = memo(function Sidebar({
       </nav>
 
       {/* Footer - Notion Style */}
-      <div className="px-3 py-2 border-t border-white/5 space-y-1">
+      <div className="px-3 py-2 border-t border-border space-y-1">
         {/* Panel Toggle Button - Above Settings */}
         {!collapsed && (
           <button
@@ -671,7 +671,7 @@ const Sidebar = memo(function Sidebar({
           )}
 
           {showUserMenu && (
-            <div className={`absolute bottom-full mb-2 bg-surfaceElevated border border-white/10 rounded-lg shadow-xl overflow-hidden z-50 animate-slide-up ${
+            <div className={`absolute bottom-full mb-2 bg-surface border border-border rounded-lg shadow-card overflow-hidden z-50 animate-slide-up ${
               collapsed 
                 ? 'left-full ml-2 w-48' 
                 : 'left-0 w-full'
@@ -684,7 +684,7 @@ const Sidebar = memo(function Sidebar({
                 <Settings className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm whitespace-nowrap">Preferences</span>
               </button>
-              <div className="h-px bg-white/5 my-1" />
+              <div className="h-px bg-border my-1" />
               <button className="w-full flex items-center gap-3 px-4 py-2.5 text-danger hover:bg-surface transition-colors">
                 <LogOut className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm whitespace-nowrap">Sign Out</span>

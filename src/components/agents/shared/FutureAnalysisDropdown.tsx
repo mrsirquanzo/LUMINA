@@ -71,7 +71,7 @@ export const FutureAnalysisDropdown: React.FC<FutureAnalysisDropdownProps> = ({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="border-t border-white/5"
+            className="border-t border-border"
           >
             <div className="p-3 grid grid-cols-1 gap-2">
               {options.map((option) => (

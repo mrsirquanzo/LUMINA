@@ -54,7 +54,7 @@ interface ExpressionBiologyTileProps {
 const CustomTooltip = ({ active, payload, label, dataType }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-surfaceElevated border border-white/10 p-3 rounded-xl shadow-2xl text-xs backdrop-blur-md">
+      <div className="bg-surfaceElevated border border-border p-3 rounded-xl shadow-2xl text-xs backdrop-blur-md">
         <p className="font-bold text-textPrimary mb-1">{label}</p>
         {dataType === 'tpm' && (
           <p className="text-primary font-medium">{formatTPM(payload[0].value)} TPM</p>
@@ -275,21 +275,21 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
 
   const getBarColor = (tissue: any) => {
     if (tissue.isSafetyOrgan && tissue.tpm >= safetyHighThreshold) return '#FF453A';
-    if (tissue.isSafetyOrgan) return '#FF9F0A';
+    if (tissue.isSafetyOrgan) return '#F59E0B';
     return '#636366';
   };
 
   const getTumorBarColor = (percentile: number) => {
     if (percentile >= 90) return '#30D158';
     if (percentile >= 75) return '#0A84FF';
-    if (percentile >= 50) return '#FF9F0A';
+    if (percentile >= 50) return '#F59E0B';
     return '#636366';
   };
 
   const getFoldChangeColor = (foldChange: number) => {
     if (foldChange >= 5) return '#30D158';
     if (foldChange >= 2) return '#0A84FF';
-    if (foldChange >= 1) return '#FF9F0A';
+    if (foldChange >= 1) return '#F59E0B';
     return '#FF453A';
   };
 
@@ -369,7 +369,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
       extendedIntelligence={extendedIntelligence}
     >
       {/* Tab Navigation */}
-      <div className="flex gap-2 mb-4 border-b border-white/5 overflow-x-auto custom-scrollbar">
+      <div className="flex gap-2 mb-4 border-b border-border overflow-x-auto custom-scrollbar">
         {(['summary', 'normal', 'tumor', 'comparison', 'genomic'] as const).map((tab) => (
           <button
             key={tab}
@@ -489,7 +489,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                   value={tissueSearch}
                   onChange={(e) => setTissueSearch(e.target.value)}
                   placeholder="Search tissues..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-surface border border-white/10 rounded-lg text-base text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 bg-surface border border-border rounded-lg text-base text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 {tissueSearch && (
                   <button
@@ -532,7 +532,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                     content={<CustomTooltip dataType="tpm" />}
                     cursor={<BarOnlyCursor />}
                   />
-                  <ReferenceLine x={safetyHighThreshold} stroke="#FF9F0A" strokeDasharray="3 3" />
+                  <ReferenceLine x={safetyHighThreshold} stroke="#F59E0B" strokeDasharray="3 3" />
                   <Bar dataKey="tpm" radius={[0, 4, 4, 0]}>
                     {normalChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={getBarColor(entry)} />
@@ -563,7 +563,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
 
             {/* Data Table */}
             {showTable && (
-              <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-white/5 mb-4">
+              <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-border mb-4">
                 <div className="overflow-x-auto custom-scrollbar">
                   <table className="w-full text-base">
                     <thead className="bg-surface">
@@ -577,7 +577,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                     </thead>
                     <tbody>
                       {filteredNormalTissues.map((tissue, idx) => (
-                        <tr key={idx} className="border-t border-white/5">
+                        <tr key={idx} className="border-t border-border">
                           <td className="px-4 py-3 text-textPrimary font-medium align-middle text-base">{tissue.name}</td>
                           <td className="px-4 py-3 text-textPrimary font-semibold align-middle text-base">{formatTPM(tissue.tpm)}</td>
                           <td className="px-4 py-3 text-textPrimary capitalize align-middle text-base font-medium">{tissue.category}</td>
@@ -656,7 +656,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
             </div>
 
             {showTable && (
-              <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-white/5 mb-4">
+              <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-border mb-4">
                 <div className="overflow-x-auto custom-scrollbar">
                   <table className="w-full text-base">
                     <thead className="bg-surface">
@@ -672,7 +672,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                       {data.tcgaTumorExpression.map((tumor, idx) => (
                         <tr
                           key={idx}
-                          className={`border-t border-white/5 ${
+                          className={`border-t border-border ${
                             tumor.percentileRank >= 75 ? 'bg-success/5' : ''
                           }`}
                         >
@@ -789,7 +789,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
             )}
 
             {/* Comparison Table */}
-            <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-white/5 mb-4">
+            <div className="bg-surfaceElevated rounded-lg overflow-hidden border border-border mb-4">
               <div className="overflow-x-auto custom-scrollbar">
                 <table className="w-full text-base">
                   <thead className="bg-surface">
@@ -805,7 +805,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                     {data.foldChangeData.map((item, idx) => (
                       <tr
                         key={idx}
-                        className={`border-t border-white/5 ${
+                        className={`border-t border-border ${
                           item.foldChange >= 5 ? 'bg-success/5' : ''
                         }`}
                       >
@@ -923,7 +923,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                       content={<CustomTooltip dataType="tpm" />}
                       cursor={<VerticalBarOnlyCursor />}
                     />
-                    <Bar dataKey="amplification" fill="#FF9F0A" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="amplification" fill="#F59E0B" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -933,7 +933,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
             <div className="mb-6">
               <h4 className="text-base font-bold text-textPrimary mb-4">Hotspot Mutations</h4>
               {data.genomicAlterations.hotspotMutations.length > 0 ? (
-                <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+                <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
                   <ul className="space-y-3">
                     {data.genomicAlterations.hotspotMutations.map((mutation, idx) => (
                       <li key={idx} className="text-base leading-relaxed text-textSecondary flex items-baseline gap-2">
@@ -944,7 +944,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                   </ul>
                 </div>
               ) : (
-                <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+                <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
                   <p className="text-base text-textTertiary italic">None significant</p>
                 </div>
               )}
@@ -954,7 +954,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
             <div className="mb-6 pb-4">
               <h4 className="text-base font-bold text-textPrimary mb-4">Fusion Events</h4>
               {data.genomicAlterations.fusionEvents.length > 0 ? (
-                <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+                <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
                   <ul className="space-y-3">
                     {data.genomicAlterations.fusionEvents.map((fusion, idx) => (
                       <li key={idx} className="text-base leading-relaxed text-textSecondary flex items-baseline gap-2">
@@ -965,7 +965,7 @@ export default function ExpressionBiologyTile({ data, loading, onAgentClick, ext
                   </ul>
                 </div>
               ) : (
-                <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+                <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
                   <p className="text-base text-textTertiary italic">None reported</p>
                 </div>
               )}

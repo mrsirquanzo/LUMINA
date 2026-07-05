@@ -36,7 +36,7 @@ export default function MarketOpportunityTile({ data, loading, onAgentClick, ext
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-surfaceElevated border border-white/10 p-3 rounded-lg shadow-xl text-xs">
+        <div className="bg-surfaceElevated border border-border p-3 rounded-lg shadow-xl text-xs">
           <p className="font-bold text-textPrimary mb-1">{data.name}</p>
           <p className="text-primary">${data.value}{'B'}</p>
           <p className="text-textSecondary mt-1">{data.share}% of market</p>
@@ -78,7 +78,7 @@ export default function MarketOpportunityTile({ data, loading, onAgentClick, ext
         </div>
 
         {/* Pie Chart - Apple-like design with glassmorphism */}
-        <div className="h-56 mb-2 bg-surfaceElevated/30 backdrop-blur-sm rounded-xl border border-white/10 p-4">
+        <div className="h-56 mb-2 bg-surfaceElevated/30 backdrop-blur-sm rounded-xl border border-border p-4">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -115,7 +115,7 @@ export default function MarketOpportunityTile({ data, loading, onAgentClick, ext
         {/* Segments List */}
         <div className="space-y-3">
           {data.segments.map((segment, idx) => (
-            <div key={idx} className="flex items-center justify-between bg-surfaceElevated rounded-lg p-4 border border-white/5">
+            <div key={idx} className="flex items-center justify-between bg-surfaceElevated rounded-lg p-4 border border-border">
               <div className="flex items-center gap-3">
                 <div
                   className="w-4 h-4 rounded-full"
@@ -131,7 +131,7 @@ export default function MarketOpportunityTile({ data, loading, onAgentClick, ext
           ))}
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">Competitive Dynamics</p>
           <p className="text-base leading-relaxed text-textPrimary">{data.competitiveDynamics}</p>
         </div>

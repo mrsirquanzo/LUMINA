@@ -84,7 +84,7 @@ export default function ComparableCompaniesPanel({
   return (
     <div className="h-full flex flex-col bg-surface">
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-sm text-textSecondary hover:text-textPrimary mb-3 transition-colors"
@@ -104,12 +104,12 @@ export default function ComparableCompaniesPanel({
       </div>
 
       {/* Filters */}
-      <div className="p-4 border-b border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-b border-border bg-surfaceElevated">
         <div className="flex gap-2">
           <select
             value={filters.stage}
             onChange={(e) => setFilters({ ...filters, stage: e.target.value })}
-            className="flex-1 p-2 bg-surface border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
+            className="flex-1 p-2 bg-surface border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
           >
             <option value="all">All Stages</option>
             <option value="preclinical">Preclinical</option>
@@ -121,7 +121,7 @@ export default function ComparableCompaniesPanel({
           <select
             value={filters.modality}
             onChange={(e) => setFilters({ ...filters, modality: e.target.value })}
-            className="flex-1 p-2 bg-surface border border-white/10 rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
+            className="flex-1 p-2 bg-surface border border-border rounded-lg text-xs text-textPrimary focus:outline-none focus:ring-2 focus:ring-green-500/50"
           >
             <option value="all">All Modalities</option>
             <option value="small_molecule">Small Molecule</option>
@@ -142,7 +142,7 @@ export default function ComparableCompaniesPanel({
             className={`p-4 rounded-lg border cursor-pointer transition-colors ${
               selectedComps.includes(comp.ticker)
                 ? 'border-green-500/50 bg-green-500/10'
-                : 'border-white/10 hover:border-white/20 bg-surfaceElevated'
+                : 'border-border hover:border-border bg-surfaceElevated'
             }`}
           >
             <div className="flex items-center justify-between mb-3">
@@ -157,7 +157,7 @@ export default function ComparableCompaniesPanel({
               </div>
               <span className="text-sm font-semibold text-textPrimary">{comp.marketCap}</span>
             </div>
-            <div className="grid grid-cols-3 gap-3 pt-3 border-t border-white/10">
+            <div className="grid grid-cols-3 gap-3 pt-3 border-t border-border">
               <div>
                 <p className="text-xs text-textSecondary">EV</p>
                 <p className="text-sm font-medium text-textPrimary">{comp.ev}</p>
@@ -176,7 +176,7 @@ export default function ComparableCompaniesPanel({
       </div>
 
       {/* Summary Stats */}
-      <div className="p-4 border-t border-white/10 bg-surfaceElevated">
+      <div className="p-4 border-t border-border bg-surfaceElevated">
         <div className="grid grid-cols-3 gap-4 text-center mb-4">
           <div>
             <p className="text-xs text-textSecondary">Median EV/Sales</p>

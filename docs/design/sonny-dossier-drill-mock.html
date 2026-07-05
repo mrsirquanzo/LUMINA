@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonny - Dossier drill-in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  :root{--page:#F6F8FB;--surface:#FFFFFF;--subtle:#F1F5F9;--border:#E6EBF2;--border-soft:#EEF2F7;--ink:#0F172A;--sec:#475569;--muted:#94A3B8;--primary:#1D4ED8;--primary-hover:#1E40AF;--primary-tint:#EFF6FF;--go:#16A34A;--go-tx:#15803D;--watch:#D97706;--watch-tx:#B45309;--nogo:#DC2626;--nogo-tx:#B91C1C;--sans:'Geist','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--display:'Newsreader',Georgia,serif;--mono:'Geist Mono','JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(.33,0,.2,1);}
+  *{box-sizing:border-box;} body{margin:0;background:var(--page);font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  ::-webkit-scrollbar{width:10px;height:10px;} ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:999px;border:3px solid transparent;background-clip:content-box;}
+  a{color:inherit;text-decoration:none;} svg{display:block;}.btn:active{transform:scale(.98);}.card.lift:active{transform:translateY(-1px);}
+  .disp{font-family:var(--display);} .micro{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);} .mono{font-family:var(--mono);}
+  .dot{width:7px;height:7px;border-radius:999px;display:inline-block;flex:none;}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;border-radius:9px;padding:9px 15px;cursor:pointer;border:1px solid transparent;display:inline-flex;align-items:center;gap:7px;transition:background .18s,border-color .18s,color .18s,box-shadow .18s;}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 1px 2px rgba(29,78,216,.35);} .btn-primary:hover{background:var(--primary-hover);}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--border);} .btn-ghost:hover{border-color:#C7D2E4;}
+  .pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;border-radius:999px;padding:5px 11px;}
+  .verdict{display:inline-flex;align-items:center;font-size:13px;font-weight:700;letter-spacing:.03em;color:#fff;border-radius:999px;padding:6px 15px;}
+  .v-watch{background:linear-gradient(135deg,#E8920B,#C2740A);box-shadow:0 2px 8px rgba(217,119,6,.28);}
+  .rag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;border-radius:999px;padding:4px 11px;background:transparent;}
+  .rag-go{border:1px solid rgba(22,163,74,.32);color:var(--go-tx);} .rag-watch{border:1px solid rgba(217,119,6,.32);color:var(--watch-tx);}
+  .cite{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--primary);background:var(--primary-tint);border-radius:5px;padding:1px 5px;vertical-align:super;cursor:pointer;margin-left:2px;}
+  @keyframes slidein{from{transform:translateX(40px);opacity:0;}to{transform:none;opacity:1;}}
+  .sec{padding:16px 0;border-top:1px solid var(--border-soft);}
+  .claim{display:flex;gap:9px;margin-top:9px;} .claim > span:first-child{flex:none;width:5px;height:5px;border-radius:999px;background:#CBD5E1;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<!-- dimmed library behind -->
+<div style="position:fixed;inset:0;filter:blur(2px) saturate(.9);opacity:.5;pointer-events:none;">
+  <div style="max-width:1440px;margin:0 auto;display:flex;height:100vh;">
+    <div style="width:248px;background:var(--page);border-right:1px solid var(--border);"></div>
+    <div style="flex:1;padding:40px;">
+      <div class="disp" style="font-size:27px;font-weight:600;">Saved dossiers</div>
+      <div style="height:14px;"></div>
+      <div style="height:70px;background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:12px;"></div>
+      <div style="height:70px;background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:12px;"></div>
+      <div style="height:70px;background:#fff;border:1px solid var(--border);border-radius:14px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- scrim -->
+<div style="position:fixed;inset:0;background:rgba(15,23,32,.42);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:100;display:flex;justify-content:flex-end;">
+
+  <!-- DRAWER -->
+  <div style="width:820px;max-width:96vw;height:100vh;background:var(--page);box-shadow:-24px 0 70px rgba(15,23,38,.34);display:flex;flex-direction:column;animation:slidein .28s var(--ease) both;">
+
+    <!-- sticky header -->
+    <div style="display:flex;align-items:center;gap:13px;padding:18px 26px;background:var(--surface);border-bottom:1px solid var(--border);flex:none;">
+      <span class="verdict v-watch">WATCH</span>
+      <div style="flex:1;min-width:0;">
+        <div class="disp" style="font-size:19px;font-weight:600;">CDCP1 &middot; dossier</div>
+        <div style="font-size:12px;color:var(--muted);">Grounded &middot; 12 references &middot; decorrelated-verified &middot; Jun 30</div>
+      </div>
+      <button class="btn btn-ghost" style="font-weight:500;color:var(--sec);">Export</button>
+      <button class="btn btn-ghost" style="width:38px;height:38px;padding:0;justify-content:center;color:var(--sec);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+
+    <!-- scroll body -->
+    <div style="flex:1;overflow:auto;padding:26px 30px 40px;">
+
+      <!-- executive read -->
+      <div class="micro">Executive read</div>
+      <p class="disp" style="font-size:19px;line-height:1.6;color:#1E293B;margin:9px 0 0;max-width:66ch;">CDCP1 is a mechanistically compelling oncology target, over-expressed across several carcinomas and driving metastasis through matriptase-dependent cleavage. The case to keep it on the watchlist rather than commit rests on a single unresolved question: near-ubiquitous normal-tissue expression makes off-target and immunogenicity risk the gating uncertainty. Mechanism and disease association are strong; the clinical pipeline is thin.</p>
+
+      <!-- gate note -->
+      <div style="margin-top:16px;display:flex;gap:11px;background:#fff;border:1px solid rgba(217,119,6,.3);border-radius:12px;padding:13px 15px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--watch)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px;"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <div><div style="font-size:13px;font-weight:600;color:var(--watch-tx);">Developability risk - significant, not severe</div><div style="font-size:12.5px;line-height:1.55;color:var(--sec);margin-top:2px;">Off-target toxicity and immunogenicity are manageable with a cleavage-selective or conditional binder. A <em>severe</em> liability would force NO-GO; here it holds the verdict at WATCH.</div></div>
+      </div>
+
+      <!-- sections -->
+      <div style="margin-top:22px;" class="micro">Sections</div>
+
+      <div class="sec">
+        <div style="display:flex;align-items:center;gap:10px;"><span class="rag rag-go"><span class="dot" style="background:var(--go);"></span>Target Biology</span><span style="font-size:13px;font-weight:600;">A CUB-domain transmembrane glycoprotein, tumor-enriched</span></div>
+        <div class="claim"><span></span><span style="font-size:13.5px;line-height:1.55;color:#3A4658;">CDCP1 (CD318) is over-expressed in NSCLC, pancreatic, renal, and breast carcinoma relative to matched normal tissue.<span class="cite">PMID:33611339</span></span></div>
+        <div class="claim"><span></span><span style="font-size:13.5px;line-height:1.55;color:#3A4658;">Surface localization and cancer-enrichment make it accessible to antibody and ADC modalities.<span class="cite">ENSG00000163814</span></span></div>
+      </div>
+
+      <div class="sec">
+        <div style="display:flex;align-items:center;gap:10px;"><span class="rag rag-go"><span class="dot" style="background:var(--go);"></span>Mechanism of Action</span><span style="font-size:13px;font-weight:600;">Protease cleavage drives Src-PKC&delta; and EMT</span></div>
+        <div class="claim"><span></span><span style="font-size:13.5px;line-height:1.55;color:#3A4658;">Matriptase/plasmin cleavage of CDCP1 triggers Src-PKC&delta; signaling that promotes EMT, migration, and metastasis.<span class="cite">PMID:23208492</span></span></div>
+        <!-- evidence drawer, opened on a citation -->
+        <div style="margin:11px 0 0 14px;background:var(--subtle);border:1px solid var(--border);border-radius:11px;padding:12px 14px;position:relative;">
+          <div style="position:absolute;top:-6px;left:20px;width:11px;height:11px;background:var(--subtle);border-left:1px solid var(--border);border-top:1px solid var(--border);transform:rotate(45deg);"></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="pill" style="background:#fff;border:1px solid var(--border);color:var(--sec);font-size:10.5px;padding:3px 8px;"><span class="dot" style="background:#2563EB;"></span>Europe PMC</span><span class="mono" style="font-size:11px;color:var(--muted);">PMID:23208492</span><span class="pill" style="margin-left:auto;font-size:10px;color:var(--go-tx);background:transparent;border:1px solid rgba(22,163,74,.3);padding:2px 8px;">supported</span></div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--ink);">Cleavage of CDCP1 by matriptase drives Src activation and tumor cell migration</div>
+          <p style="font-size:12px;line-height:1.55;color:var(--sec);margin:5px 0 0;">"...proteolytic cleavage of CDCP1 generated a 70-kDa fragment that associated with and activated Src family kinases, enhancing anchorage-independent growth and migration in vitro..."</p>
+          <div class="micro" style="margin-top:8px;font-size:10px;">Skeptic's audit: in-vitro, single cell-line - moderate: generalizability</div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div style="display:flex;align-items:center;gap:10px;"><span class="rag rag-watch"><span class="dot" style="background:var(--watch);"></span>Disease &amp; Indications</span><span style="font-size:13px;font-weight:600;">Prognostic across tumors; genetic link modest</span></div>
+        <div class="claim"><span></span><span style="font-size:13.5px;line-height:1.55;color:#3A4658;">High CDCP1 expression correlates with poor overall survival across multiple carcinomas; the germline genetic association is weak.<span class="cite">EFO_0000311</span></span></div>
+      </div>
+
+      <div class="sec">
+        <div style="display:flex;align-items:center;gap:10px;"><span class="rag rag-watch"><span class="dot" style="background:var(--watch);"></span>Clinical Landscape</span><span style="font-size:13px;font-weight:600;">No approved agents; pipeline is early and thin</span></div>
+        <div class="claim"><span></span><span style="font-size:13.5px;line-height:1.55;color:#3A4658;">No CDCP1-directed therapy is approved; activity is limited to preclinical ADCs and CD318-targeted CAR-T.<span class="cite">NCT07153289</span></span></div>
+      </div>
+
+      <div class="sec">
+        <div style="display:flex;align-items:center;gap:10px;"><span class="rag rag-go"><span class="dot" style="background:var(--go);"></span>Competitive &amp; IP</span><span style="font-size:13px;font-weight:600;">Active but navigable ADC filings</span></div>
+        <div class="claim"><span></span><span style="font-size:13.5px;line-height:1.55;color:#3A4658;">Anti-CDCP1 ADC patent activity is rising; freedom-to-operate is navigable but warrants a claims review.<span class="cite">WO2024/xxxxxx</span></span></div>
+      </div>
+
+      <div class="sec">
+        <div style="display:flex;align-items:center;gap:10px;"><span class="rag rag-watch"><span class="dot" style="background:var(--watch);"></span>Modality &amp; Developability</span><span style="font-size:13px;font-weight:600;">Normal-tissue expression is the gating risk</span></div>
+        <div class="claim"><span></span><span style="font-size:13.5px;line-height:1.55;color:#3A4658;">Broad normal-tissue expression raises off-target and immunogenicity risk; a cleavage-selective or conditionally-active binder is the mitigation path.<span class="cite">PMID:33611339</span></span></div>
+      </div>
+
+      <!-- bull / bear -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px;">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:15px 16px;">
+          <div class="micro" style="color:var(--go-tx);margin-bottom:8px;">Bull case</div>
+          <div style="font-size:12.5px;line-height:1.55;color:var(--sec);">Strong, well-mapped mechanism; broad tumor over-expression; surface-accessible for ADCs; a clear differentiated design (cleavage-selective binder).</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:15px 16px;">
+          <div class="micro" style="color:var(--nogo-tx);margin-bottom:8px;">Bear case</div>
+          <div style="font-size:12.5px;line-height:1.55;color:var(--sec);">Normal-tissue expression and immunogenicity risk; no clinical validation yet; thin pipeline; crowding IP on the obvious ADC approach.</div>
+        </div>
+      </div>
+
+      <!-- conditions -->
+      <div style="margin-top:16px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:15px 16px;">
+        <div class="micro" style="margin-bottom:9px;">Conditions to move to GO</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;gap:9px;font-size:12.5px;color:var(--sec);"><span style="color:var(--primary);font-weight:700;">1</span>Demonstrate a cleavage-selective or conditional binder that spares normal tissue.</div>
+          <div style="display:flex;gap:9px;font-size:12.5px;color:var(--sec);"><span style="color:var(--primary);font-weight:700;">2</span>Resolve immunogenicity/ADA risk in a relevant model.</div>
+          <div style="display:flex;gap:9px;font-size:12.5px;color:var(--sec);"><span style="color:var(--primary);font-weight:700;">3</span>Clear a freedom-to-operate review against the ADC filings.</div>
+        </div>
+      </div>
+
+      <!-- KOL -->
+      <div style="margin-top:16px;background:var(--subtle);border:1px solid var(--border-soft);border-radius:12px;padding:14px 16px;">
+        <div class="micro" style="margin-bottom:9px;">KOL &amp; institutional terrain</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;align-items:baseline;gap:9px;"><span style="font-size:13px;font-weight:600;flex:none;">Hooper JD</span><span style="font-size:12px;color:var(--sec);">Mater Research Institute, University of Queensland</span><span class="mono" style="font-size:11px;color:var(--muted);margin-left:auto;">w 9</span></div>
+          <div style="display:flex;align-items:baseline;gap:9px;"><span style="font-size:13px;font-weight:600;flex:none;">Wells JA</span><span style="font-size:12px;color:var(--sec);">UCSF</span><span class="mono" style="font-size:11px;color:var(--muted);margin-left:auto;">w 6</span></div>
+          <div style="display:flex;align-items:baseline;gap:9px;"><span style="font-size:13px;font-weight:600;flex:none;">Sakai R</span><span style="font-size:12px;color:var(--sec);">Kanagawa Cancer Center</span><span class="mono" style="font-size:11px;color:var(--muted);margin-left:auto;">w 3</span></div>
+        </div>
+      </div>
+
+      <!-- references -->
+      <div style="margin-top:16px;" class="micro">References (12)</div>
+      <div style="margin-top:9px;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:10px;font-size:12.5px;"><span class="mono" style="color:var(--primary);flex:none;">PMID:33611339</span><span style="color:var(--sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">CDCP1: a promising therapeutic target in cancer - a review</span></div>
+        <div style="display:flex;gap:10px;font-size:12.5px;"><span class="mono" style="color:var(--primary);flex:none;">PMID:23208492</span><span style="color:var(--sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Cleavage of CDCP1 by matriptase drives Src activation and migration</span></div>
+        <div style="display:flex;gap:10px;font-size:12.5px;"><span class="mono" style="color:var(--primary);flex:none;">NCT07153289</span><span style="color:var(--sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">CD318-targeted CAR-T cell therapy in advanced solid tumors</span></div>
+        <div style="font-size:12px;color:var(--muted);padding-top:2px;">+ 9 more</div>
+      </div>
+
+    </div>
+
+    <!-- sticky footer -->
+    <div style="flex:none;display:flex;align-items:center;gap:10px;padding:14px 26px;background:var(--surface);border-top:1px solid var(--border);">
+      <span style="font-size:11.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--go)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Every claim grounded to a cited source</span>
+      <span style="flex:1;"></span>
+      <button class="btn btn-ghost" style="border-radius:999px;">Add to watchlist</button>
+      <button class="btn btn-primary" style="border-radius:999px;">Open full report<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

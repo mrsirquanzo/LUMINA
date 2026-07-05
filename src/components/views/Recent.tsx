@@ -85,7 +85,7 @@ export default function Recent() {
           {recentWorkspaces.map((workspace) => (
             <div
               key={workspace.id}
-              className="group bg-surface border border-white/5 rounded-xl p-5 hover:border-white/10 hover:shadow-lg transition-all cursor-pointer"
+              className="group bg-surface border border-border rounded-xl p-5 hover:shadow-lg transition-all cursor-pointer"
               onClick={() => handleOpenWorkspace(String(workspace.id))}
             >
               <div className="flex items-center justify-between">

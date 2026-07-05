@@ -28,7 +28,7 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
             </p>
             <div className="flex-1 grid grid-cols-1 gap-4">
               {data.evidenceGaps.map((gap: any, idx: number) => (
-                <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+                <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border">
                   <div className="flex items-start justify-between mb-2">
                     <p className="text-base font-semibold text-textPrimary flex-1">{gap.gap}</p>
                     <span
@@ -79,12 +79,12 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
 
           {/* Timeline and Resource Info */}
           <div className="grid grid-cols-2 gap-6">
-            <div className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+            <div className="bg-surfaceElevated rounded-lg p-4 border border-border">
               <p className="text-base font-bold text-textSecondary mb-2 uppercase tracking-wider">Timeline to Decision</p>
               <p className="text-base font-bold text-textPrimary">{data.timelineToDecision}</p>
             </div>
             {data.resourceEstimate && (
-              <div className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+              <div className="bg-surfaceElevated rounded-lg p-4 border border-border">
                 <p className="text-base font-bold text-textSecondary mb-2 uppercase tracking-wider">Resource Estimate</p>
                 <p className="text-base font-bold text-textPrimary">{data.resourceEstimate}</p>
               </div>
@@ -100,7 +100,7 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
           </p>
           <div className="space-y-2">
             {data.evidenceGaps.slice(0, 3).map((gap: any, idx: number) => (
-              <div key={idx} className="bg-surfaceElevated rounded-lg p-3 border border-white/5">
+              <div key={idx} className="bg-surfaceElevated rounded-lg p-3 border border-border">
                 <div className="flex items-start justify-between mb-1">
                   <p className="text-base font-semibold text-textPrimary">{gap.gap}</p>
                   <span
@@ -143,7 +143,7 @@ export default function KeyExperimentsTile({ data, loading, onAgentClick, extend
           </div>
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-4 border border-border">
           <p className="text-base font-bold text-textSecondary mb-2 uppercase tracking-wider">Timeline to Decision</p>
           <p className="text-base font-bold text-textPrimary">{data.timelineToDecision}</p>
         </div>

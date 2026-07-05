@@ -36,7 +36,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return '#30D158';
-    if (score >= 60) return '#FF9F0A';
+    if (score >= 60) return '#F59E0B';
     return '#FF453A';
   };
 
@@ -53,7 +53,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
       extendedIntelligence={extendedIntelligence}
     >
       {/* Tabs */}
-      <div className="flex gap-2 mb-4 border-b border-white/5 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
+      <div className="flex gap-2 mb-4 border-b border-border overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
         {(['overview', 'gwas', 'constraints', 'mendelian'] as const).map((tab) => (
           <button
             key={tab}
@@ -77,19 +77,19 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
 
             {/* Metrics: keep values inside cards at narrow widths */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 px-1">
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-border min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">pLI</p>
                 <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-textPrimary leading-tight tracking-tight tabular-nums truncate">
                   {data.constraintMetrics.pLI}
                 </p>
               </div>
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-border min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">LOEUF</p>
                 <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-textPrimary leading-tight tracking-tight tabular-nums truncate">
                   {data.constraintMetrics.LOEUF}
                 </p>
               </div>
-              <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
+              <div className="bg-surfaceElevated rounded-lg p-5 border border-border min-h-[100px] flex flex-col justify-center min-w-0 overflow-hidden">
                 <p className="text-sm font-semibold text-textSecondary mb-3 uppercase tracking-wide">LoF Observed</p>
                 <p className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-bold text-textPrimary leading-tight tracking-tight tabular-nums truncate">
                   {data.constraintMetrics.lofObserved ?? '—'}
@@ -97,7 +97,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
               </div>
             </div>
 
-            <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 px-1">
+            <div className="bg-surfaceElevated rounded-lg p-5 border border-border px-1">
               <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wide">Direction of Effect</p>
               <p className="text-base leading-relaxed text-textPrimary">{data.directionOfEffect}</p>
             </div>
@@ -117,7 +117,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
                       if (active && payload && payload[0]) {
                         const data = payload[0].payload;
                         return (
-                          <div className="bg-surfaceElevated border border-white/10 rounded-lg p-3 shadow-xl">
+                          <div className="bg-surfaceElevated border border-border rounded-lg p-3 shadow-xl">
                             <p className="font-medium text-textPrimary">{data.fullDisease}</p>
                             <p className="text-sm text-textSecondary">
                               Association strength: {data.score.toFixed(1)}%
@@ -140,7 +140,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
 
             <div className="space-y-3 px-1">
               {data.gwasAssociations.map((gwas, idx) => (
-                <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+                <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border">
                   <div className="flex items-start justify-between mb-2">
                     <p className="text-base font-semibold text-textPrimary">{gwas.disease}</p>
                     <span className="text-sm px-3 py-1 bg-primary/20 text-primary rounded font-medium flex-shrink-0 ml-3">
@@ -185,7 +185,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
                       cy="50%"
                       r="35"
                       fill="none"
-                      stroke={data.constraintMetrics.pLI > 0.9 ? '#30D158' : '#FF9F0A'}
+                      stroke={data.constraintMetrics.pLI > 0.9 ? '#30D158' : '#F59E0B'}
                       strokeWidth="6"
                       strokeDasharray={2 * Math.PI * 35}
                       strokeDashoffset={2 * Math.PI * 35 * (1 - data.constraintMetrics.pLI)}
@@ -217,7 +217,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
                       cy="50%"
                       r="35"
                       fill="none"
-                      stroke={data.constraintMetrics.LOEUF < 0.35 ? '#30D158' : '#FF9F0A'}
+                      stroke={data.constraintMetrics.LOEUF < 0.35 ? '#30D158' : '#F59E0B'}
                       strokeWidth="6"
                       strokeDasharray={2 * Math.PI * 35}
                       strokeDashoffset={2 * Math.PI * 35 * data.constraintMetrics.LOEUF}
@@ -233,7 +233,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
               </div>
             </div>
 
-            <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5 space-y-3">
+            <div className="bg-surfaceElevated rounded-lg p-5 border border-border space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-base text-textSecondary font-medium">LoF Observed:</span>
                 <span className="text-base text-textPrimary font-bold">{data.constraintMetrics.lofObserved ?? '—'}</span>
@@ -250,7 +250,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
               </div>
             </div>
 
-            <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+            <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
               <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wide">LoF Carrier Phenotypes</p>
               <p className="text-base leading-relaxed text-textPrimary">{data.lofCarrierPhenotypes}</p>
             </div>
@@ -282,7 +282,7 @@ export default function GeneticValidationTile({ data, loading, onAgentClick, ext
               </p>
               <div className="space-y-3">
                 {data.biobankEvidence.map((evidence, idx) => (
-                  <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5">
+                  <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border">
                     <p className="text-base font-semibold text-textPrimary mb-2">{evidence.source}</p>
                     <p className="text-base leading-relaxed text-textPrimary">{evidence.finding}</p>
                   </div>

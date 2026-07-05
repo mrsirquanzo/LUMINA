@@ -52,7 +52,7 @@ export default function ClinicalPositioningTile({ data, loading, onAgentClick, e
           </div>
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">
             Program Status
           </p>
@@ -63,7 +63,7 @@ export default function ClinicalPositioningTile({ data, loading, onAgentClick, e
           </p>
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-base font-bold text-textSecondary mb-3 uppercase tracking-wider">Clinical Data</p>
           <p className="text-base leading-relaxed text-textPrimary">
             Early efficacy signals comparable to approved agents. Safety profile suggests improved
@@ -79,7 +79,7 @@ export default function ClinicalPositioningTile({ data, loading, onAgentClick, e
               .filter((t: any) => t.status === 'Active' || t.status === 'Recruiting')
               .slice(0, 2)
               .map((trial: any, idx: number) => (
-                <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-white/5 flex items-center justify-between">
+                <div key={idx} className="bg-surfaceElevated rounded-lg p-4 border border-border flex items-center justify-between">
                   <div>
                     <p className="text-base font-semibold text-textPrimary">{trial.nctId}</p>
                     <p className="text-base text-textPrimary mt-1 font-medium">{trial.phase}</p>

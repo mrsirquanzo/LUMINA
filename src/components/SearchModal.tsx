@@ -45,14 +45,14 @@ export default function SearchModal({ open, onClose, onSearch }: SearchModalProp
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
         }
       }}
     >
-      <div className="w-full max-w-2xl bg-surfaceElevated border border-white/10 rounded-2xl shadow-2xl animate-modal-enter">
+      <div className="w-full max-w-2xl bg-surfaceElevated border border-border rounded-2xl shadow-2xl animate-modal-enter">
         <form onSubmit={handleSubmit} className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <Sparkles className="w-6 h-6 text-primary" />
@@ -62,7 +62,7 @@ export default function SearchModal({ open, onClose, onSearch }: SearchModalProp
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ask Sonny anything about your target..."
-              className="flex-1 bg-surface border border-white/10 rounded-lg px-4 py-3 text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="flex-1 bg-surface border border-border rounded-lg px-4 py-3 text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             <button
               type="button"

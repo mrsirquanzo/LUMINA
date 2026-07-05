@@ -138,7 +138,7 @@ export const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10"
+                className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-border"
               >
                 <FileText className="w-5 h-5 text-gray-400" />
                 <div className="flex-1 min-w-0">

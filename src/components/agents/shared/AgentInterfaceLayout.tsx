@@ -73,7 +73,7 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
       initial={{ x: 400, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 400, opacity: 0 }}
-      className="h-full flex flex-col bg-gray-900/95 backdrop-blur-xl border-l border-white/10"
+      className="h-full flex flex-col bg-surface/95 backdrop-blur-xl border-l border-border"
     >
       {/* Header */}
       <div className={`relative px-6 py-4 bg-gradient-to-b ${headerGradients[themeColor]}`}>
@@ -82,7 +82,7 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
           <div className="mb-3">
             <button
               onClick={onBack}
-              className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 border border-white/10 rounded-lg hover:border-white/20 hover:bg-surfaceElevated transition-colors text-sm text-gray-300 hover:text-white"
+              className="flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 border border-border rounded-lg hover:border-border hover:bg-surfaceElevated transition-colors text-sm text-textSecondary hover:text-textPrimary"
             >
               <ChevronLeft className="w-4 h-4" />
               {backButtonLabel}
@@ -92,7 +92,7 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
 
         {/* Agent Icon Navigation - Show if enabled */}
         {showAgentSelector && currentAgent && onAgentSelect && (
-          <div className="mb-4 pb-4 border-b border-white/10">
+          <div className="mb-4 pb-4 border-b border-border">
             <AgentIconNavigation
               currentAgent={currentAgent}
               onAgentSelect={onAgentSelect}
@@ -106,9 +106,9 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
               <AgentIcon className={`w-6 h-6 ${iconColors[themeColor]}`} />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-white">{agentName}</h2>
+              <h2 className="text-lg font-semibold text-textPrimary">{agentName}</h2>
               {targetName && (
-                <p className="text-sm text-gray-400">Analyzing: {targetName}</p>
+                <p className="text-sm text-textSecondary">Analyzing: {targetName}</p>
               )}
             </div>
           </div>
@@ -117,9 +117,9 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 hover:bg-subtle rounded-lg transition-colors"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-textSecondary" />
               </button>
             )}
           </div>
@@ -131,8 +131,8 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
         {children}
         
         {/* Export Section - At bottom of content, after document upload */}
-        <section className="pt-4 border-t border-white/10">
-          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+        <section className="pt-4 border-t border-border">
+          <h3 className="text-sm font-medium text-textSecondary uppercase tracking-wider mb-4">
             Export Analysis
           </h3>
           <div className="w-full">
@@ -143,7 +143,7 @@ export const AgentInterfaceLayout: React.FC<AgentInterfaceLayoutProps> = ({
 
       {/* Chat Section */}
       {chatSection && (
-        <div className="border-t border-white/10 p-4">
+        <div className="border-t border-border p-4">
           {chatSection}
         </div>
       )}

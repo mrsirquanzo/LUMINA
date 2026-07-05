@@ -192,7 +192,7 @@ export const FinancialAgentInterfaceV2: React.FC<FinancialAgentInterfaceV2Props>
           }
         }}
         placeholder="Ask about valuations, deals, or financials..."
-        className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+        className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-border text-textPrimary placeholder-gray-500 focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
       />
       <button
         onClick={handleChatSend}
@@ -250,7 +250,7 @@ export const FinancialAgentInterfaceV2: React.FC<FinancialAgentInterfaceV2Props>
           <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
             Analysis Results
           </h3>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+          <div className="p-4 rounded-xl bg-white/5 border border-border">
             <div className="prose prose-invert max-w-none">
               <pre className="whitespace-pre-wrap text-sm text-gray-300">
                 {typeof analysisResults.data === 'string' 

@@ -100,7 +100,7 @@ export default function IPFreedomToOperateTile({ data, loading, onAgentClick, ex
             {data.keyPatents.slice(0, 2).map((patent, idx) => (
               <div
                 key={idx}
-                className="bg-surfaceElevated rounded-lg p-4 border border-white/5 cursor-pointer hover:bg-surface transition-colors"
+                className="bg-surfaceElevated rounded-lg p-4 border border-border cursor-pointer hover:bg-surface transition-colors"
                 onClick={() =>
                   setExpandedPatent(expandedPatent === patent.patentNumber ? null : patent.patentNumber)
                 }
@@ -125,7 +125,7 @@ export default function IPFreedomToOperateTile({ data, loading, onAgentClick, ex
                   <span>Expires: {new Date(patent.expiryDate).getFullYear()}</span>
                 </div>
                 {expandedPatent === patent.patentNumber && (
-                  <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="mt-4 pt-4 border-t border-border">
                     <p className="text-sm font-semibold text-textTertiary mb-2">Claims:</p>
                     <ul className="space-y-2">
                       {patent.claims.slice(0, 2).map((claim, claimIdx) => (
@@ -142,7 +142,7 @@ export default function IPFreedomToOperateTile({ data, loading, onAgentClick, ex
           </div>
         </div>
 
-        <div className="bg-surfaceElevated rounded-lg p-5 border border-white/5">
+        <div className="bg-surfaceElevated rounded-lg p-5 border border-border">
           <p className="text-sm font-semibold text-textTertiary mb-3 uppercase tracking-wider">FTO Assessment</p>
           <p className="text-base leading-relaxed text-textSecondary">{data.ftoAssessment}</p>
         </div>
