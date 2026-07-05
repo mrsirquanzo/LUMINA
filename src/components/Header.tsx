@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import {
-  Sparkles,
   Grid,
   List,
   Search,
@@ -8,7 +7,6 @@ import {
   Trash2,
   Radio,
   RotateCcw,
-  FolderPlus,
 } from 'lucide-react';
 import type { Persona } from '../types';
 import { useTileStore } from '../lib/tiles/store';
@@ -24,9 +22,6 @@ interface HeaderProps {
   onExport: (format: 'pdf' | 'pptx' | 'docx') => void;
   viewMode?: 'grid' | 'list';
   onViewModeChange?: (mode: 'grid' | 'list') => void;
-  onOpenSonnyPanel?: () => void;
-  sonnyPanelCollapsed?: boolean;
-  onToggleSonnyPanel?: () => void;
 }
 
 export default function Header({
@@ -37,9 +32,6 @@ export default function Header({
   onSearch,
   viewMode = 'grid',
   onViewModeChange,
-  onOpenSonnyPanel,
-  sonnyPanelCollapsed = false,
-  onToggleSonnyPanel,
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -67,36 +59,12 @@ export default function Header({
     return tiles.filter((tile) => tile.workspaceIds.includes(activeWorkspaceId));
   }, [tiles, activeWorkspaceId]);
 
-  const canSaveWorkspace = useMemo(() => {
-    if (!activeWorkspaceId) return false;
-    return visibleTiles.length > 0;
-  }, [activeWorkspaceId, visibleTiles.length]);
-  
-  // Check if there are any tiles to clear (either dynamic tiles or baseline tiles for TROP2)
-  const hasTilesToClear = useMemo(() => {
-    // Always show if there are any dynamic tiles
-    if (tiles.length > 0) return true;
-    
-    // For TROP2 workspace, also consider baseline tiles exist
-    if (activeWorkspaceId) {
-      const activeWorkspace = getWorkspaceById(activeWorkspaceId);
-      if (activeWorkspace?.target?.toUpperCase() === 'TROP2') {
-        return true; // TROP2 always has baseline tiles
-      }
-    }
-    
-    return false;
-  }, [tiles.length, activeWorkspaceId, getWorkspaceById]);
 
   // Keep header toggle synced with Sonny panel mode
   useEffect(() => onAgentModeUpdated(setAgentMode), []);
 
   const handleSearch = async (query: string) => {
     if (query.trim()) {
-      // Open Sonny panel if provided
-      if (onOpenSonnyPanel) {
-        onOpenSonnyPanel();
-      }
       // Pass query to Sonny via onSearch callback
       onSearch?.(query);
       // Clear the search input after submitting
@@ -223,7 +191,6 @@ export default function Header({
             <button
               type="button"
               onClick={() => {
-                onOpenSonnyPanel?.();
                 requestAgentMode('live');
               }}
               className={`tactile px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
@@ -271,24 +238,6 @@ export default function Header({
           {/* Clear All Tiles - Show in all workspaces if there are any tiles */}
           {(tiles.length > 0 || activeWorkspaceId) && (
             <>
-              {/* Save workspace (hidden in demo mode to keep investor flow clean) */}
-              {agentMode !== 'demo' && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Ensure the modal host (Sonny panel) is mounted.
-                    onOpenSonnyPanel?.();
-                    // Dispatch after a short tick so the panel can mount its listener.
-                    setTimeout(() => window.dispatchEvent(new Event('open-save-workspace')), 50);
-                  }}
-                  disabled={!canSaveWorkspace}
-                  className="tactile flex items-center gap-2 px-3 py-2 bg-surfaceElevated/50 text-textPrimary border border-border rounded-lg hover:bg-surfaceElevated/70 hover:border-slate-300 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  title={canSaveWorkspace ? 'Save this analysis as a workspace' : 'No workspace/tiles to save yet'}
-                >
-                  <FolderPlus className="w-4 h-4 text-textSecondary" />
-                  <span className="hidden md:inline">Save workspace</span>
-                </button>
-              )}
               <button
                 onClick={handleClearAllTiles}
                 disabled={visibleTiles.length === 0}
@@ -312,30 +261,6 @@ export default function Header({
             </>
           )}
 
-          {/* Sonny Panel Toggle - Enhanced with glassmorphism and gradient */}
-          {onToggleSonnyPanel && (
-            <button
-              onClick={onToggleSonnyPanel}
-              className={`tactile relative p-2.5 rounded-xl transition-all duration-300 group ${
-                sonnyPanelCollapsed
-                  ? 'bg-surfaceElevated/50 border border-border hover:border-slate-300 hover:bg-surfaceElevated/70'
-                  : 'bg-gradient-to-br from-primary/20 via-primary/15 to-cyan-500/20 border border-primary/30 shadow-lg shadow-primary/20 backdrop-blur-md'
-              }`}
-              aria-label={sonnyPanelCollapsed ? 'Show Sonny panel' : 'Hide Sonny panel'}
-              title={sonnyPanelCollapsed ? 'Show Sonny panel (⌘J)' : 'Hide Sonny panel (⌘J)'}
-            >
-              <Sparkles 
-                className={`w-5 h-5 transition-all duration-300 ${
-                  sonnyPanelCollapsed
-                    ? 'text-textSecondary group-hover:text-primary'
-                    : 'text-primary drop-shadow-sm'
-                }`}
-              />
-              {!sonnyPanelCollapsed && (
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              )}
-            </button>
-          )}
         </div>
       </div>
 

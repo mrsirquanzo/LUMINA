@@ -14,7 +14,6 @@ import ExportModal from './components/ExportModal';
 import SettingsModal from './components/SettingsModal';
 import { ToastContainer } from './components/Toast';
 import SkipLink from './components/SkipLink';
-import SonnySidePanel from './components/SonnySidePanel';
 import LandingAnimation from './components/LandingAnimation';
 import { PersonaProvider } from './contexts/PersonaContext';
 import { TargetProvider, type TargetData } from './contexts/TargetContext';
@@ -50,7 +49,7 @@ function isReloadNavigation(): boolean {
 
 function AppContent() {
   const [activePersona, setActivePersona] = useState<Persona>(Persona.SCIENTIST);
-  const [currentView, setCurrentView] = useState<ViewState>('dashboard');
+  const [currentView, setCurrentView] = useState<ViewState>('research');
   const [showLandingAnimation, setShowLandingAnimation] = useState(() => {
     // Check if user has seen the intro in this session
     if (typeof window !== 'undefined') {
@@ -69,28 +68,6 @@ function AppContent() {
     return () => window.removeEventListener('navigate-to-dashboard', handleNavigate);
   }, []);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  // Initialize sonnyPanelCollapsed from localStorage immediately to prevent layout shift
-  const [sonnyPanelCollapsed, setSonnyPanelCollapsed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedState = localStorage.getItem('sonnyPanelCollapsed');
-      if (savedState !== null) {
-        return savedState === 'true';
-      }
-    }
-    return false; // Default to expanded
-  });
-  const [sonnyPanelWidth, setSonnyPanelWidth] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedWidth = localStorage.getItem('lumina-sonny-panel-width');
-      if (savedWidth) {
-        const width = parseInt(savedWidth, 10);
-        if (width >= 400 && width <= 900) {
-          return width;
-        }
-      }
-    }
-    return 600; // Default width
-  });
   const [currentTarget, setCurrentTarget] = useState<TargetData | null>(null); // Start with null - no target selected
   const [isLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -207,7 +184,6 @@ function AppContent() {
     lobbyLayoutAppliedRef.current = true;
 
     setSidebarCollapsed(true);
-    setSonnyPanelCollapsed(true);
   }, [isLobby, showLandingAnimation]);
   
   // Update currentTarget when active workspace changes
@@ -231,23 +207,14 @@ function AppContent() {
     }
   }, [tileActiveWorkspaceId, activeWorkspaceId, getWorkspaceById]);
 
-  // Save Sonny panel state to localStorage
-  useEffect(() => {
-    localStorage.setItem('sonnyPanelCollapsed', String(sonnyPanelCollapsed));
-  }, [sonnyPanelCollapsed]);
-
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey) {
         switch (e.key) {
-          case 'k': // Search / Toggle Sonny panel
+          case 'k': // Search
             e.preventDefault();
-            if (sonnyPanelCollapsed) {
-              setSonnyPanelCollapsed(false);
-            } else {
-              setSearchOpen(true);
-            }
+            setSearchOpen(true);
             break;
           case '1': // Scientist view
             e.preventDefault();
@@ -260,10 +227,6 @@ function AppContent() {
           case 'e': // Export
             e.preventDefault();
             setExportOpen(true);
-            break;
-          case 'j': // Toggle Sonny panel
-            e.preventDefault();
-            setSonnyPanelCollapsed(!sonnyPanelCollapsed);
             break;
           case 'r': // Replay landing animation
             e.preventDefault();
@@ -279,7 +242,7 @@ function AppContent() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [sonnyPanelCollapsed, showLandingAnimation]);
+  }, [showLandingAnimation]);
 
   const [sonnyQuery, setSonnyQuery] = useState<string>('');
 
@@ -319,15 +282,10 @@ function AppContent() {
       sessionStorage.setItem('lumina-has-selected-target', 'true');
       sessionStorage.removeItem('lumina-suppress-orchestration-tiles');
 
-      // Open Sonny panel if collapsed, then set query immediately
-      // React will batch these updates, so both happen in the same render cycle
-      if (sonnyPanelCollapsed) {
-        setSonnyPanelCollapsed(false);
-      }
       // Set the query to trigger auto-start in Sonny panel (no delay needed)
       setSonnyQuery(query);
     }
-  }, [sonnyPanelCollapsed]);
+  }, []);
   
   // Use a ref to always have the latest handleSearch function
   const handleSearchRef = useRef(handleSearch);
@@ -346,10 +304,6 @@ function AppContent() {
       window.removeEventListener('trigger-search', handleTriggerSearch as EventListener);
     };
   }, []);
-
-  const handleQueryProcessed = () => {
-    setSonnyQuery('');
-  };
 
   const handleExport = (format: 'pdf' | 'pptx' | 'docx') => {
     try {
@@ -416,9 +370,8 @@ function AppContent() {
         sessionStorage.removeItem('lumina-has-selected-target');
         sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
 
-        // Lobby should start with minimized side panels.
+        // Lobby should start with minimized sidebar.
         setSidebarCollapsed(true);
-        setSonnyPanelCollapsed(true);
       }
     }
     setShowLandingAnimation(false);
@@ -438,9 +391,8 @@ function AppContent() {
         sessionStorage.removeItem('lumina-has-selected-target');
         sessionStorage.setItem('lumina-suppress-orchestration-tiles', 'true');
 
-        // Lobby should start with minimized side panels.
+        // Lobby should start with minimized sidebar.
         setSidebarCollapsed(true);
-        setSonnyPanelCollapsed(true);
       }
     }
     setShowLandingAnimation(false);
@@ -486,13 +438,6 @@ function AppContent() {
               onExport={handleExport}
               viewMode={viewMode}
               onViewModeChange={setViewMode}
-              onOpenSonnyPanel={() => {
-                if (sonnyPanelCollapsed) {
-                  setSonnyPanelCollapsed(false);
-                }
-              }}
-              sonnyPanelCollapsed={sonnyPanelCollapsed}
-              onToggleSonnyPanel={() => setSonnyPanelCollapsed(!sonnyPanelCollapsed)}
             />
 
             <div
@@ -500,12 +445,6 @@ function AppContent() {
               className="flex-1 overflow-y-auto custom-scrollbar relative transition-all duration-300"
               role="main"
               aria-label="Main content"
-              style={{
-                paddingRight: !sonnyPanelCollapsed ? `${sonnyPanelWidth}px` : '0',
-                transition: 'padding-right 0.3s ease-in-out',
-                width: '100%',
-                maxWidth: '100%',
-              }}
             >
 
               {/* Content area */}
@@ -542,7 +481,7 @@ function AppContent() {
 
                 {currentView === 'research' && (
                   <Suspense fallback={<DashboardSkeleton />}>
-                    <SonnyResearchDashboard />
+                    <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} />
                   </Suspense>
                 )}
               </div>
@@ -569,15 +508,6 @@ function AppContent() {
           {/* Toast notifications */}
           <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
           
-          {/* Sonny Side Panel - Persistent right panel for agent interactions */}
-          <SonnySidePanel
-            isCollapsed={sonnyPanelCollapsed}
-            onToggleCollapse={() => setSonnyPanelCollapsed(!sonnyPanelCollapsed)}
-            targetName={currentTarget?.name || ''}
-            initialQuery={sonnyQuery}
-            width={sonnyPanelWidth}
-            onWidthChange={setSonnyPanelWidth}
-          />
         </div>
       </TargetProvider>
     </PersonaProvider>
