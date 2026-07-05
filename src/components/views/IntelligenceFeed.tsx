@@ -22,7 +22,6 @@ import {
   ExternalLink,
   Download,
   Plus,
-  ArrowUpRight,
 } from 'lucide-react';
 import { format, formatDistanceToNowStrict, parseISO } from 'date-fns';
 import { useQueries, useQuery } from '@tanstack/react-query';
@@ -2167,108 +2166,157 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                 const expanded = expandedItemId === item.id;
                 const effectiveConfidence = analysis?.confidencePct ?? confidence;
 
+                // Derive per-item display values
+                const itemPmid = item.type === 'publication' ? extractPmidFromUrl(item.link) : null;
+                const itemNct = item.type === 'clinical' ? extractNctFromUrl(item.link) : null;
+                const isPatent = (() => {
+                  const u = (item.link || '').toLowerCase();
+                  return (
+                    u.includes('espacenet.com') ||
+                    u.includes('lens.org') ||
+                    u.includes('google.com/patents') ||
+                    u.includes('patentscope.wipo.int') ||
+                    /\/wo\d{4}/i.test(item.link)
+                  );
+                })();
+                const itemId = itemPmid
+                  ? `PMID:${itemPmid}`
+                  : itemNct
+                    ? itemNct
+                    : isPatent
+                      ? (() => {
+                          const m = item.link.match(/WO\d{4}[\w/]+/i);
+                          return m ? m[0].toUpperCase() : null;
+                        })()
+                      : null;
+
+                const typeLabel = (() => {
+                  if (item.type === 'publication') return 'Publication';
+                  if (item.type === 'clinical') return 'Clinical trial';
+                  if (item.type === 'regulatory') return 'Regulatory';
+                  if (item.type === 'deal') return 'Deal';
+                  return 'News';
+                })();
+
+                const openLabel = (() => {
+                  if (item.type === 'clinical') return 'Open trial';
+                  if (item.type === 'deal') return 'Open release';
+                  if (item.type === 'regulatory') return 'Open filing';
+                  if (isPatent) return 'Open patent';
+                  return 'Open paper';
+                })();
+
+                const activeTarget =
+                  requestParams.target || data?.queryPack?.target || currentTarget?.name || null;
+
+                const sonnysRead = analysis?.sections?.theImplication?.text || buildImplicationSentence(item.type);
+
+                const relevanceLabel =
+                  item.relevance === 'high' ? 'High' : item.relevance === 'medium' ? 'Medium' : 'Low';
+                const relevanceClass =
+                  item.relevance === 'high'
+                    ? 'text-go-text'
+                    : item.relevance === 'medium'
+                      ? 'text-watch-text'
+                      : 'text-textSecondary';
+
                 return (
                   <article
                     key={item.id}
-                    className={`group border rounded-2xl overflow-hidden transition-all ${
+                    className={[
+                      'group border rounded-2xl overflow-hidden',
+                      'shadow-[0_1px_2px_rgba(15,23,42,.04),0_2px_8px_rgba(15,23,42,.035)]',
+                      'transition-all duration-200',
+                      'hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(15,23,42,.10),0_2px_8px_rgba(15,23,42,.05)]',
+                      'active:translate-y-0 motion-reduce:hover:translate-y-0 motion-reduce:transition-none',
                       pinned
-                        ? 'border-amber-500/30 ring-1 ring-amber-500/10 bg-subtle'
-                        : 'border-border bg-subtle/50 hover:bg-subtle hover:border-border'
-                    }`}
+                        ? 'border-amber-500/30 ring-1 ring-amber-500/10 bg-white hover:border-amber-500/40'
+                        : 'border-border bg-white hover:border-[#C3D4F2]',
+                    ].join(' ')}
                   >
-                    <div className="p-5">
-                      <div className="flex items-center justify-between gap-3 mb-3">
-                        <div className="flex items-center gap-3">
-                          {pinned ? (
-                            <div className="flex items-center gap-1 text-watch-text">
-                              <Pin className="w-3.5 h-3.5" />
-                              <span className="text-[10px] font-semibold uppercase tracking-wider">Pinned</span>
-                            </div>
-                          ) : null}
-                          <PriorityIndicator priority={priority} />
-                        </div>
+                    <div className="p-[17px_19px]">
 
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-textTertiary">{formatRelativeTime(item.date)}</span>
-                          <button
-                            type="button"
-                            onClick={() => togglePinned(item.id)}
-                            className={`p-2 rounded-xl hover:bg-subtle transition-colors ${
-                              pinned ? 'text-watch-text' : 'text-textTertiary hover:text-textPrimary'
-                            }`}
-                            title={pinned ? 'Unpin' : 'Pin'}
-                            aria-label={pinned ? 'Unpin' : 'Pin'}
-                          >
-                            <Pin className="w-4 h-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setWhyOpenId((prev) => (prev === item.id ? '' : item.id))}
-                            className="p-2 rounded-xl hover:bg-subtle transition-colors text-textSecondary hover:text-textPrimary"
-                            title="Why included?"
-                            aria-label="Why included"
-                          >
-                            <Info className="w-4 h-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => hideItemUrlForContext(item.link)}
-                            className="p-2 rounded-xl hover:bg-subtle transition-colors text-textSecondary hover:text-textPrimary"
-                            title="Hide this item"
-                            aria-label="Hide this item"
-                          >
-                            <EyeOff className="w-4 h-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => hideSourceForContext(item.link)}
-                            className="p-2 rounded-xl hover:bg-subtle transition-colors text-textSecondary hover:text-textPrimary"
-                            title="Hide this source (not relevant)"
-                            aria-label="Hide this source"
-                          >
-                            <Ban className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-subtle border border-border flex items-center justify-center shrink-0">
-                          <Icon className="w-5 h-5 text-textSecondary" />
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <SourcePill source={item.source} url={item.link} />
-                            <span className="text-xs text-textTertiary">•</span>
-                            <ConfidenceMeter value={effectiveConfidence} />
+                      {/* 1. Meta row: source pill + type badge + target tag + time + icon controls */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {pinned ? (
+                          <div className="flex items-center gap-1 text-watch-text mr-1">
+                            <Pin className="w-3 h-3" />
+                            <span className="text-[10px] font-semibold uppercase tracking-wider">Pinned</span>
                           </div>
+                        ) : null}
+                        <SourcePill source={item.source} url={item.link} />
+                        <span className={`text-[11px] font-medium ${getTypeTone(item.type)}`}>{typeLabel}</span>
+                        {activeTarget ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-amber-500/30 text-[10.5px] font-semibold text-watch-text bg-transparent">
+                            {activeTarget}
+                          </span>
+                        ) : null}
+                        <span className="flex-1" />
+                        <span className="text-[11px] text-textTertiary">{formatRelativeTime(item.date)}</span>
+                        <button
+                          type="button"
+                          onClick={() => togglePinned(item.id)}
+                          className={`p-1.5 rounded-lg hover:bg-subtle transition-colors ${pinned ? 'text-watch-text' : 'text-textTertiary hover:text-textPrimary'}`}
+                          title={pinned ? 'Unpin' : 'Pin'}
+                          aria-label={pinned ? 'Unpin' : 'Pin'}
+                        >
+                          <Pin className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setWhyOpenId((prev) => (prev === item.id ? '' : item.id))}
+                          className="p-1.5 rounded-lg hover:bg-subtle transition-colors text-textTertiary hover:text-textPrimary"
+                          title="Why included?"
+                          aria-label="Why included"
+                        >
+                          <Info className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => hideItemUrlForContext(item.link)}
+                          className="p-1.5 rounded-lg hover:bg-subtle transition-colors text-textTertiary hover:text-textPrimary"
+                          title="Hide this item"
+                          aria-label="Hide this item"
+                        >
+                          <EyeOff className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => hideSourceForContext(item.link)}
+                          className="p-1.5 rounded-lg hover:bg-subtle transition-colors text-textTertiary hover:text-textPrimary"
+                          title="Hide this source"
+                          aria-label="Hide this source"
+                        >
+                          <Ban className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
 
-                          <a href={item.link} target="_blank" rel="noopener noreferrer" className="block mt-2 group/link">
-                            <h3 className="text-base font-semibold text-textPrimary leading-snug hover:text-primary transition-colors">
-                              {highlightText(item.title, item.matchedTerms || [])}
-                            </h3>
-                            <span className="inline-flex items-center gap-1 text-xs text-textTertiary mt-1 group-hover/link:text-primary transition-colors">
-                              Open source <ArrowUpRight className="w-3 h-3" />
-                            </span>
-                          </a>
+                      {/* 2. Title - clickable link */}
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block mt-[11px] group/link"
+                      >
+                        <h3 className="text-[15px] font-semibold text-textPrimary leading-[1.35] hover:text-primary transition-colors">
+                          {highlightText(item.title, item.matchedTerms || [])}
+                        </h3>
+                      </a>
 
-                          <p className="text-sm text-textSecondary leading-relaxed mt-2 line-clamp-2">{item.summary}</p>
-
-                          {item.tags?.length ? (
-                            <div className="flex items-center gap-2 mt-3 flex-wrap">
-                              {item.tags.slice(0, 6).map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="px-2 py-0.5 bg-subtle border border-border rounded text-[10px] text-textSecondary font-medium hover:bg-subtle hover:text-textPrimary transition-colors cursor-default"
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          ) : null}
+                      {/* 3. Sonny's read - inline implication */}
+                      <div className="mt-[10px] flex gap-[9px] items-start">
+                        <Sparkles className="w-[15px] h-[15px] text-primary flex-none mt-[3px]" />
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] font-semibold uppercase tracking-[.05em] text-textTertiary block mb-0.5">
+                            {"Sonny's read"}
+                          </span>
+                          <p className="font-display text-[14.5px] leading-[1.6] text-[#3A4658] m-0 max-w-[64ch]">
+                            {sonnysRead}
+                          </p>
                         </div>
                       </div>
 
+                      {/* Why included - collapsible */}
                       {whyOpenId === item.id ? (
                         <div className="mt-4 p-4 rounded-xl bg-subtle border border-border text-xs text-textSecondary">
                           <div className="flex items-center justify-between gap-2">
@@ -2285,7 +2333,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           <div className="mt-2 space-y-1">
                             <div>
                               <span className="text-textSecondary">Matched:</span>{' '}
-                              <span className="font-mono">{uniqueTerms(item.matchedTerms || []).slice(0, 8).join(', ') || '—'}</span>
+                              <span className="font-mono">{uniqueTerms(item.matchedTerms || []).slice(0, 8).join(', ') || '\u2014'}</span>
                             </div>
                             <div>
                               <span className="text-textSecondary">Field:</span>{' '}
@@ -2294,19 +2342,73 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                                   ? 'title'
                                   : item.matchedFields?.includes('summary')
                                     ? 'summary'
-                                    : '—'}
+                                    : '\u2014'}
                               </span>
                             </div>
                             <div>
                               <span className="text-textSecondary">Score:</span>{' '}
-                              <span className="font-mono">{typeof item.score === 'number' ? item.score.toFixed(2) : '—'}</span>
+                              <span className="font-mono">{typeof item.score === 'number' ? item.score.toFixed(2) : '\u2014'}</span>
                             </div>
                           </div>
                         </div>
                       ) : null}
+
+                      {/* 4. Footer row: relevance + identifier + actions */}
+                      <div className="flex items-center gap-3 mt-[14px] flex-wrap">
+                        <span className="text-[11px] font-medium text-textSecondary">
+                          Relevance{' '}
+                          <span className={`font-bold ${relevanceClass}`}>{relevanceLabel}</span>
+                        </span>
+                        {itemId ? (
+                          <span className="font-mono text-[11px] text-textTertiary">{itemId}</span>
+                        ) : null}
+                        <span className="flex-1" />
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] bg-white border border-border text-[12.5px] font-semibold text-textPrimary hover:border-[#C7D2E4] hover:shadow-[0_1px_3px_rgba(15,23,42,.05)] transition-all active:scale-[.98]"
+                        >
+                          {openLabel}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                        {/* Synthesize - toggles the full 4-panel analysis expand */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const next = expanded ? '' : item.id;
+                            setExpandedItemId(next);
+                            if (next) void ensureArticleAnalysis(item);
+                          }}
+                          className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] bg-primary text-white text-[12.5px] font-semibold shadow-[0_1px_2px_rgba(29,78,216,.35)] hover:bg-primary/90 transition-all active:scale-[.98]"
+                        >
+                          {expanded ? (
+                            <>Collapse <ChevronUp className="w-3.5 h-3.5" /></>
+                          ) : (
+                            <>
+                              Synthesize
+                              {analysisState === 'loading' ? (
+                                <span className="text-[10px] opacity-70">...</span>
+                              ) : (
+                                <ChevronDown className="w-3.5 h-3.5" />
+                              )}
+                            </>
+                          )}
+                        </button>
+                        {/* Extract sequences - honest coming-soon, only shown for genuine patent URLs */}
+                        {isPatent ? (
+                          <span
+                            className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] border border-border text-[12.5px] font-semibold text-textTertiary bg-white opacity-50 cursor-not-allowed select-none"
+                            title="Extract sequences - coming soon (patent PDF parser not yet connected)"
+                            aria-disabled="true"
+                          >
+                            Extract sequences
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
 
-                    {/* Expandable Sonny Analysis */}
+                    {/* Expandable Sonny Analysis (full 4-panel) - toggled by Synthesize */}
                     <div
                       className={`border-t border-border overflow-hidden transition-all duration-300 ${
                         expanded ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'
@@ -2319,7 +2421,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             <span className="text-xs font-semibold text-textPrimary">Sonny Analysis</span>
                             {analysisState === 'loading' ? (
                               <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-subtle border border-border text-textTertiary animate-pulse">
-                                generating…
+                                generating...
                               </span>
                             ) : null}
                           </div>
@@ -2328,7 +2430,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                         {analysisError ? (
                           <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                            <p className="text-sm text-nogo-text">Couldn't generate analysis.</p>
+                            <p className="text-sm text-nogo-text">{"Couldn't generate analysis."}</p>
                             <p className="text-xs text-nogo-text/70 mt-1 line-clamp-2">{analysisError}</p>
                             <div className="mt-3">
                               <button
@@ -2351,20 +2453,20 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wide block mb-1">The News</span>
                               <p className="text-sm text-textSecondary leading-relaxed">
                                 {analysis?.sections?.theNews?.text ||
-                                  (analysisState === 'loading' ? 'Generating a grounded summary from the source…' : 'Generate analysis to view this section.')}
+                                  (analysisState === 'loading' ? 'Generating a grounded summary from the source...' : 'Generate analysis to view this section.')}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-start gap-3">
                             <div className="w-7 h-7 rounded-lg bg-subtle border border-border flex items-center justify-center shrink-0 mt-0.5">
-                              <Target className="w-3 h-3 text-slate-300" />
+                              <Target className="w-3 h-3 text-slate-400" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wide block mb-1">The Context</span>
+                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block mb-1">The Context</span>
                               <p className="text-sm text-textSecondary leading-relaxed">
                                 {analysis?.sections?.theContext?.text ||
-                                  (analysisState === 'loading' ? 'Weighting this signal by source tier + landscape…' : 'Generate analysis to view this section.')}
+                                  (analysisState === 'loading' ? 'Weighting this signal by source tier + landscape...' : 'Generate analysis to view this section.')}
                               </p>
                             </div>
                           </div>
@@ -2377,7 +2479,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <span className="text-[10px] font-bold text-primary uppercase tracking-wide block mb-1">The Implication</span>
                               <p className="text-sm text-textSecondary leading-relaxed">
                                 {analysis?.sections?.theImplication?.text ||
-                                  (analysisState === 'loading' ? 'Deriving second/third-order implications…' : 'Generate analysis to view this section.')}
+                                  (analysisState === 'loading' ? 'Deriving second/third-order implications...' : 'Generate analysis to view this section.')}
                               </p>
                             </div>
                           </div>
@@ -2390,7 +2492,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wide block mb-1">The Question</span>
                               <p className="text-sm text-textSecondary leading-relaxed">
                                 {analysis?.sections?.theQuestion?.text ||
-                                  (analysisState === 'loading' ? 'Identifying the single highest-leverage follow-up question…' : 'Generate analysis to view this section.')}
+                                  (analysisState === 'loading' ? 'Identifying the single highest-leverage follow-up question...' : 'Generate analysis to view this section.')}
                               </p>
                             </div>
                           </div>
@@ -2426,7 +2528,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               {analysis.actions.slice(0, 3).map((a, idx) => (
                                 <li key={`${a.action}-${idx}`} className="text-sm text-textSecondary leading-relaxed">
                                   <span className="font-semibold text-textPrimary">{a.action}</span>
-                                  <span className="text-textSecondary"> — {a.why}</span>
+                                  <span className="text-textSecondary"> - {a.why}</span>
                                 </li>
                               ))}
                             </ul>
@@ -2443,36 +2545,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             <ExternalLink className="w-3.5 h-3.5" />
                             Read full source
                           </a>
-                          <div className="flex items-center gap-2">
-                          </div>
+                          <div className="flex items-center gap-2" />
                         </div>
                       </div>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const next = expanded ? '' : item.id;
-                        setExpandedItemId(next);
-                        if (next) void ensureArticleAnalysis(item);
-                      }}
-                      className="w-full px-5 py-3 flex items-center justify-center gap-2 text-xs font-medium text-textSecondary hover:text-textPrimary bg-subtle hover:bg-subtle transition-all border-t border-border"
-                    >
-                      {expanded ? (
-                        <>
-                          <span>Collapse analysis</span>
-                          <ChevronUp className="w-4 h-4" />
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-3.5 h-3.5 text-primary" />
-                          <span>
-                            {analysis ? 'Show Sonny Analysis' : analysisState === 'loading' ? 'Generating…' : 'Generate Sonny Analysis'}
-                          </span>
-                          <ChevronDown className="w-4 h-4" />
-                        </>
-                      )}
-                    </button>
                   </article>
                 );
               })}
