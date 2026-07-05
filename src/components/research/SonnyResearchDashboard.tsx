@@ -6,9 +6,11 @@ import { ResearchComposer } from './ResearchComposer';
 import { CapabilityCards } from './CapabilityCards';
 import GlassBoxTrace from './GlassBoxTrace.js';
 import ResearchDossier from './ResearchDossier.js';
+import LatestSignals from './LatestSignals';
 
 interface SonnyResearchDashboardProps {
   initialQuery?: string;
+  onOpenFeed?: () => void;
 }
 
 // Skeleton shimmer row - respects prefers-reduced-motion via CSS class.
@@ -92,7 +94,7 @@ function DossierSkeleton() {
   );
 }
 
-export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardProps) {
+export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResearchDashboardProps) {
   const s = useDeepResearchStream();
 
   // On mount: hydrate from URL ?runId=
@@ -121,17 +123,10 @@ export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardP
             position: 'relative',
           }}
         >
-          {/* Wordmark */}
-          <div className="text-center mb-10" style={{ position: 'relative', zIndex: 1 }}>
-            <h1
-              className="font-display text-textPrimary"
-              style={{ fontSize: 34, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 8 }}
-            >
-              Ask Sonny
-            </h1>
-            <p className="text-textSecondary" style={{ fontSize: 15 }}>
-              Grounded biomedical intelligence. Enter a target to start.
-            </p>
+          {/* View header row */}
+          <div className="flex items-center justify-between mb-10" style={{ position: 'relative', zIndex: 1 }}>
+            <h1 className="font-display text-2xl font-semibold text-textPrimary">Ask Sonny</h1>
+            <span className="text-xs text-textSecondary">Deep research</span>
           </div>
 
           {/* Composer */}
@@ -143,8 +138,13 @@ export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardP
           </div>
 
           {/* Capability cards */}
-          <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
             <CapabilityCards />
+          </div>
+
+          {/* Latest signals block */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <LatestSignals onOpenFeed={onOpenFeed ?? (() => {})} />
           </div>
         </div>
       </div>
@@ -154,6 +154,8 @@ export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardP
   // ---- ACTIVE RUN (hydrating / running / done / error) ----
   // Determine if still spinning up (no trace events yet).
   const isHydrating = s.status === 'hydrating';
+
+  const runCount = (s.status === 'running' || s.status === 'done' || !!s.runId) ? '1 run' : '0 runs';
 
   return (
     <div className="w-full min-h-full p-6 bg-page">
@@ -179,34 +181,43 @@ export function SonnyResearchDashboard({ initialQuery }: SonnyResearchDashboardP
         </div>
       )}
 
-      {/* Active-run two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* Left: glass-box trace */}
-        <div className="bg-surface border border-border rounded-2xl p-5 min-h-[400px]" style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}>
-          <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-4">
-            Glass-box trace
-          </p>
-          {isHydrating ? (
-            <TraceSkeleton />
-          ) : (
-            <GlassBoxTrace traceStore={s.traceStore} status={s.status} />
-          )}
+      {/* Runs section frame */}
+      <section>
+        {/* Runs header row */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="font-semibold text-textPrimary" style={{ fontSize: 15 }}>Runs</span>
+          <span className="text-xs text-textTertiary">{runCount}</span>
         </div>
 
-        {/* Right: dossier */}
-        <div className="bg-surface border border-border rounded-2xl p-5 min-h-[400px]" style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}>
-          <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-4">
-            Dossier
-          </p>
-          {briefing ? (
-            <ResearchDossier briefing={briefing} />
-          ) : (
-            <DossierSkeleton />
-          )}
-        </div>
+        {/* Active-run two-column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      </div>
+          {/* Left: glass-box trace */}
+          <div className="bg-surface border border-border rounded-2xl p-5 min-h-[400px]" style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}>
+            <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-4">
+              Glass-box trace
+            </p>
+            {isHydrating ? (
+              <TraceSkeleton />
+            ) : (
+              <GlassBoxTrace traceStore={s.traceStore} status={s.status} />
+            )}
+          </div>
+
+          {/* Right: dossier */}
+          <div className="bg-surface border border-border rounded-2xl p-5 min-h-[400px]" style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}>
+            <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-4">
+              Dossier
+            </p>
+            {briefing ? (
+              <ResearchDossier briefing={briefing} />
+            ) : (
+              <DossierSkeleton />
+            )}
+          </div>
+
+        </div>
+      </section>
     </div>
   );
 }
