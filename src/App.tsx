@@ -26,12 +26,14 @@ export interface Notification {
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<ViewState>('research');
+  const [feedTarget, setFeedTarget] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [currentTarget, setCurrentTarget] = useState<TargetData | null>(null);
   const [isLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const openFeedForTarget = (target?: string) => { setFeedTarget(target ?? null); setCurrentView('feed'); };
   const toast = useToast();
 
   // Keyboard shortcuts
@@ -105,6 +107,7 @@ function AppContent() {
         <Sidebar
           currentView={currentView}
           onViewChange={setCurrentView}
+          onOpenFeedForTarget={openFeedForTarget}
         />
 
         <main className="flex-1 flex flex-col min-w-0">
@@ -127,13 +130,13 @@ function AppContent() {
 
               {currentView === 'feed' && (
                 <Suspense fallback={<DashboardSkeleton />}>
-                  <IntelligenceFeed />
+                  <IntelligenceFeed initialTarget={feedTarget ?? undefined} />
                 </Suspense>
               )}
 
               {currentView === 'research' && (
                 <Suspense fallback={<DashboardSkeleton />}>
-                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => setCurrentView('feed')} />
+                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => openFeedForTarget()} />
                 </Suspense>
               )}
 
@@ -142,7 +145,7 @@ function AppContent() {
               )}
 
               {currentView === 'watchlist' && (
-                <WatchlistView onViewInFeed={() => setCurrentView('feed')} />
+                <WatchlistView onViewInFeed={openFeedForTarget} />
               )}
             </div>
           </div>

@@ -8,6 +8,7 @@ import { useBriefingStore } from '../lib/research/briefingStore';
 interface SidebarProps {
   currentView: ViewState;
   onViewChange: (v: ViewState) => void;
+  onOpenFeedForTarget?: (target?: string) => void;
 }
 
 interface NavItem {
@@ -26,6 +27,7 @@ const navItems: NavItem[] = [
 const Sidebar = memo(function Sidebar({
   currentView,
   onViewChange,
+  onOpenFeedForTarget,
 }: SidebarProps) {
   const targets = useWatchlistStore((s) => s.targets);
   const unread = useUnreadCounts(targets);
@@ -52,7 +54,7 @@ const Sidebar = memo(function Sidebar({
           return (
             <button
               key={id}
-              onClick={() => onViewChange(id)}
+              onClick={() => (id === 'feed' && onOpenFeedForTarget) ? onOpenFeedForTarget() : onViewChange(id)}
               className={`tactile relative w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-150 ${
                 isActive
                   ? 'bg-primary/10 text-textPrimary'
@@ -97,7 +99,7 @@ const Sidebar = memo(function Sidebar({
           {targets.map((t) => (
             <button
               key={t}
-              onClick={() => onViewChange('feed')}
+              onClick={() => onOpenFeedForTarget ? onOpenFeedForTarget(t) : onViewChange('feed')}
               className="tactile w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors duration-150"
             >
               <span className="text-xs font-medium truncate leading-relaxed">{t}</span>
