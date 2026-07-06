@@ -26,6 +26,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
       verdict: b.recommendation?.verdict,
       snippet: b.executiveRead?.split('\n')[0] ?? '',
       savedAt: savedAt[runId] ?? 0,
+      refs: b.references?.length ?? 0,
     }))
     .sort((a, b) => b.savedAt - a.savedAt);
 

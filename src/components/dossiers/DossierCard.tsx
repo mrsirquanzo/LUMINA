@@ -6,6 +6,7 @@ export interface DossierItem {
   verdict?: string;
   snippet: string;
   savedAt: number;
+  refs?: number;
 }
 
 export function normalizeVerdict(verdict?: string): 'GO' | 'WATCH' | 'NO-GO' | 'UNKNOWN' {
@@ -107,7 +108,9 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
         )}
         <div className="flex items-center justify-end gap-1 mt-0.5">
           <FileText size={11} className="text-textTertiary" />
-          <span className="font-mono text-[11px] text-textTertiary">dossier</span>
+          <span className="font-mono text-[11px] text-textTertiary">
+            {item.refs && item.refs > 0 ? `${item.refs} refs` : 'dossier'}
+          </span>
         </div>
       </div>
     </div>
