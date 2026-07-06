@@ -136,10 +136,10 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
 
   // Responsive orbit radius so nodes surround the wordmark without crowding it.
   const orbitRadius = Math.min(
-    210,
-    Math.max(140, Math.round(Math.min(windowSize.width, windowSize.height) * 0.19))
+    300,
+    Math.max(190, Math.round(Math.min(windowSize.width, windowSize.height) * 0.29))
   );
-  const stageSize = orbitRadius * 2 + 240;
+  const stageSize = orbitRadius * 2 + 280;
 
   const getNodeOffset = (index: number) => {
     const angle = (index * (2 * Math.PI)) / NODES.length - Math.PI / 2;
@@ -288,16 +288,16 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
                       }}
                     >
                       <div
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white"
+                        className="w-[72px] h-[72px] rounded-2xl flex items-center justify-center bg-white"
                         style={{
                           border: `1.5px solid ${color}33`,
                           boxShadow: `0 6px 20px ${color}1F, 0 1px 2px rgba(15,23,42,0.05)`,
                         }}
                       >
-                        <Icon size={22} strokeWidth={1.75} style={{ color }} />
+                        <Icon size={30} strokeWidth={1.75} style={{ color }} />
                       </div>
                       <span
-                        className="text-[11px] font-medium whitespace-nowrap"
+                        className="text-[15px] font-medium whitespace-nowrap"
                         style={{ color: node.kind === 'skill' ? SKILL_COLOR : '#64748B' }}
                       >
                         {node.label}
@@ -311,7 +311,7 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
         </div>
 
         {/* Tagline - Newsreader italic, editorial voice */}
-        <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-40 whitespace-nowrap">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 whitespace-nowrap">
           <motion.p
             className="font-display italic text-xl tracking-wide"
             style={{ color: '#475569' }}
