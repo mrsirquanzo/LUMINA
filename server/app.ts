@@ -21,7 +21,6 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 
 // Import route handlers
-import orchestratorRoutes from './api/agents/orchestrator';
 import uploadRoutes from './api/upload';
 import fetchUrlRoutes from './api/fetch-url';
 import individualAgentRoutes from './api/agents';
@@ -38,7 +37,6 @@ import intelligenceArticleAnalysisRoutes from './api/intelligence/article-analys
 import deepResearchRoutes from './api/agents/deepResearch';
 
 // Routes
-app.use('/api/agents/orchestrator', orchestratorRoutes);
 app.use('/api/agents', individualAgentRoutes);
 app.use('/api/agents/target-biology', targetBiologyRoutes);
 app.use('/api/upload', uploadRoutes);

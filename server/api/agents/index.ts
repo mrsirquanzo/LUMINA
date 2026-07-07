@@ -35,7 +35,7 @@ function buildFollowUpSystemPrompt(agentType: AgentType): string {
 
 router.get('/', (_req: Request, res: Response) => {
   res.json({
-    message: 'Individual agent routes (follow-up chat available at POST /api/agents/chat). Use /api/agents/orchestrator for multi-agent orchestration.',
+    message: 'Individual agent routes (follow-up chat available at POST /api/agents/chat).',
     agents: ['clinical', 'patent', 'financial', 'market_research', 'regulatory', 'target_biology'],
   });
 });
