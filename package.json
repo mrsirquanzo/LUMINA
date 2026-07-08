@@ -1,8 +1,24 @@
 {
   "name": "lumina",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Biotech target/asset diligence dashboard with a grounded, glass-box research agent (Sonny) that produces conclusion-first GO/WATCH/NO-GO dossiers.",
+  "license": "MIT",
+  "author": "Quan Ho (@mrsirquanzo)",
   "type": "module",
+  "homepage": "https://github.com/mrsirquanzo/LUMINA#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrsirquanzo/LUMINA.git"
+  },
+  "keywords": [
+    "biotech",
+    "due-diligence",
+    "intelligence-dashboard",
+    "research-agent",
+    "react",
+    "typescript"
+  ],
   "scripts": {
     "dev": "vite",
     "dev:server": "tsx watch server/index.ts",
