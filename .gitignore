@@ -23,8 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-# Sonny run artifacts
+# Sonny run artifacts & runtime data (regenerated at runtime)
 server/data/sonny-runs/
+server/data/intelligence-store.json
 
 # Environment variables
 .env
