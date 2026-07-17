@@ -4,6 +4,18 @@ import { CitedMarkdown } from '../shared/CitedMarkdown.js';
 
 interface Props { briefing: BriefingView; }
 
+// Drop repeated claims within a section - synthesis can emit the same point
+// more than once, and duplicate bullets read as sloppy to a technical audience.
+function dedupeClaims<T extends { text?: string }>(claims: T[]): T[] {
+  const seen = new Set<string>();
+  return claims.filter((c) => {
+    const key = (c.text ?? '').trim().toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 // Verdict fill pill - GO green / WATCH amber / NO-GO red fill, white text.
 function verdictPillClass(verdict: string): string {
   const v = verdict.toUpperCase();
@@ -125,9 +137,9 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
                 )}
 
                 {/* Claims with citation superscripts */}
-                {(section.claims ?? []).length > 0 && (
+                {dedupeClaims(section.claims ?? []).length > 0 && (
                   <ul className="mt-2 space-y-1.5">
-                    {section.claims!.map((c, ci) => (
+                    {dedupeClaims(section.claims ?? []).map((c, ci) => (
                       <li key={ci} className="flex gap-2 text-[13px] text-textSecondary leading-relaxed">
                         <span className="flex-none mt-[7px] w-1.5 h-1.5 rounded-full bg-border" aria-hidden="true" />
                         <span>

@@ -155,6 +155,11 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
   // Determine if still spinning up (no trace events yet).
   const isHydrating = s.status === 'hydrating';
 
+  // A hydrated (deep-linked) run has a persisted dossier but no live trace store,
+  // so the glass-box panel would render empty. In that case, present the dossier
+  // full-width instead of a lopsided two-column split.
+  const hasLiveTrace = !!s.traceStore;
+
   const runCount = (s.status === 'running' || s.status === 'done' || !!s.runId) ? '1 run' : '0 runs';
 
   return (
@@ -189,22 +194,25 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
           <span className="text-xs text-textTertiary">{runCount}</span>
         </div>
 
-        {/* Active-run two-column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Active-run layout: two columns when a live trace is streaming,
+            single full-width dossier when a saved run is hydrated. */}
+        <div className={hasLiveTrace ? 'grid grid-cols-1 lg:grid-cols-2 gap-6' : 'max-w-[860px] mx-auto'}>
 
-          {/* Left: glass-box trace */}
-          <div className="bg-surface border border-border rounded-2xl p-5 min-h-[400px]" style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}>
-            <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-4">
-              Glass-box trace
-            </p>
-            {isHydrating ? (
-              <TraceSkeleton />
-            ) : (
-              <GlassBoxTrace traceStore={s.traceStore} status={s.status} />
-            )}
-          </div>
+          {/* Left: glass-box trace - only when a live run is streaming */}
+          {hasLiveTrace && (
+            <div className="bg-surface border border-border rounded-2xl p-5 min-h-[400px]" style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}>
+              <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-4">
+                Glass-box trace
+              </p>
+              {isHydrating ? (
+                <TraceSkeleton />
+              ) : (
+                <GlassBoxTrace traceStore={s.traceStore} status={s.status} />
+              )}
+            </div>
+          )}
 
-          {/* Right: dossier */}
+          {/* Dossier */}
           <div className="bg-surface border border-border rounded-2xl p-5 min-h-[400px]" style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}>
             <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-4">
               Dossier
