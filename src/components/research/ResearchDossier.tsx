@@ -34,38 +34,43 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
   return (
     <div className="text-sm">
 
-      {/* 1. Verdict pill - conclusion-first, largest signal */}
+      {/* 1. Report masthead - target headline + conclusion-first verdict */}
       {rec?.verdict && (
-        <div className="flex items-center gap-3 pb-5 border-b border-border">
-          <span
-            className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-bold tracking-[0.03em] ${verdictPillClass(rec.verdict)}`}
-            style={{ boxShadow: rec.verdict.toUpperCase() === 'WATCH' ? '0 2px 8px rgba(217,119,6,.28)' : rec.verdict.toUpperCase() === 'GO' ? '0 2px 8px rgba(22,163,74,.25)' : rec.verdict.toUpperCase() === 'NO-GO' ? '0 2px 8px rgba(220,38,38,.25)' : 'none' }}
-          >
-            {rec.verdict.toUpperCase()}
-          </span>
-          {briefing.target && (
-            <span className="font-display text-[18px] font-semibold text-textPrimary tracking-tight">
-              {briefing.target}
+        <div className="pb-5 border-b border-border">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textTertiary">
+            due-diligence dossier
+          </p>
+          <div className="mt-2.5 flex items-center gap-3 flex-wrap">
+            {briefing.target && (
+              <h2 className="font-display text-[27px] leading-none font-semibold text-textPrimary tracking-tight">
+                {briefing.target}
+              </h2>
+            )}
+            <span
+              className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-bold tracking-[0.03em] ${verdictPillClass(rec.verdict)}`}
+              style={{ boxShadow: rec.verdict.toUpperCase() === 'WATCH' ? '0 2px 8px rgba(217,119,6,.28)' : rec.verdict.toUpperCase() === 'GO' ? '0 2px 8px rgba(22,163,74,.25)' : rec.verdict.toUpperCase() === 'NO-GO' ? '0 2px 8px rgba(220,38,38,.25)' : 'none' }}
+            >
+              {rec.verdict.toUpperCase()}
             </span>
-          )}
-          {(briefing.references ?? []).length > 0 && (
-            <span className="ml-auto flex items-center gap-1.5 font-mono text-[11px] text-textTertiary flex-none">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-              Grounded · {briefing.references!.length} refs
-            </span>
-          )}
+            {(briefing.references ?? []).length > 0 && (
+              <span className="ml-auto flex items-center gap-1.5 font-mono text-[11px] text-textTertiary flex-none">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+                Grounded · {briefing.references!.length} refs
+              </span>
+            )}
+          </div>
         </div>
       )}
 
