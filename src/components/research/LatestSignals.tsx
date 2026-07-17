@@ -57,7 +57,7 @@ function SkeletonRow() {
 // ---------------------------------------------------------------------------
 
 export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }) {
-  const { items, isLoading, isError } = useLatestSignals(3);
+  const { items, isLoading, isError, target, seeded } = useLatestSignals(3);
 
   return (
     <div>
@@ -67,7 +67,15 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
           <span className="text-textPrimary font-semibold" style={{ fontSize: 15 }}>
             Latest signals
           </span>
-          <span className="text-textTertiary text-sm ml-1.5">from your watchlist</span>
+          <span className="text-textTertiary text-sm ml-1.5">
+            {seeded ? (
+              <>
+                live from the feed &middot; <span className="font-mono">{target}</span>
+              </>
+            ) : (
+              'from your watchlist'
+            )}
+          </span>
         </div>
         <button
           type="button"

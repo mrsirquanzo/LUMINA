@@ -56,13 +56,21 @@ async function fetchLatest(target: string | undefined, limit: number): Promise<L
   }));
 }
 
-export function useLatestSignals(limit = 3): { items: LatestSignal[]; isLoading: boolean; isError: boolean } {
-  const target = useWatchlistStore((s) => s.targets[0]);
+// When the watchlist is empty, seed the home block with a relevant oncology
+// target so it shows live, on-topic intelligence instead of an untargeted feed.
+const SEED_TARGET = 'TROP2';
+
+export function useLatestSignals(
+  limit = 3,
+): { items: LatestSignal[]; isLoading: boolean; isError: boolean; target: string; seeded: boolean } {
+  const watchTarget = useWatchlistStore((s) => s.targets[0]);
+  const seeded = !watchTarget;
+  const target = watchTarget ?? SEED_TARGET;
   const q = useQuery({
     queryKey: ['latest-signals', target, limit],
     queryFn: () => fetchLatest(target, limit),
     staleTime: 60_000,
     retry: false,
   });
-  return { items: q.data ?? [], isLoading: q.isLoading, isError: q.isError };
+  return { items: q.data ?? [], isLoading: q.isLoading, isError: q.isError, target, seeded };
 }
