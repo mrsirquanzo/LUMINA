@@ -8,6 +8,7 @@ export interface RuntimePlanStep {
   id: string;
   title: string;
   figures: string[];
+  interactive?: boolean;
   status: PlanStepStatus;
 }
 

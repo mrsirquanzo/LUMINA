@@ -132,35 +132,40 @@
         "title": "FSC/SSC scatter plot and cell gating",
         "figures": [
           "/workbook/flow/01_cell_gate.png"
-        ]
+        ],
+        "interactive": true
       },
       {
         "id": "singlet",
         "title": "Singlet gating",
         "figures": [
           "/workbook/flow/02_singlet.png"
-        ]
+        ],
+        "interactive": true
       },
       {
         "id": "viability",
         "title": "Viability gating",
         "figures": [
           "/workbook/flow/03_viability.png"
-        ]
+        ],
+        "interactive": true
       },
       {
         "id": "lineage",
         "title": "Lineage gating (CD3-CD19+ B cells)",
         "figures": [
           "/workbook/flow/04_lineage.png"
-        ]
+        ],
+        "interactive": true
       },
       {
         "id": "markers",
         "title": "B-cell marker expression analysis",
         "figures": [
           "/workbook/flow/05_subsets.png"
-        ]
+        ],
+        "interactive": true
       },
       {
         "id": "heatmap",
@@ -221,5 +226,6 @@
       "methods": "FCS parsed with fcsparser. Fluorescence channels arcsinh-transformed (cofactor 6000). Per-channel positivity thresholds set by Otsu's method. Cell gate: FSC-A 100k-500k, SSC-A 20k-400k. Singlets: FSC-A/FSC-H ratio between the 3rd and 99.5th percentile. Viability: Zombie-NIR below the Otsu threshold. Lineage: CD3-CD19+. Subsets: IgD/CD27 quadrant gating. Co-expression: Spearman rank correlation. Pipeline is deterministic and reproducible from public/workbook/flow/pipeline.py.",
       "assumptionsNote": "Gating is fully automated (Otsu per channel), not FMO-informed; thresholds are data-driven and reproducible. Absolute subset percentages depend on threshold placement."
     }
-  }
+  },
+  "gatingData": "/workbook/flow/gating_events.json"
 }

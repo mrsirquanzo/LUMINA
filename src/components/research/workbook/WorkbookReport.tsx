@@ -1,6 +1,7 @@
 import { Fragment, useRef, useState } from 'react';
-import { Beaker, ChevronDown, Expand, FileQuestion, FlaskConical, Search, X } from 'lucide-react';
+import { Beaker, ChevronDown, Expand, FileQuestion, FlaskConical, RotateCcw, Search, X } from 'lucide-react';
 import type { WorkbookRun } from '../../../lib/workbook/types';
+import { useGating } from './gating/gatingStore';
 
 interface WorkbookReportProps {
   report: WorkbookRun['report'];
@@ -37,6 +38,7 @@ export function WorkbookReport({
   rankings,
   selectedSynergyModel = 'Bliss independence',
 }: WorkbookReportProps) {
+  const gating = useGating();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [activeFigure, setActiveFigure] = useState<WorkbookRun['report']['figures'][number] | null>(null);
   const usesHsa = selectedSynergyModel === 'HSA (highest single agent)';
@@ -55,6 +57,30 @@ export function WorkbookReport({
       };
     })
     .sort((a, b) => a.sortIndex - b.sortIndex);
+  const displayedSummary = gating ? report.summary.map((summary, index) => {
+    if (index === 1) {
+      return `**Sequential gating** (FSC/SSC -> singlets -> live -> CD3-CD19+) yielded **${gating.metrics.bCellCount.toLocaleString()} B cells (${gating.metrics.bCellTotalPct.toFixed(1)}% of total; ${gating.metrics.bCellLivePct.toFixed(1)}% of live singlets)**, with **${gating.metrics.viabilityPct.toFixed(1)}% viability**.`;
+    }
+    if (index === 2) {
+      return `**B-cell subsets** (IgD/CD27): **${gating.metrics.subsets.naive.toFixed(1)}% naive**, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory.`;
+    }
+    return summary;
+  }) : report.summary;
+  const displayedFigures = gating ? report.figures.map((figure, index) => {
+    const captions = [
+      `Figure 1. Default-gate reference image. The current user cell gate retains ${gating.metrics.cellPct.toFixed(1)}% of events.`,
+      `Figure 2. Default-gate reference image. The current singlet ratio band retains ${gating.metrics.singletPct.toFixed(1)}% of gated cells.`,
+      `Figure 3. Default-gate reference image. The current Zombie-NIR threshold retains ${gating.metrics.viabilityPct.toFixed(1)}% live cells.`,
+      `Figure 4. Default-gate reference image. The current lineage crosshair yields ${gating.metrics.bCellCount.toLocaleString()} B cells (${gating.metrics.bCellLivePct.toFixed(1)}% of live singlets).`,
+      `Figure 5. Default-gate reference image. Current subsets are ${gating.metrics.subsets.naive.toFixed(1)}% naive, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, and ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory.`,
+    ];
+    return index < captions.length ? { ...figure, caption: captions[index] } : figure;
+  }) : report.figures;
+  const displayedReportSections = gating ? {
+    ...report.sections,
+    detailedAnswer: `The current user-defined cascade recovers ${gating.metrics.bCellCount.toLocaleString()} CD3-CD19+ B cells (${gating.metrics.bCellLivePct.toFixed(1)}% of live singlets). The resulting subset structure is ${gating.metrics.subsets.naive.toFixed(1)}% naive, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, and ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory. Constitutive and activation marker observations use this current B-cell population.`,
+    methods: `FCS fluorescence channels were arcsinh-transformed with cofactor 6000. The scientist set the FSC/SSC cell rectangle, FSC-A/FSC-H singlet ratio band, Zombie-NIR viability threshold, CD3/CD19 lineage crosshair, and IgD/CD27 subset crosshair. Each gate is applied sequentially in the browser to the real event sample, with results projected to ${gating.metrics.total.toLocaleString()} source events.`,
+  } : report.sections;
 
   const openFigure = (figure: WorkbookRun['report']['figures'][number]) => {
     setActiveFigure(figure);
@@ -72,7 +98,7 @@ export function WorkbookReport({
         <p className="t-eyebrow text-primary">{eyebrow}</p>
         <h2 id="workbook-report-title" className="t-h1 mt-1 text-textPrimary">{title}</h2>
         <ul className="mt-5 space-y-2.5">
-          {report.summary.map((summary) => (
+          {displayedSummary.map((summary) => (
             <li key={summary} className="surface-inset t-body flex gap-3 border-l-2 border-l-primary/35 px-4 py-3 text-textSecondary">
               <span className="mt-[8px] h-1.5 w-1.5 flex-none rounded-sm bg-primary" aria-hidden="true" />
               <span>{renderBoldMarkdown(summary)}</span>
@@ -80,6 +106,57 @@ export function WorkbookReport({
           ))}
         </ul>
       </div>
+
+      {gating && (
+        <section className="surface-card overflow-hidden" data-flow-gate-report aria-label="Current flow gate results">
+          <header className="flex flex-col gap-3 border-b border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div>
+              <p className="t-eyebrow text-[#2f9e8f]">CURRENT USER GATES</p>
+              <h3 className="t-h3 mt-1 text-textPrimary">Live cascade readout</h3>
+            </div>
+            <button
+              type="button"
+              onClick={gating.resetGates}
+              disabled={gating.isDefault}
+              className="quiet-action t-meta inline-flex w-fit items-center gap-2 rounded-[10px] border border-border bg-white px-3 py-2 font-semibold text-textSecondary hover:border-[#2f9e8f]/40 hover:text-[#2f9e8f] disabled:cursor-default disabled:opacity-45"
+            >
+              <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+              Reset gates
+            </button>
+          </header>
+          <div className="grid grid-cols-2 gap-px bg-borderSoft sm:grid-cols-4">
+            {[
+              ['Cell gate', `${gating.metrics.cellPct.toFixed(1)}%`],
+              ['Viability', `${gating.metrics.viabilityPct.toFixed(1)}%`],
+              ['B cells', gating.metrics.bCellCount.toLocaleString()],
+              ['Naive', `${gating.metrics.subsets.naive.toFixed(1)}%`],
+            ].map(([label, value]) => (
+              <div key={label} className="bg-white px-5 py-4 sm:px-6">
+                <p className="t-eyebrow text-textTertiary">{label}</p>
+                <p className="t-h3 mt-1 font-mono tabular-nums text-textPrimary">{value}</p>
+              </div>
+            ))}
+          </div>
+          <div className="grid gap-3 border-t border-borderSoft bg-subtle/45 px-5 py-4 sm:grid-cols-4 sm:px-6">
+            {[
+              ['Naive', gating.metrics.subsets.naive],
+              ['Switched', gating.metrics.subsets.switched],
+              ['Double-negative', gating.metrics.subsets.doubleNegative],
+              ['Unswitched', gating.metrics.subsets.unswitched],
+            ].map(([label, value]) => (
+              <div key={String(label)}>
+                <div className="mb-1.5 flex items-baseline justify-between gap-2">
+                  <span className="t-meta text-textSecondary">{label}</span>
+                  <span className="t-meta font-mono font-semibold tabular-nums text-textPrimary">{Number(value).toFixed(1)}%</span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-slate-200">
+                  <div className="h-full rounded-full bg-[#2f9e8f]" style={{ width: `${Math.max(0, Math.min(100, Number(value)))}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {displayedRankings.length > 0 && (
         <section className="surface-card overflow-hidden" aria-labelledby="combination-ranking-title">
@@ -163,17 +240,17 @@ export function WorkbookReport({
         </section>
       )}
 
-      {report.figures.length > 0 && (
+      {displayedFigures.length > 0 && (
         <div>
           <div className="mb-3 flex items-end justify-between gap-4">
             <div>
               <p className="t-eyebrow text-textTertiary">Figures</p>
               <h3 className="t-h3 mt-1 text-textPrimary">Analysis outputs</h3>
             </div>
-            <span className="t-meta font-mono tabular-nums text-textTertiary">{report.figures.length} figures</span>
+            <span className="t-meta font-mono tabular-nums text-textTertiary">{displayedFigures.length} figures</span>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {report.figures.map((figure, index) => (
+            {displayedFigures.map((figure, index) => (
               <figure key={figure.src} className="surface-card surface-card-interactive overflow-hidden">
                 <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
                   <img src={figure.src} alt={`Analysis figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
@@ -197,7 +274,7 @@ export function WorkbookReport({
         {(contentSections ?? ACCORDIONS.map(({ key, title }) => ({
           id: key,
           title,
-          content: report.sections[key],
+          content: displayedReportSections[key],
         }))).map((section, index) => {
           const Icon = contentSections ? Search : ACCORDIONS[index]?.icon ?? Search;
           return (

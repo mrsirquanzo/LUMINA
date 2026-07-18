@@ -7,6 +7,8 @@ import { AssumptionsPanel } from './AssumptionsPanel';
 import { ReasoningTrail } from './ReasoningTrail';
 import { ResponseRequired } from './ResponseRequired';
 import { WorkbookReport } from './WorkbookReport';
+import { GatingProvider } from './gating/GatingContext';
+import { useGating } from './gating/gatingStore';
 
 interface WorkbookRunProps {
   run: WorkbookRunData;
@@ -26,15 +28,17 @@ function getReportTitle(capability: string) {
   return 'Analysis report';
 }
 
-export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
+function WorkbookRunContent({ run, onBack }: WorkbookRunProps) {
   const replay = useWorkbookReplay(run);
+  const gating = useGating();
   const { accept, reset } = replay;
   const defaultSynergyModel = run.clarifications.find((clarification) => clarification.id === 'model')?.default ?? 'Bliss independence';
   const [selectedSynergyModel, setSelectedSynergyModel] = useState(defaultSynergyModel);
   const resetReplay = useCallback(() => {
     setSelectedSynergyModel(defaultSynergyModel);
+    gating?.resetGates();
     reset();
-  }, [defaultSynergyModel, reset]);
+  }, [defaultSynergyModel, gating, reset]);
 
   const acceptResponse = useCallback((answers: Record<string, string>) => {
     setSelectedSynergyModel(answers.model ?? defaultSynergyModel);
@@ -149,5 +153,13 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+export function WorkbookRun(props: WorkbookRunProps) {
+  return (
+    <GatingProvider url={props.run.gatingData}>
+      <WorkbookRunContent {...props} />
+    </GatingProvider>
   );
 }

@@ -25,6 +25,7 @@ export interface PlanStep {
   id: string;
   title: string;
   figures: string[];
+  interactive?: boolean;
 }
 
 export interface WorkbookHypothesis {
@@ -81,4 +82,5 @@ export interface WorkbookRun {
     bliss: WorkbookRanking[];
     hsa: WorkbookRanking[];
   };
+  gatingData?: string;
 }

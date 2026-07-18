@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Check, ChevronDown, Circle, LoaderCircle, RefreshCw } from 'lucide-react';
 import type { RuntimePlanStep } from '../../../lib/workbook/replayDriver';
+import { GatePlot } from './gating/GatePlot';
 
 interface AnalysisPlanProps {
   steps: RuntimePlanStep[];
@@ -47,7 +48,8 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
       <div className="divide-y divide-borderSoft">
         {steps.map((step) => {
           const isRunning = step.status === 'running';
-          const showFigures = step.figures.length > 0 && (step.status === 'done' || expanded.has(step.id));
+          const hasOutput = step.figures.length > 0 || step.interactive;
+          const showFigures = Boolean(hasOutput && (step.status === 'done' || expanded.has(step.id)));
           return (
             <article key={step.id} className={isRunning ? 'border-l-2 border-primary bg-primary/[0.045]' : 'border-l-2 border-transparent bg-white'}>
               <button
@@ -61,7 +63,7 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
                   {step.title}
                 </span>
                 {isRunning && <span className="t-eyebrow hidden text-primary sm:inline">Running</span>}
-                {step.figures.length > 0 && (
+                {hasOutput && (
                   <ChevronDown
                     className={`h-4 w-4 flex-none transition-transform ${showFigures ? 'rotate-180' : ''} ${isRunning ? 'text-primary' : 'text-textTertiary'}`}
                     strokeWidth={1.75}
@@ -70,15 +72,17 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
                 )}
               </button>
               {showFigures && (
-                <div className={`grid gap-3 px-5 pb-4 pl-12 ${step.figures.length > 1 ? 'sm:grid-cols-2' : ''}`}>
-                  {step.figures.map((figure) => (
-                    <img
-                      key={figure}
-                      src={figure}
-                      alt={`Output for ${step.title}`}
-                      className="surface-inset max-h-44 w-full max-w-sm object-contain p-2 motion-safe:animate-[fadeIn_.22s_ease-out]"
-                    />
-                  ))}
+                <div className={`grid gap-3 px-3 pb-4 sm:px-5 sm:pl-12 ${!step.interactive && step.figures.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+                  {step.interactive ? (
+                    <GatePlot stepId={step.id} />
+                  ) : step.figures.map((figure) => (
+                      <img
+                        key={figure}
+                        src={figure}
+                        alt={`Output for ${step.title}`}
+                        className="surface-inset max-h-44 w-full max-w-sm object-contain p-2 motion-safe:animate-[fadeIn_.22s_ease-out]"
+                      />
+                    ))}
                 </div>
               )}
             </article>
