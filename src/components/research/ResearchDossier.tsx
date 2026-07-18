@@ -4,12 +4,35 @@ import { CitedMarkdown } from '../shared/CitedMarkdown.js';
 
 interface Props { briefing: BriefingView; }
 
+// Normalized claim key: lowercase + strip everything but a-z0-9 so near-identical
+// restatements collapse ("Trop-2" == "TROP2", "[68Ga]" == "[⁶⁸Ga]",
+// trailing punctuation, spacing). Aggressive on purpose - these are duplicates.
+function claimKey(text?: string): string {
+  return (text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+// Render a bull/bear point, appending only citations NOT already embedded in the
+// text (the engine often writes "...efficacy. [PMID:123]" inline, which would
+// otherwise render the PMID twice and look misaligned).
+function pointWithCitation(point?: string, citations?: string[]): ReactElement {
+  const text = point ?? '';
+  const missing = (citations ?? []).filter((c) => c && !text.includes(c));
+  return (
+    <>
+      {text}
+      {missing.length > 0 && (
+        <span className="ml-1 font-mono text-[10px] text-textTertiary">[{missing.join(', ')}]</span>
+      )}
+    </>
+  );
+}
+
 // Drop repeated claims within a section - synthesis can emit the same point
 // more than once, and duplicate bullets read as sloppy to a technical audience.
 function dedupeClaims<T extends { text?: string }>(claims: T[]): T[] {
   const seen = new Set<string>();
   return claims.filter((c) => {
-    const key = (c.text ?? '').trim().toLowerCase();
+    const key = claimKey(c.text);
     if (!key || seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -42,6 +65,22 @@ function ragDotClass(rag?: 'red' | 'amber' | 'green'): string {
 
 export default function ResearchDossier({ briefing }: Props): ReactElement {
   const rec = briefing.recommendation;
+
+  // Global dedup: specialists often restate the same fact across sections. Show
+  // each unique claim once, in the first section it appears, so every section
+  // reads as new information rather than a repeated fact. (Render-side guard;
+  // the engine should ideally give each agent awareness of prior claims.)
+  const seenClaims = new Set<string>();
+  const sectionsForRender = (briefing.sections ?? []).map((section, i) => {
+    const claims: NonNullable<typeof section.claims> = [];
+    for (const c of dedupeClaims(section.claims ?? [])) {
+      const key = claimKey(c.text);
+      if (!key || seenClaims.has(key)) continue;
+      seenClaims.add(key);
+      claims.push(c);
+    }
+    return { section, i, claims };
+  }).filter(({ section, claims }) => claims.length > 0 || section.takeaway);
 
   return (
     <div className="text-sm">
@@ -100,14 +139,14 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
         </div>
       )}
 
-      {/* 4. RAG sections */}
-      {(briefing.sections ?? []).length > 0 && (
+      {/* 4. RAG sections (claims globally deduped across sections) */}
+      {sectionsForRender.length > 0 && (
         <div className="mt-6">
           <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-3">
             Sections
           </p>
           <div className="flex flex-col divide-y divide-border">
-            {briefing.sections!.map((section, i) => (
+            {sectionsForRender.map(({ section, i, claims }) => (
               <div key={section.id ?? i} className="py-4 first:pt-0 last:pb-0">
                 {/* Section header: pill + colored dot + title */}
                 <div className="flex items-center gap-2.5 flex-wrap">
@@ -136,10 +175,10 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
                   </p>
                 )}
 
-                {/* Claims with citation superscripts */}
-                {dedupeClaims(section.claims ?? []).length > 0 && (
+                {/* Claims with citation superscripts (globally deduped) */}
+                {claims.length > 0 && (
                   <ul className="mt-2 space-y-1.5">
-                    {dedupeClaims(section.claims ?? []).map((c, ci) => (
+                    {claims.map((c, ci) => (
                       <li key={ci} className="flex gap-2 text-[13px] text-textSecondary leading-relaxed">
                         <span className="flex-none mt-[7px] w-1.5 h-1.5 rounded-full bg-border" aria-hidden="true" />
                         <span>
@@ -164,53 +203,47 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
         </div>
       )}
 
-      {/* 5. Bull / Bear */}
-      {((rec?.bull ?? []).length > 0 || (rec?.bear ?? []).length > 0) && (
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {(rec?.bull ?? []).length > 0 && (
-            <div className="bg-surface border border-border rounded-xl p-4">
-              <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-go-text mb-2">
-                Bull case
-              </p>
-              <ul className="space-y-2">
-                {(rec?.bull ?? []).map((b, i) => (
-                  <li key={i} className="text-[12.5px] text-textSecondary leading-relaxed flex gap-1.5">
-                    <span className="flex-none text-go/60 font-bold">+</span>
-                    <span>
-                      {b.point ?? ''}
-                      {(b.citations ?? []).length > 0 && (
-                        <span className="ml-1 font-mono text-[10px] text-textTertiary">
-                          [{(b.citations ?? []).join(', ')}]
-                        </span>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {(rec?.bear ?? []).length > 0 && (
-            <div className="bg-surface border border-border rounded-xl p-4">
-              <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-nogo-text mb-2">
-                Bear case
-              </p>
-              <ul className="space-y-2">
-                {(rec?.bear ?? []).map((b, i) => (
-                  <li key={i} className="text-[12.5px] text-textSecondary leading-relaxed flex gap-1.5">
-                    <span className="flex-none text-nogo/60 font-bold">-</span>
-                    <span>
-                      {b.point ?? ''}
-                      {(b.citations ?? []).length > 0 && (
-                        <span className="ml-1 font-mono text-[10px] text-textTertiary">
-                          [{(b.citations ?? []).join(', ')}]
-                        </span>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      {/* 5. Bull case (supporting) */}
+      {(rec?.bull ?? []).length > 0 && (
+        <div className="mt-5 bg-surface border border-border rounded-xl p-4">
+          <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-go-text mb-2.5">
+            Bull case
+          </p>
+          <ul className="space-y-2">
+            {(rec?.bull ?? []).map((b, i) => (
+              <li key={i} className="text-[12.5px] text-textSecondary leading-relaxed flex gap-2">
+                <span className="flex-none text-go/70 font-bold mt-px">+</span>
+                <span>{pointWithCitation(b.point, b.citations)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* 6. Adversarial review - the bear case, given prominence as a real skeptic voice */}
+      {(rec?.bear ?? []).length > 0 && (
+        <div
+          className="mt-4 rounded-xl border border-nogo/25 bg-nogo-tint/40 p-4 border-l-[3px] border-l-nogo"
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+            </svg>
+            <p className="text-[11.5px] font-bold tracking-[0.04em] uppercase text-nogo-text">
+              Adversarial review
+            </p>
+          </div>
+          <p className="text-[12px] text-textSecondary mb-2.5 leading-relaxed">
+            The bear case - risks and counter-evidence a skeptic would raise before committing.
+          </p>
+          <ul className="space-y-2.5">
+            {(rec?.bear ?? []).map((b, i) => (
+              <li key={i} className="text-[13px] text-textPrimary leading-relaxed flex gap-2.5">
+                <span className="flex-none w-1.5 h-1.5 rounded-full bg-nogo mt-[7px]" aria-hidden="true" />
+                <span>{pointWithCitation(b.point, b.citations)}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
