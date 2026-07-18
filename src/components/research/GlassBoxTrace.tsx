@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import { useStore } from 'zustand';
 import type { createTraceStore } from '../../lib/research/traceStore.js';
+import type { TraceLogEntry } from '../../lib/research/sseTypes.js';
 
 interface Props {
   traceStore: ReturnType<typeof createTraceStore> | null;
@@ -192,32 +193,77 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
         </div>
       )}
 
-      {/* Live log - legible and calm, capped at 300 entries by the store */}
+      {/* Live log - Faraday-style narrative: tool cards, reads as thoughts */}
       <div>
-        <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-1.5">
+        <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-2">
           Live log
         </p>
-        <div className="max-h-36 overflow-y-auto flex flex-col gap-0.5 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border">
+        <div className="max-h-[340px] overflow-y-auto flex flex-col gap-1.5 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border">
           {log.length === 0 ? (
             <p className="text-xs text-textTertiary italic">Waiting for events...</p>
           ) : (
-            log.map((entry, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-2 py-px"
-              >
-                <span className="font-mono text-[10px] text-textTertiary flex-none mt-px w-[90px] truncate">
-                  {entry.type}
-                </span>
-                <span className="text-[11.5px] text-textSecondary truncate">
-                  {entry.label}
-                </span>
-              </div>
-            ))
+            log.map((entry, i) => <LogRow key={i} entry={entry} />)
           )}
         </div>
       </div>
 
+    </div>
+  );
+}
+
+// One Faraday-style trace line. Tool calls render as elevated cards with a
+// status dot + mono tool name + description; reads render as italic thoughts;
+// evidence shows the real title.
+function LogRow({ entry }: { entry: TraceLogEntry }): ReactElement {
+  const { role, label, detail, type } = entry;
+
+  // Tool call / tool result: elevated card with status dot + mono name.
+  if (role === 'tool' || role === 'tool_result') {
+    const dot = role === 'tool' ? 'bg-primary' : 'bg-go';
+    return (
+      <div className="rounded-lg border border-border bg-subtle px-3 py-2">
+        <p className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-textTertiary mb-1">
+          {type}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className={`w-1.5 h-1.5 rounded-full flex-none ${dot}`} aria-hidden="true" />
+          <span className="font-mono text-[12.5px] text-textPrimary truncate">{label}</span>
+        </div>
+        {detail && <p className="text-[12px] text-textSecondary mt-1 leading-snug line-clamp-2">{detail}</p>}
+      </div>
+    );
+  }
+
+  // Evidence: real title with a small solid marker.
+  if (role === 'evidence') {
+    return (
+      <div className="flex items-start gap-2 pl-0.5">
+        <span className="w-1.5 h-1.5 rounded-full bg-go/70 flex-none mt-[6px]" aria-hidden="true" />
+        <span className="text-[12px] text-textSecondary leading-snug line-clamp-2">
+          {detail ?? 'evidence registered'}
+        </span>
+      </div>
+    );
+  }
+
+  // Read / thought: italic, left-border, muted - the agent reasoning.
+  if (role === 'read') {
+    return (
+      <div className="border-l-2 border-border pl-3 py-0.5">
+        <span className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-textTertiary">{label}</span>
+        {detail && <p className="text-[11.5px] italic text-textSecondary leading-snug truncate">{detail}</p>}
+      </div>
+    );
+  }
+
+  // Everything else: compact mono meta + label.
+  return (
+    <div className="flex items-baseline gap-2 py-px">
+      <span className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-textTertiary flex-none">{type}</span>
+      <span className="text-[12px] text-textSecondary truncate">
+        {label}
+        {detail ? <span className="text-textTertiary"> · {detail}</span> : null}
+      </span>
     </div>
   );
 }
