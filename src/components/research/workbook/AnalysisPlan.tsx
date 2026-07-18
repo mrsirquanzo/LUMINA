@@ -39,9 +39,9 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
       <header className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
         <div className="flex items-center gap-2.5">
           <RefreshCw className="h-4 w-4 text-primary motion-safe:animate-[spin_2.4s_linear_infinite]" strokeWidth={1.75} aria-hidden="true" />
-          <h2 id="analysis-plan-title" className="text-[14px] font-semibold text-textPrimary">Analysis Plan</h2>
+          <h2 id="analysis-plan-title" className="t-h3 text-textPrimary">Analysis Plan</h2>
         </div>
-        <span className="font-mono text-[11px] tabular-nums text-textTertiary">{current}/{total} steps</span>
+        <span className="t-meta font-mono tabular-nums text-textTertiary">{current}/{total} steps</span>
       </header>
 
       <div className="divide-y divide-borderSoft">
@@ -57,10 +57,10 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
                 aria-expanded={showFigures}
               >
                 <span className={isRunning ? 'text-white' : ''}><StatusGlyph status={step.status} /></span>
-                <span className={`min-w-0 flex-1 text-[12.5px] font-medium ${isRunning ? 'text-white' : 'text-textPrimary'}`}>
+                <span className={`t-body-sm min-w-0 flex-1 font-medium ${isRunning ? 'text-white' : 'text-textPrimary'}`}>
                   {step.title}
                 </span>
-                {isRunning && <span className="hidden font-mono text-[9px] tracking-[0.08em] text-slate-300 sm:inline">RUNNING</span>}
+                {isRunning && <span className="t-eyebrow hidden text-slate-300 sm:inline">Running</span>}
                 {step.figures.length > 0 && (
                   <ChevronDown
                     className={`h-4 w-4 flex-none transition-transform ${showFigures ? 'rotate-180' : ''} ${isRunning ? 'text-slate-300' : 'text-textTertiary'}`}

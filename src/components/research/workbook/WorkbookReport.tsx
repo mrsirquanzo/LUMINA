@@ -69,11 +69,11 @@ export function WorkbookReport({
   return (
     <section className="space-y-5 motion-safe:animate-[slideUp_.4s_cubic-bezier(.16,1,.3,1)]" aria-labelledby="workbook-report-title">
       <div className="rounded-2xl border border-border bg-surface px-5 py-5 shadow-card sm:px-6">
-        <p className="font-mono text-[10px] font-semibold tracking-[0.12em] text-primary">{eyebrow}</p>
-        <h2 id="workbook-report-title" className="mt-1 font-display text-[28px] font-semibold tracking-tight text-textPrimary">{title}</h2>
+        <p className="t-eyebrow text-primary">{eyebrow}</p>
+        <h2 id="workbook-report-title" className="t-h1 mt-1 text-textPrimary">{title}</h2>
         <ul className="mt-5 space-y-3.5">
           {report.summary.map((summary) => (
-            <li key={summary} className="flex gap-3 text-[13.5px] leading-relaxed text-textSecondary">
+            <li key={summary} className="t-body flex gap-3 text-textSecondary">
               <span className="mt-[8px] h-1.5 w-1.5 flex-none rounded-full bg-primary" aria-hidden="true" />
               <span>{renderBoldMarkdown(summary)}</span>
             </li>
@@ -85,16 +85,16 @@ export function WorkbookReport({
         <section className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card" aria-labelledby="combination-ranking-title">
           <header className="flex flex-col gap-2 border-b border-border px-5 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-6">
             <div>
-              <p className="font-mono text-[9px] font-semibold tracking-[0.11em] text-primary">SELECTED MODEL: {rankingLabel.toUpperCase()}</p>
-              <h3 id="combination-ranking-title" className="mt-1 font-display text-[23px] font-semibold tracking-tight text-textPrimary">
+              <p className="t-eyebrow text-primary">SELECTED MODEL: {rankingLabel.toUpperCase()}</p>
+              <h3 id="combination-ranking-title" className="t-h3 mt-1 text-textPrimary">
                 Combination ranking
               </h3>
             </div>
-            <p className="font-mono text-[10px] tabular-nums text-textTertiary">Mean excess, % inhibition</p>
+            <p className="t-meta font-mono tabular-nums text-textTertiary">Mean excess, % inhibition</p>
           </header>
 
           {usesFallback && (
-            <p className="border-b border-border bg-subtle/55 px-5 py-2.5 text-[11px] font-medium text-textSecondary sm:px-6">
+            <p className="t-meta border-b border-border bg-subtle/55 px-5 py-2.5 font-medium text-textSecondary sm:px-6">
               Loewe/ZIP not computed in this demo - showing Bliss.
             </p>
           )}
@@ -102,11 +102,11 @@ export function WorkbookReport({
           <ol className="divide-y divide-borderSoft px-5 sm:px-6" data-ranking-model={rankingModel}>
             {displayedRankings.map((item, index) => (
               <li key={item.combination} className="flex min-h-12 items-center gap-3 py-2.5">
-                <span className="w-6 flex-none font-mono text-[10px] font-semibold tabular-nums text-textTertiary">
+                <span className="t-eyebrow w-6 flex-none tabular-nums text-textTertiary">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="min-w-0 flex-1 text-[13px] font-medium text-textPrimary">{item.combination}</span>
-                <span className={`font-mono text-[12px] font-semibold tabular-nums ${item.score > 0 ? 'text-primary' : 'text-textSecondary'}`}>
+                <span className="t-body-sm min-w-0 flex-1 font-medium text-textPrimary">{item.combination}</span>
+                <span className={`t-meta font-mono font-semibold tabular-nums ${item.score > 0 ? 'text-primary' : 'text-textSecondary'}`}>
                   {formatScore(item.score)}
                 </span>
               </li>
@@ -125,11 +125,11 @@ export function WorkbookReport({
               <Beaker className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
             </span>
             <div>
-              <p className="font-mono text-[9px] font-semibold tracking-[0.11em] text-primary">NEXT EXPERIMENTS</p>
-              <h3 id="workbook-hypotheses-title" className="mt-1 font-display text-[23px] font-semibold tracking-tight text-textPrimary">
+              <p className="t-eyebrow text-primary">Next experiments</p>
+              <h3 id="workbook-hypotheses-title" className="t-h3 mt-1 text-textPrimary">
                 Proposed hypotheses for wet-lab testing
               </h3>
-              <p className="mt-1 text-[12px] leading-relaxed text-textSecondary">
+              <p className="t-meta mt-1 text-textSecondary">
                 Ranked candidates to validate at the bench, grounded in the observed dose-response data.
               </p>
             </div>
@@ -139,20 +139,20 @@ export function WorkbookReport({
             {rankedHypotheses.map((hypothesis) => (
               <article key={hypothesis.combination} className="rounded-xl border border-border bg-white px-4 py-4 sm:px-5">
                 <div className="flex items-start gap-3.5">
-                  <span className="flex h-7 min-w-7 flex-none items-center justify-center rounded-lg bg-primary px-2 font-mono text-[10px] font-semibold tabular-nums text-white">
+                  <span className="t-eyebrow flex h-7 min-w-7 flex-none items-center justify-center rounded-lg bg-primary px-2 tabular-nums text-white">
                     #{hypothesis.displayedRank}
                   </span>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                      <h4 className="text-[14px] font-semibold text-textPrimary">{hypothesis.combination}</h4>
+                      <h4 className="t-body font-semibold text-textPrimary">{hypothesis.combination}</h4>
                       {hypothesis.score !== undefined && (
-                        <span className="font-mono text-[10px] font-semibold tabular-nums text-primary">
+                        <span className="t-meta font-mono font-semibold tabular-nums text-primary">
                           {rankingLabel} {formatScore(hypothesis.score)}
                         </span>
                       )}
                     </div>
-                    <p className="mt-1.5 text-[12.5px] leading-relaxed text-textSecondary">{hypothesis.rationale}</p>
-                    <p className="mt-3 border-t border-borderSoft pt-3 text-[12px] leading-relaxed text-textSecondary">
+                    <p className="t-body-sm mt-1.5 text-textSecondary">{hypothesis.rationale}</p>
+                    <p className="t-meta mt-3 border-t border-borderSoft pt-3 text-textSecondary">
                       <span className="font-semibold text-textPrimary">Experiment:</span> {hypothesis.experiment}
                     </p>
                   </div>
@@ -167,10 +167,10 @@ export function WorkbookReport({
         <div>
           <div className="mb-3 flex items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[9px] font-semibold tracking-[0.1em] text-textTertiary">FIGURES</p>
-              <h3 className="mt-1 text-[15px] font-semibold text-textPrimary">Analysis outputs</h3>
+              <p className="t-eyebrow text-textTertiary">Figures</p>
+              <h3 className="t-h3 mt-1 text-textPrimary">Analysis outputs</h3>
             </div>
-            <span className="font-mono text-[10px] tabular-nums text-textTertiary">{report.figures.length} figures</span>
+            <span className="t-meta font-mono tabular-nums text-textTertiary">{report.figures.length} figures</span>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {report.figures.map((figure, index) => (
@@ -186,7 +186,7 @@ export function WorkbookReport({
                     <Expand className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
                   </button>
                 </div>
-                <figcaption className="px-4 py-3 text-[11px] leading-relaxed text-textSecondary">{figure.caption}</figcaption>
+                <figcaption className="t-meta px-4 py-3 text-textSecondary">{figure.caption}</figcaption>
               </figure>
             ))}
           </div>
@@ -208,10 +208,10 @@ export function WorkbookReport({
             >
               <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:hidden">
                 <Icon className="h-4 w-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
-                <span className="flex-1 text-[13px] font-semibold text-textPrimary">{section.title}</span>
+                <span className="t-body-sm flex-1 font-semibold text-textPrimary">{section.title}</span>
                 <ChevronDown className="h-4 w-4 text-textTertiary transition-transform group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" />
               </summary>
-              <div className="px-5 pb-5 pl-12 text-[12.5px] leading-relaxed text-textSecondary">
+              <div className="t-body-sm px-5 pb-5 pl-12 text-textSecondary">
                 {section.content}
               </div>
             </details>
@@ -232,7 +232,7 @@ export function WorkbookReport({
         {activeFigure && (
           <div>
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
-              <p className="font-mono text-[10px] tracking-[0.08em] text-textTertiary">FULL FIGURE</p>
+              <p className="t-eyebrow text-textTertiary">Full figure</p>
               <button type="button" onClick={closeFigure} className="flex h-8 w-8 items-center justify-center rounded-lg text-textSecondary hover:bg-subtle hover:text-textPrimary" aria-label="Close expanded figure">
                 <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
               </button>
@@ -240,7 +240,7 @@ export function WorkbookReport({
             <div className="max-h-[72dvh] overflow-auto bg-subtle p-3 sm:p-5">
               <img src={activeFigure.src} alt="Expanded analysis figure" className="mx-auto max-h-[66dvh] w-auto max-w-full rounded-lg border border-border bg-white object-contain" />
             </div>
-            <p className="px-5 py-4 text-[12px] leading-relaxed text-textSecondary">{activeFigure.caption}</p>
+            <p className="t-meta px-5 py-4 text-textSecondary">{activeFigure.caption}</p>
           </div>
         )}
       </dialog>

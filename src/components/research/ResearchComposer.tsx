@@ -83,14 +83,13 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
           onKeyDown={handleKeyDown}
           placeholder="Ask Sonny to research a target, map a landscape, or analyze data..."
           rows={5}
-          className="w-full resize-none bg-transparent px-6 pb-3 pr-28 pt-6 text-textPrimary outline-none placeholder:text-textSecondary"
-          style={{ font: '400 18px var(--font-sans, Geist, sans-serif)', minHeight: 184, lineHeight: 1.55 }}
+          className="t-lead min-h-[184px] w-full resize-none bg-transparent px-6 pb-3 pr-28 pt-6 text-textPrimary outline-none placeholder:text-textSecondary"
           autoFocus
         />
 
         {contextChip && (
           <div className="px-6 pb-3">
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 font-mono text-[10px] tracking-[0.08em] text-textTertiary">
+            <span className="t-eyebrow inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 text-textTertiary">
               {contextChip}
               <button
                 type="button"
@@ -116,7 +115,7 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
             >
               <Plus className="w-[18px] h-[18px]" />
             </button>
-            <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 rounded-lg bg-ink text-white text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+            <span className="t-meta pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
               Upload - coming soon
             </span>
           </span>
@@ -131,7 +130,7 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
             >
               <AtSign className="w-[16px] h-[16px]" />
             </button>
-            <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 rounded-lg bg-ink text-white text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+            <span className="t-meta pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
               Reference files - coming soon
             </span>
           </span>

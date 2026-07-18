@@ -33,7 +33,7 @@ function AddTargetInput({
         placeholder="Add a target - e.g. CDCP1"
         aria-label="Add a watchlist target"
         className="
-          flex-1 h-10 px-3 text-sm rounded-lg
+          t-body flex-1 h-10 px-3 rounded-lg
           bg-surface border border-border text-textPrimary
           placeholder:text-textTertiary
           focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
@@ -46,7 +46,7 @@ function AddTargetInput({
         disabled={!value.trim()}
         aria-label="Add target"
         className="
-          inline-flex items-center gap-1.5 h-10 px-4 rounded-lg text-sm font-medium
+          t-body inline-flex items-center gap-1.5 h-10 px-4 rounded-lg font-medium
           bg-primary text-white
           hover:bg-[#1E40AF] active:scale-[0.98]
           disabled:opacity-40 disabled:cursor-not-allowed
@@ -75,10 +75,10 @@ function EmptyState({
       <div className="mb-5 w-14 h-14 rounded-xl bg-subtle border border-border flex items-center justify-center">
         <Eye className="w-6 h-6 text-textSecondary" />
       </div>
-      <h1 className="font-display text-2xl font-semibold text-textPrimary mb-2 tracking-tight">
+      <h1 className="t-h2 mb-2 text-textPrimary">
         Your watchlist is empty
       </h1>
-      <p className="text-sm text-textSecondary max-w-sm leading-relaxed mb-6">
+      <p className="t-body mb-6 max-w-sm text-textSecondary">
         Add a target and Sonny will monitor it for new papers, trials, and patents.
       </p>
       <div className="w-full max-w-sm">
@@ -115,18 +115,18 @@ function TargetCard({ target, unreadCount, onViewInFeed }: TargetCardProps) {
     >
       {/* Target name */}
       <div>
-        <p className="text-lg font-semibold text-textPrimary leading-snug tracking-tight">
+        <p className="t-h3 text-textPrimary">
           {target}
         </p>
       </div>
 
       {/* Signal count */}
-      <p className="text-sm text-textSecondary">
+      <p className="t-body text-textSecondary">
         {unreadCount > 0 ? `${unreadCount} new signals` : 'No new signals'}
       </p>
 
       {/* Catalysts - static coming soon */}
-      <p className="text-xs text-textTertiary">
+      <p className="t-meta text-textTertiary">
         Catalysts - coming soon
       </p>
 
@@ -136,7 +136,7 @@ function TargetCard({ target, unreadCount, onViewInFeed }: TargetCardProps) {
           type="button"
           onClick={() => onViewInFeed?.(target)}
           className="
-            inline-flex items-center h-8 px-3 rounded-md text-sm font-medium
+            t-body inline-flex items-center h-8 px-3 rounded-md font-medium
             text-textSecondary bg-transparent border border-border
             hover:bg-subtle hover:text-textPrimary
             active:scale-[0.98]
@@ -150,7 +150,7 @@ function TargetCard({ target, unreadCount, onViewInFeed }: TargetCardProps) {
           type="button"
           onClick={() => useWatchlistStore.getState().remove(target)}
           className="
-            inline-flex items-center h-8 px-3 rounded-md text-sm font-medium
+            t-body inline-flex items-center h-8 px-3 rounded-md font-medium
             text-textTertiary bg-transparent
             hover:bg-subtle hover:text-textPrimary
             active:scale-[0.98]
@@ -181,10 +181,10 @@ export default function WatchlistView({ onViewInFeed }: WatchlistViewProps) {
     <div className="max-w-4xl mx-auto w-full">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="font-display text-3xl font-semibold text-textPrimary tracking-tight mb-1">
+        <h1 className="t-h1 mb-1 text-textPrimary">
           Watchlist
         </h1>
-        <p className="text-sm text-textSecondary">
+        <p className="t-body text-textSecondary">
           Targets Sonny is monitoring for new papers, trials, and patents.
         </p>
       </div>

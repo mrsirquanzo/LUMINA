@@ -3,70 +3,145 @@ import { formatTargetDisplayName } from '../targetNaming.js';
 
 const KEY = 'lumina:intelligence:trackedTargets:v1';
 const CAP = 8;
+export const DEFAULT_PROJECT_ICON = '📄';
 
-function normalize(list: string[]): string[] {
-  const out: string[] = [];
+export interface WatchlistProject {
+  id: string;
+  target: string;
+  icon: string;
+}
+
+function projectId(target: string): string {
+  const slug = target.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'project';
+  const suffix = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID().slice(0, 8)
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+  return `${slug}-${suffix}`;
+}
+
+function normalizeTarget(raw: unknown): string {
+  return formatTargetDisplayName(String(raw ?? '')).trim();
+}
+
+function normalizeProjects(list: unknown[]): WatchlistProject[] {
+  const out: WatchlistProject[] = [];
   const seen = new Set<string>();
+
   for (const raw of list) {
-    const t = formatTargetDisplayName(String(raw)).trim();
-    if (!t) continue;
-    const k = t.toLowerCase();
-    if (seen.has(k)) continue;
-    seen.add(k);
-    out.push(t);
+    const source = typeof raw === 'string' ? { target: raw } : raw;
+    if (!source || typeof source !== 'object') continue;
+
+    const candidate = source as Partial<WatchlistProject>;
+    const target = normalizeTarget(candidate.target);
+    if (!target) continue;
+
+    const key = target.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      id: typeof candidate.id === 'string' && candidate.id.trim() ? candidate.id : projectId(target),
+      target,
+      icon: typeof candidate.icon === 'string' && candidate.icon.trim() ? candidate.icon : DEFAULT_PROJECT_ICON,
+    });
   }
+
   return out;
 }
 
-/** Exported for tests + store init: read + normalize the persisted targets. */
-export function loadTargets(): string[] {
+/** Read persisted projects, including migration from the legacy string array. */
+export function loadProjects(): WatchlistProject[] {
   if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(KEY);
     const parsed = raw ? (JSON.parse(raw) as unknown) : [];
-    return Array.isArray(parsed) ? normalize(parsed as string[]).slice(-CAP) : [];
+    return Array.isArray(parsed) ? normalizeProjects(parsed).slice(-CAP) : [];
   } catch {
     return [];
   }
 }
 
-function persist(targets: string[]): void {
+/** Backwards-compatible target selector used by the intelligence feed. */
+export function loadTargets(): string[] {
+  return loadProjects().map((project) => project.target);
+}
+
+function persist(projects: WatchlistProject[]): void {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem(KEY, JSON.stringify(targets));
+    localStorage.setItem(KEY, JSON.stringify(projects));
   } catch {
-    // ignore
+    // Persistence is best-effort in private browsing and restricted contexts.
   }
 }
 
+function stateFor(projects: WatchlistProject[]) {
+  return { projects, targets: projects.map((project) => project.target) };
+}
+
 interface WatchlistStore {
+  projects: WatchlistProject[];
   targets: string[];
-  add(target: string): void;
-  remove(target: string): void;
+  add(target: string, icon?: string): void;
+  remove(targetOrId: string): void;
+  rename(id: string, target: string): void;
+  setIcon(id: string, emoji: string): void;
   seedIfEmpty(defaults: string[]): void;
 }
 
+const initialProjects = loadProjects();
+
 export const useWatchlistStore = create<WatchlistStore>()((set, get) => ({
-  targets: loadTargets(),
-  add: (target) =>
+  ...stateFor(initialProjects),
+  add: (rawTarget, icon = DEFAULT_PROJECT_ICON) =>
     set(() => {
-      // remove any case-insensitive dupe, append the new one, keep the 8 most recent
-      const targets = normalize([...get().targets, target]).slice(-CAP);
-      persist(targets);
-      return { targets };
+      const target = normalizeTarget(rawTarget);
+      if (!target) return {};
+
+      const key = target.toLowerCase();
+      const existing = get().projects.find((project) => project.target.toLowerCase() === key);
+      const projects = [
+        ...get().projects.filter((project) => project.target.toLowerCase() !== key),
+        existing ? { ...existing, target } : { id: projectId(target), target, icon },
+      ].slice(-CAP);
+      persist(projects);
+      return stateFor(projects);
     }),
-  remove: (target) =>
+  remove: (targetOrId) =>
     set(() => {
-      const k = formatTargetDisplayName(String(target)).trim().toLowerCase();
-      const targets = get().targets.filter((t) => t.toLowerCase() !== k);
-      persist(targets);
-      return { targets };
+      const key = normalizeTarget(targetOrId).toLowerCase();
+      const projects = get().projects.filter(
+        (project) => project.id !== targetOrId && project.target.toLowerCase() !== key,
+      );
+      persist(projects);
+      return stateFor(projects);
+    }),
+  rename: (id, rawTarget) =>
+    set(() => {
+      const target = normalizeTarget(rawTarget);
+      if (!target) return {};
+      const key = target.toLowerCase();
+      if (get().projects.some((project) => project.id !== id && project.target.toLowerCase() === key)) return {};
+
+      const projects = get().projects.map((project) => project.id === id ? { ...project, target } : project);
+      persist(projects);
+      return stateFor(projects);
+    }),
+  setIcon: (idOrTarget, emoji) =>
+    set(() => {
+      const icon = emoji.trim();
+      if (!icon) return {};
+      const key = normalizeTarget(idOrTarget).toLowerCase();
+      const projects = get().projects.map((project) =>
+        project.id === idOrTarget || project.target.toLowerCase() === key ? { ...project, icon } : project,
+      );
+      persist(projects);
+      return stateFor(projects);
     }),
   seedIfEmpty: (defaults) =>
     set(() => {
-      if (get().targets.length > 0) return {};
-      const targets = normalize(defaults).slice(-CAP);
-      persist(targets);
-      return { targets };
+      if (get().projects.length > 0) return {};
+      const projects = normalizeProjects(defaults).slice(-CAP);
+      persist(projects);
+      return stateFor(projects);
     }),
 }));

@@ -49,18 +49,18 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
             </button>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.11em] text-primary">Sonny research</span>
-                <span className="rounded-full border border-primary/20 bg-primary/[0.05] px-2 py-0.5 font-mono text-[9px] text-primary">
+                <span className="t-eyebrow text-primary">Sonny research</span>
+                <span className="t-eyebrow rounded-full border border-primary/20 bg-primary/[0.05] px-2 py-0.5 text-primary">
                   {demo ? 'CACHED REPLAY' : 'LIVE'}
                 </span>
               </div>
-              <h1 className="mt-1 truncate font-display text-[25px] font-semibold tracking-tight text-textPrimary">{target} deep research</h1>
-              <p className="mt-1 text-[11px] text-textTertiary">
+              <h1 className="t-h2 mt-1 truncate text-textPrimary">{target} deep research</h1>
+              <p className="t-meta mt-1 text-textTertiary">
                 {status === 'done' ? 'Research complete' : 'Reading sources and synthesizing evidence'}
               </p>
             </div>
           </div>
-          <div className="flex max-w-full items-center gap-2 overflow-hidden font-mono text-[9px] text-textTertiary sm:max-w-[320px]">
+          <div className="t-eyebrow flex max-w-full items-center gap-2 overflow-hidden text-textTertiary sm:max-w-[320px]">
             <Database className="h-3.5 w-3.5 text-primary" strokeWidth={1.75} aria-hidden="true" />
             <span className="truncate">{runId ?? 'Preparing run'}</span>
           </div>
@@ -73,8 +73,8 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
                 <AlertTriangle className="h-[18px] w-[18px]" aria-hidden="true" />
               </span>
               <div>
-                <p className="text-[14px] font-semibold text-nogo-text">Report unavailable</p>
-                <p className="mt-0.5 text-[12.5px] leading-relaxed text-textSecondary">{error}</p>
+                <p className="t-body font-semibold text-nogo-text">Report unavailable</p>
+                <p className="t-body-sm mt-0.5 text-textSecondary">{error}</p>
               </div>
             </div>
           )}
@@ -99,7 +99,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
         </main>
 
         {status === 'error' && (
-          <button type="button" onClick={onBack} className="mt-5 inline-flex items-center gap-2 rounded-lg border border-border bg-white px-3.5 py-2 text-[12px] font-semibold text-textSecondary">
+          <button type="button" onClick={onBack} className="t-meta mt-5 inline-flex items-center gap-2 rounded-lg border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary">
             <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
             Start another report
           </button>

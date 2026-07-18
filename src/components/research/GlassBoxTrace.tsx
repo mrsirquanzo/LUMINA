@@ -97,7 +97,7 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
 
       {/* Steps - vertical checklist */}
       <div>
-        <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-3">
+        <p className="t-eyebrow mb-3 text-textTertiary">
           Progress
         </p>
         <ol className="flex flex-col gap-3">
@@ -111,10 +111,10 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
                 <span
                   className={
                     state === 'done'
-                      ? 'text-[12.5px] font-medium text-textSecondary'
+                      ? 't-body-sm font-medium text-textSecondary'
                       : state === 'current'
-                      ? 'text-[12.5px] font-semibold text-textPrimary'
-                      : 'text-[12.5px] text-textTertiary'
+                      ? 't-body-sm font-semibold text-textPrimary'
+                      : 't-body-sm text-textTertiary'
                   }
                 >
                   {step.label}
@@ -128,12 +128,12 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
       {/* Specialist threads grid - 2-column, gains a RAG dot on section_complete */}
       {sectionEntries.length > 0 && (
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-2">
+          <p className="t-eyebrow mb-2 text-textTertiary">
             Specialists
           </p>
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             {sectionEntries.map(([id, rag]) => (
-              <div key={id} className="flex items-center gap-2 text-[12.5px]">
+              <div key={id} className="t-body-sm flex items-center gap-2">
                 <span
                   className={`w-2 h-2 rounded-full flex-none ${ragDotClass(rag)}`}
                   aria-label={rag}
@@ -148,26 +148,26 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
       {/* KPI chips */}
       <div className="grid grid-cols-3 gap-2">
         <div className="bg-subtle border border-border rounded-xl px-3 py-2 text-center">
-          <p className="font-mono text-[17px] font-semibold text-textPrimary tabular-nums">
+          <p className="t-h3 font-mono tabular-nums text-textPrimary">
             {counts['research_read'] ?? 0}
           </p>
-          <p className="text-[10px] font-semibold tracking-[0.05em] uppercase text-textTertiary mt-0.5">
+          <p className="t-eyebrow mt-0.5 text-textTertiary">
             Papers
           </p>
         </div>
         <div className="bg-subtle border border-border rounded-xl px-3 py-2 text-center">
-          <p className="font-mono text-[17px] font-semibold text-textPrimary tabular-nums">
+          <p className="t-h3 font-mono tabular-nums text-textPrimary">
             {counts['evidence_registered'] ?? 0}
           </p>
-          <p className="text-[10px] font-semibold tracking-[0.05em] uppercase text-textTertiary mt-0.5">
+          <p className="t-eyebrow mt-0.5 text-textTertiary">
             Evidence
           </p>
         </div>
         <div className="bg-subtle border border-border rounded-xl px-3 py-2 text-center">
-          <p className="font-mono text-[17px] font-semibold text-textPrimary tabular-nums">
+          <p className="t-h3 font-mono tabular-nums text-textPrimary">
             {counts['tool_call'] ?? 0}
           </p>
-          <p className="text-[10px] font-semibold tracking-[0.05em] uppercase text-textTertiary mt-0.5">
+          <p className="t-eyebrow mt-0.5 text-textTertiary">
             Tools
           </p>
         </div>
@@ -175,7 +175,7 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
 
       {/* Audit flags - shown if any */}
       {auditFlags > 0 && (
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-watch-tint border border-amber-500/30 text-watch-text text-xs font-semibold self-start">
+        <div className="t-meta inline-flex items-center gap-1.5 self-start rounded-full border border-amber-500/30 bg-watch-tint px-2.5 py-1 font-semibold text-watch-text">
           <svg
             width="12"
             height="12"
@@ -195,12 +195,12 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
 
       {/* Live log - Faraday-style narrative: tool cards, reads as thoughts */}
       <div>
-        <p className="text-[11px] font-semibold tracking-[0.05em] uppercase text-textTertiary mb-2">
+        <p className="t-eyebrow mb-2 text-textTertiary">
           Live log
         </p>
         <div className="max-h-[340px] overflow-y-auto flex flex-col gap-1.5 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border">
           {log.length === 0 ? (
-            <p className="text-xs text-textTertiary italic">Waiting for events...</p>
+            <p className="t-meta italic text-textTertiary">Waiting for events...</p>
           ) : (
             log.map((entry, i) => <LogRow key={i} entry={entry} />)
           )}
@@ -222,14 +222,14 @@ function LogRow({ entry }: { entry: TraceLogEntry }): ReactElement {
     const dot = role === 'tool' ? 'bg-primary' : 'bg-go';
     return (
       <div className="rounded-lg border border-border bg-subtle px-3 py-2">
-        <p className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-textTertiary mb-1">
+        <p className="t-eyebrow mb-1 text-textTertiary">
           {type}
         </p>
         <div className="flex items-center gap-2">
           <span className={`w-1.5 h-1.5 rounded-full flex-none ${dot}`} aria-hidden="true" />
-          <span className="font-mono text-[12.5px] text-textPrimary truncate">{label}</span>
+          <span className="t-body-sm truncate font-mono text-textPrimary">{label}</span>
         </div>
-        {detail && <p className="text-[12px] text-textSecondary mt-1 leading-snug line-clamp-2">{detail}</p>}
+        {detail && <p className="t-meta mt-1 text-textSecondary line-clamp-2">{detail}</p>}
       </div>
     );
   }
@@ -239,7 +239,7 @@ function LogRow({ entry }: { entry: TraceLogEntry }): ReactElement {
     return (
       <div className="flex items-start gap-2 pl-0.5">
         <span className="w-1.5 h-1.5 rounded-full bg-go/70 flex-none mt-[6px]" aria-hidden="true" />
-        <span className="text-[12px] text-textSecondary leading-snug line-clamp-2">
+        <span className="t-meta text-textSecondary line-clamp-2">
           {detail ?? 'evidence registered'}
         </span>
       </div>
@@ -250,8 +250,8 @@ function LogRow({ entry }: { entry: TraceLogEntry }): ReactElement {
   if (role === 'read') {
     return (
       <div className="border-l-2 border-border pl-3 py-0.5">
-        <span className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-textTertiary">{label}</span>
-        {detail && <p className="text-[11.5px] italic text-textSecondary leading-snug truncate">{detail}</p>}
+        <span className="t-eyebrow text-textTertiary">{label}</span>
+        {detail && <p className="t-meta truncate italic text-textSecondary">{detail}</p>}
       </div>
     );
   }
@@ -259,8 +259,8 @@ function LogRow({ entry }: { entry: TraceLogEntry }): ReactElement {
   // Everything else: compact mono meta + label.
   return (
     <div className="flex items-baseline gap-2 py-px">
-      <span className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-textTertiary flex-none">{type}</span>
-      <span className="text-[12px] text-textSecondary truncate">
+      <span className="t-eyebrow flex-none text-textTertiary">{type}</span>
+      <span className="t-meta truncate text-textSecondary">
         {label}
         {detail ? <span className="text-textTertiary"> · {detail}</span> : null}
       </span>
@@ -289,10 +289,10 @@ function IdleState() {
         </svg>
       </div>
       <div>
-        <p className="text-[15px] font-semibold text-textPrimary font-display">
+        <p className="t-h3 text-textPrimary">
           No active run
         </p>
-        <p className="text-[13px] text-textSecondary mt-1 max-w-[32ch] leading-relaxed">
+        <p className="t-body-sm mt-1 max-w-[32ch] text-textSecondary">
           Ask Sonny a question; the run and its glass-box appear here.
         </p>
       </div>

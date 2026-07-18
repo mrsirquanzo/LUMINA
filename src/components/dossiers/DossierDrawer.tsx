@@ -151,10 +151,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
           }}
         >
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              className="font-display"
-              style={{ fontSize: 19, fontWeight: 600, color: '#0F172A' }}
-            >
+            <div className="t-h3 text-textPrimary">
               {briefing?.target ? `${briefing.target} · report` : 'Report'}
             </div>
           </div>
@@ -199,7 +196,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
           {briefing ? (
             <ResearchDossier briefing={briefing} />
           ) : (
-            <p style={{ color: '#475569', fontSize: 14 }}>Report not found.</p>
+            <p className="t-body text-textSecondary">Report not found.</p>
           )}
         </div>
       </div>

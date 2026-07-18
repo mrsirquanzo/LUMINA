@@ -135,7 +135,7 @@ function ConfidenceMeter({ value }: { value: number }) {
       <div className="w-16 h-1.5 bg-subtle rounded-full overflow-hidden">
         <div className="h-full rounded-full bg-primary" style={{ width: `${v}%` }} />
       </div>
-      <span className="text-[10px] font-mono text-textTertiary">{v}%</span>
+      <span className="t-meta font-mono text-textTertiary">{v}%</span>
     </div>
   );
 }
@@ -1428,16 +1428,16 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                 <Sparkles className="w-5 h-5 text-primary" />
               </div>
               <div className="min-w-0">
-                <h1 className="font-display text-2xl font-semibold tracking-tight text-textPrimary flex items-center gap-2">
+                <h1 className="t-h2 flex items-center gap-2 text-textPrimary">
                   Intelligence feed
                   {isDemoMode && (
-                    <span className="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-md font-mono font-semibold tracking-wide bg-primary/10 border border-primary/20 text-primary">
+                    <span className="t-eyebrow inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-primary">
                       <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />
                       DEMO DATA
                     </span>
                   )}
                 </h1>
-                <p className="text-xs text-textSecondary mt-0.5">
+                <p className="t-meta mt-0.5 text-textSecondary">
                   A live monitor for the targets and topics you follow, read for what changes.
                 </p>
               </div>
@@ -1460,7 +1460,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         setShowExportMenu(false);
                         exportFeedCsv();
                       }}
-                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-subtle"
+                      className="t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle"
                     >
                       Export feed (.csv)
                     </button>
@@ -1471,7 +1471,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         setShowExportMenu(false);
                         exportDigest();
                       }}
-                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-subtle disabled:opacity-50"
+                      className="t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle disabled:opacity-50"
                     >
                       Export Sonny digest (.md)
                     </button>
@@ -1479,7 +1479,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                     <button
                       type="button"
                       onClick={() => setCuratedOnly(!isCuratedOnly)}
-                      className="w-full px-3 py-2.5 text-left text-sm text-textSecondary hover:bg-subtle"
+                      className="t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
                     >
                       {isCuratedOnly ? 'Use all live sources' : 'Use curated live sources'}
                     </button>
@@ -1491,7 +1491,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           clearHiddenItems();
                           setShowExportMenu(false);
                         }}
-                        className="w-full px-3 py-2.5 text-left text-sm text-textSecondary hover:bg-subtle"
+                        className="t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
                       >
                         Restore hidden items
                       </button>
@@ -1507,7 +1507,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)] lg:items-end">
             <nav aria-label="Intelligence subscriptions" className="space-y-3 min-w-0">
               <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-textTertiary">Targets</span>
+                <span className="t-eyebrow text-textTertiary">Targets</span>
                 <div className="flex items-center gap-2 flex-wrap">
                   {trackedTargetSubscriptions.map((subscription) => {
                     const active = selectedSubscriptionLabel.toLowerCase() === subscription.toLowerCase();
@@ -1517,21 +1517,21 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         key={subscription}
                         type="button"
                         onClick={() => selectSubscription(subscription)}
-                        className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                        className={`t-body rounded-lg border px-3 py-1.5 font-medium transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                           active
                             ? 'bg-primary text-white border-primary shadow-sm'
                             : 'bg-surface border-border text-textSecondary hover:text-primary hover:border-primary/30'
                         }`}
                       >
                         {subscription}
-                        {unread > 0 ? <span className="ml-1.5 font-mono text-[10px] opacity-70">{unread}</span> : null}
+                        {unread > 0 ? <span className="t-meta ml-1.5 font-mono opacity-70">{unread}</span> : null}
                       </button>
                     );
                   })}
                 </div>
               </div>
               <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-textTertiary">Topics</span>
+                <span className="t-eyebrow text-textTertiary">Topics</span>
                 <div className="flex items-center gap-2 flex-wrap">
                   {trackedTopicSubscriptions.map((subscription) => {
                     const active = selectedSubscriptionLabel.toLowerCase() === subscription.toLowerCase();
@@ -1540,7 +1540,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         key={subscription}
                         type="button"
                         onClick={() => selectSubscription(subscription)}
-                        className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                        className={`t-body rounded-lg border px-3 py-1.5 font-medium transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                           active
                             ? 'bg-primary text-white border-primary shadow-sm'
                             : 'bg-surface border-border text-textSecondary hover:text-primary hover:border-primary/30'
@@ -1568,7 +1568,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                     }
                   }}
                   placeholder="Add a target or topic"
-                  className="w-full pl-10 pr-20 py-2.5 bg-subtle border border-border rounded-xl text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
+                  className="t-body w-full rounded-xl border border-border bg-subtle py-2.5 pl-10 pr-20 text-textPrimary placeholder:text-textTertiary focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
                 {feedSearchInput ? (
                   <button
@@ -1584,7 +1584,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   type="button"
                   onClick={() => submitFeedSearch()}
                   disabled={!feedSearchInput.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-subtle hover:bg-subtle text-textPrimary text-xs font-semibold disabled:opacity-50"
+                  className="t-meta absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-subtle px-3 py-1.5 font-semibold text-textPrimary hover:bg-subtle disabled:opacity-50"
                 >
                   Add
                 </button>
@@ -1600,7 +1600,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   type="button"
                   onClick={() => setSourceFilter(option)}
                   aria-pressed={sourceFilter === option}
-                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                  className={`t-meta rounded-lg px-2.5 py-1.5 font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                     sourceFilter === option ? 'bg-surface text-primary shadow-sm' : 'text-textTertiary hover:text-textPrimary'
                   }`}
                 >
@@ -1608,12 +1608,12 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                 </button>
               ))}
             </div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-textTertiary">
+            <p className="t-eyebrow text-textTertiary">
               {isFetching ? 'Updating automatically' : `Monitoring ${feedItems.length} grounded sources`}
             </p>
           </div>
           {data?.errors?.length ? (
-            <p className="mt-3 text-xs text-textSecondary">
+            <p className="t-meta mt-3 text-textSecondary">
               {data.errors.length} source connection{data.errors.length === 1 ? '' : 's'} did not respond. Available results are shown.
             </p>
           ) : null}
@@ -1624,7 +1624,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       {toast ? (
         <div className="fixed top-20 right-6 z-50 animate-slide-up">
           <div
-            className={`glass-elevated rounded-xl px-4 py-3 text-sm font-medium border ${
+            className={`t-body glass-elevated rounded-xl border px-4 py-3 font-medium ${
               toast.tone === 'success'
                 ? 'border-emerald-500/30 text-go-text'
                 : toast.tone === 'error'
@@ -1647,16 +1647,16 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-primary">Automatic digest</p>
-                  <h2 id="sonny-read-heading" className="font-display text-xl font-semibold text-textPrimary">Sonny's read</h2>
+                  <p className="t-eyebrow text-primary">Automatic digest</p>
+                  <h2 id="sonny-read-heading" className="t-h3 text-textPrimary">Sonny's read</h2>
                 </div>
-                <span className="font-mono text-[10px] text-textTertiary">{selectedSubscriptionLabel} / {feedItems.length} sources</span>
+                <span className="t-meta font-mono text-textTertiary">{selectedSubscriptionLabel} / {feedItems.length} sources</span>
               </div>
-              <p className="mt-3 max-w-[82ch] font-display text-[15px] leading-7 text-textSecondary line-clamp-5">
+              <p className="t-lead mt-3 max-w-[82ch] font-display text-textSecondary line-clamp-5">
                 {automaticSonnyRead}
               </p>
               {digestError && !selectedDemoPack ? (
-                <p className="mt-2 text-xs text-textTertiary">The live digest is waiting for a grounded response. Feed items remain available below.</p>
+                <p className="t-meta mt-2 text-textTertiary">The live digest is waiting for a grounded response. Feed items remain available below.</p>
               ) : null}
             </div>
           </div>
@@ -1666,17 +1666,17 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
         <section>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <h2 className="font-display text-xl font-semibold text-textPrimary">Latest updates</h2>
-              <span className="text-xs px-2 py-1 bg-subtle text-textSecondary rounded-lg border border-border">
+              <h2 className="t-h3 text-textPrimary">Latest updates</h2>
+              <span className="t-meta rounded-lg border border-border bg-subtle px-2 py-1 text-textSecondary">
                 {filteredItems.length} items
               </span>
               {pinnedItems.length > 0 ? (
-                <span className="text-xs px-2 py-1 bg-primary/5 text-primary rounded-lg border border-primary/20">
+                <span className="t-meta rounded-lg border border-primary/20 bg-primary/5 px-2 py-1 text-primary">
                   {pinnedItems.length} pinned
                 </span>
               ) : null}
             </div>
-            <div className="text-xs text-textTertiary">
+            <div className="t-meta text-textTertiary">
               Showing{' '}
               <span className="font-mono">
                 {selectedSubscriptionLabel || '-'}
@@ -1686,8 +1686,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
           {isError ? (
             <div className="rounded-2xl border border-border bg-subtle p-6">
-              <p className="font-display text-lg text-textPrimary mb-1">No monitored sources are available for this selection yet.</p>
-              <p className="text-sm text-textSecondary">
+              <p className="t-h3 mb-1 text-textPrimary">No monitored sources are available for this selection yet.</p>
+              <p className="t-body text-textSecondary">
                 {error instanceof Error ? error.message : 'The monitor will update automatically when a grounded source is available.'}
               </p>
             </div>
@@ -1768,18 +1768,18 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         {pinned ? (
                           <div className="flex items-center gap-1 text-primary mr-1">
                             <Pin className="w-3 h-3" />
-                            <span className="font-mono text-[10px] uppercase tracking-wider">Pinned</span>
+                            <span className="t-eyebrow">Pinned</span>
                           </div>
                         ) : null}
-                        <span className="inline-flex items-center px-2 py-1 rounded-md border border-primary/20 bg-primary/5 font-mono text-[10px] uppercase tracking-wide text-primary">
+                        <span className="t-eyebrow inline-flex items-center rounded-md border border-primary/20 bg-primary/5 px-2 py-1 text-primary">
                           {typeLabel}
                         </span>
-                        <span className="text-[11px] font-medium text-textSecondary">{item.source}</span>
+                        <span className="t-meta font-medium text-textSecondary">{item.source}</span>
                         <span className="flex-1" />
-                        <time dateTime={item.date} className="font-mono text-[10px] text-textTertiary">{formatRelativeTime(item.date)}</time>
+                        <time dateTime={item.date} className="t-meta font-mono text-textTertiary">{formatRelativeTime(item.date)}</time>
                       </div>
 
-                      <h3 className="mt-3 text-[15px] font-semibold text-textPrimary leading-[1.4] text-balance">
+                      <h3 className="t-h3 mt-3 text-balance text-textPrimary">
                         {highlightText(item.title, item.matchedTerms || [])}
                       </h3>
 
@@ -1787,10 +1787,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                       <div className="mt-[10px] flex gap-[9px] items-start">
                         <Sparkles className="w-[15px] h-[15px] text-primary flex-none mt-[3px]" />
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] font-semibold uppercase tracking-[.05em] text-textTertiary block mb-0.5">
+                          <span className="t-eyebrow mb-0.5 block text-textTertiary">
                             {"Sonny's read"}
                           </span>
-                          <p className="font-display text-[14.5px] leading-[1.6] text-textSecondary m-0 max-w-[76ch] line-clamp-2">
+                          <p className="t-body m-0 max-w-[76ch] font-display text-textSecondary line-clamp-2">
                             {sonnysRead}
                           </p>
                         </div>
@@ -1798,9 +1798,9 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                       {/* One primary action; source and management controls live inside the expansion. */}
                       <div className="flex items-center gap-3 mt-[14px] flex-wrap">
-                        <span className="font-mono text-[10px] uppercase tracking-wide text-textTertiary">{item.relevance} relevance</span>
+                        <span className="t-eyebrow text-textTertiary">{item.relevance} relevance</span>
                         {itemId ? (
-                          <span className="font-mono text-[11px] text-textTertiary">{itemId}</span>
+                          <span className="t-meta font-mono text-textTertiary">{itemId}</span>
                         ) : null}
                         <span className="flex-1" />
                         <button
@@ -1810,7 +1810,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             setExpandedItemId(next);
                             if (next && !isDemoMode) void ensureArticleAnalysis(item);
                           }}
-                          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-white text-[12px] font-semibold shadow-sm hover:bg-primary/90 transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                          className="t-meta inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 font-semibold text-white shadow-sm transition-all hover:bg-primary/90 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                         >
                           {expanded ? (
                             <>Close read <ChevronUp className="w-3.5 h-3.5" /></>
@@ -1818,7 +1818,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             <>
                               Read Sonny's take
                               {analysisState === 'loading' ? (
-                                <span className="text-[10px] opacity-70">...</span>
+                                <span className="t-meta opacity-70">...</span>
                               ) : (
                                 <ChevronDown className="w-3.5 h-3.5" />
                               )}
@@ -1838,9 +1838,9 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-xs font-semibold text-textPrimary">Sonny's full read</span>
+                            <span className="t-body-sm font-semibold text-textPrimary">Sonny's full read</span>
                             {analysisState === 'loading' ? (
-                              <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-subtle border border-border text-textTertiary animate-pulse">
+                              <span className="t-meta ml-2 animate-pulse rounded-full border border-border bg-subtle px-2 py-0.5 text-textTertiary">
                                 generating...
                               </span>
                             ) : null}
@@ -1850,13 +1850,13 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                         {analysisError && !isDemoMode ? (
                           <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                            <p className="text-sm text-textPrimary">The live analysis is not available yet.</p>
-                            <p className="text-xs text-nogo-text/70 mt-1 line-clamp-2">{analysisError}</p>
+                            <p className="t-body text-textPrimary">The live analysis is not available yet.</p>
+                            <p className="t-meta mt-1 text-nogo-text/70 line-clamp-2">{analysisError}</p>
                             <div className="mt-3">
                               <button
                                 type="button"
                                 onClick={() => void ensureArticleAnalysis(item)}
-                                className="px-3 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textPrimary text-sm font-semibold"
+                                className="t-body rounded-xl border border-border bg-subtle px-3 py-2 font-semibold text-textPrimary hover:bg-subtle"
                               >
                                 Retry
                               </button>
@@ -1870,8 +1870,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <Newspaper className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-wide block mb-1">The source</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
+                              <span className="t-eyebrow mb-1 block text-primary">The source</span>
+                              <p className="t-body text-textSecondary">
                                 {analysis?.sections?.theNews?.text || item.summary}
                               </p>
                             </div>
@@ -1882,8 +1882,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <Target className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-wide block mb-1">The context</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
+                              <span className="t-eyebrow mb-1 block text-primary">The context</span>
+                              <p className="t-body text-textSecondary">
                                 {sonnyContext}
                               </p>
                             </div>
@@ -1894,8 +1894,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <Lightbulb className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-wide block mb-1">The implication</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
+                              <span className="t-eyebrow mb-1 block text-primary">The implication</span>
+                              <p className="t-body text-textSecondary">
                                 {sonnyImplication}
                               </p>
                             </div>
@@ -1906,8 +1906,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <HelpCircle className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-wide block mb-1">The question</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
+                              <span className="t-eyebrow mb-1 block text-primary">The question</span>
+                              <p className="t-body text-textSecondary">
                                 {sonnyQuestion}
                               </p>
                             </div>
@@ -1916,12 +1916,12 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                         {analysis?.keyThemes?.length ? (
                           <div className="pt-1">
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-textTertiary mb-2">Key themes</p>
+                            <p className="t-eyebrow mb-2 text-textTertiary">Key themes</p>
                             <div className="flex flex-wrap gap-2">
                               {analysis.keyThemes.slice(0, 4).map((t, idx) => (
                                 <span
                                   key={`${t.theme}-${idx}`}
-                                  className="px-2.5 py-1 rounded-md text-[11px] font-semibold border bg-primary/5 border-primary/20 text-primary"
+                                  className="t-meta rounded-md border border-primary/20 bg-primary/5 px-2.5 py-1 font-semibold text-primary"
                                   title={t.rationale}
                                 >
                                   {t.theme}
@@ -1933,10 +1933,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                         {analysis?.actions?.length ? (
                           <div className="pt-1">
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-textTertiary mb-2">Actions</p>
+                            <p className="t-eyebrow mb-2 text-textTertiary">Actions</p>
                             <ul className="space-y-2">
                               {analysis.actions.slice(0, 3).map((a, idx) => (
-                                <li key={`${a.action}-${idx}`} className="text-sm text-textSecondary leading-relaxed">
+                                <li key={`${a.action}-${idx}`} className="t-body text-textSecondary">
                                   <span className="font-semibold text-textPrimary">{a.action}</span>
                                   <span className="text-textSecondary"> - {a.why}</span>
                                 </li>
@@ -1950,18 +1950,18 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-xs text-primary hover:text-primary/90 font-medium transition-colors"
+                            className="t-meta flex items-center gap-2 font-medium text-primary transition-colors hover:text-primary/90"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                             {openLabel}
                           </a>
-                          <button type="button" onClick={() => togglePinned(item.id)} className="text-xs text-textTertiary hover:text-primary">
+                          <button type="button" onClick={() => togglePinned(item.id)} className="t-meta text-textTertiary hover:text-primary">
                             {pinned ? 'Unpin' : 'Pin'}
                           </button>
-                          <button type="button" onClick={() => hideItemUrlForContext(item.link)} className="text-xs text-textTertiary hover:text-primary">
+                          <button type="button" onClick={() => hideItemUrlForContext(item.link)} className="t-meta text-textTertiary hover:text-primary">
                             Hide item
                           </button>
-                          <button type="button" onClick={() => hideSourceForContext(item.link)} className="text-xs text-textTertiary hover:text-primary">
+                          <button type="button" onClick={() => hideSourceForContext(item.link)} className="t-meta text-textTertiary hover:text-primary">
                             Hide source
                           </button>
                         </div>
@@ -1974,8 +1974,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
           ) : (
             <div className="text-center py-16">
               <FileText className="w-12 h-12 text-textTertiary mx-auto mb-4 opacity-50" />
-              <p className="font-display text-lg text-textSecondary mb-2">{isLoading ? 'Reading monitored sources...' : 'No items match this source view.'}</p>
-              <p className="text-sm text-textSecondary">{isLoading ? 'The feed will appear as soon as the monitor responds.' : 'Choose another source type or add a different subscription.'}</p>
+              <p className="t-h3 mb-2 text-textSecondary">{isLoading ? 'Reading monitored sources...' : 'No items match this source view.'}</p>
+              <p className="t-body text-textSecondary">{isLoading ? 'The feed will appear as soon as the monitor responds.' : 'Choose another source type or add a different subscription.'}</p>
             </div>
           )}
         </section>

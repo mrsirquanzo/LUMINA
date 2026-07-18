@@ -80,10 +80,7 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
   };
   return (
     <div>
-      <h2
-        className="font-display text-textPrimary mb-3.5"
-        style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.01em' }}
-      >
+      <h2 className="t-h3 mb-3.5 text-textPrimary">
         What Sonny can do
       </h2>
 
@@ -104,17 +101,17 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
         onMouseLeave={(event) => lift(event.currentTarget as HTMLDivElement, false)}
       >
         <span className="flex-1 min-w-0">
-          <span className="inline-flex items-center gap-1.5 mb-2" style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', color: '#1D4ED8' }}>
+          <span className="t-eyebrow mb-2 inline-flex items-center gap-1.5 text-primary">
             <span className="w-[6px] h-[6px] rounded-full inline-block" style={{ background: '#1D4ED8' }} />
             AVAILABLE
           </span>
-          <span className="block text-textPrimary font-semibold" style={{ fontSize: 15.5 }}>
+          <span className="t-h3 block text-textPrimary">
             {COMBINATION_SCREENING.title}
           </span>
-          <span className="block text-textSecondary mt-1 leading-relaxed" style={{ fontSize: 12.5, maxWidth: '46ch' }}>
+          <span className="t-body-sm mt-1 block max-w-[46ch] text-textSecondary">
             {COMBINATION_SCREENING.description}
           </span>
-          <span className="inline-flex items-center gap-1.5 mt-2.5 text-primary" style={{ fontSize: 11, fontWeight: 600 }}>
+          <span className="t-meta mt-2.5 inline-flex items-center gap-1.5 font-semibold text-primary">
             Open workbook <span aria-hidden="true">→</span>
           </span>
         </span>
@@ -139,18 +136,18 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
         onMouseLeave={(e) => lift(e.currentTarget as HTMLDivElement, false)}
       >
         <span className="flex-1 min-w-0">
-          <span className="inline-flex items-center gap-1.5 mb-2" style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', color: '#1D4ED8' }}>
+          <span className="t-eyebrow mb-2 inline-flex items-center gap-1.5 text-primary">
             <span className="w-[6px] h-[6px] rounded-full inline-block" style={{ background: '#1D4ED8' }} />
             AVAILABLE
           </span>
-          <span className="block text-textPrimary font-semibold" style={{ fontSize: 15.5 }}>
+          <span className="t-h3 block text-textPrimary">
             Deep target research
           </span>
-          <span className="block text-textSecondary mt-1 leading-relaxed" style={{ fontSize: 12.5, maxWidth: '46ch' }}>
+          <span className="t-body-sm mt-1 block max-w-[46ch] text-textSecondary">
             Six specialists read the literature and public data, run grounded computational analysis across DepMap,
             GTEx, and tumor expression, then return a conclusion-first GO / WATCH / NO-GO report with every claim cited.
           </span>
-          <span className="inline-flex items-center gap-1.5 mt-2.5 text-primary" style={{ fontSize: 11, fontWeight: 600 }}>
+          <span className="t-meta mt-2.5 inline-flex items-center gap-1.5 font-semibold text-primary">
             Start a report <span aria-hidden="true">→</span>
           </span>
         </span>
@@ -192,13 +189,13 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
                 />
               </div>
               <div className="p-[16px]">
-                <span className="block text-textPrimary font-semibold" style={{ fontSize: 14 }}>
+                <span className="t-h3 block text-textPrimary">
                   {cap.title}
                 </span>
-                <span className="block text-textSecondary mt-1 leading-relaxed" style={{ fontSize: 12.5 }}>
+                <span className="t-body-sm mt-1 block text-textSecondary">
                   {cap.description}
                 </span>
-                <span className={`inline-flex items-center gap-1.5 mt-2.5 ${isAvailable ? 'text-primary' : 'text-textTertiary'}`} style={{ fontSize: 11, fontWeight: 600 }}>
+                <span className={`t-meta mt-2.5 inline-flex items-center gap-1.5 font-semibold ${isAvailable ? 'text-primary' : 'text-textTertiary'}`}>
                   {isAvailable ? (
                     <><span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />Open workbook <span aria-hidden="true">→</span></>
                   ) : 'Coming soon'}

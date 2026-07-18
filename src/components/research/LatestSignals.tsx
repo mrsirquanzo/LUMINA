@@ -64,10 +64,10 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
       {/* Section header */}
       <div className="flex items-center justify-between mb-3">
         <div>
-          <span className="text-textPrimary font-semibold" style={{ fontSize: 15 }}>
+          <span className="t-h3 text-textPrimary">
             Latest signals
           </span>
-          <span className="text-textTertiary text-sm ml-1.5">
+          <span className="t-meta ml-1.5 text-textTertiary">
             {seeded ? (
               <>
                 live from the feed &middot; <span className="font-mono">{target}</span>
@@ -80,7 +80,7 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
         <button
           type="button"
           onClick={onOpenFeed}
-          className="text-primary text-sm tactile"
+          className="t-meta tactile text-primary"
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
           Open feed -&gt;
@@ -95,9 +95,9 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
           <SkeletonRow />
         </div>
       ) : isError ? (
-        <p className="text-textTertiary text-sm py-2">Couldn't load latest signals.</p>
+        <p className="t-body-sm py-2 text-textTertiary">Couldn't load latest signals.</p>
       ) : items.length === 0 ? (
-        <p className="text-textSecondary text-sm py-2 leading-relaxed">
+        <p className="t-body-sm py-2 text-textSecondary">
           No recent signals yet - add targets to your watchlist and Sonny will surface new papers,
           trials, and patents here.
         </p>
@@ -108,11 +108,11 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
             const metaParts = [item.source, item.target, ago].filter(Boolean);
             const inner = (
               <div className="py-2.5 tactile">
-                <p className="text-textPrimary truncate" style={{ fontSize: 13.5 }}>
+                <p className="t-body-sm truncate text-textPrimary">
                   {item.title}
                 </p>
                 {metaParts.length > 0 && (
-                  <p className="text-textTertiary text-xs mt-0.5 truncate">
+                  <p className="t-meta mt-0.5 truncate text-textTertiary">
                     {metaParts.map((part, i) => (
                       <span key={i}>
                         {i > 0 && (

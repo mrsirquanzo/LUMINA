@@ -66,19 +66,19 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
             </button>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.11em] text-primary">Sonny Workbook</span>
-                <span className="rounded-full border border-primary/20 bg-primary/[0.05] px-2 py-0.5 font-mono text-[9px] text-primary">REPLAY</span>
+                <span className="t-eyebrow text-primary">Sonny Workbook</span>
+                <span className="t-eyebrow rounded-full border border-primary/20 bg-primary/[0.05] px-2 py-0.5 text-primary">Replay</span>
               </div>
-              <h1 className="mt-2 max-w-[900px] text-balance font-display text-[27px] font-semibold leading-[1.12] tracking-tight text-textPrimary sm:text-[32px]">
+              <h1 className="t-h1 mt-2 max-w-[900px] text-balance text-textPrimary">
                 {run.question ?? run.title}
               </h1>
-              <p className="mt-2 max-w-[100ch] text-pretty text-[12px] leading-relaxed text-textSecondary">{context}</p>
+              <p className="t-meta mt-2 max-w-[100ch] text-pretty text-textSecondary">{context}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={resetReplay}
-            className="inline-flex w-fit items-center gap-2 rounded-lg border border-border bg-white px-3.5 py-2 text-[12px] font-semibold text-textSecondary transition-colors hover:border-slate-300 hover:text-textPrimary active:translate-y-px"
+            className="t-meta inline-flex w-fit items-center gap-2 rounded-lg border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary transition-colors hover:border-slate-300 hover:text-textPrimary active:translate-y-px"
           >
             <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
             Restart replay
@@ -124,11 +124,11 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
           <aside className="rounded-2xl border border-border bg-surface p-4 shadow-card lg:sticky lg:top-4" aria-label="Workbook file details">
             <div className="flex items-center gap-2">
               <FileChartColumn className="h-4 w-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
-              <p className="font-mono text-[10px] font-semibold tracking-[0.11em] text-textTertiary">FILES</p>
+              <p className="t-eyebrow text-textTertiary">Files</p>
             </div>
             <div className="mt-3 rounded-xl border border-border bg-subtle/60 p-3">
-              <p className="break-words text-[12px] font-semibold leading-snug text-textPrimary">{run.file.name}</p>
-              <p className="mt-1 font-mono text-[9px] tabular-nums text-textTertiary">
+              <p className="t-meta break-words font-semibold text-textPrimary">{run.file.name}</p>
+              <p className="t-eyebrow mt-1 tabular-nums text-textTertiary">
                 {run.file.sizeMB.toFixed(2)} MB · {run.file.name.split('.').pop()?.toUpperCase() ?? 'DATA'}
               </p>
             </div>
@@ -136,13 +136,13 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
               <div>
                 <div className="flex items-center gap-1.5 text-textTertiary">
                   <Microscope className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-                  <p className="font-mono text-[9px] tracking-[0.08em]">INSTRUMENT</p>
+                  <p className="t-eyebrow">Instrument</p>
                 </div>
-                <p className="mt-1.5 text-[11px] leading-relaxed text-textSecondary">{run.file.instrument}</p>
+                <p className="t-meta mt-1.5 text-textSecondary">{run.file.instrument}</p>
               </div>
               <div>
-                <p className="font-mono text-[9px] tracking-[0.08em] text-textTertiary">PANEL</p>
-                <p className="mt-1.5 text-[11px] leading-relaxed text-textSecondary">{run.file.panel}</p>
+                <p className="t-eyebrow text-textTertiary">Panel</p>
+                <p className="t-meta mt-1.5 text-textSecondary">{run.file.panel}</p>
               </div>
             </div>
           </aside>

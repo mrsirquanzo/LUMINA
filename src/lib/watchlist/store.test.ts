@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useWatchlistStore, loadTargets } from './store.js';
+import { DEFAULT_PROJECT_ICON, useWatchlistStore, loadProjects, loadTargets } from './store.js';
 
 describe('watchlist store', () => {
   let mem: Record<string, string> = {};
@@ -12,7 +12,7 @@ describe('watchlist store', () => {
       clear: () => { mem = {}; },
     });
     vi.stubGlobal('window', {});
-    useWatchlistStore.setState({ targets: [] });
+    useWatchlistStore.setState({ targets: [], projects: [] });
   });
 
   it('add normalizes, dedupes case-insensitively, and persists', () => {
@@ -20,7 +20,7 @@ describe('watchlist store', () => {
     useWatchlistStore.getState().add('CDCP1'); // dupe (case-insensitive)
     const { targets } = useWatchlistStore.getState();
     expect(targets.length).toBe(1);
-    expect(JSON.parse(mem['lumina:intelligence:trackedTargets:v1'])).toEqual(targets);
+    expect(JSON.parse(mem['lumina:intelligence:trackedTargets:v1'])).toEqual(useWatchlistStore.getState().projects);
   });
 
   it('add caps at 8, keeping the 8 most recent', () => {
@@ -49,5 +49,17 @@ describe('watchlist store', () => {
   it('loadTargets reads + normalizes pre-existing key data', () => {
     mem['lumina:intelligence:trackedTargets:v1'] = JSON.stringify(['cdcp1', 'cdcp1', 'trop2']);
     expect(loadTargets()).toEqual(['cdcp1', 'TROP2']); // formatTargetDisplayName upcases TROP2 (known alias), leaves cdcp1 unchanged
+    expect(loadProjects().every((project) => project.icon === DEFAULT_PROJECT_ICON)).toBe(true);
+  });
+
+  it('persists project icons and supports renaming', () => {
+    useWatchlistStore.getState().add('CDCP1');
+    const project = useWatchlistStore.getState().projects[0];
+    useWatchlistStore.getState().setIcon(project.id, '🧬');
+    useWatchlistStore.getState().rename(project.id, 'CDCP1 program');
+
+    expect(useWatchlistStore.getState().projects[0]).toMatchObject({ target: 'CDCP1 program', icon: '🧬' });
+    expect(JSON.parse(mem['lumina:intelligence:trackedTargets:v1'])[0]).toMatchObject({ target: 'CDCP1 program', icon: '🧬' });
+    expect(loadProjects()[0]).toMatchObject({ target: 'CDCP1 program', icon: '🧬' });
   });
 });
