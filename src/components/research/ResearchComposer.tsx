@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Plus, AtSign, Maximize2, HelpCircle, ArrowRight, X } from 'lucide-react';
 import type { ResearchTemplate } from './CapabilityCards';
-import { resolveRunTarget, shouldClearRunTarget } from './researchTemplateState';
+import {
+  hasUnresolvedTargetPlaceholder,
+  resolveRunTarget,
+  shouldClearRunTarget,
+  TARGET_PLACEHOLDER,
+} from './researchTemplateState';
 
 interface ResearchComposerProps {
   onStart: (target: string, mode: 'fast' | 'thorough') => void;
@@ -9,19 +14,30 @@ interface ResearchComposerProps {
   seed?: ResearchTemplate;
 }
 
-const EXAMPLE_CHIPS = ['CDCP1', 'TROP2', 'KRAS G12C'];
-
 export function ResearchComposer({ onStart, initialQuery, seed }: ResearchComposerProps) {
   const activeSeed = initialQuery ? undefined : seed;
   const [prompt, setPrompt] = useState(initialQuery ?? activeSeed?.prompt ?? '');
   const [runTarget, setRunTarget] = useState(activeSeed?.target);
   const [seededPrompt, setSeededPrompt] = useState(activeSeed?.prompt);
   const [contextChip, setContextChip] = useState(activeSeed?.contextChip);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const canRun = prompt.trim().length > 0;
+  const canRun = prompt.trim().length > 0 && !hasUnresolvedTargetPlaceholder(prompt);
+
+  useEffect(() => {
+    const placeholderStart = prompt.indexOf(TARGET_PLACEHOLDER);
+    if (placeholderStart === -1 || !activeSeed) return;
+
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.focus();
+    textarea.setSelectionRange(placeholderStart, placeholderStart + TARGET_PLACEHOLDER.length);
+  }, [activeSeed, prompt]);
+
   const handleStart = () => {
     const trimmed = prompt.trim();
-    if (!trimmed) return;
+    if (!trimmed || hasUnresolvedTargetPlaceholder(prompt)) return;
     onStart(resolveRunTarget(prompt, runTarget), 'fast');
   };
 
@@ -30,15 +46,8 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
     if (shouldClearRunTarget(nextPrompt, seededPrompt)) {
       setRunTarget(undefined);
       setSeededPrompt(undefined);
-      setContextChip(undefined);
+      if (runTarget) setContextChip(undefined);
     }
-  };
-
-  const selectQuickTarget = (target: string) => {
-    setPrompt(target);
-    setRunTarget(target);
-    setSeededPrompt(target);
-    setContextChip(undefined);
   };
 
   // Enter submits; Shift+Enter inserts a newline.
@@ -68,6 +77,7 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
 
         {/* Prompt textarea */}
         <textarea
+          ref={textareaRef}
           value={prompt}
           onChange={(e) => handlePromptChange(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -145,21 +155,6 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
         </div>
       </div>
 
-      {/* Example chips */}
-      <div className="flex items-center gap-2 mt-3.5 flex-wrap">
-        <span className="text-textSecondary font-medium" style={{ fontSize: 11 }}>Quick target</span>
-        {EXAMPLE_CHIPS.map((chip) => (
-          <button
-            key={chip}
-            type="button"
-            onClick={() => selectQuickTarget(chip)}
-            className="px-3 py-1.5 rounded-full bg-surface border border-border text-textSecondary hover:text-textPrimary hover:border-primary/30 transition-colors text-sm font-semibold"
-            style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
-          >
-            {chip}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

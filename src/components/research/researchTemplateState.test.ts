@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { resolveRunTarget, shouldClearRunTarget } from './researchTemplateState';
+import {
+  hasUnresolvedTargetPlaceholder,
+  resolveRunTarget,
+  shouldClearRunTarget,
+} from './researchTemplateState';
 
 describe('template run target state', () => {
   it.each([
@@ -23,5 +27,10 @@ describe('template run target state', () => {
 
     expect(shouldClearRunTarget(prompt, prompt)).toBe(false);
     expect(resolveRunTarget(prompt, 'CDCP1')).toBe('CDCP1');
+  });
+
+  it('detects an unresolved target placeholder', () => {
+    expect(hasUnresolvedTargetPlaceholder('Run a dossier on [target].')).toBe(true);
+    expect(hasUnresolvedTargetPlaceholder('Run a dossier on HER2.')).toBe(false);
   });
 });

@@ -133,12 +133,6 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
             position: 'relative',
           }}
         >
-          {/* View header row */}
-          <div className="flex items-center justify-between mb-10" style={{ position: 'relative', zIndex: 1 }}>
-            <h1 className="font-display text-2xl font-semibold text-textPrimary">Ask Sonny</h1>
-            <span className="text-xs text-textSecondary">Deep research</span>
-          </div>
-
           {/* Composer */}
           <div ref={composerRef} style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
             <ResearchComposer

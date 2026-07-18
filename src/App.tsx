@@ -32,7 +32,6 @@ function AppContent() {
   const [isLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const openFeedForTarget = (target?: string) => { setFeedTarget(target ?? null); setCurrentView('feed'); };
   const toast = useToast();
 
@@ -111,11 +110,7 @@ function AppContent() {
         />
 
         <main className="flex-1 flex flex-col min-w-0">
-          <Header
-            onSearch={handleSearch}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-          />
+          <Header />
 
           <div
             id="main-content"
