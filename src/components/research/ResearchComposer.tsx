@@ -1,25 +1,44 @@
-import { useState, useEffect } from 'react';
-import { Plus, AtSign, Maximize2, HelpCircle, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, AtSign, Maximize2, HelpCircle, ArrowRight, X } from 'lucide-react';
+import type { ResearchTemplate } from './CapabilityCards';
+import { resolveRunTarget, shouldClearRunTarget } from './researchTemplateState';
 
 interface ResearchComposerProps {
   onStart: (target: string, mode: 'fast' | 'thorough') => void;
   initialQuery?: string;
+  seed?: ResearchTemplate;
 }
 
 const EXAMPLE_CHIPS = ['CDCP1', 'TROP2', 'KRAS G12C'];
 
-export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProps) {
-  const [target, setTarget] = useState(initialQuery ?? '');
+export function ResearchComposer({ onStart, initialQuery, seed }: ResearchComposerProps) {
+  const activeSeed = initialQuery ? undefined : seed;
+  const [prompt, setPrompt] = useState(initialQuery ?? activeSeed?.prompt ?? '');
+  const [runTarget, setRunTarget] = useState(activeSeed?.target);
+  const [seededPrompt, setSeededPrompt] = useState(activeSeed?.prompt);
+  const [contextChip, setContextChip] = useState(activeSeed?.contextChip);
 
-  useEffect(() => {
-    if (initialQuery) setTarget(initialQuery);
-  }, [initialQuery]);
-
-  const canRun = target.trim().length > 0;
+  const canRun = prompt.trim().length > 0;
   const handleStart = () => {
-    const trimmed = target.trim();
+    const trimmed = prompt.trim();
     if (!trimmed) return;
-    onStart(trimmed, 'fast');
+    onStart(resolveRunTarget(prompt, runTarget), 'fast');
+  };
+
+  const handlePromptChange = (nextPrompt: string) => {
+    setPrompt(nextPrompt);
+    if (shouldClearRunTarget(nextPrompt, seededPrompt)) {
+      setRunTarget(undefined);
+      setSeededPrompt(undefined);
+      setContextChip(undefined);
+    }
+  };
+
+  const selectQuickTarget = (target: string) => {
+    setPrompt(target);
+    setRunTarget(target);
+    setSeededPrompt(target);
+    setContextChip(undefined);
   };
 
   // Enter submits; Shift+Enter inserts a newline.
@@ -49,8 +68,8 @@ export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProp
 
         {/* Prompt textarea */}
         <textarea
-          value={target}
-          onChange={(e) => setTarget(e.target.value)}
+          value={prompt}
+          onChange={(e) => handlePromptChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask Sonny to research a target, map a landscape, or analyze data..."
           rows={3}
@@ -58,6 +77,22 @@ export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProp
           style={{ font: '400 16px var(--font-sans, Geist, sans-serif)', minHeight: 132, lineHeight: 1.5 }}
           autoFocus
         />
+
+        {contextChip && (
+          <div className="px-5 pb-2">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 font-mono text-[10px] tracking-[0.08em] text-textTertiary">
+              {contextChip}
+              <button
+                type="button"
+                onClick={() => setContextChip(undefined)}
+                aria-label={`Remove ${contextChip} context`}
+                className="rounded-sm text-textTertiary transition-colors hover:text-textPrimary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+              >
+                <X className="h-3 w-3" aria-hidden="true" />
+              </button>
+            </span>
+          </div>
+        )}
 
         {/* Bottom control bar */}
         <div className="flex items-center gap-2 px-4 pb-3.5 pt-1">
@@ -117,7 +152,7 @@ export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProp
           <button
             key={chip}
             type="button"
-            onClick={() => setTarget(chip)}
+            onClick={() => selectQuickTarget(chip)}
             className="px-3 py-1.5 rounded-full bg-surface border border-border text-textSecondary hover:text-textPrimary hover:border-primary/30 transition-colors text-sm font-semibold"
             style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
           >

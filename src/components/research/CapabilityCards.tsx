@@ -4,6 +4,12 @@
  * image-led capability cards. Honest status per card; available cards lift on hover.
  */
 
+export interface ResearchTemplate {
+  prompt: string;
+  target: string;
+  contextChip?: string;
+}
+
 interface Capability {
   id: string;
   title: string;
@@ -11,8 +17,14 @@ interface Capability {
   status: 'available' | 'coming-soon';
   image: string;
   alt: string;
-  example?: string; // prompt loaded into the composer when the card is clicked
+  template?: ResearchTemplate;
 }
+
+const GROUNDED_DATA_TEMPLATE: ResearchTemplate = {
+  prompt: 'Analyze TACSTD2 (TROP2) as a target: pull DepMap dependency, GTEx normal-tissue expression, and tumor expression, and ground every number to the dataset and the code that produced it.',
+  target: 'TACSTD2',
+  contextChip: 'DepMap · GTEx',
+};
 
 const CAPABILITIES: Capability[] = [
   {
@@ -22,7 +34,10 @@ const CAPABILITIES: Capability[] = [
     status: 'available',
     image: '/deep-research.png',
     alt: 'Grounded due-diligence dossier with a GO verdict and cited claims',
-    example: 'TROP2',
+    template: {
+      prompt: 'Run a full due-diligence dossier on TROP2 as an antibody-drug-conjugate target in epithelial cancers. I want a conclusion-first GO / WATCH / NO-GO verdict with every claim cited to source.',
+      target: 'TROP2',
+    },
   },
   {
     id: 'competitive',
@@ -31,7 +46,10 @@ const CAPABILITIES: Capability[] = [
     status: 'available',
     image: '/competitive-landscape.png',
     alt: 'TROP2 ADC competitive positioning quadrant',
-    example: 'CDCP1',
+    template: {
+      prompt: 'Map the competitive landscape for CDCP1 as an oncology target. Who is developing against it, what modalities are they using, and where does the whitespace sit?',
+      target: 'CDCP1',
+    },
   },
   {
     id: 'flow-cytometry',
@@ -59,9 +77,9 @@ function lift(el: HTMLDivElement, on: boolean) {
   el.style.borderColor = on ? '#C3D4F2' : '';
 }
 
-export function CapabilityCards({ onSelectExample }: { onSelectExample?: (prompt: string) => void }) {
-  const pick = (example?: string) => {
-    if (example && onSelectExample) onSelectExample(example);
+export function CapabilityCards({ onSelectTemplate }: { onSelectTemplate?: (template: ResearchTemplate) => void }) {
+  const pick = (template?: ResearchTemplate) => {
+    if (template && onSelectTemplate) onSelectTemplate(template);
   };
   return (
     <div>
@@ -76,8 +94,8 @@ export function CapabilityCards({ onSelectExample }: { onSelectExample?: (prompt
       <div
         role="button"
         tabIndex={0}
-        onClick={() => pick('TACSTD2')}
-        onKeyDown={(e) => { if (e.key === 'Enter') pick('TACSTD2'); }}
+        onClick={() => pick(GROUNDED_DATA_TEMPLATE)}
+        onKeyDown={(e) => { if (e.key === 'Enter') pick(GROUNDED_DATA_TEMPLATE); }}
         className="bg-surface border border-border rounded-[14px] p-[18px] mb-3.5 flex gap-5 items-center transition-all duration-200 cursor-pointer"
         style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
         onMouseEnter={(e) => lift(e.currentTarget as HTMLDivElement, true)}
@@ -118,8 +136,8 @@ export function CapabilityCards({ onSelectExample }: { onSelectExample?: (prompt
               key={cap.id}
               role={available ? 'button' : undefined}
               tabIndex={available ? 0 : undefined}
-              onClick={available ? () => pick(cap.example) : undefined}
-              onKeyDown={available ? (e) => { if (e.key === 'Enter') pick(cap.example); } : undefined}
+              onClick={available ? () => pick(cap.template) : undefined}
+              onKeyDown={available ? (e) => { if (e.key === 'Enter') pick(cap.template); } : undefined}
               className={`bg-surface border border-border rounded-[14px] overflow-hidden flex flex-col transition-all duration-200 ${available ? 'cursor-pointer' : ''}`}
               style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
               onMouseEnter={available ? (e) => lift(e.currentTarget as HTMLDivElement, true) : undefined}
@@ -148,7 +166,7 @@ export function CapabilityCards({ onSelectExample }: { onSelectExample?: (prompt
                       Available
                     </span>
                     <span className="text-primary font-semibold" style={{ fontSize: 11 }}>
-                      Try {cap.example} &rarr;
+                      Try {cap.template?.target} &rarr;
                     </span>
                   </div>
                 ) : (

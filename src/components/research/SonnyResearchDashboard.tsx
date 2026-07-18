@@ -4,6 +4,7 @@ import { useDeepResearchStream } from '../../hooks/useDeepResearchStream';
 import { useBriefingStore } from '../../lib/research/briefingStore';
 import { ResearchComposer } from './ResearchComposer';
 import { CapabilityCards } from './CapabilityCards';
+import type { ResearchTemplate } from './CapabilityCards';
 import GlassBoxTrace from './GlassBoxTrace.js';
 import ResearchDossier from './ResearchDossier.js';
 import LatestSignals from './LatestSignals';
@@ -96,11 +97,13 @@ function DossierSkeleton() {
 
 export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResearchDashboardProps) {
   const s = useDeepResearchStream();
-  // Prompt seeded into the composer (from URL or a clicked capability card).
-  const [seed, setSeed] = useState(initialQuery ?? '');
+  // Template seed keeps the displayed prompt separate from the canonical run target.
+  const [seed, setSeed] = useState<ResearchTemplate>();
+  const [seedRevision, setSeedRevision] = useState(0);
   const composerRef = useRef<HTMLDivElement>(null);
-  const seedFromCard = (prompt: string) => {
-    setSeed(prompt);
+  const seedFromCard = (template: ResearchTemplate) => {
+    setSeed({ ...template });
+    setSeedRevision((revision) => revision + 1);
     composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
@@ -139,14 +142,16 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
           {/* Composer */}
           <div ref={composerRef} style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
             <ResearchComposer
+              key={`${initialQuery ?? ''}:${seedRevision}`}
               onStart={(t, m) => s.start(t, m)}
-              initialQuery={seed}
+              initialQuery={initialQuery}
+              seed={seed}
             />
           </div>
 
           {/* Capability cards */}
           <div style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
-            <CapabilityCards onSelectExample={seedFromCard} />
+            <CapabilityCards onSelectTemplate={seedFromCard} />
           </div>
 
           {/* Latest signals block */}
