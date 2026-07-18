@@ -2,12 +2,28 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import comboScenarioData from '../../../lib/workbook/comboScenario.json';
 import flowScenarioData from '../../../lib/workbook/flowScenario.json';
+import westernScenarioData from '../../../lib/workbook/westernScenario.json';
 import type { WorkbookRun as WorkbookRunData } from '../../../lib/workbook/types';
+import { CapabilityCards } from '../CapabilityCards';
 import { WorkbookReport } from './WorkbookReport';
 import { WorkbookRun } from './WorkbookRun';
 
 const comboScenario = comboScenarioData as WorkbookRunData;
 const flowScenario = flowScenarioData as WorkbookRunData;
+const westernScenario = westernScenarioData as WorkbookRunData;
+
+describe('CapabilityCards', () => {
+  it('offers Western blot analysis while keeping Patent sequence extraction coming soon', () => {
+    const html = renderToStaticMarkup(<CapabilityCards onSelectWorkbook={() => undefined} />);
+
+    expect(html).toContain('Western blot analysis');
+    expect(html).toContain('/workbook/western/annotated.png');
+    expect(html).toContain('background-corrected densitometry');
+    expect(html).toContain('Patent sequence extraction');
+    expect(html.match(/Open workbook/g)).toHaveLength(3);
+    expect(html.match(/Coming soon/g)).toHaveLength(1);
+  });
+});
 
 describe('WorkbookRun', () => {
   it('frames the combination workbook with its biological goal and dataset context', () => {
@@ -25,6 +41,32 @@ describe('WorkbookRun', () => {
 
     expect(html).toContain('Analyze flow cytometry data');
     expect(html).toContain('13-colour B-cell immunophenotyping');
+  });
+
+  it('frames the western blot workbook with its biological question and assay context', () => {
+    const html = renderToStaticMarkup(<WorkbookRun run={westernScenario} onBack={() => undefined} />);
+
+    expect(html).toContain('Does trastuzumab lower HER2 and drive compensatory HSP90');
+    expect(html).toContain('HER2, HSP90, GAPDH loading control');
+    expect(html).toContain('trastuzumab 0 / 25 / 50 ug/mL, 72 h');
+    expect(html).toContain('band intensity (background-corrected integrated density)');
+  });
+});
+
+describe('WorkbookReport western blot output', () => {
+  it('renders the qualitative findings without combination-only hypotheses', () => {
+    const html = renderToStaticMarkup(
+      <WorkbookReport report={westernScenario.report} title="Western blot analysis report" />,
+    );
+
+    expect(html).toContain('HER2 decreases');
+    expect(html).toContain('HSP90 increases');
+    expect(html).toContain('Single blot (n=1)');
+    expect(html).toContain('2 figures');
+    expect(html).toContain('Detailed Answer');
+    expect(html).toContain('Methods');
+    expect(html).toContain('Assumptions Made');
+    expect(html).not.toContain('Proposed hypotheses for wet-lab testing');
   });
 });
 

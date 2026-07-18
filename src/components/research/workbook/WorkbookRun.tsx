@@ -22,22 +22,24 @@ function reached(current: WorkbookPhase, target: WorkbookPhase) {
 function getReportTitle(capability: string) {
   if (capability === 'combination-screening') return 'Combination drug screening report';
   if (capability === 'flow-cytometry') return 'Flow cytometry report';
+  if (capability === 'western-blot') return 'Western blot analysis report';
   return 'Analysis report';
 }
 
 export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
   const replay = useWorkbookReplay(run);
+  const { accept, reset } = replay;
   const defaultSynergyModel = run.clarifications.find((clarification) => clarification.id === 'model')?.default ?? 'Bliss independence';
   const [selectedSynergyModel, setSelectedSynergyModel] = useState(defaultSynergyModel);
   const resetReplay = useCallback(() => {
     setSelectedSynergyModel(defaultSynergyModel);
-    replay.reset();
-  }, [defaultSynergyModel, replay.reset]);
+    reset();
+  }, [defaultSynergyModel, reset]);
 
   const acceptResponse = useCallback((answers: Record<string, string>) => {
     setSelectedSynergyModel(answers.model ?? defaultSynergyModel);
-    replay.accept();
-  }, [defaultSynergyModel, replay.accept]);
+    accept();
+  }, [accept, defaultSynergyModel]);
 
   const context = [run.file.panel, run.file.drugs && `Drugs and targets: ${run.file.drugs}`, run.file.readout && `Readout: ${run.file.readout}`]
     .filter(Boolean)

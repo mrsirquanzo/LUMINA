@@ -35,6 +35,14 @@ const CAPABILITIES: Capability[] = [
     alt: 'Flow cytometry gating: FSC/SSC and CD3 vs CD19',
   },
   {
+    id: 'western-blot',
+    title: 'Western blot analysis',
+    description: 'Quantify band intensity by background-corrected densitometry, normalize to a loading control, and report fold-change.',
+    status: 'available',
+    image: '/workbook/western/annotated.png',
+    alt: 'Western blot with detected HER2, HSP90, and GAPDH band regions',
+  },
+  {
     id: 'patent',
     title: 'Patent sequence extraction',
     description: 'Parse a patent PDF, pull antibody sequences and CDRs, and BLAST-verify against the claims.',
