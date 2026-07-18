@@ -63,7 +63,7 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
     <div
       role="button"
       tabIndex={0}
-      aria-label={`Open dossier for ${item.target ?? 'unknown target'}`}
+      aria-label={`Open report for ${item.target ?? 'unknown target'}`}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -109,7 +109,7 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
         <div className="flex items-center justify-end gap-1 mt-0.5">
           <FileText size={11} className="text-textTertiary" />
           <span className="font-mono text-[11px] text-textTertiary">
-            {item.refs && item.refs > 0 ? `${item.refs} refs` : 'dossier'}
+            {item.refs && item.refs > 0 ? `${item.refs} refs` : 'report'}
           </span>
         </div>
       </div>

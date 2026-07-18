@@ -61,11 +61,13 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
                   {step.title}
                 </span>
                 {isRunning && <span className="hidden font-mono text-[9px] tracking-[0.08em] text-slate-300 sm:inline">RUNNING</span>}
-                <ChevronDown
-                  className={`h-4 w-4 flex-none transition-transform ${showFigures ? 'rotate-180' : ''} ${isRunning ? 'text-slate-300' : 'text-textTertiary'}`}
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                />
+                {step.figures.length > 0 && (
+                  <ChevronDown
+                    className={`h-4 w-4 flex-none transition-transform ${showFigures ? 'rotate-180' : ''} ${isRunning ? 'text-slate-300' : 'text-textTertiary'}`}
+                    strokeWidth={1.75}
+                    aria-hidden="true"
+                  />
+                )}
               </button>
               {showFigures && (
                 <div className={`grid gap-3 px-5 pb-4 pl-12 ${step.figures.length > 1 ? 'sm:grid-cols-2' : ''}`}>

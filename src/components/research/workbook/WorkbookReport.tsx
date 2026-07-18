@@ -4,6 +4,9 @@ import type { WorkbookRun } from '../../../lib/workbook/types';
 
 interface WorkbookReportProps {
   report: WorkbookRun['report'];
+  title?: string;
+  eyebrow?: string;
+  contentSections?: Array<{ id: string; title: string; content: string }>;
 }
 
 function renderBoldMarkdown(text: string) {
@@ -20,7 +23,12 @@ const ACCORDIONS = [
   { key: 'assumptionsNote', title: 'Assumptions Made', icon: FileQuestion },
 ] as const;
 
-export function WorkbookReport({ report }: WorkbookReportProps) {
+export function WorkbookReport({
+  report,
+  title = 'Flow cytometry report',
+  eyebrow = 'ANALYSIS COMPLETE',
+  contentSections,
+}: WorkbookReportProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [activeFigure, setActiveFigure] = useState<WorkbookRun['report']['figures'][number] | null>(null);
 
@@ -37,8 +45,8 @@ export function WorkbookReport({ report }: WorkbookReportProps) {
   return (
     <section className="space-y-5 motion-safe:animate-[slideUp_.4s_cubic-bezier(.16,1,.3,1)]" aria-labelledby="workbook-report-title">
       <div className="rounded-2xl border border-border bg-surface px-5 py-5 shadow-card sm:px-6">
-        <p className="font-mono text-[10px] font-semibold tracking-[0.12em] text-primary">ANALYSIS COMPLETE</p>
-        <h2 id="workbook-report-title" className="mt-1 font-display text-[28px] font-semibold tracking-tight text-textPrimary">Flow cytometry report</h2>
+        <p className="font-mono text-[10px] font-semibold tracking-[0.12em] text-primary">{eyebrow}</p>
+        <h2 id="workbook-report-title" className="mt-1 font-display text-[28px] font-semibold tracking-tight text-textPrimary">{title}</h2>
         <ul className="mt-5 space-y-3.5">
           {report.summary.map((summary) => (
             <li key={summary} className="flex gap-3 text-[13.5px] leading-relaxed text-textSecondary">
@@ -49,47 +57,60 @@ export function WorkbookReport({ report }: WorkbookReportProps) {
         </ul>
       </div>
 
-      <div>
-        <div className="mb-3 flex items-end justify-between gap-4">
-          <div>
-            <p className="font-mono text-[9px] font-semibold tracking-[0.1em] text-textTertiary">FIGURES</p>
-            <h3 className="mt-1 text-[15px] font-semibold text-textPrimary">Analysis outputs</h3>
+      {report.figures.length > 0 && (
+        <div>
+          <div className="mb-3 flex items-end justify-between gap-4">
+            <div>
+              <p className="font-mono text-[9px] font-semibold tracking-[0.1em] text-textTertiary">FIGURES</p>
+              <h3 className="mt-1 text-[15px] font-semibold text-textPrimary">Analysis outputs</h3>
+            </div>
+            <span className="font-mono text-[10px] tabular-nums text-textTertiary">{report.figures.length} figures</span>
           </div>
-          <span className="font-mono text-[10px] tabular-nums text-textTertiary">{report.figures.length} figures</span>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {report.figures.map((figure, index) => (
+              <figure key={figure.src} className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
+                <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
+                  <img src={figure.src} alt={`Flow cytometry figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
+                  <button
+                    type="button"
+                    onClick={() => openFigure(figure)}
+                    className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white/95 text-textSecondary shadow-card transition-colors hover:text-primary active:scale-[.98]"
+                    aria-label={`Expand figure ${index + 1}`}
+                  >
+                    <Expand className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  </button>
+                </div>
+                <figcaption className="px-4 py-3 text-[11px] leading-relaxed text-textSecondary">{figure.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {report.figures.map((figure, index) => (
-            <figure key={figure.src} className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
-              <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
-                <img src={figure.src} alt={`Flow cytometry figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
-                <button
-                  type="button"
-                  onClick={() => openFigure(figure)}
-                  className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white/95 text-textSecondary shadow-card transition-colors hover:text-primary active:scale-[.98]"
-                  aria-label={`Expand figure ${index + 1}`}
-                >
-                  <Expand className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-                </button>
-              </div>
-              <figcaption className="px-4 py-3 text-[11px] leading-relaxed text-textSecondary">{figure.caption}</figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
+      )}
 
       <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
-        {ACCORDIONS.map(({ key, title, icon: Icon }) => (
-          <details key={key} className="group border-border open:bg-subtle/35 [&:not(:last-child)]:border-b">
-            <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:hidden">
-              <Icon className="h-4 w-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
-              <span className="flex-1 text-[13px] font-semibold text-textPrimary">{title}</span>
-              <ChevronDown className="h-4 w-4 text-textTertiary transition-transform group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" />
-            </summary>
-            <div className="px-5 pb-5 pl-12 text-[12.5px] leading-relaxed text-textSecondary">
-              {report.sections[key]}
-            </div>
-          </details>
-        ))}
+        {(contentSections ?? ACCORDIONS.map(({ key, title }) => ({
+          id: key,
+          title,
+          content: report.sections[key],
+        }))).map((section, index) => {
+          const Icon = contentSections ? Search : ACCORDIONS[index]?.icon ?? Search;
+          return (
+            <details
+              key={section.id}
+              open={Boolean(contentSections) && index === 0}
+              className="group border-border open:bg-subtle/35 [&:not(:last-child)]:border-b"
+            >
+              <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:hidden">
+                <Icon className="h-4 w-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
+                <span className="flex-1 text-[13px] font-semibold text-textPrimary">{section.title}</span>
+                <ChevronDown className="h-4 w-4 text-textTertiary transition-transform group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" />
+              </summary>
+              <div className="px-5 pb-5 pl-12 text-[12.5px] leading-relaxed text-textSecondary">
+                {section.content}
+              </div>
+            </details>
+          );
+        })}
       </div>
 
       <dialog

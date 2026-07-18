@@ -8,7 +8,7 @@ export interface TraceLogEntry {
   type: string;
   label: string;
   detail?: string;
-  role?: 'tool' | 'tool_result' | 'read' | 'evidence' | 'section' | 'audit' | 'verdict' | 'event';
+  role?: 'tool' | 'tool_result' | 'read' | 'evidence' | 'section' | 'audit' | 'verdict' | 'degraded' | 'event';
 }
 
 export interface TraceAggregate {

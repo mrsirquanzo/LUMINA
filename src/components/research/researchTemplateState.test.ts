@@ -7,7 +7,7 @@ import {
 
 describe('template run target state', () => {
   it.each([
-    ['TROP2', 'Run a full due-diligence dossier on TROP2'],
+    ['TROP2', 'Run a full due-diligence report on TROP2'],
     ['CDCP1', 'Map the competitive landscape for CDCP1'],
     ['TACSTD2', 'Analyze TACSTD2 (TROP2) as a target'],
   ])('submits canonical target %s while the template prompt is unchanged', (target, prompt) => {
@@ -15,7 +15,7 @@ describe('template run target state', () => {
   });
 
   it('submits edited text after the seeded prompt changes', () => {
-    const seededPrompt = 'Run a full due-diligence dossier on TROP2';
+    const seededPrompt = 'Run a full due-diligence report on TROP2';
     const editedPrompt = 'Compare TROP2 expression across ovarian cancer subtypes';
 
     expect(shouldClearRunTarget(editedPrompt, seededPrompt)).toBe(true);
@@ -30,7 +30,7 @@ describe('template run target state', () => {
   });
 
   it('detects an unresolved target placeholder', () => {
-    expect(hasUnresolvedTargetPlaceholder('Run a dossier on [target].')).toBe(true);
-    expect(hasUnresolvedTargetPlaceholder('Run a dossier on HER2.')).toBe(false);
+    expect(hasUnresolvedTargetPlaceholder('Run a report on [target].')).toBe(true);
+    expect(hasUnresolvedTargetPlaceholder('Run a report on HER2.')).toBe(false);
   });
 });

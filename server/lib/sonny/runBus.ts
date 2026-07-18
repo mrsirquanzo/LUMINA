@@ -2,6 +2,7 @@ import type { TraceEvent, Briefing } from '@mrsirquanzo/sonny-shared';
 
 export type BusEvent =
   | TraceEvent
+  | { type: 'source_unavailable'; message: string }
   | { type: 'done'; briefing: Briefing }
   | { type: 'error'; message: string };
 

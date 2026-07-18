@@ -4,6 +4,7 @@ import { startRun as realStartRun } from '../../lib/sonny/adapter.js';
 import { subscribe as realSubscribe } from '../../lib/sonny/runBus.js';
 import type { BusEvent } from '../../lib/sonny/runBus.js';
 import { loadBriefing as realLoadBriefing } from '../../lib/sonny/runStore.js';
+import { loadDemoBriefing as realLoadDemoBriefing } from '../../lib/sonny/runStore.js';
 
 export type { BusEvent };
 
@@ -12,6 +13,7 @@ export interface DeepResearchDeps {
   startRun: (input: { runId: string; target: string; mode: 'fast' | 'thorough'; backend?: string }) => void;
   subscribe: (runId: string, fn: (e: BusEvent) => void) => () => void;
   loadBriefing: (runId: string) => Promise<Briefing | null>;
+  loadDemoBriefing: (target: string) => Promise<{ runId: string; briefing: Briefing } | null>;
 }
 
 let counter = 0;
@@ -64,7 +66,17 @@ export function makeDeepResearchRouter(deps: DeepResearchDeps): Router {
     });
   });
 
-  // GET /:runId - hydrate a finished dossier
+  // GET /demo/:target - resolve a deterministic cached run without starting the engine
+  router.get('/demo/:target', async (req: Request, res: Response) => {
+    const cached = await deps.loadDemoBriefing(req.params.target);
+    if (cached) {
+      res.json(cached);
+    } else {
+      res.status(404).json({ error: `No cached report for ${req.params.target} in demo mode.` });
+    }
+  });
+
+  // GET /:runId - hydrate a finished report
   router.get('/:runId', async (req: Request, res: Response) => {
     const b = await deps.loadBriefing(req.params.runId);
     if (b) {
@@ -83,6 +95,7 @@ const deepResearchRoutes = makeDeepResearchRouter({
   startRun: realStartRun,
   subscribe: realSubscribe,
   loadBriefing: realLoadBriefing,
+  loadDemoBriefing: realLoadDemoBriefing,
 });
 
 export default deepResearchRoutes;

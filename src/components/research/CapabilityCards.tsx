@@ -20,7 +20,7 @@ interface Capability {
 }
 
 const DEEP_RESEARCH_TEMPLATE: ResearchTemplate = {
-  prompt: 'Run a full due-diligence dossier on [target]. I want a conclusion-first GO / WATCH / NO-GO verdict, grounded in literature and public data, with every claim cited to source.',
+  prompt: 'Run a full due-diligence report on [target]. I want a conclusion-first GO / WATCH / NO-GO verdict, grounded in literature and public data, with every claim cited to source.',
   target: undefined,
   contextChip: 'DepMap · GTEx · PubMed',
 };
@@ -91,15 +91,15 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
           </span>
           <span className="block text-textSecondary mt-1 leading-relaxed" style={{ fontSize: 12.5, maxWidth: '46ch' }}>
             Six specialists read the literature and public data, run grounded computational analysis across DepMap,
-            GTEx, and tumor expression, then return a conclusion-first GO / WATCH / NO-GO dossier with every claim cited.
+            GTEx, and tumor expression, then return a conclusion-first GO / WATCH / NO-GO report with every claim cited.
           </span>
           <span className="inline-flex items-center gap-1.5 mt-2.5 text-primary" style={{ fontSize: 11, fontWeight: 600 }}>
-            Start a dossier <span aria-hidden="true">→</span>
+            Start a report <span aria-hidden="true">→</span>
           </span>
         </span>
         <img
           src="/deep-research.png"
-          alt="Grounded due-diligence dossier with a verdict and cited claims"
+          alt="Grounded due-diligence report with a verdict and cited claims"
           className="w-full sm:w-[280px] flex-none rounded-[10px] border border-border object-cover"
           style={{ height: 118, objectPosition: 'left top' }}
           loading="lazy"

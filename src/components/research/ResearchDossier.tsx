@@ -89,7 +89,7 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       {rec?.verdict && (
         <div className="pb-5 border-b border-border">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textTertiary">
-            due-diligence dossier
+            due-diligence report
           </p>
           <div className="mt-2.5 flex items-center gap-3 flex-wrap">
             {briefing.target && (

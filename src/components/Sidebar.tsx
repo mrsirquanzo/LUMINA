@@ -21,7 +21,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'research', icon: Sparkles, label: 'Ask Sonny' },
   { id: 'feed',     icon: Bell,     label: 'Feed' },
-  { id: 'dossiers', icon: Library,  label: 'Dossiers' },
+  { id: 'dossiers', icon: Library,  label: 'Reports' },
   { id: 'watchlist',icon: Eye,      label: 'Watchlist' },
 ];
 
@@ -109,7 +109,7 @@ const Sidebar = memo(function Sidebar({
           <>
             <div className="px-3 py-1.5">
               <span className="text-[11px] font-semibold tracking-wider uppercase text-textTertiary">
-                Recent dossiers
+                Recent reports
               </span>
             </div>
             <div className="space-y-0.5">

@@ -16,7 +16,7 @@ export function ReasoningTrail({ lines }: ReasoningTrailProps) {
           <div className="h-5 w-2/3 rounded bg-subtle motion-safe:animate-pulse" aria-label="Reading flow cytometry file" />
         ) : lines.map((line, index) => (
           <div
-            key={line}
+            key={`${index}-${line}`}
             className="flex items-start gap-3 motion-safe:animate-[slideUp_.28s_cubic-bezier(.16,1,.3,1)]"
           >
             <span className="mt-[7px] h-1.5 w-1.5 flex-none rounded-full bg-primary" aria-hidden="true" />

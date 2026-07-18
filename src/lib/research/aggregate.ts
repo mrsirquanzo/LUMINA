@@ -15,6 +15,7 @@ const LABEL_MAP: Record<string, string> = {
   methodological_critique: 'audit flag',
   section_complete: 'section done',
   recommendation: 'verdict',
+  source_unavailable: 'source unavailable',
 };
 
 function str(v: unknown): string | undefined {
@@ -48,6 +49,8 @@ function describe(e: ResearchTraceEvent): TraceLogEntry {
       return { type, role: 'section', label: 'section done', detail: [str(e.id), str(e.rag)?.toUpperCase()].filter(Boolean).join(' · ') || undefined };
     case 'methodological_critique':
       return { type, role: 'audit', label: 'audit flag', detail: str(e.note) ?? str(e.message) };
+    case 'source_unavailable':
+      return { type, role: 'degraded', label: 'source unavailable', detail: str(e.message) };
     case 'recommendation':
       return { type, role: 'verdict', label: 'verdict', detail: str(e.verdict)?.toUpperCase() };
     default:

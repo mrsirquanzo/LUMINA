@@ -79,7 +79,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
         </span>
 
         <h2 className="font-display text-[22px] font-semibold text-textPrimary mb-2 text-center">
-          No dossiers yet
+          No reports yet
         </h2>
         <p className="text-[14px] text-textSecondary text-center max-w-xs mb-8 leading-relaxed">
           Every completed Sonny research run lands here, grounded and re-openable
@@ -126,7 +126,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
         className="font-display text-[27px] font-semibold text-textPrimary"
         style={{ letterSpacing: '-0.01em' }}
       >
-        Saved dossiers
+        Saved reports
       </h1>
       <p className="text-[14px] text-textSecondary mt-1.5">
         Every completed research run, grounded and re-openable with its evidence.
@@ -162,7 +162,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by target..."
-          aria-label="Search dossiers by target"
+          aria-label="Search reports by target"
           className="text-[14px] text-textPrimary placeholder:text-textTertiary rounded-lg px-3.5 py-2.5"
           style={{
             background: '#fff',
@@ -190,10 +190,10 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           <div className="py-12 text-center">
             <p className="text-[14px] text-textSecondary">
               {query
-                ? `No dossiers match "${query}"`
+                ? `No reports match "${query}"`
                 : filter !== 'all'
-                  ? `No ${filter} dossiers`
-                  : 'No dossiers found'}
+                  ? `No ${filter} reports`
+                  : 'No reports found'}
             </p>
           </div>
         ) : (

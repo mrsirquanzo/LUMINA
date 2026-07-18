@@ -4,10 +4,10 @@ import { subscribe, publish } from './runBus.js';
 import type { WorkerMessage } from './worker.js';
 
 function fakeSpawn() {
-  const h: Record<string, Function[]> = { message: [], error: [], exit: [] };
+  const h: Record<string, Array<(arg: unknown) => void>> = { message: [], error: [], exit: [] };
   let terminated = false;
   const handle: WorkerHandle = {
-    on: (ev: string, cb: Function) => { h[ev].push(cb); },
+    on: (ev: string, cb: (arg: unknown) => void) => { h[ev].push(cb); },
     terminate: () => { terminated = true; },
   } as unknown as WorkerHandle;
   const spawn: SpawnWorker = () => handle;
@@ -30,9 +30,26 @@ describe('startRun adapter', () => {
     expect(wasTerminated()).toBe(true);
   });
 
+  it('keeps a caught seed failure non-terminal and continues to done', () => {
+    const { spawn, emit, wasTerminated } = fakeSpawn();
+    const got: Array<{ type: string; message?: string }> = [];
+    subscribe('seed-soft-failure', (event) => got.push(event as never));
+    startRun({ runId: 'seed-soft-failure', target: 'TROP2', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
+
+    emit('message', {
+      kind: 'trace',
+      event: { type: 'error', message: 'seed clinical_trials_search failed: ClinicalTrials.gov HTTP 400' },
+    } as WorkerMessage);
+    emit('message', { kind: 'trace', event: { type: 'lead_decompose', specialists: [] } } as WorkerMessage);
+    emit('message', { kind: 'done', briefing: { target: 'TROP2' } } as unknown as WorkerMessage);
+
+    expect(got.map((event) => event.type)).toEqual(['source_unavailable', 'lead_decompose', 'done']);
+    expect(got[0].message).toContain('clinical_trials_search');
+    expect(wasTerminated()).toBe(true);
+  });
+
   it('forwards a worker error onto the bus and closes the run', () => {
     const { spawn, emit } = fakeSpawn();
-    const seen: WorkerMessage[] = [] as never;
     const got: Array<{ type: string; message?: string }> = [];
     subscribe('r2', (e) => got.push(e as never));
     startRun({ runId: 'r2', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
