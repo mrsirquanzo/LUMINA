@@ -36,3 +36,6 @@ server/data/intelligence-store.json
 .gstack/
 .claude/worktrees/
 .superpowers/
+
+# Codex build evidence screenshots
+artifacts/

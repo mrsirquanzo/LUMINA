@@ -30,7 +30,7 @@ const CAPABILITIES: Capability[] = [
     id: 'flow-cytometry',
     title: 'Flow cytometry analysis',
     description: 'Gate, phenotype, and summarize FCS data in a hardened sandbox. Every step grounded and reproducible.',
-    status: 'coming-soon',
+    status: 'available',
     image: '/flow-cytometry.png',
     alt: 'Flow cytometry gating: FSC/SSC and CD3 vs CD19',
   },
@@ -52,7 +52,12 @@ function lift(el: HTMLDivElement, on: boolean) {
   el.style.borderColor = on ? '#C3D4F2' : '';
 }
 
-export function CapabilityCards({ onSelectTemplate }: { onSelectTemplate?: (template: ResearchTemplate) => void }) {
+interface CapabilityCardsProps {
+  onSelectTemplate?: (template: ResearchTemplate) => void;
+  onSelectWorkbook?: (capabilityId: string) => void;
+}
+
+export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: CapabilityCardsProps) {
   const pick = (template?: ResearchTemplate) => {
     if (template && onSelectTemplate) onSelectTemplate(template);
   };
@@ -102,12 +107,22 @@ export function CapabilityCards({ onSelectTemplate }: { onSelectTemplate?: (temp
       </div>
 
       {/* Image-forward capability grid */}
-      <div className="grid grid-cols-2 gap-3.5">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         {CAPABILITIES.map((cap) => {
+          const isAvailable = cap.status === 'available';
           return (
             <div
               key={cap.id}
-              className="bg-surface border border-border rounded-[14px] overflow-hidden flex flex-col transition-all duration-200"
+              role={isAvailable ? 'button' : undefined}
+              tabIndex={isAvailable ? 0 : undefined}
+              onClick={() => { if (isAvailable) onSelectWorkbook?.(cap.id); }}
+              onKeyDown={(event) => {
+                if (isAvailable && (event.key === 'Enter' || event.key === ' ')) {
+                  event.preventDefault();
+                  onSelectWorkbook?.(cap.id);
+                }
+              }}
+              className={`bg-surface border border-border rounded-[14px] overflow-hidden flex flex-col transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${isAvailable ? 'cursor-pointer hover:-translate-y-0.5 hover:border-[#C3D4F2] hover:shadow-[0_10px_30px_rgba(15,23,42,.10),0_2px_8px_rgba(15,23,42,.05)] active:translate-y-0' : ''}`}
               style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
             >
               <div className="w-full bg-subtle border-b border-border overflow-hidden" style={{ height: 132 }}>
@@ -126,8 +141,10 @@ export function CapabilityCards({ onSelectTemplate }: { onSelectTemplate?: (temp
                 <span className="block text-textSecondary mt-1 leading-relaxed" style={{ fontSize: 12.5 }}>
                   {cap.description}
                 </span>
-                <span className="inline-block mt-2.5 text-textTertiary" style={{ fontSize: 11, fontWeight: 600 }}>
-                  Coming soon
+                <span className={`inline-flex items-center gap-1.5 mt-2.5 ${isAvailable ? 'text-primary' : 'text-textTertiary'}`} style={{ fontSize: 11, fontWeight: 600 }}>
+                  {isAvailable ? (
+                    <><span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />Open workbook <span aria-hidden="true">→</span></>
+                  ) : 'Coming soon'}
                 </span>
               </div>
             </div>

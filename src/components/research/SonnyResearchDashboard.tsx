@@ -8,6 +8,11 @@ import type { ResearchTemplate } from './CapabilityCards';
 import GlassBoxTrace from './GlassBoxTrace.js';
 import ResearchDossier from './ResearchDossier.js';
 import LatestSignals from './LatestSignals';
+import { WorkbookRun } from './workbook/WorkbookRun';
+import flowScenarioData from '../../lib/workbook/flowScenario.json';
+import type { WorkbookRun as WorkbookRunData } from '../../lib/workbook/types';
+
+const FLOW_SCENARIO = flowScenarioData as WorkbookRunData;
 
 interface SonnyResearchDashboardProps {
   initialQuery?: string;
@@ -97,6 +102,7 @@ function DossierSkeleton() {
 
 export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResearchDashboardProps) {
   const s = useDeepResearchStream();
+  const [localView, setLocalView] = useState<'home' | 'workbook'>('home');
   // Template seed keeps the displayed prompt separate from the canonical run target.
   const [seed, setSeed] = useState<ResearchTemplate>();
   const [seedRevision, setSeedRevision] = useState(0);
@@ -118,6 +124,10 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
 
   // Select briefing for current run from persistent store
   const briefing = useBriefingStore((st) => (s.runId ? st.briefings[s.runId] : undefined));
+
+  if (s.status === 'idle' && localView === 'workbook') {
+    return <WorkbookRun run={FLOW_SCENARIO} onBack={() => setLocalView('home')} />;
+  }
 
   // ---- HOME (idle) ----
   if (s.status === 'idle') {
@@ -145,7 +155,12 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
 
           {/* Capability cards */}
           <div style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
-            <CapabilityCards onSelectTemplate={seedFromCard} />
+            <CapabilityCards
+              onSelectTemplate={seedFromCard}
+              onSelectWorkbook={(capabilityId) => {
+                if (capabilityId === FLOW_SCENARIO.capability) setLocalView('workbook');
+              }}
+            />
           </div>
 
           {/* Latest signals block */}
