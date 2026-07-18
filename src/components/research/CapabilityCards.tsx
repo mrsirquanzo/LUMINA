@@ -18,7 +18,7 @@ const CAPABILITIES: Capability[] = [
   {
     id: 'deep-research',
     title: 'Deep target research',
-    description: 'Six specialists over one grounded evidence store — a conclusion-first GO / WATCH / NO-GO dossier.',
+    description: 'Six specialists over one grounded evidence store. A conclusion-first GO / WATCH / NO-GO dossier.',
     status: 'available',
     image: '/deep-research.png',
     alt: 'Grounded due-diligence dossier with a GO verdict and cited claims',
@@ -27,7 +27,7 @@ const CAPABILITIES: Capability[] = [
   {
     id: 'competitive',
     title: 'Competitive landscape',
-    description: 'Map the field with clarity — the players, strategies, and positioning that redefine advantage.',
+    description: 'Map the players, strategies, and positioning across a target\'s competitive field.',
     status: 'available',
     image: '/competitive-landscape.png',
     alt: 'TROP2 ADC competitive positioning quadrant',
@@ -36,7 +36,7 @@ const CAPABILITIES: Capability[] = [
   {
     id: 'flow-cytometry',
     title: 'Flow cytometry analysis',
-    description: 'Gate, phenotype, and summarize FCS data in a hardened sandbox — every step grounded and reproducible.',
+    description: 'Gate, phenotype, and summarize FCS data in a hardened sandbox. Every step grounded and reproducible.',
     status: 'coming-soon',
     image: '/flow-cytometry.png',
     alt: 'Flow cytometry gating: FSC/SSC and CD3 vs CD19',
