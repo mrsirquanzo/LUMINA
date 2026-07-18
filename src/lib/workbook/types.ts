@@ -27,6 +27,13 @@ export interface PlanStep {
   figures: string[];
 }
 
+export interface WorkbookHypothesis {
+  rank: number;
+  combination: string;
+  rationale: string;
+  experiment: string;
+}
+
 export interface WorkbookRun {
   id: string;
   title: string;
@@ -55,6 +62,7 @@ export interface WorkbookRun {
       src: string;
       caption: string;
     }>;
+    hypotheses?: WorkbookHypothesis[];
     sections: {
       detailedAnswer: string;
       methods: string;

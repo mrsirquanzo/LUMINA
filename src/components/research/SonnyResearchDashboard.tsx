@@ -7,10 +7,16 @@ import type { ResearchTemplate } from './CapabilityCards';
 import LatestSignals from './LatestSignals';
 import { DeepResearchRun } from './DeepResearchRun';
 import { WorkbookRun } from './workbook/WorkbookRun';
+import comboScenarioData from '../../lib/workbook/comboScenario.json';
 import flowScenarioData from '../../lib/workbook/flowScenario.json';
 import type { WorkbookRun as WorkbookRunData } from '../../lib/workbook/types';
 
 const FLOW_SCENARIO = flowScenarioData as WorkbookRunData;
+const COMBO_SCENARIO = comboScenarioData as WorkbookRunData;
+const WORKBOOKS: Record<string, WorkbookRunData> = {
+  [COMBO_SCENARIO.capability]: COMBO_SCENARIO,
+  [FLOW_SCENARIO.capability]: FLOW_SCENARIO,
+};
 
 interface SonnyResearchDashboardProps {
   initialQuery?: string;
@@ -19,7 +25,7 @@ interface SonnyResearchDashboardProps {
 
 export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResearchDashboardProps) {
   const s = useDeepResearchStream();
-  const [localView, setLocalView] = useState<'home' | 'workbook'>('home');
+  const [selectedWorkbook, setSelectedWorkbook] = useState<WorkbookRunData | null>(null);
   // Template seed keeps the displayed prompt separate from the canonical run target.
   const [seed, setSeed] = useState<ResearchTemplate>();
   const [seedRevision, setSeedRevision] = useState(0);
@@ -42,8 +48,8 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
   // Select briefing for current run from persistent store
   const briefing = useBriefingStore((st) => (s.runId ? st.briefings[s.runId] : undefined));
 
-  if (s.status === 'idle' && localView === 'workbook') {
-    return <WorkbookRun run={FLOW_SCENARIO} onBack={() => setLocalView('home')} />;
+  if (s.status === 'idle' && selectedWorkbook) {
+    return <WorkbookRun run={selectedWorkbook} onBack={() => setSelectedWorkbook(null)} />;
   }
 
   // ---- HOME (idle) ----
@@ -75,7 +81,8 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
             <CapabilityCards
               onSelectTemplate={seedFromCard}
               onSelectWorkbook={(capabilityId) => {
-                if (capabilityId === FLOW_SCENARIO.capability) setLocalView('workbook');
+                const workbook = WORKBOOKS[capabilityId];
+                if (workbook) setSelectedWorkbook(workbook);
               }}
             />
           </div>

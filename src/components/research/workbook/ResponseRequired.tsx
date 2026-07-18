@@ -23,7 +23,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
           </span>
           <div>
             <p className="text-[13px] font-semibold text-textPrimary">Accepted</p>
-            <p className="text-[11px] text-textTertiary">Default scope and gating strategy included.</p>
+            <p className="text-[11px] text-textTertiary">Default analysis choices included.</p>
           </div>
         </div>
         <span className="font-mono text-[9px] tracking-[0.08em] text-primary">RESPONSE RECEIVED</span>

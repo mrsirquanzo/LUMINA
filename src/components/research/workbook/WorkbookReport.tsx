@@ -1,5 +1,5 @@
 import { Fragment, useRef, useState } from 'react';
-import { ChevronDown, Expand, FileQuestion, FlaskConical, Search, X } from 'lucide-react';
+import { Beaker, ChevronDown, Expand, FileQuestion, FlaskConical, Search, X } from 'lucide-react';
 import type { WorkbookRun } from '../../../lib/workbook/types';
 
 interface WorkbookReportProps {
@@ -57,6 +57,47 @@ export function WorkbookReport({
         </ul>
       </div>
 
+      {report.hypotheses && report.hypotheses.length > 0 && (
+        <section
+          className="rounded-2xl border border-primary/25 bg-primary/[0.035] px-5 py-5 shadow-card sm:px-6 sm:py-6"
+          aria-labelledby="workbook-hypotheses-title"
+        >
+          <div className="flex items-start gap-3">
+            <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-primary text-white shadow-sm">
+              <Beaker className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+            </span>
+            <div>
+              <p className="font-mono text-[9px] font-semibold tracking-[0.11em] text-primary">NEXT EXPERIMENTS</p>
+              <h3 id="workbook-hypotheses-title" className="mt-1 font-display text-[23px] font-semibold tracking-tight text-textPrimary">
+                Proposed hypotheses for wet-lab testing
+              </h3>
+              <p className="mt-1 text-[12px] leading-relaxed text-textSecondary">
+                Ranked candidates to validate at the bench, grounded in the observed dose-response data.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 space-y-3">
+            {report.hypotheses.map((hypothesis) => (
+              <article key={`${hypothesis.rank}-${hypothesis.combination}`} className="rounded-xl border border-border bg-white px-4 py-4 sm:px-5">
+                <div className="flex items-start gap-3.5">
+                  <span className="flex h-7 min-w-7 flex-none items-center justify-center rounded-lg bg-primary px-2 font-mono text-[10px] font-semibold tabular-nums text-white">
+                    #{hypothesis.rank}
+                  </span>
+                  <div className="min-w-0">
+                    <h4 className="text-[14px] font-semibold text-textPrimary">{hypothesis.combination}</h4>
+                    <p className="mt-1.5 text-[12.5px] leading-relaxed text-textSecondary">{hypothesis.rationale}</p>
+                    <p className="mt-3 border-t border-borderSoft pt-3 text-[12px] leading-relaxed text-textSecondary">
+                      <span className="font-semibold text-textPrimary">Experiment:</span> {hypothesis.experiment}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {report.figures.length > 0 && (
         <div>
           <div className="mb-3 flex items-end justify-between gap-4">
@@ -70,7 +111,7 @@ export function WorkbookReport({
             {report.figures.map((figure, index) => (
               <figure key={figure.src} className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
                 <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
-                  <img src={figure.src} alt={`Flow cytometry figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
+                  <img src={figure.src} alt={`Analysis figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
                   <button
                     type="button"
                     onClick={() => openFigure(figure)}
@@ -132,7 +173,7 @@ export function WorkbookReport({
               </button>
             </div>
             <div className="max-h-[72dvh] overflow-auto bg-subtle p-3 sm:p-5">
-              <img src={activeFigure.src} alt="Expanded flow cytometry figure" className="mx-auto max-h-[66dvh] w-auto max-w-full rounded-lg border border-border bg-white object-contain" />
+              <img src={activeFigure.src} alt="Expanded analysis figure" className="mx-auto max-h-[66dvh] w-auto max-w-full rounded-lg border border-border bg-white object-contain" />
             </div>
             <p className="px-5 py-4 text-[12px] leading-relaxed text-textSecondary">{activeFigure.caption}</p>
           </div>

@@ -1,6 +1,6 @@
 /**
  * CapabilityCards - image-forward "What Sonny can do" section.
- * One primary deep-research card plus two honest coming-soon capabilities.
+ * Primary research capabilities plus focused workbook demos.
  */
 
 export interface ResearchTemplate {
@@ -44,6 +44,15 @@ const CAPABILITIES: Capability[] = [
   },
 ];
 
+const COMBINATION_SCREENING: Capability = {
+  id: 'combination-screening',
+  title: 'Combination drug screening',
+  description: 'Score a combination screen for synergy and propose the strongest pairs to test at the bench, grounded in the dose-response data.',
+  status: 'available',
+  image: '/workbook/combo/fig_ranking.png',
+  alt: 'Drug combinations ranked by mean excess over Bliss synergy',
+};
+
 function lift(el: HTMLDivElement, on: boolean) {
   el.style.boxShadow = on
     ? '0 10px 30px rgba(15,23,42,.10), 0 2px 8px rgba(15,23,42,.05)'
@@ -69,6 +78,46 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
       >
         What Sonny can do
       </h2>
+
+      {/* Headline workbook capability */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelectWorkbook?.(COMBINATION_SCREENING.id)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onSelectWorkbook?.(COMBINATION_SCREENING.id);
+          }
+        }}
+        className="bg-surface border border-border rounded-[14px] p-[18px] mb-3.5 flex flex-col sm:flex-row gap-5 items-stretch sm:items-center transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
+        onMouseEnter={(event) => lift(event.currentTarget as HTMLDivElement, true)}
+        onMouseLeave={(event) => lift(event.currentTarget as HTMLDivElement, false)}
+      >
+        <span className="flex-1 min-w-0">
+          <span className="inline-flex items-center gap-1.5 mb-2" style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', color: '#1D4ED8' }}>
+            <span className="w-[6px] h-[6px] rounded-full inline-block" style={{ background: '#1D4ED8' }} />
+            AVAILABLE
+          </span>
+          <span className="block text-textPrimary font-semibold" style={{ fontSize: 15.5 }}>
+            {COMBINATION_SCREENING.title}
+          </span>
+          <span className="block text-textSecondary mt-1 leading-relaxed" style={{ fontSize: 12.5, maxWidth: '46ch' }}>
+            {COMBINATION_SCREENING.description}
+          </span>
+          <span className="inline-flex items-center gap-1.5 mt-2.5 text-primary" style={{ fontSize: 11, fontWeight: 600 }}>
+            Open workbook <span aria-hidden="true">→</span>
+          </span>
+        </span>
+        <img
+          src={COMBINATION_SCREENING.image}
+          alt={COMBINATION_SCREENING.alt}
+          className="w-full sm:w-[280px] flex-none rounded-[10px] border border-border object-cover"
+          style={{ height: 118, objectPosition: 'center' }}
+          loading="eager"
+        />
+      </div>
 
       {/* Primary capability */}
       <div

@@ -19,6 +19,12 @@ function reached(current: WorkbookPhase, target: WorkbookPhase) {
   return PHASE_ORDER.indexOf(current) >= PHASE_ORDER.indexOf(target);
 }
 
+function getReportTitle(capability: string) {
+  if (capability === 'combination-screening') return 'Combination drug screening report';
+  if (capability === 'flow-cytometry') return 'Flow cytometry report';
+  return 'Analysis report';
+}
+
 export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
   const replay = useWorkbookReplay(run);
   const resetReplay = replay.reset;
@@ -87,7 +93,9 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
               </div>
             )}
 
-            {replay.phase === 'done' && <WorkbookReport report={run.report} />}
+            {replay.phase === 'done' && (
+              <WorkbookReport report={run.report} title={getReportTitle(run.capability)} />
+            )}
           </main>
 
           <aside className="rounded-2xl border border-border bg-surface p-4 shadow-card lg:sticky lg:top-4" aria-label="Workbook file details">
@@ -97,7 +105,9 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
             </div>
             <div className="mt-3 rounded-xl border border-border bg-subtle/60 p-3">
               <p className="break-words text-[12px] font-semibold leading-snug text-textPrimary">{run.file.name}</p>
-              <p className="mt-1 font-mono text-[9px] tabular-nums text-textTertiary">{run.file.sizeMB.toFixed(2)} MB · FCS</p>
+              <p className="mt-1 font-mono text-[9px] tabular-nums text-textTertiary">
+                {run.file.sizeMB.toFixed(2)} MB · {run.file.name.split('.').pop()?.toUpperCase() ?? 'DATA'}
+              </p>
             </div>
             <div className="mt-4 space-y-4">
               <div>
