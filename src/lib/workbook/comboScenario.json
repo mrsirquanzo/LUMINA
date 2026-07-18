@@ -1,0 +1,208 @@
+{
+  "id": "combination-screening",
+  "title": "Screen a drug-combination dataset",
+  "capability": "combination-screening",
+  "file": {
+    "name": "drug_combination_testing_data.xlsx",
+    "sizeMB": 0.2,
+    "instrument": "comboFM experimental validation set (Julkunen et al., Nat Commun 2020)",
+    "panel": "MALME-3M melanoma (NCI-60), 6 combinations on 8x8 concentration grids"
+  },
+  "reasoning": [
+    "Loading the combination screen. 6 drug pairs in MALME-3M melanoma, each an 8x8 dose-response matrix of percent inhibition.",
+    "I will fit single-agent responses, compute a synergy reference per pair, rank the combinations, and propose the strongest for wet-lab validation."
+  ],
+  "assumptions": {
+    "checked": 2,
+    "inferred": 3,
+    "needsInput": 2,
+    "items": [
+      {
+        "label": "Dataset",
+        "chosen": "comboFM experimental validation set (MALME-3M, 6 combinations)",
+        "impact": "high",
+        "source": "user-specified",
+        "status": "checked",
+        "alternatives": []
+      },
+      {
+        "label": "Cell line",
+        "chosen": "MALME-3M (malignant melanoma, NCI-60)",
+        "impact": "high",
+        "source": "user-specified",
+        "status": "checked",
+        "alternatives": []
+      },
+      {
+        "label": "Analysis scope",
+        "chosen": "Rank combinations by synergy and propose the strongest for validation",
+        "impact": "high",
+        "source": "agent-inferred",
+        "status": "needs-input",
+        "alternatives": [
+          "Full MuSyC parametric fit",
+          "Identify the synergy-maximizing dose window",
+          "Mechanism-of-synergy pathway enrichment"
+        ]
+      },
+      {
+        "label": "Synergy reference model",
+        "chosen": "Bliss independence (excess over Bliss, % inhibition)",
+        "impact": "high",
+        "source": "agent-inferred",
+        "status": "needs-input",
+        "alternatives": [
+          "Loewe additivity",
+          "HSA (highest single agent)",
+          "ZIP"
+        ]
+      },
+      {
+        "label": "Response readout",
+        "chosen": "Percent inhibition (killing scale)",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Percent viability",
+          "Normalized growth rate (GR)"
+        ]
+      },
+      {
+        "label": "Single-agent model",
+        "chosen": "Hill curve fit per drug (synergy package)",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Non-parametric interpolation"
+        ]
+      },
+      {
+        "label": "Ranking statistic",
+        "chosen": "Mean excess over Bliss across the dose matrix",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Peak synergy",
+          "Synergy volume"
+        ]
+      }
+    ]
+  },
+  "clarifications": [
+    {
+      "id": "scope",
+      "type": "single-choice",
+      "required": true,
+      "question": "What should I optimize for on this combination screen?",
+      "context": "6 combinations were screened in MALME-3M melanoma on 8x8 dose grids. I can rank by synergy, fit parametric models, or focus on dose or mechanism.",
+      "default": "Rank combinations by synergy and propose the strongest for validation",
+      "options": [
+        "Rank combinations by synergy and propose the strongest for validation",
+        "Full MuSyC parametric fit per combination",
+        "Identify the synergy-maximizing dose window",
+        "Mechanism-of-synergy pathway enrichment"
+      ]
+    },
+    {
+      "id": "model",
+      "type": "single-choice",
+      "required": true,
+      "question": "Which synergy reference model should I use?",
+      "context": "Bliss independence assumes independent action; Loewe assumes dose additivity; HSA compares to the best single agent.",
+      "default": "Bliss independence",
+      "options": [
+        "Bliss independence",
+        "Loewe additivity",
+        "HSA (highest single agent)",
+        "ZIP"
+      ]
+    }
+  ],
+  "plan": {
+    "total": 5,
+    "steps": [
+      {
+        "id": "load",
+        "title": "Load combination screen and QC dose grids",
+        "figures": []
+      },
+      {
+        "id": "single",
+        "title": "Fit single-agent dose-response",
+        "figures": [
+          "/workbook/combo/fig_single_agent.png"
+        ]
+      },
+      {
+        "id": "synergy",
+        "title": "Compute Bliss / HSA synergy surfaces",
+        "figures": [
+          "/workbook/combo/fig_synergy_matrices.png"
+        ]
+      },
+      {
+        "id": "rank",
+        "title": "Rank combinations by synergy",
+        "figures": [
+          "/workbook/combo/fig_ranking.png"
+        ]
+      },
+      {
+        "id": "hypotheses",
+        "title": "Propose hypotheses for wet-lab testing",
+        "figures": []
+      }
+    ]
+  },
+  "report": {
+    "summary": [
+      "**6 combinations** screened in **MALME-3M melanoma** on 8x8 dose grids (comboFM, Julkunen et al. 2020).",
+      "**Everolimus + Romidepsin** is the strongest synergy (**Bliss +11.1**, HSA +11.2), concentrated in the high-dose region.",
+      "**Romidepsin + Vismodegib** is second (Bliss +9.4). Romidepsin (an HDAC inhibitor) drives the top two synergies.",
+      "**Dactinomycin + Romidepsin** is antagonistic (Bliss -6.5) and should be deprioritized.",
+      "**Recommendation:** advance Everolimus + Romidepsin to wet-lab confirmation."
+    ],
+    "figures": [
+      {
+        "src": "/workbook/combo/fig_synergy_matrices.png",
+        "caption": "Bliss synergy surfaces (excess over Bliss, % inhibition) for the top 3 combinations. Red = synergy."
+      },
+      {
+        "src": "/workbook/combo/fig_ranking.png",
+        "caption": "Combinations ranked by mean excess over Bliss in MALME-3M. Teal = synergistic, red = antagonistic."
+      },
+      {
+        "src": "/workbook/combo/fig_single_agent.png",
+        "caption": "Single-agent dose-response for the top combination's drugs (Hill fits)."
+      }
+    ],
+    "hypotheses": [
+      {
+        "rank": 1,
+        "combination": "Everolimus + Romidepsin",
+        "rationale": "mTOR (everolimus) + HDAC (romidepsin) synergy is the strongest and dose-dependent, peaking at high romidepsin. HDAC inhibition plausibly sensitizes melanoma cells to mTOR blockade.",
+        "experiment": "Confirm in a fresh MALME-3M 8x8 dose-response focused on the hotspot (romidepsin 100-1000 nM x everolimus 10-100 nM); extend to 2-3 additional melanoma lines to test generality; add a caspase/apoptosis readout to probe mechanism."
+      },
+      {
+        "rank": 2,
+        "combination": "Romidepsin + Vismodegib",
+        "rationale": "HDAC (romidepsin) + Hedgehog/SMO (vismodegib) is the second synergy; romidepsin recurs as a synergy driver.",
+        "experiment": "Validate the combination and stratify by Hedgehog-pathway activity; test whether SMO inhibition is required for the effect."
+      },
+      {
+        "rank": 3,
+        "combination": "Dactinomycin + Romidepsin",
+        "rationale": "Antagonistic in this line; combining these mechanisms may be counterproductive here.",
+        "experiment": "Deprioritize; do not pursue without a mechanistic reason specific to another context."
+      }
+    ],
+    "sections": {
+      "detailedAnswer": "Across the 6 pairs, romidepsin (HDAC inhibitor) is the dominant synergy driver, forming the top two combinations with everolimus (mTOR) and vismodegib (Hedgehog/SMO). Everolimus + romidepsin shows the clearest dose-dependent Bliss excess, concentrated where both drugs are active, which is the signature of true interaction rather than a single-agent artifact. The single-agent curves show everolimus is weak alone while romidepsin is sigmoidal, consistent with romidepsin sensitizing cells to an otherwise modest mTOR effect.",
+      "methods": "Combination dose-response matrices from the comboFM experimental validation set (MALME-3M). Single-agent responses fit with Hill curves (synergy package). Bliss independence and HSA references computed per dose pair; synergy scored as mean excess over Bliss on the percent-inhibition scale (positive = synergistic). Reproducible from public/workbook/combo/pipeline.py.",
+      "assumptionsNote": "Small screen (6 combinations, one melanoma line). Scores depend on the reference model and dose-grid coverage; ranking is robust but absolute values shift under Loewe/ZIP. Findings are hypothesis-generating for wet-lab confirmation, not a validated result."
+    }
+  }
+}
