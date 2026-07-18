@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ArrowLeft, FileChartColumn, Microscope, RotateCcw } from 'lucide-react';
 import type { WorkbookRun as WorkbookRunData } from '../../../lib/workbook/types';
 import { useWorkbookReplay, type WorkbookPhase } from '../../../lib/workbook/replayDriver';
@@ -27,7 +27,21 @@ function getReportTitle(capability: string) {
 
 export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
   const replay = useWorkbookReplay(run);
-  const resetReplay = replay.reset;
+  const defaultSynergyModel = run.clarifications.find((clarification) => clarification.id === 'model')?.default ?? 'Bliss independence';
+  const [selectedSynergyModel, setSelectedSynergyModel] = useState(defaultSynergyModel);
+  const resetReplay = useCallback(() => {
+    setSelectedSynergyModel(defaultSynergyModel);
+    replay.reset();
+  }, [defaultSynergyModel, replay.reset]);
+
+  const acceptResponse = useCallback((answers: Record<string, string>) => {
+    setSelectedSynergyModel(answers.model ?? defaultSynergyModel);
+    replay.accept();
+  }, [defaultSynergyModel, replay.accept]);
+
+  const context = [run.file.panel, run.file.drugs && `Drugs and targets: ${run.file.drugs}`, run.file.readout && `Readout: ${run.file.readout}`]
+    .filter(Boolean)
+    .join(' - ');
 
   useEffect(() => {
     const handleResetDemo = () => resetReplay();
@@ -38,7 +52,7 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
   return (
     <div className="min-h-full w-full bg-page px-3 py-4 sm:px-5 lg:px-6">
       <div className="mx-auto max-w-[1240px]">
-        <header className="mb-5 flex flex-col gap-4 rounded-2xl border border-border bg-surface px-4 py-4 shadow-card sm:px-5 lg:flex-row lg:items-center lg:justify-between">
+        <header className="mb-5 flex flex-col gap-4 rounded-2xl border border-border bg-surface px-4 py-5 shadow-card sm:px-5 lg:flex-row lg:items-start lg:justify-between lg:px-6 lg:py-6">
           <div className="flex min-w-0 items-start gap-3">
             <button
               type="button"
@@ -53,8 +67,10 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
                 <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.11em] text-primary">Sonny Workbook</span>
                 <span className="rounded-full border border-primary/20 bg-primary/[0.05] px-2 py-0.5 font-mono text-[9px] text-primary">REPLAY</span>
               </div>
-              <h1 className="mt-1 truncate font-display text-[25px] font-semibold tracking-tight text-textPrimary">{run.title}</h1>
-              <p className="mt-1 text-[11px] text-textTertiary">Scripted from real, pre-computed analysis outputs</p>
+              <h1 className="mt-2 max-w-[900px] text-balance font-display text-[27px] font-semibold leading-[1.12] tracking-tight text-textPrimary sm:text-[32px]">
+                {run.question ?? run.title}
+              </h1>
+              <p className="mt-2 max-w-[100ch] text-pretty text-[12px] leading-relaxed text-textSecondary">{context}</p>
             </div>
           </div>
           <button
@@ -82,7 +98,7 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
                 <ResponseRequired
                   clarifications={run.clarifications}
                   accepted={replay.phase === 'running' || replay.phase === 'done'}
-                  onAccept={replay.accept}
+                  onAccept={acceptResponse}
                 />
               </div>
             )}
@@ -94,7 +110,12 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
             )}
 
             {replay.phase === 'done' && (
-              <WorkbookReport report={run.report} title={getReportTitle(run.capability)} />
+              <WorkbookReport
+                report={run.report}
+                title={getReportTitle(run.capability)}
+                rankings={run.rankings}
+                selectedSynergyModel={selectedSynergyModel}
+              />
             )}
           </main>
 

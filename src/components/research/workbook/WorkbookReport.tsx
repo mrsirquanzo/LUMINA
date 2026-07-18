@@ -7,6 +7,8 @@ interface WorkbookReportProps {
   title?: string;
   eyebrow?: string;
   contentSections?: Array<{ id: string; title: string; content: string }>;
+  rankings?: WorkbookRun['rankings'];
+  selectedSynergyModel?: string;
 }
 
 function renderBoldMarkdown(text: string) {
@@ -23,14 +25,36 @@ const ACCORDIONS = [
   { key: 'assumptionsNote', title: 'Assumptions Made', icon: FileQuestion },
 ] as const;
 
+function formatScore(score: number) {
+  return `${score >= 0 ? '+' : ''}${score.toFixed(1)}`;
+}
+
 export function WorkbookReport({
   report,
   title = 'Flow cytometry report',
   eyebrow = 'ANALYSIS COMPLETE',
   contentSections,
+  rankings,
+  selectedSynergyModel = 'Bliss independence',
 }: WorkbookReportProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [activeFigure, setActiveFigure] = useState<WorkbookRun['report']['figures'][number] | null>(null);
+  const usesHsa = selectedSynergyModel === 'HSA (highest single agent)';
+  const usesFallback = selectedSynergyModel === 'Loewe additivity' || selectedSynergyModel === 'ZIP';
+  const rankingModel = usesHsa ? 'hsa' : 'bliss';
+  const rankingLabel = usesHsa ? 'HSA' : 'Bliss';
+  const displayedRankings = rankings?.[rankingModel] ?? [];
+  const rankedHypotheses = (report.hypotheses ?? [])
+    .map((hypothesis) => {
+      const rankingIndex = displayedRankings.findIndex((item) => item.combination === hypothesis.combination);
+      return {
+        ...hypothesis,
+        displayedRank: rankingIndex >= 0 ? rankingIndex + 1 : hypothesis.rank,
+        score: rankingIndex >= 0 ? displayedRankings[rankingIndex].score : undefined,
+        sortIndex: rankingIndex >= 0 ? rankingIndex : hypothesis.rank - 1,
+      };
+    })
+    .sort((a, b) => a.sortIndex - b.sortIndex);
 
   const openFigure = (figure: WorkbookRun['report']['figures'][number]) => {
     setActiveFigure(figure);
@@ -57,7 +81,41 @@ export function WorkbookReport({
         </ul>
       </div>
 
-      {report.hypotheses && report.hypotheses.length > 0 && (
+      {displayedRankings.length > 0 && (
+        <section className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card" aria-labelledby="combination-ranking-title">
+          <header className="flex flex-col gap-2 border-b border-border px-5 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+            <div>
+              <p className="font-mono text-[9px] font-semibold tracking-[0.11em] text-primary">SELECTED MODEL: {rankingLabel.toUpperCase()}</p>
+              <h3 id="combination-ranking-title" className="mt-1 font-display text-[23px] font-semibold tracking-tight text-textPrimary">
+                Combination ranking
+              </h3>
+            </div>
+            <p className="font-mono text-[10px] tabular-nums text-textTertiary">Mean excess, % inhibition</p>
+          </header>
+
+          {usesFallback && (
+            <p className="border-b border-border bg-subtle/55 px-5 py-2.5 text-[11px] font-medium text-textSecondary sm:px-6">
+              Loewe/ZIP not computed in this demo - showing Bliss.
+            </p>
+          )}
+
+          <ol className="divide-y divide-borderSoft px-5 sm:px-6" data-ranking-model={rankingModel}>
+            {displayedRankings.map((item, index) => (
+              <li key={item.combination} className="flex min-h-12 items-center gap-3 py-2.5">
+                <span className="w-6 flex-none font-mono text-[10px] font-semibold tabular-nums text-textTertiary">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="min-w-0 flex-1 text-[13px] font-medium text-textPrimary">{item.combination}</span>
+                <span className={`font-mono text-[12px] font-semibold tabular-nums ${item.score > 0 ? 'text-primary' : 'text-textSecondary'}`}>
+                  {formatScore(item.score)}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {rankedHypotheses.length > 0 && (
         <section
           className="rounded-2xl border border-primary/25 bg-primary/[0.035] px-5 py-5 shadow-card sm:px-6 sm:py-6"
           aria-labelledby="workbook-hypotheses-title"
@@ -78,14 +136,21 @@ export function WorkbookReport({
           </div>
 
           <div className="mt-5 space-y-3">
-            {report.hypotheses.map((hypothesis) => (
-              <article key={`${hypothesis.rank}-${hypothesis.combination}`} className="rounded-xl border border-border bg-white px-4 py-4 sm:px-5">
+            {rankedHypotheses.map((hypothesis) => (
+              <article key={hypothesis.combination} className="rounded-xl border border-border bg-white px-4 py-4 sm:px-5">
                 <div className="flex items-start gap-3.5">
                   <span className="flex h-7 min-w-7 flex-none items-center justify-center rounded-lg bg-primary px-2 font-mono text-[10px] font-semibold tabular-nums text-white">
-                    #{hypothesis.rank}
+                    #{hypothesis.displayedRank}
                   </span>
                   <div className="min-w-0">
-                    <h4 className="text-[14px] font-semibold text-textPrimary">{hypothesis.combination}</h4>
+                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      <h4 className="text-[14px] font-semibold text-textPrimary">{hypothesis.combination}</h4>
+                      {hypothesis.score !== undefined && (
+                        <span className="font-mono text-[10px] font-semibold tabular-nums text-primary">
+                          {rankingLabel} {formatScore(hypothesis.score)}
+                        </span>
+                      )}
+                    </div>
                     <p className="mt-1.5 text-[12.5px] leading-relaxed text-textSecondary">{hypothesis.rationale}</p>
                     <p className="mt-3 border-t border-borderSoft pt-3 text-[12px] leading-relaxed text-textSecondary">
                       <span className="font-semibold text-textPrimary">Experiment:</span> {hypothesis.experiment}

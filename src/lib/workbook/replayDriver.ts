@@ -13,7 +13,7 @@ export interface RuntimePlanStep {
 
 export const REPLAY_TIMINGS = {
   reasoningInitialDelay: 220,
-  reasoningStagger: 760,
+  reasoningStagger: 620,
   assumptionsDelay: 460,
   inputDelay: 620,
   stepDurations: [780, 920, 840, 1040, 880, 960, 820, 900],

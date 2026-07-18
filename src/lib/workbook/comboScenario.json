@@ -1,16 +1,23 @@
 {
   "id": "combination-screening",
-  "title": "Screen a drug-combination dataset",
+  "title": "Combination synergy screen",
   "capability": "combination-screening",
   "file": {
     "name": "drug_combination_testing_data.xlsx",
     "sizeMB": 0.2,
     "instrument": "comboFM experimental validation set (Julkunen et al., Nat Commun 2020)",
-    "panel": "MALME-3M melanoma (NCI-60), 6 combinations on 8x8 concentration grids"
+    "panel": "MALME-3M melanoma (NCI-60), 6 combinations on 8x8 concentration grids",
+    "drugs": "everolimus (mTOR), romidepsin (HDAC), vismodegib (Hedgehog/SMO), gefitinib (EGFR), oxaliplatin, cladribine, dactinomycin",
+    "readout": "% inhibition on 8x8 dose-response grids"
   },
   "reasoning": [
-    "Loading the combination screen. 6 drug pairs in MALME-3M melanoma, each an 8x8 dose-response matrix of percent inhibition.",
-    "I will fit single-agent responses, compute a synergy reference per pair, rank the combinations, and propose the strongest for wet-lab validation."
+    "Loading drug_combination_testing_data.xlsx - 6 drug pairs screened in MALME-3M melanoma, each an 8x8 dose-response grid of percent inhibition.",
+    "Inspecting the panel: everolimus (mTOR), romidepsin (HDAC), vismodegib (Hedgehog/SMO), gefitinib (EGFR), oxaliplatin, cladribine, and dactinomycin.",
+    "Fitting a Hill curve to each single agent so the combination effect is judged against each drug's own dose-response.",
+    "Romidepsin is the most active single agent (sigmoidal); everolimus is weak alone - a classic sensitizer setup worth watching.",
+    "Computing a Bliss-independence reference across each 8x8 grid; the synergy score is the mean excess over Bliss on the inhibition scale.",
+    "Ranking the 6 pairs. The strongest signal concentrates where both drugs are active - the signature of a real interaction, not a single-agent artifact.",
+    "Drafting wet-lab hypotheses for the top pairs and flagging the antagonistic one to deprioritize."
   ],
   "assumptions": {
     "checked": 2,
@@ -204,5 +211,60 @@
       "methods": "Combination dose-response matrices from the comboFM experimental validation set (MALME-3M). Single-agent responses fit with Hill curves (synergy package). Bliss independence and HSA references computed per dose pair; synergy scored as mean excess over Bliss on the percent-inhibition scale (positive = synergistic). Reproducible from public/workbook/combo/pipeline.py.",
       "assumptionsNote": "Small screen (6 combinations, one melanoma line). Scores depend on the reference model and dose-grid coverage; ranking is robust but absolute values shift under Loewe/ZIP. Findings are hypothesis-generating for wet-lab confirmation, not a validated result."
     }
+  },
+  "question": "Which drug combinations are synergistic in MALME-3M melanoma, and which pair should we prioritize for wet-lab validation?",
+  "rankings": {
+    "bliss": [
+      {
+        "combination": "Everolimus + Romidepsin",
+        "score": 11.1
+      },
+      {
+        "combination": "Romidepsin + Vismodegib",
+        "score": 9.4
+      },
+      {
+        "combination": "Gefitinib + Vismodegib",
+        "score": 1.6
+      },
+      {
+        "combination": "Oxaliplatin + Romidepsin",
+        "score": 0.8
+      },
+      {
+        "combination": "Cladribine + Romidepsin",
+        "score": -0.1
+      },
+      {
+        "combination": "Dactinomycin + Romidepsin",
+        "score": -6.5
+      }
+    ],
+    "hsa": [
+      {
+        "combination": "Everolimus + Romidepsin",
+        "score": 11.2
+      },
+      {
+        "combination": "Romidepsin + Vismodegib",
+        "score": 8.9
+      },
+      {
+        "combination": "Cladribine + Romidepsin",
+        "score": 2.8
+      },
+      {
+        "combination": "Gefitinib + Vismodegib",
+        "score": -0.7
+      },
+      {
+        "combination": "Dactinomycin + Romidepsin",
+        "score": -1.1
+      },
+      {
+        "combination": "Oxaliplatin + Romidepsin",
+        "score": -2.3
+      }
+    ]
   }
 }

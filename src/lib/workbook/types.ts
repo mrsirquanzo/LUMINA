@@ -34,15 +34,23 @@ export interface WorkbookHypothesis {
   experiment: string;
 }
 
+export interface WorkbookRanking {
+  combination: string;
+  score: number;
+}
+
 export interface WorkbookRun {
   id: string;
   title: string;
+  question?: string;
   capability: string;
   file: {
     name: string;
     sizeMB: number;
     instrument: string;
     panel: string;
+    drugs?: string;
+    readout?: string;
   };
   reasoning: string[];
   assumptions: {
@@ -68,5 +76,9 @@ export interface WorkbookRun {
       methods: string;
       assumptionsNote: string;
     };
+  };
+  rankings?: {
+    bliss: WorkbookRanking[];
+    hsa: WorkbookRanking[];
   };
 }

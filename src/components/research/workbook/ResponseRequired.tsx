@@ -5,7 +5,7 @@ import type { Clarification } from '../../../lib/workbook/types';
 interface ResponseRequiredProps {
   clarifications: Clarification[];
   accepted: boolean;
-  onAccept: () => void;
+  onAccept: (answers: Record<string, string>) => void;
 }
 
 export function ResponseRequired({ clarifications, accepted, onAccept }: ResponseRequiredProps) {
@@ -23,7 +23,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
           </span>
           <div>
             <p className="text-[13px] font-semibold text-textPrimary">Accepted</p>
-            <p className="text-[11px] text-textTertiary">Default analysis choices included.</p>
+            <p className="text-[11px] text-textTertiary">Your analysis choices are reflected in the report.</p>
           </div>
         </div>
         <span className="font-mono text-[9px] tracking-[0.08em] text-primary">RESPONSE RECEIVED</span>
@@ -32,9 +32,9 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
   }
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-amber-200 bg-surface shadow-card" aria-labelledby="response-required-title">
-      <header className="border-b border-amber-100 bg-amber-50/60 px-5 py-4">
-        <p className="font-mono text-[10px] font-semibold tracking-[0.12em] text-amber-700">RESPONSE REQUIRED</p>
+    <section className="overflow-hidden rounded-2xl border border-primary/20 bg-surface shadow-card" aria-labelledby="response-required-title">
+      <header className="border-b border-primary/10 bg-primary/[0.035] px-5 py-4">
+        <p className="font-mono text-[10px] font-semibold tracking-[0.12em] text-primary">RESPONSE REQUIRED</p>
         <h2 id="response-required-title" className="mt-1 font-display text-[23px] font-semibold tracking-tight text-textPrimary">
           Sonny needs your input
         </h2>
@@ -102,7 +102,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
           </button>
           <button
             type="button"
-            onClick={onAccept}
+            onClick={() => onAccept(answers)}
             className="rounded-lg bg-primary px-4 py-2 text-[12px] font-semibold text-white transition-colors hover:bg-primary/90 active:translate-y-px"
           >
             Accept

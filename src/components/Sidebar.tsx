@@ -19,10 +19,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 'research', icon: Sparkles, label: 'Ask Sonny' },
-  { id: 'feed',     icon: Bell,     label: 'Feed' },
+  { id: 'research', icon: Sparkles, label: 'Sonny' },
+  { id: 'feed',     icon: Bell,     label: 'News Feed' },
   { id: 'dossiers', icon: Library,  label: 'Reports' },
-  { id: 'watchlist',icon: Eye,      label: 'Watchlist' },
+  { id: 'watchlist',icon: Eye,      label: 'Projects' },
 ];
 
 const Sidebar = memo(function Sidebar({
@@ -62,32 +62,34 @@ const Sidebar = memo(function Sidebar({
       aria-label="Main navigation"
     >
       {/* Wordmark */}
-      <div className="px-5 py-5 border-b border-border">
-        <span className="font-display text-2xl font-semibold text-textPrimary tracking-tight select-none">
+      <div className="px-5 pb-4 pt-5">
+        <span className="select-none font-display text-2xl font-semibold tracking-tight text-textPrimary">
           Sonny
         </span>
+        <p className="mt-0.5 font-mono text-[9px] font-medium uppercase tracking-[0.12em] text-textTertiary">Research workspace</p>
       </div>
 
       {/* Nav items */}
-      <nav className="py-3 px-3 space-y-0.5">
+      <nav className="space-y-0.5 px-3 pb-3">
+        <p className="px-3 pb-1.5 pt-1 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-textTertiary">Workspace</p>
         {navItems.map(({ id, icon: Icon, label }) => {
           const isActive = currentView === id;
           return (
             <button
               key={id}
               onClick={() => (id === 'feed' && onOpenFeedForTarget) ? onOpenFeedForTarget() : onViewChange(id)}
-              className={`tactile relative w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-150 ${
+              className={`tactile relative flex min-h-10 w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left transition-colors duration-150 ${
                 isActive
-                  ? 'bg-primary/10 text-textPrimary'
-                  : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
+                  ? 'bg-primary/[0.08] text-primary'
+                  : 'text-textSecondary hover:bg-subtle hover:text-textPrimary'
               }`}
               aria-current={isActive ? 'page' : undefined}
             >
               {isActive && (
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
               )}
-              <Icon className="w-5 h-5 flex-shrink-0" />
-              <span className="text-sm font-medium leading-relaxed flex-1">{label}</span>
+              <Icon className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={1.75} />
+              <span className="flex-1 text-[13px] font-medium leading-relaxed">{label}</span>
               {id === 'feed' && feedUnread > 0 && (
                 <span className="flex-shrink-0 text-[10px] font-semibold leading-none px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
                   {feedUnread}
@@ -132,25 +134,25 @@ const Sidebar = memo(function Sidebar({
         )}
       </div>
 
-      {/* Watchlist section */}
+      {/* Projects section */}
       <div className="px-3 pb-2 border-t border-border pt-2">
         {/* Section header */}
         <div className="flex items-center justify-between px-3 py-1.5">
           <span className="text-[11px] font-semibold tracking-wider uppercase text-textTertiary">
-            Watchlist
+            Projects
           </span>
           {targets.length > 0 && (
             <span className="text-[11px] font-semibold text-textTertiary">{targets.length}</span>
           )}
         </div>
 
-        {/* Watched-target list */}
+        {/* Project list */}
         <div className="space-y-0.5">
           {targets.map((t) => (
             <button
               key={t}
               onClick={() => onOpenFeedForTarget ? onOpenFeedForTarget(t) : onViewChange('feed')}
-              className="tactile w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors duration-150"
+              className="tactile flex min-h-9 w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-textSecondary transition-colors duration-150 hover:bg-subtle hover:text-textPrimary"
             >
               <span className="text-xs font-medium truncate leading-relaxed">{t}</span>
               {unread[t] > 0 && (
@@ -162,13 +164,13 @@ const Sidebar = memo(function Sidebar({
           ))}
         </div>
 
-        {/* Add-to-watchlist row */}
+        {/* New project row */}
         <button
           onClick={() => onViewChange('watchlist')}
-          className="tactile w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-textSecondary hover:text-textPrimary transition-colors duration-150"
+          className="tactile flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 text-textSecondary transition-colors duration-150 hover:bg-subtle hover:text-textPrimary"
         >
-          <Plus className="w-4 h-4 flex-shrink-0" />
-          <span className="text-sm">Add to watchlist</span>
+          <Plus className="h-4 w-4 flex-shrink-0" strokeWidth={1.75} />
+          <span className="text-[13px] font-medium">New project</span>
         </button>
       </div>
 

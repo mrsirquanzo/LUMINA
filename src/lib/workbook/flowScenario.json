@@ -9,8 +9,13 @@
     "panel": "13-colour B-cell immunophenotyping (CD19, CD3, IgD, IgM, CD27, CD38, CD86, CD80, CD40, HLA-DR, CD197, Zombie-NIR viability)"
   },
   "reasoning": [
-    "Parsing the FCS file. It carries 19,364 events across 19 channels from a Sony ID7000 spectral cytometer, spectrally unmixed (WLSM).",
-    "This is a B-cell immunophenotyping panel. Before analysing I will state my assumptions and confirm scope with you."
+    "Parsing the FCS file - 19,364 events across 19 channels from a Sony ID7000 spectral cytometer, spectrally unmixed (WLSM).",
+    "This is a 13-colour B-cell immunophenotyping panel (CD19, CD3, IgD, IgM, CD27, CD38, CD86, CD80, CD40, HLA-DR, CD197, Zombie-NIR).",
+    "arcsinh-transforming the fluorescence channels (cofactor 6000) so positive and negative populations separate cleanly.",
+    "Gating sequentially: FSC/SSC to remove debris, then FSC-A vs FSC-H for singlets.",
+    "Setting the viability threshold on the Zombie-NIR distribution by Otsu, then isolating live cells.",
+    "Identifying the B-cell lineage as CD3-negative, CD19-positive; then characterising subsets and marker expression.",
+    "Assembling the figures, the subset table, and a grounded summary - every number traced to the gate that produced it."
   ],
   "assumptions": {
     "checked": 3,
