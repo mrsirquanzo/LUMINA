@@ -166,8 +166,8 @@
   "report": {
     "summary": [
       "**BT474 (HER2+ breast cancer)** treated with **trastuzumab at 0, 25, 50 ug/mL** for 72 h; HER2, HSP90, and GAPDH quantified by background-corrected densitometry.",
-      "**HER2 decreases** with trastuzumab, to **0.84x** of untreated at 50 ug/mL (normalized to GAPDH).",
-      "**HSP90 increases** with dose, to **2.7x** at 25 and **6.5x** at 50 ug/mL - a compensatory chaperone response.",
+      "**HER2 decreases** with trastuzumab, to **0.68x** of untreated at 50 ug/mL (normalized to GAPDH).",
+      "**HSP90 increases** with dose, to **2.6x** at 25 and **5.2x** at 50 ug/mL - a compensatory chaperone response.",
       "GAPDH is even across lanes, supporting equal loading.",
       "**Single blot (n=1)** - fold-changes are qualitative, not statistical."
     ],

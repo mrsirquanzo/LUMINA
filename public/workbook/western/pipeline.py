@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
-from scipy.ndimage import gaussian_filter1d, label
+from scipy.ndimage import gaussian_filter1d, gaussian_filter, label
 
 SRC = "/private/tmp/claude-501/-Users-quanho/35d39a2c-2df7-4460-b340-b3c28387140c/scratchpad/wb_source/blot.png"
 OUT = "/private/tmp/claude-501/-Users-quanho/35d39a2c-2df7-4460-b340-b3c28387140c/scratchpad/wb_out"
@@ -34,64 +34,66 @@ proteins = ["HER2", "HSP90", "GAPDH"][:len(rpk)]
 # row half-height from projection width
 rh = int(H*0.06)
 
-# --- lane detection (3 lanes) via vertical projection over all band rows ---
-ymask = np.zeros(H, bool)
-for y in rpk: ymask[max(0,y-rh):min(H,y+rh)] = True
-colproj = gaussian_filter1d(inv[ymask, X0:X1].sum(axis=0), 5)
-cpk, _ = find_peaks(colproj, distance=(X1-X0)*0.18, prominence=colproj.max()*0.08)
-cpk = sorted(cpk, key=lambda x: -colproj[x])[:3]
-cpk = sorted([c+X0 for c in cpk])
-lanes = ["0 (untreated)", "25 ug/mL", "50 ug/mL"][:len(cpk)]
-spacing = int(np.median(np.diff(cpk))) if len(cpk) > 1 else int((X1-X0)*0.3)
-# Generous SEARCH window (contains one full band, excludes neighbours); the drawn
-# box is then tightened onto the band itself so it aligns with the blot.
-sw = int(spacing*0.48)          # search half-width (x)
-sh = int(H*0.085)               # search half-height (y)
+# --- band detection: find each band's ACTUAL pixels per row (no lane-x bias) ---
+lanes = ["0 (untreated)", "25 ug/mL", "50 ug/mL"]
+sh = int(H*0.075)               # row strip half-height
 
-def refine_lane(x):
-    """Recenter a lane on the actual band mass (bg-subtracted, across all rows)."""
-    x0, x1 = max(X0, x-sw), min(X1, x+sw)
-    prof = np.zeros(x1-x0)
-    for y in rpk:
-        w = inv[max(0, y-sh):min(H, y+sh), x0:x1]
-        prof += np.clip(w - np.median(w), 0, None).sum(axis=0)
-    if prof.sum() == 0:
-        return x
-    return int(x0 + (np.arange(len(prof))*prof).sum()/prof.sum())
+def row_blobs(y):
+    """Threshold a row strip and return up to 3 band blobs (bounding boxes)."""
+    y0, y1 = max(0, y-sh), min(H, y+sh)
+    strip = gaussian_filter(inv[y0:y1, X0:X1], 1.2)
+    bg = float(np.median(strip))
+    thr = bg + max(12.0, (np.percentile(strip, 99.5) - bg) * 0.22)
+    lbl, n = label(strip > thr)
+    comps = []
+    for k in range(1, n+1):
+        ys, xs = np.where(lbl == k)
+        if len(xs) < 80:
+            continue
+        comps.append({"x0": int(xs.min()+X0), "x1": int(xs.max()+X0),
+                      "y0": int(ys.min()+y0), "y1": int(ys.max()+y0),
+                      "cx": (xs.min()+xs.max())/2 + X0, "area": len(xs)})
+    comps.sort(key=lambda c: -c["area"])
+    return comps[:3]
 
-cpk = [refine_lane(x) for x in cpk]
+row_det = {i: sorted(row_blobs(y), key=lambda c: c["cx"]) for i, y in enumerate(rpk)}
+# Consensus lane x from any row that cleanly found all 3 bands (e.g. GAPDH).
+full = [[c["cx"] for c in comps] for comps in row_det.values() if len(comps) == 3]
+if full:
+    lane_cx = list(np.median(np.array(full), axis=0))
+else:
+    best = max(row_det.values(), key=len)
+    lane_cx = sorted(c["cx"] for c in best)[:3]
+allc = [c for comps in row_det.values() for c in comps]
+mw = int(np.median([c["x1"]-c["x0"] for c in allc]))  # median band footprint
+mh = int(np.median([c["y1"]-c["y0"] for c in allc]))
 
-bw = int(spacing*0.64)          # drawn box width (consistent across bands)
-bh = int(sh*1.7)                # drawn box height
+def bg_and_density(box):
+    bx0, by0, bx1, by1 = box
+    roi = inv[max(0,by0):min(H,by1), max(0,bx0):min(W,bx1)]
+    above = inv[max(0,by0-8):max(0,by0), max(0,bx0):min(W,bx1)]
+    below = inv[min(H,by1):min(H,by1+8), max(0,bx0):min(W,bx1)]
+    strips = np.concatenate([above.ravel(), below.ravel()])
+    bg = float(np.median(strips)) if strips.size else float(np.median(roi))
+    return float(np.clip(roi - bg, 0, None).sum())
 
-def band_box(y, x):
-    """Center a consistent-size ROI on the band's intensity centroid (so the box
-    aligns with the whole band, not just its darkest part) and return its
-    background-corrected integrated density."""
-    sy0, sy1 = max(0, y-sh), min(H, y+sh)
-    sx0, sx1 = max(X0, x-sw), min(X1, x+sw)
-    win = inv[sy0:sy1, sx0:sx1]
-    if win.size == 0:
-        return 0.0, (x-bw//2, y-bh//2, x+bw//2, y+bh//2)
-    border = np.concatenate([win[0, :], win[-1, :], win[:, 0], win[:, -1]])
-    bg = float(np.median(border))
-    sig = np.clip(win - bg, 0, None)
-    if sig.sum() > 0:
-        colw, roww = sig.sum(axis=0), sig.sum(axis=1)
-        cx = sx0 + (np.arange(len(colw))*colw).sum()/colw.sum()
-        cy = sy0 + (np.arange(len(roww))*roww).sum()/roww.sum()
-    else:
-        cx, cy = x, y
-    bx0, by0 = int(cx-bw/2), int(cy-bh/2)
-    bx1, by1 = bx0+bw, by0+bh
-    idv = float(np.clip(inv[max(0,by0):min(H,by1), max(0,bx0):min(W,bx1)] - bg, 0, None).sum())
-    return idv, (bx0, by0, bx1, by1)
-
+# Blobs give the band POSITION (so boxes align); a CONSISTENT box SIZE is used
+# for measurement so a near-absent band (e.g. untreated HSP90) is not quantified
+# with a tiny window - which would make its fold-change denominator explode.
+BW = int(mw * 1.10)
+BH = int(mh * 1.30)
 rows = []; boxes = []
 for pi, y in enumerate(rpk):
-    for li, x in enumerate(cpk):
-        idv, box = band_box(y, x)
-        rows.append({"protein": proteins[pi], "lane": lanes[li], "raw_id": round(idv, 0)})
+    comps = row_det[pi]
+    for li, lx in enumerate(lane_cx):
+        near = [c for c in comps if abs(c["cx"] - lx) < mw * 0.9]
+        if near:
+            c = min(near, key=lambda c: abs(c["cx"] - lx))
+            cx, cy = (c["x0"]+c["x1"])/2, (c["y0"]+c["y1"])/2   # center from the real band
+        else:
+            cx, cy = lx, y                                       # faint/absent: grid position
+        box = (int(cx-BW/2), int(cy-BH/2), int(cx+BW/2), int(cy+BH/2))
+        rows.append({"protein": proteins[pi], "lane": lanes[li], "raw_id": round(bg_and_density(box), 0)})
         boxes.append((box, proteins[pi], lanes[li]))
 
 # normalize each target to GAPDH in the same lane; fold-change vs untreated lane
@@ -130,7 +132,7 @@ ax.legend(frameon=False, fontsize=9); ax.spines[["top","right"]].set_visible(Fal
 plt.tight_layout(); plt.savefig(os.path.join(OUT,"wb_foldchange.png"),dpi=150,bbox_inches="tight",facecolor="white"); plt.close()
 
 summary = {"rows": rows, "results": results, "proteins": proteins, "lanes": lanes,
-           "row_y": [int(y) for y in rpk], "lane_x": [int(x) for x in cpk]}
+           "row_y": [int(y) for y in rpk], "lane_x": [int(x) for x in lane_cx]}
 json.dump(summary, open(os.path.join(OUT,"summary.json"),"w"), indent=2)
-print("rows_y:", [int(y) for y in rpk], "lanes_x:", [int(x) for x in cpk])
+print("rows_y:", [int(y) for y in rpk], "lanes_x:", [int(x) for x in lane_cx])
 print(json.dumps(results, indent=2))
