@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 import { useDeepResearchStream } from '../../hooks/useDeepResearchStream';
 import { useBriefingStore } from '../../lib/research/briefingStore';
@@ -96,6 +96,13 @@ function DossierSkeleton() {
 
 export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResearchDashboardProps) {
   const s = useDeepResearchStream();
+  // Prompt seeded into the composer (from URL or a clicked capability card).
+  const [seed, setSeed] = useState(initialQuery ?? '');
+  const composerRef = useRef<HTMLDivElement>(null);
+  const seedFromCard = (prompt: string) => {
+    setSeed(prompt);
+    composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   // On mount: hydrate from URL ?runId=
   useEffect(() => {
@@ -130,16 +137,16 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
           </div>
 
           {/* Composer */}
-          <div style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
+          <div ref={composerRef} style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
             <ResearchComposer
               onStart={(t, m) => s.start(t, m)}
-              initialQuery={initialQuery}
+              initialQuery={seed}
             />
           </div>
 
           {/* Capability cards */}
           <div style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
-            <CapabilityCards />
+            <CapabilityCards onSelectExample={seedFromCard} />
           </div>
 
           {/* Latest signals block */}

@@ -11,6 +11,7 @@ interface Capability {
   status: 'available' | 'coming-soon';
   image: string;
   alt: string;
+  example?: string; // prompt loaded into the composer when the card is clicked
 }
 
 const CAPABILITIES: Capability[] = [
@@ -21,6 +22,7 @@ const CAPABILITIES: Capability[] = [
     status: 'available',
     image: '/deep-research.png',
     alt: 'Grounded due-diligence dossier with a GO verdict and cited claims',
+    example: 'TROP2',
   },
   {
     id: 'competitive',
@@ -29,6 +31,7 @@ const CAPABILITIES: Capability[] = [
     status: 'available',
     image: '/competitive-landscape.png',
     alt: 'TROP2 ADC competitive positioning quadrant',
+    example: 'CDCP1',
   },
   {
     id: 'flow-cytometry',
@@ -56,7 +59,10 @@ function lift(el: HTMLDivElement, on: boolean) {
   el.style.borderColor = on ? '#C3D4F2' : '';
 }
 
-export function CapabilityCards() {
+export function CapabilityCards({ onSelectExample }: { onSelectExample?: (prompt: string) => void }) {
+  const pick = (example?: string) => {
+    if (example && onSelectExample) onSelectExample(example);
+  };
   return (
     <div>
       <h2
@@ -68,7 +74,11 @@ export function CapabilityCards() {
 
       {/* Hero feature card: real grounded data analysis output */}
       <div
-        className="bg-surface border border-border rounded-[14px] p-[18px] mb-3.5 flex gap-5 items-center transition-all duration-200"
+        role="button"
+        tabIndex={0}
+        onClick={() => pick('TACSTD2')}
+        onKeyDown={(e) => { if (e.key === 'Enter') pick('TACSTD2'); }}
+        className="bg-surface border border-border rounded-[14px] p-[18px] mb-3.5 flex gap-5 items-center transition-all duration-200 cursor-pointer"
         style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
         onMouseEnter={(e) => lift(e.currentTarget as HTMLDivElement, true)}
         onMouseLeave={(e) => lift(e.currentTarget as HTMLDivElement, false)}
@@ -106,10 +116,14 @@ export function CapabilityCards() {
           return (
             <div
               key={cap.id}
-              className="bg-surface border border-border rounded-[14px] overflow-hidden flex flex-col transition-all duration-200"
+              role={available ? 'button' : undefined}
+              tabIndex={available ? 0 : undefined}
+              onClick={available ? () => pick(cap.example) : undefined}
+              onKeyDown={available ? (e) => { if (e.key === 'Enter') pick(cap.example); } : undefined}
+              className={`bg-surface border border-border rounded-[14px] overflow-hidden flex flex-col transition-all duration-200 ${available ? 'cursor-pointer' : ''}`}
               style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
-              onMouseEnter={(e) => lift(e.currentTarget as HTMLDivElement, true)}
-              onMouseLeave={(e) => lift(e.currentTarget as HTMLDivElement, false)}
+              onMouseEnter={available ? (e) => lift(e.currentTarget as HTMLDivElement, true) : undefined}
+              onMouseLeave={available ? (e) => lift(e.currentTarget as HTMLDivElement, false) : undefined}
             >
               <div className="w-full bg-subtle border-b border-border overflow-hidden" style={{ height: 132 }}>
                 <img
@@ -128,10 +142,15 @@ export function CapabilityCards() {
                   {cap.description}
                 </span>
                 {available ? (
-                  <span className="inline-flex items-center gap-1.5 mt-2.5" style={{ fontSize: 11, fontWeight: 600, color: '#15803D' }}>
-                    <span className="w-[7px] h-[7px] rounded-full inline-block flex-none" style={{ background: '#16A34A', boxShadow: '0 0 0 3px rgba(22,163,74,.16)' }} />
-                    Available
-                  </span>
+                  <div className="flex items-center justify-between mt-2.5">
+                    <span className="inline-flex items-center gap-1.5" style={{ fontSize: 11, fontWeight: 600, color: '#15803D' }}>
+                      <span className="w-[7px] h-[7px] rounded-full inline-block flex-none" style={{ background: '#16A34A', boxShadow: '0 0 0 3px rgba(22,163,74,.16)' }} />
+                      Available
+                    </span>
+                    <span className="text-primary font-semibold" style={{ fontSize: 11 }}>
+                      Try {cap.example} &rarr;
+                    </span>
+                  </div>
                 ) : (
                   <span className="inline-block mt-2.5 text-textTertiary" style={{ fontSize: 11, fontWeight: 600 }}>
                     Coming soon
