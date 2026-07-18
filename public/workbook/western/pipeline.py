@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
-from scipy.ndimage import gaussian_filter1d
+from scipy.ndimage import gaussian_filter1d, label
 
 SRC = "/private/tmp/claude-501/-Users-quanho/35d39a2c-2df7-4460-b340-b3c28387140c/scratchpad/wb_source/blot.png"
 OUT = "/private/tmp/claude-501/-Users-quanho/35d39a2c-2df7-4460-b340-b3c28387140c/scratchpad/wb_out"
@@ -43,31 +43,55 @@ cpk = sorted(cpk, key=lambda x: -colproj[x])[:3]
 cpk = sorted([c+X0 for c in cpk])
 lanes = ["0 (untreated)", "25 ug/mL", "50 ug/mL"][:len(cpk)]
 spacing = int(np.median(np.diff(cpk))) if len(cpk) > 1 else int((X1-X0)*0.3)
-cw = int(spacing*0.42)  # wide enough to contain a full band
+# Generous SEARCH window (contains one full band, excludes neighbours); the drawn
+# box is then tightened onto the band itself so it aligns with the blot.
+sw = int(spacing*0.48)          # search half-width (x)
+sh = int(H*0.085)               # search half-height (y)
 
-def centroid_x(y, x):
-    """Snap the ROI x-center onto the band's intensity centroid within its lane window."""
-    y0,y1 = max(0,y-rh), min(H,y+rh); x0,x1 = max(X0,x-cw), min(X1,x+cw)
-    col = inv[y0:y1, x0:x1].sum(axis=0)
-    col = np.clip(col - np.median(col), 0, None)
-    if col.sum() == 0: return x
-    return int(x0 + (np.arange(len(col))*col).sum()/col.sum())
+def refine_lane(x):
+    """Recenter a lane on the actual band mass (bg-subtracted, across all rows)."""
+    x0, x1 = max(X0, x-sw), min(X1, x+sw)
+    prof = np.zeros(x1-x0)
+    for y in rpk:
+        w = inv[max(0, y-sh):min(H, y+sh), x0:x1]
+        prof += np.clip(w - np.median(w), 0, None).sum(axis=0)
+    if prof.sum() == 0:
+        return x
+    return int(x0 + (np.arange(len(prof))*prof).sum()/prof.sum())
 
-def integrated_density(y, x):
-    """Background-corrected integrated density over a band box centered on the band."""
-    y0,y1 = max(0,y-rh), min(H,y+rh); x0,x1 = max(0,x-cw), min(W,x+cw)
-    roi = inv[y0:y1, x0:x1]
-    # local background = median of thin strips just above and below the band, same lane
-    above = inv[max(0,y-rh-10):max(0,y-rh), x0:x1]; below = inv[min(H,y+rh):min(H,y+rh+10), x0:x1]
-    bg = np.median(np.concatenate([above.ravel(), below.ravel()])) if above.size+below.size else 0
-    return float(np.clip(roi - bg, 0, None).sum()), (x0,y0,x1,y1)
+cpk = [refine_lane(x) for x in cpk]
+
+bw = int(spacing*0.64)          # drawn box width (consistent across bands)
+bh = int(sh*1.7)                # drawn box height
+
+def band_box(y, x):
+    """Center a consistent-size ROI on the band's intensity centroid (so the box
+    aligns with the whole band, not just its darkest part) and return its
+    background-corrected integrated density."""
+    sy0, sy1 = max(0, y-sh), min(H, y+sh)
+    sx0, sx1 = max(X0, x-sw), min(X1, x+sw)
+    win = inv[sy0:sy1, sx0:sx1]
+    if win.size == 0:
+        return 0.0, (x-bw//2, y-bh//2, x+bw//2, y+bh//2)
+    border = np.concatenate([win[0, :], win[-1, :], win[:, 0], win[:, -1]])
+    bg = float(np.median(border))
+    sig = np.clip(win - bg, 0, None)
+    if sig.sum() > 0:
+        colw, roww = sig.sum(axis=0), sig.sum(axis=1)
+        cx = sx0 + (np.arange(len(colw))*colw).sum()/colw.sum()
+        cy = sy0 + (np.arange(len(roww))*roww).sum()/roww.sum()
+    else:
+        cx, cy = x, y
+    bx0, by0 = int(cx-bw/2), int(cy-bh/2)
+    bx1, by1 = bx0+bw, by0+bh
+    idv = float(np.clip(inv[max(0,by0):min(H,by1), max(0,bx0):min(W,bx1)] - bg, 0, None).sum())
+    return idv, (bx0, by0, bx1, by1)
 
 rows = []; boxes = []
 for pi, y in enumerate(rpk):
-    for li, x0c in enumerate(cpk):
-        x = centroid_x(y, x0c)
-        idv, box = integrated_density(y, x)
-        rows.append({"protein": proteins[pi], "lane": lanes[li], "raw_id": round(idv,0)})
+    for li, x in enumerate(cpk):
+        idv, box = band_box(y, x)
+        rows.append({"protein": proteins[pi], "lane": lanes[li], "raw_id": round(idv, 0)})
         boxes.append((box, proteins[pi], lanes[li]))
 
 # normalize each target to GAPDH in the same lane; fold-change vs untreated lane
