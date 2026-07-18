@@ -137,14 +137,14 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
       >
         <div
           style={{
-            maxWidth: 760,
+            maxWidth: 840,
             margin: '0 auto',
-            padding: '52px 40px 64px',
+            padding: '60px 40px 72px',
             position: 'relative',
           }}
         >
           {/* Composer */}
-          <div ref={composerRef} style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
+          <div ref={composerRef} style={{ position: 'relative', zIndex: 1, marginBottom: 44 }}>
             <ResearchComposer
               key={`${initialQuery ?? ''}:${seedRevision}`}
               onStart={(t, m) => s.start(t, m)}
@@ -154,7 +154,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
           </div>
 
           {/* Capability cards */}
-          <div style={{ position: 'relative', zIndex: 1, marginBottom: 40 }}>
+          <div style={{ position: 'relative', zIndex: 1, marginBottom: 44 }}>
             <CapabilityCards
               onSelectTemplate={seedFromCard}
               onSelectWorkbook={(capabilityId) => {

@@ -1,9 +1,10 @@
-import { memo } from 'react';
-import { Sparkles, Bell, Library, Eye, Plus } from 'lucide-react';
+import { memo, useEffect, useState } from 'react';
+import { Sparkles, Bell, Library, Eye, Plus, Radio, RotateCcw } from 'lucide-react';
 import type { ViewState } from '../types';
 import { useWatchlistStore } from '../lib/watchlist/store';
 import { useUnreadCounts } from '../hooks/useUnreadCounts';
 import { useBriefingStore } from '../lib/research/briefingStore';
+import { getStoredAgentMode, onAgentModeUpdated, requestAgentMode, type AgentMode } from '../lib/agentMode';
 
 interface SidebarProps {
   currentView: ViewState;
@@ -29,11 +30,21 @@ const Sidebar = memo(function Sidebar({
   onViewChange,
   onOpenFeedForTarget,
 }: SidebarProps) {
+  const [agentMode, setAgentMode] = useState<AgentMode>(() => getStoredAgentMode());
   const targets = useWatchlistStore((s) => s.targets);
   const unread = useUnreadCounts(targets);
   const briefings = useBriefingStore((s) => s.briefings);
   const dossierCount = Object.keys(briefings).length;
   const feedUnread = targets.reduce((n, t) => n + (unread[t] ?? 0), 0);
+
+  useEffect(() => onAgentModeUpdated(setAgentMode), []);
+
+  const handleResetDemo = () => {
+    if (!window.confirm('Reset demo state?\n\nThis will clear generated tiles and reset analysis panels so you can rerun the investor flow cleanly.')) {
+      return;
+    }
+    window.dispatchEvent(new CustomEvent('reset-demo'));
+  };
 
   // Most recent dossiers for the sidebar rail.
   const recentDossiers = Object.entries(briefings)
@@ -161,15 +172,59 @@ const Sidebar = memo(function Sidebar({
         </button>
       </div>
 
-      {/* Engine status pill */}
-      <div className="px-5 py-4 border-t border-border">
-        <div className="flex items-center gap-2">
-          <span
-            className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"
-            aria-hidden="true"
-          />
-          <span className="text-xs text-textSecondary font-medium">Engine online</span>
+      {/* Mode controls and engine status */}
+      <div className="border-t border-border px-4 pb-4 pt-3">
+        <div className="flex items-center justify-between px-1 pb-2">
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-textTertiary">
+            Agent mode
+          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+            <span className="text-[11px] font-medium text-textSecondary">Engine online</span>
+          </div>
         </div>
+
+        <div className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-subtle p-1">
+          <button
+            type="button"
+            onClick={() => requestAgentMode('demo')}
+            className={`tactile rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+              agentMode === 'demo'
+                ? 'bg-surface text-textPrimary shadow-sm'
+                : 'text-textSecondary hover:text-textPrimary'
+            }`}
+            aria-label="Use demo mode (no API calls)"
+            aria-pressed={agentMode === 'demo'}
+          >
+            Demo
+          </button>
+          <button
+            type="button"
+            onClick={() => requestAgentMode('live')}
+            className={`tactile flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+              agentMode === 'live'
+                ? 'bg-success/15 text-success'
+                : 'text-textSecondary hover:text-textPrimary'
+            }`}
+            aria-label="Use live mode (real agent APIs)"
+            aria-pressed={agentMode === 'live'}
+          >
+            <Radio className="h-3.5 w-3.5" aria-hidden="true" />
+            Live
+          </button>
+        </div>
+
+        {agentMode === 'demo' && (
+          <button
+            type="button"
+            onClick={handleResetDemo}
+            className="tactile mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-textSecondary transition-colors hover:bg-subtle hover:text-textPrimary"
+            title="Reset demo (clear analysis state)"
+          >
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            Reset Demo
+          </button>
+        )}
       </div>
     </aside>
   );

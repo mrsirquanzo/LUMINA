@@ -62,11 +62,11 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
     <div className="w-full">
       {/* Composer shell - tall, calm, Science-Machine-style */}
       <div
-        className="relative bg-surface border border-border rounded-[16px] transition-all duration-200 focus-within:border-primary/50"
-        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 4px 16px rgba(15,23,42,.05)' }}
+        className="relative rounded-[18px] border border-[#D8E0EA] bg-surface transition-all duration-200 focus-within:border-primary/60 focus-within:ring-4 focus-within:ring-primary/[0.06]"
+        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 10px 28px rgba(15,23,42,.07)' }}
       >
         {/* Top-right utility icons */}
-        <div className="absolute top-3.5 right-4 flex items-center gap-3 text-textTertiary">
+        <div className="absolute right-5 top-5 flex items-center gap-3 text-textSecondary">
           <button type="button" aria-label="Expand" className="hover:text-textSecondary transition-colors">
             <Maximize2 className="w-[15px] h-[15px]" />
           </button>
@@ -82,14 +82,14 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
           onChange={(e) => handlePromptChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask Sonny to research a target, map a landscape, or analyze data..."
-          rows={3}
-          className="w-full bg-transparent text-textPrimary placeholder:text-textTertiary outline-none resize-none px-5 pt-[18px] pb-2"
-          style={{ font: '400 16px var(--font-sans, Geist, sans-serif)', minHeight: 132, lineHeight: 1.5 }}
+          rows={5}
+          className="w-full resize-none bg-transparent px-6 pb-3 pr-28 pt-6 text-textPrimary outline-none placeholder:text-textSecondary"
+          style={{ font: '400 18px var(--font-sans, Geist, sans-serif)', minHeight: 184, lineHeight: 1.55 }}
           autoFocus
         />
 
         {contextChip && (
-          <div className="px-5 pb-2">
+          <div className="px-6 pb-3">
             <span className="inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 font-mono text-[10px] tracking-[0.08em] text-textTertiary">
               {contextChip}
               <button
@@ -105,7 +105,7 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
         )}
 
         {/* Bottom control bar */}
-        <div className="flex items-center gap-2 px-4 pb-3.5 pt-1">
+        <div className="flex items-center gap-2 px-5 pb-4 pt-1">
           {/* Upload (coming soon) */}
           <span className="group relative inline-flex">
             <button

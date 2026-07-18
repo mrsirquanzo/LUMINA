@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Sidebar from './components/Sidebar';
-import Header from './components/Header';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
 import DossiersLibrary from './components/dossiers/DossiersLibrary';
@@ -27,7 +26,6 @@ export interface Notification {
 function AppContent() {
   const [currentView, setCurrentView] = useState<ViewState>('research');
   const [feedTarget, setFeedTarget] = useState<string | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [currentTarget, setCurrentTarget] = useState<TargetData | null>(null);
   const [isLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -110,8 +108,6 @@ function AppContent() {
         />
 
         <main className="flex-1 flex flex-col min-w-0">
-          <Header />
-
           <div
             id="main-content"
             className="flex-1 overflow-y-auto custom-scrollbar relative transition-all duration-300"
