@@ -86,6 +86,50 @@ export function CapabilityCards() {
       >
         What Sonny can do
       </h2>
+
+      {/* Feature card: real, grounded data analysis - shows the actual TROP2 output */}
+      <div
+        className="bg-surface border border-border rounded-[14px] p-[18px] mb-3.5 flex gap-5 items-center transition-all duration-200"
+        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget as HTMLDivElement;
+          el.style.boxShadow = '0 10px 30px rgba(15,23,42,.10), 0 2px 8px rgba(15,23,42,.05)';
+          el.style.transform = 'translateY(-2px)';
+          el.style.borderColor = '#C3D4F2';
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget as HTMLDivElement;
+          el.style.boxShadow = '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)';
+          el.style.transform = 'none';
+          el.style.borderColor = '';
+        }}
+      >
+        <span className="flex-1 min-w-0">
+          <span className="inline-flex items-center gap-1.5 mb-2" style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', color: '#1D4ED8' }}>
+            <span className="w-[6px] h-[6px] rounded-full inline-block" style={{ background: '#1D4ED8' }} />
+            NEW
+          </span>
+          <span className="block text-textPrimary font-semibold" style={{ fontSize: 15.5 }}>
+            Grounded data analysis
+          </span>
+          <span className="block text-textSecondary mt-1 leading-relaxed" style={{ fontSize: 12.5, maxWidth: '46ch' }}>
+            Sonny runs reviewed analyses in a hardened sandbox - DepMap dependency, GTEx normal-tissue expression,
+            tumor expression - and grounds every computed number to the dataset and the code that produced it.
+          </span>
+          <span className="inline-flex items-center gap-1.5 mt-2.5" style={{ fontSize: 11, fontWeight: 600, color: '#15803D' }}>
+            <span className="w-[7px] h-[7px] rounded-full inline-block flex-none" style={{ background: '#16A34A', boxShadow: '0 0 0 3px rgba(22,163,74,.16)' }} />
+            Available
+          </span>
+        </span>
+        <img
+          src="/trop2-analysis.png"
+          alt="TROP2 / TACSTD2 grounded analysis: DepMap dependency, tumor expression, GTEx normal tissue"
+          className="flex-none rounded-[10px] border border-border object-cover"
+          style={{ width: 280, height: 118, objectPosition: 'left top' }}
+          loading="lazy"
+        />
+      </div>
+
       <div className="grid grid-cols-2 gap-3.5">
         {CAPABILITIES.map((cap) => {
           const isAvailable = cap.status === 'available';

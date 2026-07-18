@@ -31,8 +31,18 @@ const Sidebar = memo(function Sidebar({
 }: SidebarProps) {
   const targets = useWatchlistStore((s) => s.targets);
   const unread = useUnreadCounts(targets);
-  const dossierCount = useBriefingStore((s) => Object.keys(s.briefings).length);
+  const briefings = useBriefingStore((s) => s.briefings);
+  const dossierCount = Object.keys(briefings).length;
   const feedUnread = targets.reduce((n, t) => n + (unread[t] ?? 0), 0);
+
+  // Most recent dossiers for the sidebar rail.
+  const recentDossiers = Object.entries(briefings)
+    .map(([runId, b]) => ({ runId, target: b.target ?? runId, verdict: (b.recommendation?.verdict ?? '').toUpperCase() }))
+    .slice(-6)
+    .reverse();
+
+  const verdictDot = (v: string) =>
+    v === 'GO' ? 'bg-go' : v === 'NO-GO' ? 'bg-nogo' : v === 'WATCH' ? 'bg-watch' : 'bg-textTertiary';
 
   return (
     <aside
@@ -48,7 +58,7 @@ const Sidebar = memo(function Sidebar({
       </div>
 
       {/* Nav items */}
-      <nav className="flex-1 py-3 px-3 space-y-0.5">
+      <nav className="py-3 px-3 space-y-0.5">
         {navItems.map(({ id, icon: Icon, label }) => {
           const isActive = currentView === id;
           return (
@@ -82,8 +92,37 @@ const Sidebar = memo(function Sidebar({
         })}
       </nav>
 
+      {/* Recent dossiers rail - fills the space, gives quick access */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 custom-scrollbar">
+        {recentDossiers.length > 0 && (
+          <>
+            <div className="px-3 py-1.5">
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-textTertiary">
+                Recent dossiers
+              </span>
+            </div>
+            <div className="space-y-0.5">
+              {recentDossiers.map(({ runId, target, verdict }) => (
+                <button
+                  key={runId}
+                  onClick={() => onViewChange('dossiers')}
+                  className="tactile w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors duration-150"
+                  title={`${target}${verdict ? ` - ${verdict}` : ''}`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full flex-none ${verdictDot(verdict)}`} aria-hidden="true" />
+                  <span className="text-xs font-medium truncate leading-relaxed flex-1 text-left">{target}</span>
+                  {verdict && (
+                    <span className="flex-none font-mono text-[9px] uppercase tracking-[0.08em] text-textTertiary">{verdict}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
       {/* Watchlist section */}
-      <div className="px-3 pb-2">
+      <div className="px-3 pb-2 border-t border-border pt-2">
         {/* Section header */}
         <div className="flex items-center justify-between px-3 py-1.5">
           <span className="text-[11px] font-semibold tracking-wider uppercase text-textTertiary">
