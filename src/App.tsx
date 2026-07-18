@@ -3,8 +3,9 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import Sidebar from './components/Sidebar';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
-import DossiersLibrary from './components/dossiers/DossiersLibrary';
 import WatchlistView from './components/watchlist/WatchlistView';
+import ProjectWorkspace from './components/projects/ProjectWorkspace';
+import { WorkbookRun } from './components/research/workbook/WorkbookRun';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import SearchModal from './components/SearchModal';
 import SettingsModal from './components/SettingsModal';
@@ -13,6 +14,9 @@ import SkipLink from './components/SkipLink';
 import { TargetProvider, type TargetData } from './contexts/TargetContext';
 import { useToast } from './hooks/useToast';
 import { type ViewState } from './types';
+import { DEFAULT_PROJECTS, useProjectStore } from './lib/projects/store';
+import { getWorkbookScenario } from './lib/workbook/scenarios';
+import type { WorkbookRun as WorkbookRunData } from './lib/workbook/types';
 
 
 export interface Notification {
@@ -25,13 +29,32 @@ export interface Notification {
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<ViewState>('research');
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [workspaceWorkbook, setWorkspaceWorkbook] = useState<WorkbookRunData | null>(null);
   const [feedTarget, setFeedTarget] = useState<string | null>(null);
   const [currentTarget, setCurrentTarget] = useState<TargetData | null>(null);
   const [isLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const openFeedForTarget = (target?: string) => { setFeedTarget(target ?? null); setCurrentView('feed'); };
+  const openFeedForTarget = (target?: string) => {
+    setWorkspaceWorkbook(null);
+    setFeedTarget(target ?? null);
+    setCurrentView('feed');
+  };
+  const changeView = (view: ViewState) => {
+    setWorkspaceWorkbook(null);
+    setCurrentView(view);
+  };
+  const openProject = (projectId: string) => {
+    setWorkspaceWorkbook(null);
+    setSelectedProjectId(projectId);
+    setCurrentView('project');
+  };
   const toast = useToast();
+
+  useEffect(() => {
+    useProjectStore.getState().seedIfEmpty(DEFAULT_PROJECTS);
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -103,8 +126,10 @@ function AppContent() {
       <div className="flex h-screen bg-background text-textPrimary overflow-hidden">
         <Sidebar
           currentView={currentView}
-          onViewChange={setCurrentView}
+          onViewChange={changeView}
           onOpenFeedForTarget={openFeedForTarget}
+          selectedProjectId={selectedProjectId}
+          onOpenProject={openProject}
         />
 
         <main className="flex-1 flex flex-col min-w-0">
@@ -119,23 +144,31 @@ function AppContent() {
             <div className="min-h-full relative z-10 p-4 md:p-6 pb-20 w-full">
               {isLoading && <DashboardSkeleton />}
 
-              {currentView === 'feed' && (
+              {workspaceWorkbook ? (
+                <WorkbookRun run={workspaceWorkbook} onBack={() => setWorkspaceWorkbook(null)} />
+              ) : currentView === 'feed' && (
                 <Suspense fallback={<DashboardSkeleton />}>
                   <IntelligenceFeed initialTarget={feedTarget ?? undefined} />
                 </Suspense>
               )}
 
-              {currentView === 'research' && (
+              {!workspaceWorkbook && currentView === 'research' && (
                 <Suspense fallback={<DashboardSkeleton />}>
                   <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => openFeedForTarget()} />
                 </Suspense>
               )}
 
-              {currentView === 'dossiers' && (
-                <DossiersLibrary onOpenSonny={() => setCurrentView('research')} />
+              {!workspaceWorkbook && currentView === 'project' && selectedProjectId && (
+                <ProjectWorkspace
+                  projectId={selectedProjectId}
+                  onOpenWorkbook={(capability, scenarioId) => {
+                    const workbook = getWorkbookScenario(capability, scenarioId);
+                    if (workbook) setWorkspaceWorkbook(workbook);
+                  }}
+                />
               )}
 
-              {currentView === 'watchlist' && (
+              {!workspaceWorkbook && currentView === 'watchlist' && (
                 <WatchlistView onViewInFeed={openFeedForTarget} />
               )}
             </div>

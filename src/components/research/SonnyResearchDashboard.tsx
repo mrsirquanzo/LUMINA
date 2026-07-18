@@ -7,19 +7,8 @@ import type { ResearchTemplate } from './CapabilityCards';
 import LatestSignals from './LatestSignals';
 import { DeepResearchRun } from './DeepResearchRun';
 import { WorkbookRun } from './workbook/WorkbookRun';
-import comboScenarioData from '../../lib/workbook/comboScenario.json';
-import flowScenarioData from '../../lib/workbook/flowScenario.json';
-import westernScenarioData from '../../lib/workbook/westernScenario.json';
+import { getWorkbookByCapability } from '../../lib/workbook/scenarios';
 import type { WorkbookRun as WorkbookRunData } from '../../lib/workbook/types';
-
-const FLOW_SCENARIO = flowScenarioData as WorkbookRunData;
-const COMBO_SCENARIO = comboScenarioData as WorkbookRunData;
-const WESTERN_SCENARIO = westernScenarioData as WorkbookRunData;
-const WORKBOOKS: Record<string, WorkbookRunData> = {
-  [COMBO_SCENARIO.capability]: COMBO_SCENARIO,
-  [FLOW_SCENARIO.capability]: FLOW_SCENARIO,
-  [WESTERN_SCENARIO.capability]: WESTERN_SCENARIO,
-};
 
 interface SonnyResearchDashboardProps {
   initialQuery?: string;
@@ -75,7 +64,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
             <CapabilityCards
               onSelectTemplate={seedFromCard}
               onSelectWorkbook={(capabilityId) => {
-                const workbook = WORKBOOKS[capabilityId];
+                const workbook = getWorkbookByCapability(capabilityId);
                 if (workbook) setSelectedWorkbook(workbook);
               }}
             />

@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import {
   Bell,
   ChevronRight,
-  Library,
   Plus,
   Radio,
   RotateCcw,
@@ -11,15 +10,17 @@ import {
   X,
 } from 'lucide-react';
 import type { ViewState } from '../types';
-import { DEFAULT_PROJECT_ICON, useWatchlistStore, type WatchlistProject } from '../lib/watchlist/store';
+import { useWatchlistStore } from '../lib/watchlist/store';
+import { useProjectStore, type Project } from '../lib/projects/store';
 import { useUnreadCounts } from '../hooks/useUnreadCounts';
-import { useBriefingStore } from '../lib/research/briefingStore';
 import { getStoredAgentMode, onAgentModeUpdated, requestAgentMode, type AgentMode } from '../lib/agentMode';
 
 interface SidebarProps {
   currentView: ViewState;
   onViewChange: (v: ViewState) => void;
   onOpenFeedForTarget?: (target?: string) => void;
+  selectedProjectId?: string | null;
+  onOpenProject: (projectId: string) => void;
 }
 
 interface NavItem {
@@ -41,7 +42,6 @@ interface EmojiGroup {
 const navItems: NavItem[] = [
   { id: 'research', icon: Sparkles, label: 'Sonny' },
   { id: 'feed', icon: Bell, label: 'News Feed' },
-  { id: 'dossiers', icon: Library, label: 'Reports' },
 ];
 
 const EMOJI_GROUPS: EmojiGroup[] = [
@@ -108,7 +108,7 @@ function EmojiPicker({
   anchor,
   onClose,
 }: {
-  project: WatchlistProject;
+  project: Project;
   anchor: DOMRect;
   onClose: () => void;
 }) {
@@ -154,7 +154,7 @@ function EmojiPicker({
       className="fixed z-[60] flex w-72 flex-col overflow-hidden rounded-xl border border-border bg-white shadow-[0_16px_48px_rgba(15,23,42,.16),0_2px_8px_rgba(15,23,42,.08)]"
       style={{ left, top, maxHeight: height }}
       role="dialog"
-      aria-label={`Choose an icon for ${project.target}`}
+      aria-label={`Choose an icon for ${project.name}`}
     >
       <div className="border-b border-border p-2.5">
         <input
@@ -176,7 +176,7 @@ function EmojiPicker({
                   key={`${group.label}-${option.emoji}`}
                   type="button"
                   onClick={() => {
-                    useWatchlistStore.getState().setIcon(project.id, option.emoji);
+                    useProjectStore.getState().setIcon(project.id, option.emoji);
                     onClose();
                   }}
                   className={`emoji-glyph flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${project.icon === option.emoji ? 'bg-primary/[0.08]' : ''}`}
@@ -197,18 +197,16 @@ function EmojiPicker({
   );
 }
 
-const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedForTarget }: SidebarProps) {
+const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedForTarget, selectedProjectId, onOpenProject }: SidebarProps) {
   const [agentMode, setAgentMode] = useState<AgentMode>(() => getStoredAgentMode());
   const [projectsOpen, setProjectsOpen] = useState(true);
   const [picker, setPicker] = useState<{ projectId: string; anchor: DOMRect } | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const editInputRef = useRef<HTMLInputElement>(null);
-  const projects = useWatchlistStore((state) => state.projects);
+  const projects = useProjectStore((state) => state.projects);
   const targets = useWatchlistStore((state) => state.targets);
   const unread = useUnreadCounts(targets);
-  const briefings = useBriefingStore((state) => state.briefings);
-  const dossierCount = Object.keys(briefings).length;
   const feedUnread = targets.reduce((count, target) => count + (unread[target] ?? 0), 0);
   const activePickerProject = picker ? projects.find((project) => project.id === picker.projectId) : undefined;
 
@@ -220,25 +218,13 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
     window.dispatchEvent(new CustomEvent('reset-demo'));
   };
 
-  const recentDossiers = Object.entries(briefings)
-    .map(([runId, briefing]) => ({
-      runId,
-      target: briefing.target ?? runId,
-      verdict: (briefing.recommendation?.verdict ?? '').toUpperCase(),
-    }))
-    .slice(-5)
-    .reverse();
-
-  const verdictDot = (verdict: string) =>
-    verdict === 'GO' ? 'bg-go' : verdict === 'NO-GO' ? 'bg-nogo' : verdict === 'WATCH' ? 'bg-watch' : 'bg-textTertiary';
-
-  const startRename = (project: WatchlistProject) => {
+  const startRename = (project: Project) => {
     setEditingId(project.id);
-    setEditingName(project.target);
+    setEditingName(project.name);
   };
 
   const commitRename = () => {
-    if (editingId && editingName.trim()) useWatchlistStore.getState().rename(editingId, editingName);
+    if (editingId && editingName.trim()) useProjectStore.getState().rename(editingId, editingName);
     setEditingId(null);
   };
 
@@ -251,13 +237,16 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
   };
 
   const addProject = () => {
-    const existing = new Set(projects.map((project) => project.target.toLowerCase()));
+    const existing = new Set(projects.map((project) => project.name.toLowerCase()));
     let index = 1;
     let name = 'Untitled project';
     while (existing.has(name.toLowerCase())) name = `Untitled project ${++index}`;
-    useWatchlistStore.getState().add(name, DEFAULT_PROJECT_ICON);
-    const created = useWatchlistStore.getState().projects.find((project) => project.target === name);
-    if (created) startRename(created);
+    useProjectStore.getState().add(name);
+    const created = useProjectStore.getState().projects.find((project) => project.name === name);
+    if (created) {
+      startRename(created);
+      onOpenProject(created.id);
+    }
     setProjectsOpen(true);
   };
 
@@ -285,34 +274,12 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
               <Icon className="h-4 w-4 flex-none opacity-80" strokeWidth={1.75} aria-hidden="true" />
               <span className="t-body-sm min-w-0 flex-1 truncate font-medium">{label}</span>
               {id === 'feed' && feedUnread > 0 && <span className="t-meta tabular-nums text-primary">{feedUnread}</span>}
-              {id === 'dossiers' && dossierCount > 0 && <span className="t-meta tabular-nums text-primary">{dossierCount}</span>}
             </button>
           );
         })}
       </nav>
 
       <div className="custom-scrollbar min-h-0 flex-1 overflow-y-auto px-2 pb-3">
-        {recentDossiers.length > 0 && (
-          <section className="mb-3" aria-labelledby="recent-reports-label">
-            <p id="recent-reports-label" className="t-eyebrow px-2.5 pb-1 pt-2 text-textTertiary">Recent reports</p>
-            <div className="space-y-0.5">
-              {recentDossiers.map(({ runId, target, verdict }) => (
-                <button
-                  key={runId}
-                  type="button"
-                  onClick={() => onViewChange('dossiers')}
-                  className="tactile flex min-h-[30px] w-full items-center gap-2 rounded-md px-2.5 py-1 text-textSecondary transition-colors hover:bg-[rgba(15,23,42,.05)] hover:text-textPrimary"
-                  title={`${target}${verdict ? ` - ${verdict}` : ''}`}
-                >
-                  <span className={`h-1.5 w-1.5 flex-none rounded-full ${verdictDot(verdict)}`} aria-hidden="true" />
-                  <span className="t-body-sm min-w-0 flex-1 truncate text-left font-medium">{target}</span>
-                  {verdict && <span className="t-eyebrow flex-none text-textTertiary">{verdict}</span>}
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
-
         <section aria-labelledby="projects-label">
           <button
             type="button"
@@ -330,13 +297,14 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="group/project flex min-h-[30px] items-center gap-1 rounded-md px-1.5 text-textSecondary transition-colors hover:bg-[rgba(15,23,42,.05)] hover:text-textPrimary"
+                  className={`group/project relative flex min-h-[30px] items-center gap-1 rounded-md px-1.5 transition-colors ${currentView === 'project' && selectedProjectId === project.id ? 'bg-primary/[0.07] text-primary' : 'text-textSecondary hover:bg-[rgba(15,23,42,.05)] hover:text-textPrimary'}`}
                 >
+                  {currentView === 'project' && selectedProjectId === project.id && <span className="absolute inset-y-1 left-0 w-0.5 rounded-r bg-primary" aria-hidden="true" />}
                   <button
                     type="button"
                     onClick={(event) => setPicker({ projectId: project.id, anchor: event.currentTarget.getBoundingClientRect() })}
                     className="emoji-glyph flex h-7 w-7 flex-none items-center justify-center rounded-md transition-colors hover:bg-black/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
-                    aria-label={`Change icon for ${project.target}`}
+                    aria-label={`Change icon for ${project.name}`}
                     title="Change icon"
                   >
                     {project.icon}
@@ -355,23 +323,19 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
                   ) : (
                     <button
                       type="button"
-                      onClick={() => onOpenFeedForTarget ? onOpenFeedForTarget(project.target) : onViewChange('feed')}
+                      onClick={() => onOpenProject(project.id)}
                       onDoubleClick={() => startRename(project)}
                       className="t-body-sm min-w-0 flex-1 truncate py-1 text-left font-medium"
-                      title={`${project.target}. Double-click to rename.`}
+                      title={`${project.name}. Double-click to rename.`}
                     >
-                      {project.target}
+                      {project.name}
                     </button>
-                  )}
-
-                  {unread[project.target] > 0 && editingId !== project.id && (
-                    <span className="t-meta flex-none tabular-nums text-primary group-hover/project:hidden">{unread[project.target]}</span>
                   )}
                   <button
                     type="button"
-                    onClick={() => useWatchlistStore.getState().remove(project.id)}
+                    onClick={() => useProjectStore.getState().remove(project.id)}
                     className="hidden h-7 w-7 flex-none items-center justify-center rounded-md text-textTertiary transition-colors hover:bg-black/[0.06] hover:text-textPrimary focus:flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 group-hover/project:flex"
-                    aria-label={`Remove ${project.target}`}
+                    aria-label={`Remove ${project.name}`}
                     title="Remove project"
                   >
                     <X className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />

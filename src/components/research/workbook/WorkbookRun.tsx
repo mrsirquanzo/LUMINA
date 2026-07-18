@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowLeft, FileChartColumn, Microscope, RotateCcw } from 'lucide-react';
+import { ArrowLeft, FileChartColumn, Microscope, Pin, RotateCcw } from 'lucide-react';
 import type { WorkbookRun as WorkbookRunData } from '../../../lib/workbook/types';
 import { useWorkbookReplay, type WorkbookPhase } from '../../../lib/workbook/replayDriver';
+import { useProjectStore, type ProjectExperiment } from '../../../lib/projects/store';
 import { AnalysisPlan } from './AnalysisPlan';
 import { AssumptionsPanel } from './AssumptionsPanel';
 import { ReasoningTrail } from './ReasoningTrail';
@@ -28,12 +29,30 @@ function getReportTitle(capability: string) {
   return 'Analysis report';
 }
 
+function getProjectExperiment(run: WorkbookRunData): ProjectExperiment {
+  if (run.capability === 'western-blot') {
+    return { id: 'western', label: 'Western blot densitometry', capability: run.capability, scenarioId: 'western-blot' };
+  }
+  if (run.capability === 'flow-cytometry') {
+    return { id: 'flow', label: 'Flow cytometry gating', capability: run.capability, scenarioId: 'flow' };
+  }
+  if (run.capability === 'combination-screening') {
+    return { id: 'combo', label: 'Synergy screen', capability: run.capability, scenarioId: 'combination-screening' };
+  }
+  return { id: run.id, label: run.title, capability: run.capability, scenarioId: run.id };
+}
+
 function WorkbookRunContent({ run, onBack }: WorkbookRunProps) {
   const replay = useWorkbookReplay(run);
   const gating = useGating();
   const { accept, reset } = replay;
   const defaultSynergyModel = run.clarifications.find((clarification) => clarification.id === 'model')?.default ?? 'Bliss independence';
   const [selectedSynergyModel, setSelectedSynergyModel] = useState(defaultSynergyModel);
+  const [pinProjectId, setPinProjectId] = useState('');
+  const projects = useProjectStore((state) => state.projects);
+  const experiment = getProjectExperiment(run);
+  const selectedProject = projects.find((project) => project.id === pinProjectId);
+  const alreadyPinned = selectedProject?.experiments.some((item) => item.id === experiment.id) ?? false;
   const resetReplay = useCallback(() => {
     setSelectedSynergyModel(defaultSynergyModel);
     gating?.resetGates();
@@ -149,6 +168,31 @@ function WorkbookRunContent({ run, onBack }: WorkbookRunProps) {
                 <p className="t-meta mt-1.5 text-textSecondary">{run.file.panel}</p>
               </div>
             </div>
+            {replay.phase === 'done' && projects.length > 0 && (
+              <div className="mt-5 border-t border-border pt-4">
+                <div className="flex items-center gap-1.5 text-textTertiary">
+                  <Pin className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  <p className="t-eyebrow">Pin to project</p>
+                </div>
+                <select
+                  value={pinProjectId}
+                  onChange={(event) => setPinProjectId(event.target.value)}
+                  className="t-meta mt-2.5 h-9 w-full rounded-lg border border-border bg-white px-2.5 text-textSecondary outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
+                  aria-label="Project for this experiment"
+                >
+                  <option value="">Choose a project</option>
+                  {projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}
+                </select>
+                <button
+                  type="button"
+                  disabled={!pinProjectId || alreadyPinned}
+                  onClick={() => useProjectStore.getState().pinExperiment(pinProjectId, experiment)}
+                  className="quiet-action t-meta mt-2 w-full rounded-lg border border-border bg-white px-3 py-2 font-semibold text-primary disabled:cursor-not-allowed disabled:text-textTertiary disabled:opacity-60"
+                >
+                  {alreadyPinned ? 'Already pinned' : 'Pin experiment'}
+                </button>
+              </div>
+            )}
           </aside>
         </div>
       </div>
