@@ -137,11 +137,15 @@ export const useWatchlistStore = create<WatchlistStore>()((set, get) => ({
       persist(projects);
       return stateFor(projects);
     }),
-  seedIfEmpty: (defaults) =>
-    set(() => {
-      if (get().projects.length > 0) return {};
-      const projects = normalizeProjects(defaults).slice(-CAP);
-      persist(projects);
-      return stateFor(projects);
-    }),
+  seedIfEmpty: (defaults) => {
+    // Guard BEFORE calling set: zustand notifies subscribers on every set(),
+    // even a no-op merge, so returning {} from inside set() still forces a
+    // re-render. Because this runs inside an effect, that extra render can feed
+    // a render->set->render loop. Only touch state when we actually seed.
+    if (get().projects.length > 0) return;
+    const projects = normalizeProjects(defaults).slice(-CAP);
+    if (projects.length === 0) return;
+    persist(projects);
+    set(stateFor(projects));
+  },
 }));
