@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Zap, Clock, Upload } from 'lucide-react';
+import { Plus, AtSign, Maximize2, HelpCircle, ArrowRight } from 'lucide-react';
 
 interface ResearchComposerProps {
   onStart: (target: string, mode: 'fast' | 'thorough') => void;
@@ -10,156 +10,108 @@ const EXAMPLE_CHIPS = ['CDCP1', 'TROP2', 'KRAS G12C'];
 
 export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProps) {
   const [target, setTarget] = useState(initialQuery ?? '');
-  const [mode, setMode] = useState<'fast' | 'thorough'>('fast');
-  // Sync initialQuery if parent passes one
+
   useEffect(() => {
     if (initialQuery) setTarget(initialQuery);
   }, [initialQuery]);
 
+  const canRun = target.trim().length > 0;
   const handleStart = () => {
     const trimmed = target.trim();
     if (!trimmed) return;
-    onStart(trimmed, mode);
+    onStart(trimmed, 'fast');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleStart();
+  // Enter submits; Shift+Enter inserts a newline.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleStart();
+    }
   };
 
   return (
     <div className="w-full">
-      {/* Radial atmosphere behind composer */}
+      {/* Composer shell - tall, calm, Science-Machine-style */}
       <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 760,
-          height: 220,
-          background: 'radial-gradient(ellipse at center, rgba(29,78,216,.07), transparent 68%)',
-          filter: 'blur(8px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
-      {/* Composer shell - liquid-glass gradient border */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          background: 'linear-gradient(120deg,rgba(29,78,216,.55),rgba(29,78,216,.12) 60%,rgba(29,78,216,.04))',
-          padding: '1.5px',
-          borderRadius: 17,
-          boxShadow: '0 0 0 4px rgba(29,78,216,.10), 0 6px 22px rgba(15,23,42,.06)',
-        }}
+        className="relative bg-surface border border-border rounded-[16px] transition-all duration-200 focus-within:border-primary/50"
+        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 4px 16px rgba(15,23,42,.05)' }}
       >
-        <div className="bg-surface rounded-[15.5px]">
-          {/* Input row */}
-          <div className="flex items-center gap-3 px-3 py-2.5">
-            {/* Disabled upload button with hover tooltip */}
-            <span className="group relative inline-flex flex-none">
-              <button
-                type="button"
-                disabled
-                aria-label="Upload document (coming soon)"
-                className="w-[42px] h-[42px] flex items-center justify-center rounded-[11px] bg-subtle border border-border text-textSecondary cursor-not-allowed opacity-60"
-              >
-                <Upload className="w-[19px] h-[19px]" />
-              </button>
-              <span
-                role="tooltip"
-                className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-ink text-white text-xs font-medium whitespace-nowrap z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-                style={{ boxShadow: '0 4px 12px rgba(15,23,42,.22)' }}
-              >
-                Coming soon
-                <span
-                  aria-hidden="true"
-                  className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink"
-                />
-              </span>
-            </span>
+        {/* Top-right utility icons */}
+        <div className="absolute top-3.5 right-4 flex items-center gap-3 text-textTertiary">
+          <button type="button" aria-label="Expand" className="hover:text-textSecondary transition-colors">
+            <Maximize2 className="w-[15px] h-[15px]" />
+          </button>
+          <button type="button" aria-label="Help" className="hover:text-textSecondary transition-colors">
+            <HelpCircle className="w-[16px] h-[16px]" />
+          </button>
+        </div>
 
-            {/* Text input */}
-            <input
-              type="text"
-              value={target}
-              onChange={(e) => setTarget(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="What should Sonny research?"
-              className="flex-1 bg-transparent text-textPrimary placeholder:text-textTertiary outline-none"
-              style={{ font: '400 17px var(--font-sans, Geist, sans-serif)', padding: '13px 0' }}
-              autoFocus
-            />
+        {/* Prompt textarea */}
+        <textarea
+          value={target}
+          onChange={(e) => setTarget(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Ask Sonny to research a target, map a landscape, or analyze data..."
+          rows={3}
+          className="w-full bg-transparent text-textPrimary placeholder:text-textTertiary outline-none resize-none px-5 pt-[18px] pb-2"
+          style={{ font: '400 16px var(--font-sans, Geist, sans-serif)', minHeight: 132, lineHeight: 1.5 }}
+          autoFocus
+        />
 
-            {/* Enter hint */}
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-textSecondary" style={{ fontSize: 11, fontWeight: 500, flexShrink: 0 }}>
-              <kbd className="border border-border rounded px-1.5 py-0.5 text-textSecondary bg-surface font-semibold" style={{ fontSize: 11 }}>
-                &#8629;
-              </kbd>
-              to run
-            </span>
-          </div>
-
-          {/* Mode toggle + run button row */}
-          <div className="flex items-center gap-3 px-3 pb-3">
-            {/* Mode toggle */}
-            <div className="flex gap-0.5 bg-subtle border border-border rounded-lg p-0.5">
-              <button
-                type="button"
-                onClick={() => setMode('fast')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  mode === 'fast'
-                    ? 'bg-white border border-border text-textPrimary shadow-sm'
-                    : 'text-textSecondary hover:text-textPrimary'
-                }`}
-              >
-                <Zap className="w-3.5 h-3.5" />
-                Fast
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode('thorough')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  mode === 'thorough'
-                    ? 'bg-white border border-border text-textPrimary shadow-sm'
-                    : 'text-textSecondary hover:text-textPrimary'
-                }`}
-              >
-                <Clock className="w-3.5 h-3.5" />
-                Thorough
-              </button>
-            </div>
-
-            {/* Run button - tactile */}
+        {/* Bottom control bar */}
+        <div className="flex items-center gap-2 px-4 pb-3.5 pt-1">
+          {/* Upload (coming soon) */}
+          <span className="group relative inline-flex">
             <button
               type="button"
-              onClick={handleStart}
-              disabled={!target.trim()}
-              className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-[9px] text-white text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{
-                background: 'rgb(29 78 216)',
-                boxShadow: '0 1px 2px rgba(29,78,216,.35)',
-              }}
-              onMouseEnter={(e) => {
-                if (!target.trim()) return;
-                (e.currentTarget as HTMLButtonElement).style.background = 'rgb(30 64 175)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = 'rgb(29 78 216)';
-              }}
+              disabled
+              aria-label="Upload data (coming soon)"
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-border text-textSecondary cursor-not-allowed opacity-70"
             >
-              <Search className="w-4 h-4" />
-              Research
+              <Plus className="w-[18px] h-[18px]" />
             </button>
-          </div>
+            <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 rounded-lg bg-ink text-white text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+              Upload - coming soon
+            </span>
+          </span>
+
+          {/* Reference / mention (coming soon) */}
+          <span className="group relative inline-flex">
+            <button
+              type="button"
+              disabled
+              aria-label="Reference files (coming soon)"
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-border text-textSecondary cursor-not-allowed opacity-70"
+            >
+              <AtSign className="w-[16px] h-[16px]" />
+            </button>
+            <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 rounded-lg bg-ink text-white text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+              Reference files - coming soon
+            </span>
+          </span>
+
+          {/* Circular submit */}
+          <button
+            type="button"
+            onClick={handleStart}
+            disabled={!canRun}
+            aria-label="Run"
+            className="ml-auto w-10 h-10 flex items-center justify-center rounded-full text-white transition-all disabled:cursor-not-allowed"
+            style={{
+              background: canRun ? 'rgb(29 78 216)' : '#CBD5E1',
+              boxShadow: canRun ? '0 1px 3px rgba(29,78,216,.4)' : 'none',
+            }}
+            onMouseEnter={(e) => { if (canRun) (e.currentTarget as HTMLButtonElement).style.background = 'rgb(30 64 175)'; }}
+            onMouseLeave={(e) => { if (canRun) (e.currentTarget as HTMLButtonElement).style.background = 'rgb(29 78 216)'; }}
+          >
+            <ArrowRight className="w-[18px] h-[18px]" />
+          </button>
         </div>
       </div>
 
       {/* Example chips */}
-      <div className="flex items-center gap-2 mt-3.5 flex-wrap" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="flex items-center gap-2 mt-3.5 flex-wrap">
         <span className="text-textSecondary font-medium" style={{ fontSize: 11 }}>Quick target</span>
         {EXAMPLE_CHIPS.map((chip) => (
           <button
