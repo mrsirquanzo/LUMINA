@@ -1414,13 +1414,12 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
   }, [autoDigestKey, data, lastAutoDigestKey]);
 
   return (
-    <section className="relative max-w-6xl mx-auto">
+    <section className="relative mx-auto max-w-6xl">
       {/* Outer rounded container (matches dashboard section styling) */}
-      <div className="relative overflow-hidden rounded-3xl border border-border bg-surface shadow-2xl shadow-black/10">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(29,78,216,0.08),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(29,78,216,0.05),transparent_40%)]" />
+      <div className="surface-card relative overflow-hidden">
         <div className="relative">
       {/* Sticky glass header */}
-      <header className="sticky top-0 z-40 glass border-b border-border">
+      <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-xl">
         <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
@@ -1446,21 +1445,21 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
             <div className="relative shrink-0">
                 <button
                   onClick={() => setShowExportMenu((v) => !v)}
-                  className="p-2.5 rounded-xl border border-border text-textSecondary hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  className="icon-action h-10 w-10"
                   title="Feed options"
                   aria-label="Feed options"
                 >
                   <MoreHorizontal className="w-5 h-5" />
                 </button>
                 {showExportMenu && (
-                  <div className="absolute z-50 right-0 top-full mt-2 w-64 bg-surface rounded-xl shadow-xl overflow-hidden border border-border">
+                  <div className="surface-card absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden">
                     <button
                       type="button"
                       onClick={() => {
                         setShowExportMenu(false);
                         exportFeedCsv();
                       }}
-                      className="t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle"
+                      className="quiet-action t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle"
                     >
                       Export feed (.csv)
                     </button>
@@ -1471,7 +1470,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         setShowExportMenu(false);
                         exportDigest();
                       }}
-                      className="t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle disabled:opacity-50"
+                      className="quiet-action t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle disabled:opacity-50"
                     >
                       Export Sonny digest (.md)
                     </button>
@@ -1479,7 +1478,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                     <button
                       type="button"
                       onClick={() => setCuratedOnly(!isCuratedOnly)}
-                      className="t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
+                      className="quiet-action t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
                     >
                       {isCuratedOnly ? 'Use all live sources' : 'Use curated live sources'}
                     </button>
@@ -1491,7 +1490,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           clearHiddenItems();
                           setShowExportMenu(false);
                         }}
-                        className="t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
+                        className="quiet-action t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
                       >
                         Restore hidden items
                       </button>
@@ -1505,8 +1504,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
         {/* Target selector + search */}
         <div className="px-6 py-4">
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)] lg:items-end">
-            <nav aria-label="Intelligence subscriptions" className="space-y-3 min-w-0">
-              <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3">
+            <nav aria-label="Intelligence subscriptions" className="min-w-0 space-y-2">
+              <div className="surface-inset grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3 border-transparent bg-subtle/60 px-3 py-2.5">
                 <span className="t-eyebrow text-textTertiary">Targets</span>
                 <div className="flex items-center gap-2 flex-wrap">
                   {trackedTargetSubscriptions.map((subscription) => {
@@ -1530,7 +1529,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   })}
                 </div>
               </div>
-              <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3">
+              <div className="surface-inset grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3 border-transparent bg-subtle/60 px-3 py-2.5">
                 <span className="t-eyebrow text-textTertiary">Topics</span>
                 <div className="flex items-center gap-2 flex-wrap">
                   {trackedTopicSubscriptions.map((subscription) => {
@@ -1568,13 +1567,13 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                     }
                   }}
                   placeholder="Add a target or topic"
-                  className="t-body w-full rounded-xl border border-border bg-subtle py-2.5 pl-10 pr-20 text-textPrimary placeholder:text-textTertiary focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="quiet-action t-body w-full rounded-[10px] border border-border bg-white py-2.5 pl-10 pr-20 text-textPrimary placeholder:text-textTertiary hover:border-primary/20 focus:border-primary/40 focus:outline-none"
                 />
                 {feedSearchInput ? (
                   <button
                     type="button"
                     onClick={() => setFeedSearchInput('')}
-                    className="absolute right-14 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-textSecondary hover:text-textPrimary hover:bg-subtle"
+                    className="quiet-action absolute right-14 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-textSecondary hover:bg-subtle hover:text-primary"
                     aria-label="Clear search"
                   >
                     <X className="w-4 h-4" />
@@ -1584,7 +1583,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   type="button"
                   onClick={() => submitFeedSearch()}
                   disabled={!feedSearchInput.trim()}
-                  className="t-meta absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-subtle px-3 py-1.5 font-semibold text-textPrimary hover:bg-subtle disabled:opacity-50"
+                  className="quiet-action t-meta absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-subtle px-3 py-1.5 font-semibold text-textSecondary hover:bg-primary/[0.06] hover:text-primary disabled:opacity-50"
                 >
                   Add
                 </button>
@@ -1593,7 +1592,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
           </div>
 
           <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="inline-flex w-fit items-center gap-1 p-1 rounded-xl bg-subtle" aria-label="Source filter">
+            <div className="surface-inset inline-flex w-fit items-center gap-1 border-transparent p-1" aria-label="Source filter">
               {sourceFilterOptions.map((option) => (
                 <button
                   key={option}
@@ -1637,11 +1636,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
         </div>
       ) : null}
 
-      <main className="px-6 py-8 space-y-6">
-        <section aria-labelledby="sonny-read-heading" className="relative overflow-hidden rounded-2xl border border-primary/20 bg-primary/[0.035] p-5">
-          <div className="absolute left-0 top-0 h-full w-1 bg-primary" aria-hidden="true" />
+      <main className="space-y-6 px-6 py-8">
+        <section aria-labelledby="sonny-read-heading" className="surface-card relative overflow-hidden border-primary/15 bg-primary/[0.025] p-5">
           <div className="flex items-start gap-4">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-primary/15 bg-white text-primary shadow-card">
               <Sparkles className="w-4 h-4 text-primary" />
             </div>
             <div className="min-w-0 flex-1">
@@ -1685,7 +1683,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
           </div>
 
           {isError ? (
-            <div className="rounded-2xl border border-border bg-subtle p-6">
+            <div className="surface-inset p-6">
               <p className="t-h3 mb-1 text-textPrimary">No monitored sources are available for this selection yet.</p>
               <p className="t-body text-textSecondary">
                 {error instanceof Error ? error.message : 'The monitor will update automatically when a grounded source is available.'}
@@ -1751,17 +1749,14 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   <article
                     key={item.id}
                     className={[
-                      'group border rounded-2xl overflow-hidden',
-                      'shadow-[0_1px_2px_rgba(15,23,42,.04),0_2px_8px_rgba(15,23,42,.035)]',
-                      'transition-all duration-200',
-                      'hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(15,23,42,.10),0_2px_8px_rgba(15,23,42,.05)]',
-                      'active:translate-y-0 motion-reduce:hover:translate-y-0 motion-reduce:transition-none',
+                      'surface-card surface-card-interactive group overflow-hidden',
+                      'motion-reduce:hover:translate-y-0 motion-reduce:transition-none',
                       pinned
                         ? 'border-primary/30 ring-1 ring-primary/10 bg-white hover:border-primary/40'
                         : 'border-border bg-white hover:border-primary/30',
                     ].join(' ')}
                   >
-                    <div className="p-[17px_19px]">
+                    <div className="p-5">
 
                       {/* Source, kind, and date */}
                       <div className="flex items-center gap-2 flex-wrap">
@@ -1771,10 +1766,11 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             <span className="t-eyebrow">Pinned</span>
                           </div>
                         ) : null}
-                        <span className="t-eyebrow inline-flex items-center rounded-md border border-primary/20 bg-primary/5 px-2 py-1 text-primary">
+                        <span className="t-eyebrow inline-flex items-center rounded-md border border-primary/20 bg-primary/[0.045] px-2 py-1 text-primary">
                           {typeLabel}
                         </span>
-                        <span className="t-meta font-medium text-textSecondary">{item.source}</span>
+                        <span className="t-meta inline-flex items-center rounded-md border border-border bg-subtle px-2 py-1 font-mono text-textSecondary">{item.source}</span>
+                        <span className="t-meta font-mono text-textTertiary">{selectedSubscriptionLabel}</span>
                         <span className="flex-1" />
                         <time dateTime={item.date} className="t-meta font-mono text-textTertiary">{formatRelativeTime(item.date)}</time>
                       </div>
@@ -1784,7 +1780,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                       </h3>
 
                       {/* 3. Sonny's read - inline implication */}
-                      <div className="mt-[10px] flex gap-[9px] items-start">
+                      <div className="surface-inset mt-3 flex items-start gap-2.5 border-transparent bg-subtle/65 px-3 py-2.5">
                         <Sparkles className="w-[15px] h-[15px] text-primary flex-none mt-[3px]" />
                         <div className="flex-1 min-w-0">
                           <span className="t-eyebrow mb-0.5 block text-textTertiary">
@@ -1810,7 +1806,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             setExpandedItemId(next);
                             if (next && !isDemoMode) void ensureArticleAnalysis(item);
                           }}
-                          className="t-meta inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 font-semibold text-white shadow-sm transition-all hover:bg-primary/90 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                          className="quiet-action t-meta inline-flex items-center gap-1.5 rounded-[10px] bg-primary px-3 py-2 font-semibold text-white shadow-sm hover:bg-primary/90"
                         >
                           {expanded ? (
                             <>Close read <ChevronUp className="w-3.5 h-3.5" /></>
@@ -1830,7 +1826,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                     {/* Full grounded read and source actions */}
                     <div
-                      className={`border-t border-border overflow-hidden transition-all duration-300 ${
+                      className={`overflow-hidden border-t border-border transition-all duration-200 ${
                         expanded ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'
                       }`}
                     >
@@ -1856,7 +1852,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <button
                                 type="button"
                                 onClick={() => void ensureArticleAnalysis(item)}
-                                className="t-body rounded-xl border border-border bg-subtle px-3 py-2 font-semibold text-textPrimary hover:bg-subtle"
+                                className="quiet-action t-body rounded-[10px] border border-border bg-white px-3 py-2 font-semibold text-textPrimary hover:border-primary/25 hover:text-primary"
                               >
                                 Retry
                               </button>
@@ -1950,18 +1946,18 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="t-meta flex items-center gap-2 font-medium text-primary transition-colors hover:text-primary/90"
+                            className="quiet-action t-meta flex items-center gap-2 rounded-md font-medium text-primary hover:text-primary/90"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                             {openLabel}
                           </a>
-                          <button type="button" onClick={() => togglePinned(item.id)} className="t-meta text-textTertiary hover:text-primary">
+                          <button type="button" onClick={() => togglePinned(item.id)} className="quiet-action t-meta rounded-md text-textTertiary hover:text-primary">
                             {pinned ? 'Unpin' : 'Pin'}
                           </button>
-                          <button type="button" onClick={() => hideItemUrlForContext(item.link)} className="t-meta text-textTertiary hover:text-primary">
+                          <button type="button" onClick={() => hideItemUrlForContext(item.link)} className="quiet-action t-meta rounded-md text-textTertiary hover:text-primary">
                             Hide item
                           </button>
-                          <button type="button" onClick={() => hideSourceForContext(item.link)} className="t-meta text-textTertiary hover:text-primary">
+                          <button type="button" onClick={() => hideSourceForContext(item.link)} className="quiet-action t-meta rounded-md text-textTertiary hover:text-primary">
                             Hide source
                           </button>
                         </div>

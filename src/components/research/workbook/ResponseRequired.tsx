@@ -16,7 +16,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
 
   if (accepted) {
     return (
-      <section className="flex items-center justify-between gap-4 rounded-xl border border-primary/20 bg-primary/[0.045] px-4 py-3" aria-label="Response accepted">
+      <section className="surface-card flex items-center justify-between gap-4 border-primary/20 bg-primary/[0.035] px-5 py-4" aria-label="Response accepted">
         <div className="flex items-center gap-2.5">
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white">
             <Check className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
@@ -32,8 +32,8 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
   }
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-primary/20 bg-surface shadow-card" aria-labelledby="response-required-title">
-      <header className="border-b border-primary/10 bg-primary/[0.035] px-5 py-4">
+    <section className="surface-card overflow-hidden border-primary/20" aria-labelledby="response-required-title">
+      <header className="border-b border-primary/10 bg-primary/[0.035] px-5 py-5">
         <p className="t-eyebrow text-primary">Response required</p>
         <h2 id="response-required-title" className="t-h3 mt-1 text-textPrimary">
           Sonny needs your input
@@ -54,7 +54,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
                 id={`clarification-${clarification.id}`}
                 value={answers[clarification.id] ?? clarification.default}
                 onChange={(event) => setAnswers((current) => ({ ...current, [clarification.id]: event.target.value }))}
-                className="t-body-sm w-full appearance-none rounded-xl border border-border bg-white px-3.5 py-3 pr-10 text-textPrimary outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                className="quiet-action t-body-sm w-full appearance-none rounded-[10px] border border-border bg-white px-3.5 py-3 pr-10 text-textPrimary outline-none hover:border-primary/25 focus:border-primary/50"
               >
                 {clarification.options.map((option) => <option key={option}>{option}</option>)}
               </select>
@@ -69,7 +69,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
                   value={answers[clarification.id] ?? ''}
                   onChange={(event) => setAnswers((current) => ({ ...current, [clarification.id]: event.target.value }))}
                   placeholder="Describe the analysis you want Sonny to use"
-                  className="t-body-sm mt-1.5 w-full rounded-xl border border-border bg-white px-3.5 py-3 text-textPrimary outline-none placeholder:text-textTertiary focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+                  className="quiet-action t-body-sm mt-1.5 w-full rounded-[10px] border border-border bg-white px-3.5 py-3 text-textPrimary outline-none placeholder:text-textTertiary hover:border-primary/25 focus:border-primary/50"
                   autoFocus
                 />
               </div>
@@ -80,7 +80,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
                   setCustomFor(clarification.id);
                   setAnswers((current) => ({ ...current, [clarification.id]: '' }));
                 }}
-                className="t-meta mt-2.5 inline-flex items-center gap-1.5 font-medium text-textTertiary transition-colors hover:text-primary active:translate-y-px"
+                className="quiet-action t-meta mt-2.5 inline-flex items-center gap-1.5 rounded-md font-medium text-textTertiary hover:text-primary"
               >
                 <PencilLine className="h-3 w-3" strokeWidth={1.75} aria-hidden="true" />
                 Write a custom answer
@@ -96,14 +96,14 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
           <button
             type="button"
             onClick={() => setCustomFor(clarifications[0]?.id ?? null)}
-            className="t-meta rounded-lg border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary transition-colors hover:border-slate-300 hover:text-textPrimary active:translate-y-px"
+            className="quiet-action t-meta rounded-[10px] border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary"
           >
             Something else
           </button>
           <button
             type="button"
             onClick={() => onAccept(answers)}
-            className="t-meta rounded-lg bg-primary px-4 py-2 font-semibold text-white transition-colors hover:bg-primary/90 active:translate-y-px"
+            className="quiet-action t-meta rounded-[10px] bg-primary px-4 py-2 font-semibold text-white shadow-sm hover:bg-primary/90"
           >
             Accept
           </button>

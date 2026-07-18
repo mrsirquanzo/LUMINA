@@ -35,11 +35,11 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
   };
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card" aria-labelledby="analysis-plan-title">
-      <header className="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
+    <section className="surface-card overflow-hidden" aria-labelledby="analysis-plan-title">
+      <header className="flex items-center justify-between gap-4 border-b border-border px-5 py-5">
         <div className="flex items-center gap-2.5">
-          <RefreshCw className="h-4 w-4 text-primary motion-safe:animate-[spin_2.4s_linear_infinite]" strokeWidth={1.75} aria-hidden="true" />
-          <h2 id="analysis-plan-title" className="t-h3 text-textPrimary">Analysis Plan</h2>
+          <RefreshCw className="h-4 w-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
+          <h2 id="analysis-plan-title" className="t-h3 text-textPrimary">Analysis plan</h2>
         </div>
         <span className="t-meta font-mono tabular-nums text-textTertiary">{current}/{total} steps</span>
       </header>
@@ -49,21 +49,21 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
           const isRunning = step.status === 'running';
           const showFigures = step.figures.length > 0 && (step.status === 'done' || expanded.has(step.id));
           return (
-            <article key={step.id} className={isRunning ? 'bg-slate-900 text-white' : 'bg-white'}>
+            <article key={step.id} className={isRunning ? 'border-l-2 border-primary bg-primary/[0.045]' : 'border-l-2 border-transparent bg-white'}>
               <button
                 type="button"
                 onClick={() => toggle(step.id)}
-                className="flex w-full items-center gap-3 px-5 py-3.5 text-left active:translate-y-px"
+                className="quiet-action flex w-full items-center gap-3 px-5 py-4 text-left hover:bg-primary/[0.025]"
                 aria-expanded={showFigures}
               >
-                <span className={isRunning ? 'text-white' : ''}><StatusGlyph status={step.status} /></span>
-                <span className={`t-body-sm min-w-0 flex-1 font-medium ${isRunning ? 'text-white' : 'text-textPrimary'}`}>
+                <span className={isRunning ? 'text-primary' : ''}><StatusGlyph status={step.status} /></span>
+                <span className={`t-body-sm min-w-0 flex-1 font-medium ${isRunning ? 'text-primary' : 'text-textPrimary'}`}>
                   {step.title}
                 </span>
-                {isRunning && <span className="t-eyebrow hidden text-slate-300 sm:inline">Running</span>}
+                {isRunning && <span className="t-eyebrow hidden text-primary sm:inline">Running</span>}
                 {step.figures.length > 0 && (
                   <ChevronDown
-                    className={`h-4 w-4 flex-none transition-transform ${showFigures ? 'rotate-180' : ''} ${isRunning ? 'text-slate-300' : 'text-textTertiary'}`}
+                    className={`h-4 w-4 flex-none transition-transform ${showFigures ? 'rotate-180' : ''} ${isRunning ? 'text-primary' : 'text-textTertiary'}`}
                     strokeWidth={1.75}
                     aria-hidden="true"
                   />
@@ -76,7 +76,7 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
                       key={figure}
                       src={figure}
                       alt={`Output for ${step.title}`}
-                      className="max-h-44 w-full max-w-sm rounded-lg border border-border bg-white object-contain p-1 motion-safe:animate-[fadeIn_.3s_ease-out]"
+                      className="surface-inset max-h-44 w-full max-w-sm object-contain p-2 motion-safe:animate-[fadeIn_.22s_ease-out]"
                     />
                   ))}
                 </div>

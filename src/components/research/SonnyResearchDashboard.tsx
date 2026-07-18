@@ -58,19 +58,10 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
   // ---- HOME (idle) ----
   if (s.status === 'idle') {
     return (
-      <div
-        className="w-full min-h-full overflow-auto bg-page"
-      >
-        <div
-          style={{
-            maxWidth: 840,
-            margin: '0 auto',
-            padding: '60px 40px 72px',
-            position: 'relative',
-          }}
-        >
+      <div className="min-h-full w-full overflow-auto bg-page">
+        <div className="relative mx-auto max-w-[840px] px-4 pb-[72px] pt-10 sm:px-8 sm:pt-[60px]">
           {/* Composer */}
-          <div ref={composerRef} style={{ position: 'relative', zIndex: 1, marginBottom: 44 }}>
+          <div ref={composerRef} className="relative z-[1] mb-11">
             <ResearchComposer
               key={`${initialQuery ?? ''}:${seedRevision}`}
               onStart={(t, m) => s.start(t, m)}
@@ -80,7 +71,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
           </div>
 
           {/* Capability cards */}
-          <div style={{ position: 'relative', zIndex: 1, marginBottom: 44 }}>
+          <div className="relative z-[1] mb-11">
             <CapabilityCards
               onSelectTemplate={seedFromCard}
               onSelectWorkbook={(capabilityId) => {
@@ -91,7 +82,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
           </div>
 
           {/* Latest signals block */}
-          <div style={{ position: 'relative', zIndex: 1 }}>
+          <div className="relative z-[1]">
             <LatestSignals onOpenFeed={onOpenFeed ?? (() => {})} />
           </div>
         </div>

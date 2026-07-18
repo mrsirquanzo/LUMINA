@@ -61,14 +61,6 @@ const COMBINATION_SCREENING: Capability = {
   alt: 'Drug combinations ranked by mean excess over Bliss synergy',
 };
 
-function lift(el: HTMLDivElement, on: boolean) {
-  el.style.boxShadow = on
-    ? '0 10px 30px rgba(15,23,42,.10), 0 2px 8px rgba(15,23,42,.05)'
-    : '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)';
-  el.style.transform = on ? 'translateY(-2px)' : 'none';
-  el.style.borderColor = on ? '#C3D4F2' : '';
-}
-
 interface CapabilityCardsProps {
   onSelectTemplate?: (template: ResearchTemplate) => void;
   onSelectWorkbook?: (capabilityId: string) => void;
@@ -95,12 +87,9 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
             onSelectWorkbook?.(COMBINATION_SCREENING.id);
           }
         }}
-        className="bg-surface border border-border rounded-[14px] p-[18px] mb-3.5 flex flex-col sm:flex-row gap-5 items-stretch sm:items-center transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
-        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
-        onMouseEnter={(event) => lift(event.currentTarget as HTMLDivElement, true)}
-        onMouseLeave={(event) => lift(event.currentTarget as HTMLDivElement, false)}
+        className="capability-card surface-card-interactive mb-3.5 cursor-pointer flex-col items-stretch sm:flex-row sm:items-center"
       >
-        <span className="flex-1 min-w-0">
+        <span className="flex min-w-0 flex-1 flex-col self-stretch py-0.5">
           <span className="t-eyebrow mb-2 inline-flex items-center gap-1.5 text-primary">
             <span className="w-[6px] h-[6px] rounded-full inline-block" style={{ background: '#1D4ED8' }} />
             AVAILABLE
@@ -111,15 +100,15 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
           <span className="t-body-sm mt-1 block max-w-[46ch] text-textSecondary">
             {COMBINATION_SCREENING.description}
           </span>
-          <span className="t-meta mt-2.5 inline-flex items-center gap-1.5 font-semibold text-primary">
+          <span className="t-meta mt-auto inline-flex items-center gap-1.5 pt-3 font-semibold text-primary">
             Open workbook <span aria-hidden="true">→</span>
           </span>
         </span>
         <img
           src={COMBINATION_SCREENING.image}
           alt={COMBINATION_SCREENING.alt}
-          className="w-full sm:w-[280px] flex-none rounded-[10px] border border-border object-cover"
-          style={{ height: 118, objectPosition: 'center' }}
+          className="capability-media h-[118px] w-full flex-none object-cover sm:w-[280px]"
+          style={{ objectPosition: 'center' }}
           loading="eager"
         />
       </div>
@@ -130,12 +119,9 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
         tabIndex={0}
         onClick={() => pick(DEEP_RESEARCH_TEMPLATE)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') pick(DEEP_RESEARCH_TEMPLATE); }}
-        className="bg-surface border border-border rounded-[14px] p-[18px] mb-3.5 flex flex-col sm:flex-row gap-5 items-stretch sm:items-center transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
-        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
-        onMouseEnter={(e) => lift(e.currentTarget as HTMLDivElement, true)}
-        onMouseLeave={(e) => lift(e.currentTarget as HTMLDivElement, false)}
+        className="capability-card surface-card-interactive mb-3.5 cursor-pointer flex-col items-stretch sm:flex-row sm:items-center"
       >
-        <span className="flex-1 min-w-0">
+        <span className="flex min-w-0 flex-1 flex-col self-stretch py-0.5">
           <span className="t-eyebrow mb-2 inline-flex items-center gap-1.5 text-primary">
             <span className="w-[6px] h-[6px] rounded-full inline-block" style={{ background: '#1D4ED8' }} />
             AVAILABLE
@@ -147,15 +133,15 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
             Six specialists read the literature and public data, run grounded computational analysis across DepMap,
             GTEx, and tumor expression, then return a conclusion-first GO / WATCH / NO-GO report with every claim cited.
           </span>
-          <span className="t-meta mt-2.5 inline-flex items-center gap-1.5 font-semibold text-primary">
+          <span className="t-meta mt-auto inline-flex items-center gap-1.5 pt-3 font-semibold text-primary">
             Start a report <span aria-hidden="true">→</span>
           </span>
         </span>
         <img
           src="/deep-research.png"
           alt="Grounded due-diligence report with a verdict and cited claims"
-          className="w-full sm:w-[280px] flex-none rounded-[10px] border border-border object-cover"
-          style={{ height: 118, objectPosition: 'left top' }}
+          className="capability-media h-[118px] w-full flex-none object-cover sm:w-[280px]"
+          style={{ objectPosition: 'left top' }}
           loading="lazy"
         />
       </div>
@@ -176,10 +162,9 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
                   onSelectWorkbook?.(cap.id);
                 }
               }}
-              className={`bg-surface border border-border rounded-[14px] overflow-hidden flex flex-col transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${isAvailable ? 'cursor-pointer hover:-translate-y-0.5 hover:border-[#C3D4F2] hover:shadow-[0_10px_30px_rgba(15,23,42,.10),0_2px_8px_rgba(15,23,42,.05)] active:translate-y-0' : ''}`}
-              style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
+              className={`capability-card flex-col ${isAvailable ? 'surface-card-interactive cursor-pointer' : 'bg-slate-50/70'}`}
             >
-              <div className="w-full bg-subtle border-b border-border overflow-hidden" style={{ height: 132 }}>
+              <div className="capability-media h-[132px] w-full">
                 <img
                   src={cap.image}
                   alt={cap.alt}
@@ -188,14 +173,14 @@ export function CapabilityCards({ onSelectTemplate, onSelectWorkbook }: Capabili
                   loading="lazy"
                 />
               </div>
-              <div className="p-[16px]">
+              <div className="flex flex-1 flex-col px-0.5 pb-0.5">
                 <span className="t-h3 block text-textPrimary">
                   {cap.title}
                 </span>
                 <span className="t-body-sm mt-1 block text-textSecondary">
                   {cap.description}
                 </span>
-                <span className={`t-meta mt-2.5 inline-flex items-center gap-1.5 font-semibold ${isAvailable ? 'text-primary' : 'text-textTertiary'}`}>
+                <span className={`t-meta mt-auto inline-flex items-center gap-1.5 pt-3 font-semibold ${isAvailable ? 'text-primary' : 'text-textTertiary'}`}>
                   {isAvailable ? (
                     <><span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />Open workbook <span aria-hidden="true">→</span></>
                   ) : 'Coming soon'}

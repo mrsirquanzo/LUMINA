@@ -5,14 +5,14 @@ interface AssumptionsPanelProps {
 }
 
 function impactClass(impact: 'high' | 'medium' | 'low') {
-  if (impact === 'high') return 'border-slate-300 bg-slate-100 text-textPrimary';
+  if (impact === 'high') return 'border-primary/20 bg-primary/[0.045] text-primary';
   return 'border-border bg-subtle text-textTertiary';
 }
 
 export function AssumptionsPanel({ assumptions }: AssumptionsPanelProps) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card" aria-labelledby="assumptions-title">
-      <header className="flex flex-col gap-3 border-b border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <section className="surface-card overflow-hidden" aria-labelledby="assumptions-title">
+      <header className="flex flex-col gap-3 border-b border-border px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="t-eyebrow text-textTertiary">Run setup</p>
           <h2 id="assumptions-title" className="t-h3 mt-1 text-textPrimary">
@@ -22,7 +22,7 @@ export function AssumptionsPanel({ assumptions }: AssumptionsPanelProps) {
         <div className="t-meta flex flex-wrap items-center gap-2 font-mono tabular-nums">
           <span className="rounded-full border border-border bg-subtle px-2.5 py-1 text-textSecondary">{assumptions.checked} checked</span>
           <span className="rounded-full border border-border bg-subtle px-2.5 py-1 text-textSecondary">{assumptions.inferred} inferred</span>
-          <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-700">{assumptions.needsInput} needs input</span>
+          <span className="rounded-full border border-primary/20 bg-primary/[0.045] px-2.5 py-1 text-primary">{assumptions.needsInput} needs input</span>
         </div>
       </header>
 
@@ -47,7 +47,7 @@ export function AssumptionsPanel({ assumptions }: AssumptionsPanelProps) {
                   {item.source}
                 </span>
                 {item.status === 'needs-input' && (
-                  <span className="t-eyebrow rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-amber-700">
+                  <span className="t-eyebrow rounded-full border border-primary/20 bg-primary/[0.045] px-2 py-0.5 text-primary">
                     needs input
                   </span>
                 )}

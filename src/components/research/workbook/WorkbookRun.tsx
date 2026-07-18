@@ -54,12 +54,12 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
   return (
     <div className="min-h-full w-full bg-page px-3 py-4 sm:px-5 lg:px-6">
       <div className="mx-auto max-w-[1240px]">
-        <header className="mb-5 flex flex-col gap-4 rounded-2xl border border-border bg-surface px-4 py-5 shadow-card sm:px-5 lg:flex-row lg:items-start lg:justify-between lg:px-6 lg:py-6">
+        <header className="surface-card mb-5 flex flex-col gap-4 px-4 py-5 sm:px-5 lg:flex-row lg:items-start lg:justify-between lg:px-6 lg:py-6">
           <div className="flex min-w-0 items-start gap-3">
             <button
               type="button"
               onClick={onBack}
-              className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg border border-border text-textSecondary transition-colors hover:border-slate-300 hover:text-textPrimary active:translate-y-px"
+              className="icon-action mt-0.5 h-8 w-8 flex-none"
               aria-label="Back to Sonny research home"
             >
               <ArrowLeft className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
@@ -78,7 +78,7 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
           <button
             type="button"
             onClick={resetReplay}
-            className="t-meta inline-flex w-fit items-center gap-2 rounded-lg border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary transition-colors hover:border-slate-300 hover:text-textPrimary active:translate-y-px"
+            className="quiet-action t-meta inline-flex w-fit items-center gap-2 rounded-[10px] border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary"
           >
             <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
             Restart replay
@@ -121,12 +121,12 @@ export function WorkbookRun({ run, onBack }: WorkbookRunProps) {
             )}
           </main>
 
-          <aside className="rounded-2xl border border-border bg-surface p-4 shadow-card lg:sticky lg:top-4" aria-label="Workbook file details">
+          <aside className="surface-card p-4 lg:sticky lg:top-4" aria-label="Workbook file details">
             <div className="flex items-center gap-2">
               <FileChartColumn className="h-4 w-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
               <p className="t-eyebrow text-textTertiary">Files</p>
             </div>
-            <div className="mt-3 rounded-xl border border-border bg-subtle/60 p-3">
+            <div className="surface-inset mt-3 p-3">
               <p className="t-meta break-words font-semibold text-textPrimary">{run.file.name}</p>
               <p className="t-eyebrow mt-1 tabular-nums text-textTertiary">
                 {run.file.sizeMB.toFixed(2)} MB · {run.file.name.split('.').pop()?.toUpperCase() ?? 'DATA'}

@@ -62,15 +62,14 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
     <div className="w-full">
       {/* Composer shell - tall, calm, Science-Machine-style */}
       <div
-        className="relative rounded-[18px] border border-[#D8E0EA] bg-surface transition-all duration-200 focus-within:border-primary/60 focus-within:ring-4 focus-within:ring-primary/[0.06]"
-        style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 10px 28px rgba(15,23,42,.07)' }}
+        className="composer-shell relative"
       >
         {/* Top-right utility icons */}
-        <div className="absolute right-5 top-5 flex items-center gap-3 text-textSecondary">
-          <button type="button" aria-label="Expand" className="hover:text-textSecondary transition-colors">
+        <div className="absolute right-5 top-5 flex items-center gap-2 text-textSecondary">
+          <button type="button" aria-label="Expand" className="icon-action h-8 w-8 border-transparent bg-transparent">
             <Maximize2 className="w-[15px] h-[15px]" />
           </button>
-          <button type="button" aria-label="Help" className="hover:text-textSecondary transition-colors">
+          <button type="button" aria-label="Help" className="icon-action h-8 w-8 border-transparent bg-transparent">
             <HelpCircle className="w-[16px] h-[16px]" />
           </button>
         </div>
@@ -83,12 +82,12 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
           onKeyDown={handleKeyDown}
           placeholder="Ask Sonny to research a target, map a landscape, or analyze data..."
           rows={5}
-          className="t-lead min-h-[184px] w-full resize-none bg-transparent px-6 pb-3 pr-28 pt-6 text-textPrimary outline-none placeholder:text-textSecondary"
+          className="t-lead min-h-[176px] w-full resize-none bg-transparent px-5 pb-3 pr-28 pt-5 text-textPrimary outline-none placeholder:text-textSecondary sm:px-6 sm:pt-6"
           autoFocus
         />
 
         {contextChip && (
-          <div className="px-6 pb-3">
+          <div className="px-5 pb-3 sm:px-6">
             <span className="t-eyebrow inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 text-textTertiary">
               {contextChip}
               <button
@@ -104,14 +103,14 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
         )}
 
         {/* Bottom control bar */}
-        <div className="flex items-center gap-2 px-5 pb-4 pt-1">
+        <div className="flex items-center gap-2 border-t border-borderSoft px-5 pb-4 pt-3">
           {/* Upload (coming soon) */}
           <span className="group relative inline-flex">
             <button
               type="button"
               disabled
               aria-label="Upload data (coming soon)"
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-border text-textSecondary cursor-not-allowed opacity-70"
+              className="icon-action h-9 w-9 rounded-full"
             >
               <Plus className="w-[18px] h-[18px]" />
             </button>
@@ -126,7 +125,7 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
               type="button"
               disabled
               aria-label="Reference files (coming soon)"
-              className="w-9 h-9 flex items-center justify-center rounded-full border border-border text-textSecondary cursor-not-allowed opacity-70"
+              className="icon-action h-9 w-9 rounded-full"
             >
               <AtSign className="w-[16px] h-[16px]" />
             </button>
@@ -141,13 +140,7 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
             onClick={handleStart}
             disabled={!canRun}
             aria-label="Run"
-            className="ml-auto w-10 h-10 flex items-center justify-center rounded-full text-white transition-all disabled:cursor-not-allowed"
-            style={{
-              background: canRun ? 'rgb(29 78 216)' : '#CBD5E1',
-              boxShadow: canRun ? '0 1px 3px rgba(29,78,216,.4)' : 'none',
-            }}
-            onMouseEnter={(e) => { if (canRun) (e.currentTarget as HTMLButtonElement).style.background = 'rgb(30 64 175)'; }}
-            onMouseLeave={(e) => { if (canRun) (e.currentTarget as HTMLButtonElement).style.background = 'rgb(29 78 216)'; }}
+            className="quiet-action ml-auto flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-sm hover:bg-primary/90 hover:shadow-md disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
           >
             <ArrowRight className="w-[18px] h-[18px]" />
           </button>

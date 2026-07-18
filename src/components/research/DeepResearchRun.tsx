@@ -37,12 +37,12 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
   return (
     <div className="min-h-full w-full bg-page px-3 py-4 sm:px-5 lg:px-6">
       <div className="mx-auto max-w-[1040px]">
-        <header className="mb-5 flex flex-col gap-4 rounded-2xl border border-border bg-surface px-4 py-4 shadow-card sm:px-5 sm:flex-row sm:items-center sm:justify-between">
+        <header className="surface-card mb-5 flex flex-col gap-4 px-4 py-5 sm:px-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-start gap-3">
             <button
               type="button"
               onClick={onBack}
-              className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg border border-border text-textSecondary transition-colors hover:border-slate-300 hover:text-textPrimary active:translate-y-px"
+              className="icon-action mt-0.5 h-8 w-8 flex-none"
               aria-label="Back to Sonny research home"
             >
               <ArrowLeft className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
@@ -89,7 +89,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
             />
           )}
           {status !== 'done' && !briefing && (
-            <div className="rounded-2xl border border-border bg-surface px-5 py-5 shadow-card" aria-busy="true" aria-label="Preparing report">
+            <div className="surface-card px-5 py-5" aria-busy="true" aria-label="Preparing report">
               <div className="h-3 w-24 rounded bg-subtle motion-safe:animate-pulse" />
               <div className="mt-3 h-7 w-2/5 rounded bg-subtle motion-safe:animate-pulse" />
               <div className="mt-5 h-3 w-full rounded bg-subtle motion-safe:animate-pulse" />
@@ -99,7 +99,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
         </main>
 
         {status === 'error' && (
-          <button type="button" onClick={onBack} className="t-meta mt-5 inline-flex items-center gap-2 rounded-lg border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary">
+          <button type="button" onClick={onBack} className="quiet-action t-meta mt-5 inline-flex items-center gap-2 rounded-[10px] border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary">
             <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
             Start another report
           </button>

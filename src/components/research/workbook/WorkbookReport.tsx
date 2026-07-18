@@ -67,14 +67,14 @@ export function WorkbookReport({
   };
 
   return (
-    <section className="space-y-5 motion-safe:animate-[slideUp_.4s_cubic-bezier(.16,1,.3,1)]" aria-labelledby="workbook-report-title">
-      <div className="rounded-2xl border border-border bg-surface px-5 py-5 shadow-card sm:px-6">
+    <section className="space-y-5 motion-safe:animate-[slideUp_.3s_cubic-bezier(.16,1,.3,1)]" aria-labelledby="workbook-report-title">
+      <div className="surface-card overflow-hidden px-5 py-6 sm:px-6">
         <p className="t-eyebrow text-primary">{eyebrow}</p>
         <h2 id="workbook-report-title" className="t-h1 mt-1 text-textPrimary">{title}</h2>
-        <ul className="mt-5 space-y-3.5">
+        <ul className="mt-5 space-y-2.5">
           {report.summary.map((summary) => (
-            <li key={summary} className="t-body flex gap-3 text-textSecondary">
-              <span className="mt-[8px] h-1.5 w-1.5 flex-none rounded-full bg-primary" aria-hidden="true" />
+            <li key={summary} className="surface-inset t-body flex gap-3 border-l-2 border-l-primary/35 px-4 py-3 text-textSecondary">
+              <span className="mt-[8px] h-1.5 w-1.5 flex-none rounded-sm bg-primary" aria-hidden="true" />
               <span>{renderBoldMarkdown(summary)}</span>
             </li>
           ))}
@@ -82,7 +82,7 @@ export function WorkbookReport({
       </div>
 
       {displayedRankings.length > 0 && (
-        <section className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card" aria-labelledby="combination-ranking-title">
+        <section className="surface-card overflow-hidden" aria-labelledby="combination-ranking-title">
           <header className="flex flex-col gap-2 border-b border-border px-5 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-6">
             <div>
               <p className="t-eyebrow text-primary">SELECTED MODEL: {rankingLabel.toUpperCase()}</p>
@@ -117,7 +117,7 @@ export function WorkbookReport({
 
       {rankedHypotheses.length > 0 && (
         <section
-          className="rounded-2xl border border-primary/25 bg-primary/[0.035] px-5 py-5 shadow-card sm:px-6 sm:py-6"
+          className="surface-card border-primary/25 bg-primary/[0.03] px-5 py-6 sm:px-6"
           aria-labelledby="workbook-hypotheses-title"
         >
           <div className="flex items-start gap-3">
@@ -137,7 +137,7 @@ export function WorkbookReport({
 
           <div className="mt-5 space-y-3">
             {rankedHypotheses.map((hypothesis) => (
-              <article key={hypothesis.combination} className="rounded-xl border border-border bg-white px-4 py-4 sm:px-5">
+              <article key={hypothesis.combination} className="surface-inset bg-white px-4 py-4 sm:px-5">
                 <div className="flex items-start gap-3.5">
                   <span className="t-eyebrow flex h-7 min-w-7 flex-none items-center justify-center rounded-lg bg-primary px-2 tabular-nums text-white">
                     #{hypothesis.displayedRank}
@@ -174,13 +174,13 @@ export function WorkbookReport({
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {report.figures.map((figure, index) => (
-              <figure key={figure.src} className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
+              <figure key={figure.src} className="surface-card surface-card-interactive overflow-hidden">
                 <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
                   <img src={figure.src} alt={`Analysis figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
                   <button
                     type="button"
                     onClick={() => openFigure(figure)}
-                    className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white/95 text-textSecondary shadow-card transition-colors hover:text-primary active:scale-[.98]"
+                    className="icon-action absolute right-2.5 top-2.5 h-8 w-8 bg-white/95 shadow-card"
                     aria-label={`Expand figure ${index + 1}`}
                   >
                     <Expand className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
@@ -193,7 +193,7 @@ export function WorkbookReport({
         </div>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
+      <div className="surface-card overflow-hidden">
         {(contentSections ?? ACCORDIONS.map(({ key, title }) => ({
           id: key,
           title,
@@ -206,7 +206,7 @@ export function WorkbookReport({
               open={Boolean(contentSections) && index === 0}
               className="group border-border open:bg-subtle/35 [&:not(:last-child)]:border-b"
             >
-              <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:hidden">
+              <summary className="quiet-action flex cursor-pointer list-none items-center gap-3 px-5 py-4 marker:hidden hover:bg-primary/[0.025]">
                 <Icon className="h-4 w-4 text-primary" strokeWidth={1.75} aria-hidden="true" />
                 <span className="t-body-sm flex-1 font-semibold text-textPrimary">{section.title}</span>
                 <ChevronDown className="h-4 w-4 text-textTertiary transition-transform group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" />
@@ -226,14 +226,14 @@ export function WorkbookReport({
           closeFigure();
         }}
         onClick={(event) => { if (event.target === event.currentTarget) closeFigure(); }}
-        className="m-auto w-[min(94vw,1100px)] rounded-2xl border border-border bg-white p-0 text-textPrimary shadow-2xl backdrop:bg-slate-950/60"
+        className="m-auto w-[min(94vw,1100px)] rounded-[14px] border border-border bg-white p-0 text-textPrimary shadow-card-hover backdrop:bg-slate-950/55"
         aria-label="Expanded analysis figure"
       >
         {activeFigure && (
           <div>
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <p className="t-eyebrow text-textTertiary">Full figure</p>
-              <button type="button" onClick={closeFigure} className="flex h-8 w-8 items-center justify-center rounded-lg text-textSecondary hover:bg-subtle hover:text-textPrimary" aria-label="Close expanded figure">
+              <button type="button" onClick={closeFigure} className="icon-action h-8 w-8 border-transparent bg-transparent" aria-label="Close expanded figure">
                 <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
               </button>
             </div>
