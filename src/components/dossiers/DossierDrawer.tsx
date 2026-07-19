@@ -84,8 +84,8 @@ export function DossierDrawer({ runId, onClose }: Props) {
       };
 
   const label = briefing?.target
-    ? `${briefing.target} dossier`
-    : 'Dossier';
+    ? `${briefing.target} report`
+    : 'Report';
 
   const drawerContent = (
     <>
@@ -151,18 +151,15 @@ export function DossierDrawer({ runId, onClose }: Props) {
           }}
         >
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              className="font-display"
-              style={{ fontSize: 19, fontWeight: 600, color: '#0F172A' }}
-            >
-              {briefing?.target ? `${briefing.target} · dossier` : 'Dossier'}
+            <div className="t-h3 text-textPrimary">
+              {briefing?.target ? `${briefing.target} · report` : 'Report'}
             </div>
           </div>
           {/* Close button */}
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close dossier"
+            aria-label="Close report"
             style={{
               width: 38,
               height: 38,
@@ -199,7 +196,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
           {briefing ? (
             <ResearchDossier briefing={briefing} />
           ) : (
-            <p style={{ color: '#475569', fontSize: 14 }}>Dossier not found.</p>
+            <p className="t-body text-textSecondary">Report not found.</p>
           )}
         </div>
       </div>

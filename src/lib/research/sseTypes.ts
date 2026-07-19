@@ -1,12 +1,22 @@
 // A permissive view of the engine TraceEvent union; we key off `type` and known fields.
 export type ResearchTraceEvent = { type: string; [k: string]: unknown };
 
+// A rendered trace log line. `role` groups the visual treatment (tool card vs
+// read/thought vs evidence); `detail` is the human-readable specifics pulled
+// from the raw event (tool args, evidence title, source locator).
+export interface TraceLogEntry {
+  type: string;
+  label: string;
+  detail?: string;
+  role?: 'tool' | 'tool_result' | 'read' | 'evidence' | 'section' | 'audit' | 'verdict' | 'degraded' | 'event';
+}
+
 export interface TraceAggregate {
   phase: string;
   counts: Record<string, number>;
   sectionsRag: Record<string, 'red' | 'amber' | 'green'>;
   auditFlags: number;
-  log: Array<{ type: string; label: string }>;
+  log: TraceLogEntry[];
 }
 
 // Frozen at the top level; foldTrace always copies (spreads) before writing, so the
@@ -16,7 +26,7 @@ export const EMPTY_AGGREGATE: TraceAggregate = Object.freeze({
   counts: {} as Record<string, number>,
   sectionsRag: {} as Record<string, 'red' | 'amber' | 'green'>,
   auditFlags: 0,
-  log: [] as Array<{ type: string; label: string }>,
+  log: [] as TraceLogEntry[],
 });
 
 export interface BriefingView {

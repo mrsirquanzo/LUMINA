@@ -1,27 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Search,
-  Filter,
   ChevronDown,
   ChevronUp,
   Sparkles,
-  SlidersHorizontal,
   X,
-  Ban,
   Pin,
-  EyeOff,
-  Info,
-  RefreshCw,
   FileText,
   Newspaper,
-  Handshake,
-  Shield,
   Target,
   Lightbulb,
   HelpCircle,
   ExternalLink,
-  Download,
-  Plus,
+  MoreHorizontal,
 } from 'lucide-react';
 import { format, formatDistanceToNowStrict, parseISO } from 'date-fns';
 import { useQueries, useQuery } from '@tanstack/react-query';
@@ -29,11 +20,10 @@ import { useTarget } from '../../contexts/TargetContext';
 import { formatTargetDisplayName } from '../../lib/targetNaming';
 import { getStoredAgentMode, onAgentModeUpdated } from '../../lib/agentMode';
 import { useWatchlistStore } from '../../lib/watchlist/store';
-import { buildDemoFeedResponse, DEMO_FEED_PACKS } from '../../lib/intelligence/demoFeedPacks';
-import { CitedMarkdown } from '../shared/CitedMarkdown';
+import { buildDemoFeedResponse, DEMO_FEED_PACKS, resolveDemoFeedPack } from '../../lib/intelligence/demoFeedPacks';
 
 type FeedItemType = 'publication' | 'deal' | 'regulatory' | 'news' | 'clinical';
-type RelevanceFilter = 'Target-specific' | 'Market' | 'Competitive' | 'All';
+type SourceFilter = 'All' | 'Papers' | 'Preprints' | 'News' | 'Trials';
 
 const BLACKLIST_PREFIX = 'lumina:intelligence:blacklist:';
 const HIDDEN_ITEMS_PREFIX = 'lumina:intelligence:hiddenItems:';
@@ -120,9 +110,6 @@ function highlightText(text: string, terms: string[]) {
   });
 }
 
-type FeedPriority = 'breaking' | 'high' | 'medium';
-type SourceBadgeKind = 'primary' | 'trade' | 'other';
-
 function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
 }
@@ -141,116 +128,26 @@ function computeItemConfidencePct(item: Pick<FeedItem, 'score' | 'relevance'>): 
   return 60;
 }
 
-function computePriority(item: Pick<FeedItem, 'date' | 'relevance'>): FeedPriority {
-  const dt = parseISO(item.date);
-  const now = Date.now();
-  const ms = Number.isNaN(dt.getTime()) ? Number.POSITIVE_INFINITY : now - dt.getTime();
-  if (ms <= 24 * 60 * 60 * 1000) return 'breaking';
-  if (item.relevance === 'high') return 'high';
-  return 'medium';
-}
-
-function computeSourceBadgeKind(source: string, url: string): SourceBadgeKind {
-  const s = (source || '').toLowerCase();
-  const u = (url || '').toLowerCase();
-  const isPrimary =
-    s.includes('fda') ||
-    s.includes('ema') ||
-    s.includes('pubmed') ||
-    s.includes('clinicaltrials') ||
-    u.includes('fda.gov') ||
-    u.includes('ema.europa.eu') ||
-    u.includes('pubmed.ncbi.nlm.nih.gov') ||
-    u.includes('clinicaltrials.gov');
-  if (isPrimary) return 'primary';
-
-  const isTrade =
-    s.includes('endpoints') ||
-    s.includes('stat') ||
-    s.includes('fierce') ||
-    s.includes('biopharmadive') ||
-    s.includes('biopharma dive') ||
-    s.includes('business wire') ||
-    s.includes('pr newswire') ||
-    u.includes('endpts.com') ||
-    u.includes('statnews.com') ||
-    u.includes('fierce') ||
-    u.includes('biopharmadive.com') ||
-    u.includes('businesswire.com') ||
-    u.includes('prnewswire.com');
-  if (isTrade) return 'trade';
-
-  return 'other';
-}
-
-function getSourceBadgeConfig(kind: SourceBadgeKind) {
-  if (kind === 'primary')
-    return {
-      label: 'Primary',
-      icon: Shield,
-      bg: 'bg-emerald-500/15',
-      border: 'border-emerald-500/30',
-      text: 'text-go-text',
-      iconText: 'text-emerald-400',
-    };
-  if (kind === 'trade')
-    return {
-      label: 'Trade',
-      icon: Newspaper,
-      bg: 'bg-amber-500/15',
-      border: 'border-amber-500/30',
-      text: 'text-watch-text',
-      iconText: 'text-amber-400',
-    };
-  return {
-    label: 'Other',
-    icon: FileText,
-    bg: 'bg-slate-500/10',
-    border: 'border-border',
-    text: 'text-textTertiary',
-    iconText: 'text-textTertiary',
-  };
-}
-
-function getPriorityConfig(priority: FeedPriority) {
-  if (priority === 'breaking') return { dot: 'bg-red-500', label: 'Breaking', pulse: true, text: 'text-nogo-text' };
-  if (priority === 'high') return { dot: 'bg-amber-500', label: 'High', pulse: false, text: 'text-watch-text' };
-  return { dot: 'bg-slate-500', label: 'Medium', pulse: false, text: 'text-textSecondary' };
-}
-
 function ConfidenceMeter({ value }: { value: number }) {
   const v = clamp(Math.round(value), 0, 100);
-  const bar = v >= 85 ? 'bg-emerald-500' : v >= 70 ? 'bg-amber-500' : 'bg-slate-500';
   return (
     <div className="flex items-center gap-2">
       <div className="w-16 h-1.5 bg-subtle rounded-full overflow-hidden">
-        <div className={`h-full rounded-full ${bar}`} style={{ width: `${v}%` }} />
+        <div className="h-full rounded-full bg-primary" style={{ width: `${v}%` }} />
       </div>
-      <span className="text-[10px] font-mono text-textTertiary">{v}%</span>
+      <span className="t-meta font-mono text-textTertiary">{v}%</span>
     </div>
   );
 }
 
-function PriorityIndicator({ priority }: { priority: FeedPriority }) {
-  const c = getPriorityConfig(priority);
-  return (
-    <div className="flex items-center gap-1.5">
-      <div className={`w-2 h-2 rounded-full ${c.dot} ${c.pulse ? 'animate-pulse' : ''}`} />
-      <span className={`text-[10px] font-semibold uppercase tracking-wider ${c.text}`}>{c.label}</span>
-    </div>
-  );
+function isPreprintSource(source: string): boolean {
+  return /biorxiv|medrxiv|arxiv|preprint/i.test(source);
 }
 
-function SourcePill({ source, url }: { source: string; url: string }) {
-  const kind = computeSourceBadgeKind(source, url);
-  const c = getSourceBadgeConfig(kind);
-  const Icon = c.icon;
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full border ${c.border} ${c.bg}`}>
-      <Icon className={`w-3.5 h-3.5 ${c.iconText}`} />
-      <span className={`text-[11px] font-semibold ${c.text}`}>{source}</span>
-    </span>
-  );
+function isTopicSubscription(value: string): boolean {
+  const pack = resolveDemoFeedPack(value);
+  const label = (pack?.target || value).toLowerCase();
+  return /\b(landscape|market|space|class|trend|topic)\b/.test(label);
 }
 
 function extractSection(markdown: string, headingStartsWith: string): string {
@@ -265,24 +162,6 @@ function extractSection(markdown: string, headingStartsWith: string): string {
 
 function stripInlineCitations(text: string): string {
   return (text || '').replace(/\[source:[^\]]+\](?:\([^)]+\))?/g, '').replace(/\s+/g, ' ').trim();
-}
-
-function extractBulletLines(markdown: string): string[] {
-  const lines = (markdown || '').split('\n');
-  const bullets = lines
-    .map((l) => l.trim())
-    .filter((l) => l.startsWith('- '))
-    .map((l) => stripInlineCitations(l.replace(/^-+\s+/, '').trim()));
-  return bullets.filter(Boolean);
-}
-
-type ThemeDirection = 'positive' | 'watch' | 'neutral';
-
-function inferThemeDirection(text: string): ThemeDirection {
-  const t = (text || '').toLowerCase();
-  if (t.includes('risk') || t.includes('concern') || t.includes('monitor') || t.includes('watch')) return 'watch';
-  if (t.includes('opportun') || t.includes('tailwind') || t.includes('positive')) return 'positive';
-  return 'neutral';
 }
 
 function buildContextSentence(kind: FeedItemType): string {
@@ -306,12 +185,12 @@ function buildImplicationSentence(kind: FeedItemType): string {
 
 function buildQuestionSentence(kind: FeedItemType): string {
   if (kind === 'regulatory')
-    return 'Which specific label language (definition + monitoring expectations) is the precedent—and how does it constrain trial design?';
+    return 'Which specific label language (definition + monitoring expectations) is the precedent - and how does it constrain trial design?';
   if (kind === 'clinical')
     return 'What single missing datum would convert this from "interesting" to "decision-changing" (endpoint, subgroup, durability, tolerability)?';
   if (kind === 'publication')
     return 'Which translation assumption is most likely wrong (assay, heterogeneity, exposure-response, resistance), and how would we test it quickly?';
-  if (kind === 'deal') return "What proof point shifts leverage materially in the next negotiation window—and what's the shortest path to it?";
+  if (kind === 'deal') return "What proof point shifts leverage materially in the next negotiation window - and what's the shortest path to it?";
   return 'What primary data would validate (or falsify) the implied narrative before it hardens into consensus?';
 }
 
@@ -538,23 +417,16 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
   const [agentMode, setAgentMode] = useState(() => getStoredAgentMode());
   const isDemoMode = agentMode === 'demo';
 
-  const [typeFilter, setTypeFilter] = useState<FeedItemType | 'All'>('All');
-  const [relevanceFilter, setRelevanceFilter] = useState<RelevanceFilter>('All');
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('All');
   // Primary search: fetch a new target/topic for the feed
   const [feedSearchInput, setFeedSearchInput] = useState('');
-  // Secondary: filter within the currently loaded feed items
-  const [feedFilterInput, setFeedFilterInput] = useState('');
   const [topicQuery, setTopicQuery] = useState('');
   const [hasCustomTopic, setHasCustomTopic] = useState(false);
-  const [assetQuery, setAssetQuery] = useState('');
-  const [companyQuery, setCompanyQuery] = useState('');
+  const [assetQuery] = useState('');
+  const [companyQuery] = useState('');
   const [targetOverride, setTargetOverride] = useState<string>('');
-  const [showFilters, setShowFilters] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const trackedTargets = useWatchlistStore((s) => s.targets);
-  const [isAddingTarget, setIsAddingTarget] = useState(false);
-  const [addTargetInput, setAddTargetInput] = useState('');
   const [refreshToken, setRefreshToken] = useState(0);
   const [forceFresh, setForceFresh] = useState(false);
   const [digestMarkdown, setDigestMarkdown] = useState<string>('');
@@ -562,9 +434,8 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
   const [digestError, setDigestError] = useState<string>('');
   const [isDigestLoading, setIsDigestLoading] = useState(false);
   const [digestJobId, setDigestJobId] = useState<string>('');
-  const [digestJobStatus, setDigestJobStatus] = useState<{ status: string; progress?: number; message?: string } | null>(null);
-  const [isSynthesisExpanded, setIsSynthesisExpanded] = useState(true);
-  const [isFullDigestExpanded, setIsFullDigestExpanded] = useState(false);
+  const [, setDigestJobStatus] = useState<{ status: string; progress?: number; message?: string } | null>(null);
+  const [lastAutoDigestKey, setLastAutoDigestKey] = useState('');
   const [toast, setToast] = useState<{ message: string; tone: 'success' | 'error' | 'info' } | null>(null);
   const [articleAnalysisById, setArticleAnalysisById] = useState<Record<string, ArticleAnalysis>>({});
   const [articleAnalysisStatus, setArticleAnalysisStatus] = useState<Record<string, { status: 'idle' | 'loading' | 'error'; error?: string }>>({});
@@ -576,34 +447,6 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     const t = window.setTimeout(() => setToast(null), 2800);
     return () => window.clearTimeout(t);
   }, [toast]);
-
-  const digestMarkdownLinked = useMemo(() => {
-    if (!digestMarkdown) return '';
-
-    // Parse Sources table for id -> url mapping
-    const map = new Map<string, string>();
-    const lines = digestMarkdown.split('\n');
-    let inSourcesTable = false;
-    for (const line of lines) {
-      if (line.trim() === '### Sources') {
-        inSourcesTable = true;
-        continue;
-      }
-      if (!inSourcesTable) continue;
-      if (!line.trim().startsWith('|')) continue;
-      // Example: | news-001 | STAT News | NEWS | Tier 3 | [statnews.com](https://statnews.com/...) |
-      const m = line.match(/^\|\s*([^|]+?)\s*\|[\s\S]*?\((https?:\/\/[^)]+)\)\s*\|/);
-      if (m) map.set(m[1].trim(), m[2].trim());
-      const m2 = line.match(/^\|\s*([^|]+?)\s*\|[\s\S]*?\|\s*(https?:\/\/[^\s|]+)\s*\|/);
-      if (m2) map.set(m2[1].trim(), m2[2].trim());
-    }
-
-    return digestMarkdown.replace(/\[source:([^\]]+)\]/g, (full, id) => {
-      const url = map.get(String(id).trim());
-      if (!url) return full;
-      return `[source:${id}](${url})`;
-    });
-  }, [digestMarkdown]);
 
   const defaultTopic = useMemo(() => {
     const target = currentTarget?.name?.trim();
@@ -647,6 +490,25 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     return compact.toUpperCase();
   }
 
+  function selectSubscription(raw: string) {
+    const pack = resolveDemoFeedPack(raw);
+    const canonical = pack?.target || formatTargetDisplayName(raw);
+    if (!canonical) return;
+
+    if (isTopicSubscription(canonical)) {
+      setTargetOverride('');
+      setHasCustomTopic(true);
+      setTopicQuery(canonical);
+    } else {
+      setTargetOverride(normalizeTargetInput(canonical));
+      setHasCustomTopic(false);
+      setTopicQuery(defaultTopic);
+    }
+    setFeedSearchInput('');
+    setSourceFilter('All');
+    triggerRefresh(true);
+  }
+
   useEffect(() => {
     const t = (initialTarget ?? '').trim();
     if (!t) {
@@ -656,29 +518,22 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       setFeedSearchInput('');
       return;
     }
-    setTargetOverride(normalizeTargetInput(t));
-    setHasCustomTopic(false);
-    setTopicQuery(defaultTopic);
-    setFeedSearchInput('');
-    triggerRefresh(true);
+    selectSubscription(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialTarget]);
+
+  useEffect(() => {
+    if (!isDemoMode || initialTarget?.trim() || currentTarget?.name?.trim() || targetOverride || hasCustomTopic) return;
+    setTargetOverride('TROP2');
+  }, [currentTarget?.name, hasCustomTopic, initialTarget, isDemoMode, targetOverride]);
 
   function submitFeedSearch() {
     const raw = feedSearchInput.trim();
     if (!raw) return;
-    const isSingleToken = !/\s/.test(raw) && /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(raw);
-    if (isSingleToken) {
-      setTargetOverride(normalizeTargetInput(raw));
-      setHasCustomTopic(false);
-      setTopicQuery(defaultTopic);
-      triggerRefresh(true);
-      return;
-    }
-    setTargetOverride('');
-    setHasCustomTopic(true);
-    setTopicQuery(raw);
-    triggerRefresh(true);
+    const pack = resolveDemoFeedPack(raw);
+    const canonical = pack?.target || formatTargetDisplayName(raw);
+    if (canonical) useWatchlistStore.getState().add(canonical);
+    selectSubscription(canonical || raw);
   }
 
   const requestParams = useMemo<IntelligenceFeedParams>(() => {
@@ -700,7 +555,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     }
 
     return { q: effectiveTopic, limit, fresh: forceFresh };
-  }, [assetQuery, companyQuery, currentTarget?.indication, currentTarget?.name, effectiveTopic, forceFresh, hasCustomTopic]);
+  }, [assetQuery, companyQuery, currentTarget?.indication, currentTarget?.name, effectiveTopic, forceFresh, hasCustomTopic, targetOverride]);
 
   const analysisCacheKey = useMemo(() => {
     const ctx = requestParams.target || requestParams.q || currentTarget?.name || 'global';
@@ -718,7 +573,6 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     } catch {
       // ignore
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analysisCacheKey]);
 
   useEffect(() => {
@@ -733,7 +587,27 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     }
   }, [analysisCacheKey, articleAnalysisById]);
 
-  const trackedTargetsForHeader = useMemo(() => trackedTargets.slice(0, 6), [trackedTargets]);
+  const trackedTargetsForHeader = useMemo(() => {
+    const demoSeeds = isDemoMode ? DEMO_FEED_PACKS.map((pack) => pack.target) : [];
+    const seen = new Set<string>();
+    return [...demoSeeds, ...trackedTargets]
+      .map((value) => resolveDemoFeedPack(value)?.target || formatTargetDisplayName(value))
+      .filter((value) => {
+        const key = value.toLowerCase();
+        if (!value || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 8);
+  }, [isDemoMode, trackedTargets]);
+  const trackedTargetSubscriptions = useMemo(
+    () => trackedTargetsForHeader.filter((value) => !isTopicSubscription(value)),
+    [trackedTargetsForHeader]
+  );
+  const trackedTopicSubscriptions = useMemo(
+    () => trackedTargetsForHeader.filter((value) => isTopicSubscription(value)),
+    [trackedTargetsForHeader]
+  );
   const unreadQueries = useQueries({
     queries: trackedTargetsForHeader.map((t) => ({
       queryKey: ['intelligence-unread', t],
@@ -744,7 +618,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
         if (!res.ok) return { unreadCount: 0 };
         return (await res.json()) as { unreadCount: number };
       },
-      enabled: Boolean(t),
+      enabled: Boolean(t) && !isDemoMode,
       staleTime: 30_000,
       refetchInterval: 60_000,
       refetchOnWindowFocus: true,
@@ -784,7 +658,6 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
   const [pinnedIds, setPinnedIds] = useState<string[]>([]);
   const [isCuratedOnly, setIsCuratedOnly] = useState(false);
   const [hiddenItemUrls, setHiddenItemUrls] = useState<string[]>([]);
-  const [whyOpenId, setWhyOpenId] = useState<string>('');
   const [expandedItemId, setExpandedItemId] = useState<string>('');
 
   useEffect(() => {
@@ -877,14 +750,6 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
   const setCuratedOnly = (next: boolean) => {
     setIsCuratedOnly(next);
     localStorage.setItem(curatedOnlyKey, next ? 'true' : 'false');
-  };
-
-  const applyDemoPreset = () => {
-    setCuratedOnly(true);
-    setTypeFilter('All');
-    setRelevanceFilter('Target-specific');
-    setFeedFilterInput('');
-    setShowFilters(false);
   };
 
   // Persist jobId per target context so leaving the page doesn't reset progress.
@@ -1116,7 +981,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       setDigestMarkdown(existing.markdown);
       setDigestMeta({ generatedAt: existing.generatedAt, persona: existing.persona });
     })();
-  }, [requestParams.asset, requestParams.company, requestParams.indication, requestParams.target]);
+  }, [isDemoMode, requestParams.asset, requestParams.company, requestParams.indication, requestParams.target]);
 
   // Phase 2: mark this feed context as "seen" when the view is loaded.
   useEffect(() => {
@@ -1131,7 +996,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       synonyms: requestParams.synonyms,
       q: requestParams.q,
     });
-  }, [data, isError, isFetching, requestParams]);
+  }, [data, isDemoMode, isError, isFetching, requestParams]);
 
   const feedItems: FeedItem[] = useMemo(() => {
     const items = data?.items ?? [];
@@ -1151,36 +1016,27 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     }));
   }, [data?.items]);
 
-  const digestSynthesis = useMemo(() => {
-    const itemsForConfidence = (feedItems || []).slice(0, 8);
-    const overall =
-      itemsForConfidence.length > 0
-        ? Math.round(itemsForConfidence.reduce((acc, it) => acc + computeItemConfidencePct(it), 0) / itemsForConfidence.length)
-        : 0;
-
-    const takeaways = extractBulletLines(extractSection(digestMarkdown, 'Executive Takeaways')).slice(0, 3);
+  const digestSummary = useMemo(() => {
     const read = extractSection(digestMarkdown, "Sonny's Read");
-    const summary = stripInlineCitations(read.split('\n\n')[0] || read);
+    return stripInlineCitations(read.split('\n\n')[0] || read);
+  }, [digestMarkdown]);
 
-    const keyThemes = takeaways.map((t) => ({
-      theme: (t.split(';')[0] || t).replace(/^Signal:\s*/i, '').trim(),
-      detail: t,
-      direction: inferThemeDirection(t),
-    }));
-
-    return {
-      confidence: overall || 0,
-      summary,
-      keyThemes,
-      hasContent: Boolean(summary || keyThemes.length),
-    };
-  }, [digestMarkdown, feedItems]);
+  const selectedDemoPack = useMemo(
+    () => isDemoMode ? resolveDemoFeedPack(data?.queryPack?.target || requestParams.target || requestParams.q) : null,
+    [data?.queryPack?.target, isDemoMode, requestParams.q, requestParams.target]
+  );
+  const selectedSubscriptionLabel =
+    selectedDemoPack?.target || data?.queryPack?.target || requestParams.target || requestParams.q || currentTarget?.name || 'Intelligence';
+  const automaticSonnyRead =
+    selectedDemoPack?.digestBlueprint?.sonnyRead.GENERAL ||
+    digestSummary ||
+    (isDigestLoading ? 'Sonny is reading the latest sources for this selection.' : 'No cross-source read is available yet. The monitor will add one when grounded sources arrive.');
 
   const filteredItems = useMemo(() => {
     let filtered = [...feedItems];
 
-    // Curated-only mode for investor demos
-    if (isCuratedOnly) filtered = filtered.filter((item) => CURATED_SOURCES.has(item.source));
+    // Demo packs are already curated and should always remain complete.
+    if (isCuratedOnly && !isDemoMode) filtered = filtered.filter((item) => CURATED_SOURCES.has(item.source));
 
     // Hide user-marked irrelevant sources for this context
     if (blacklistedHostSet.size > 0) {
@@ -1200,45 +1056,18 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       filtered = filtered.filter((item) => !hiddenUrlSet.has(item.link.toLowerCase()));
     }
 
-    // Type filter
-    if (typeFilter !== 'All') {
-      filtered = filtered.filter((item) => item.type === typeFilter);
+    if (sourceFilter === 'Papers') {
+      filtered = filtered.filter((item) => item.type === 'publication' && !isPreprintSource(item.source));
+    } else if (sourceFilter === 'Preprints') {
+      filtered = filtered.filter((item) => item.type === 'publication' && isPreprintSource(item.source));
+    } else if (sourceFilter === 'News') {
+      filtered = filtered.filter((item) => ['news', 'deal', 'regulatory'].includes(item.type));
+    } else if (sourceFilter === 'Trials') {
+      filtered = filtered.filter((item) => item.type === 'clinical');
     }
 
-    // Relevance filter
-    if (relevanceFilter !== 'All') {
-      if (relevanceFilter === 'Target-specific')
-        filtered = filtered.filter((item) => (item.matchedTerms?.length ?? 0) > 0 || item.relevance === 'high');
-      else if (relevanceFilter === 'Market')
-        filtered = filtered.filter((item) => item.type === 'news' || item.type === 'deal');
-      else if (relevanceFilter === 'Competitive')
-        filtered = filtered.filter((item) => item.type === 'deal' || item.title.toLowerCase().includes('competi'));
-    }
-
-    // Search filter
-    if (feedFilterInput) {
-      const query = feedFilterInput.toLowerCase();
-      filtered = filtered.filter(
-        (item) =>
-          item.title.toLowerCase().includes(query) ||
-          item.summary.toLowerCase().includes(query) ||
-          item.source.toLowerCase().includes(query)
-      );
-    }
-
-    const pr = { breaking: 3, high: 2, medium: 1 } satisfies Record<FeedPriority, number>;
-    return filtered.sort((a, b) => {
-      const aPinned = pinnedIdSet.has(a.id) ? 1 : 0;
-      const bPinned = pinnedIdSet.has(b.id) ? 1 : 0;
-      if (aPinned !== bPinned) return bPinned - aPinned;
-
-      const aPr = pr[computePriority(a)];
-      const bPr = pr[computePriority(b)];
-      if (aPr !== bPr) return bPr - aPr;
-
-      return (b.score ?? 0) - (a.score ?? 0) || new Date(b.date).getTime() - new Date(a.date).getTime();
-    });
-  }, [feedItems, typeFilter, relevanceFilter, feedFilterInput, blacklistedHostSet, hiddenUrlSet, isCuratedOnly, pinnedIdSet]);
+    return filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [feedItems, sourceFilter, blacklistedHostSet, hiddenUrlSet, isCuratedOnly, isDemoMode]);
 
   const pinnedItems = useMemo(() => {
     if (!pinnedIds.length) return [];
@@ -1264,47 +1093,13 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     return feedItems.filter((it) => hiddenUrlSet.has(it.link.toLowerCase())).length;
   }, [feedItems, hiddenUrlSet]);
 
-  const getTypeTone = (type: FeedItemType) => {
-    switch (type) {
-      case 'publication':
-        return 'text-info';
-      case 'news':
-        return 'text-warning';
-      case 'deal':
-        return 'text-success';
-      case 'regulatory':
-        return 'text-primary';
-      case 'clinical':
-        return 'text-info';
-      default:
-        return 'text-textTertiary';
-    }
-  };
-
   const formatRelativeTime = (iso: string) => {
     const dt = parseISO(iso);
-    if (Number.isNaN(dt.getTime())) return '—';
+    if (Number.isNaN(dt.getTime())) return '-';
     try {
       return formatDistanceToNowStrict(dt, { addSuffix: true });
     } catch {
       return format(dt, 'MMM d');
-    }
-  };
-
-  const getTypeIcon = (type: FeedItemType) => {
-    switch (type) {
-      case 'publication':
-        return FileText;
-      case 'news':
-        return Newspaper;
-      case 'deal':
-        return Handshake;
-      case 'regulatory':
-        return Shield;
-      case 'clinical':
-        return FileText;
-      default:
-        return FileText;
     }
   };
 
@@ -1313,24 +1108,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     setRefreshToken((t) => t + 1);
   };
 
-  const typeFilters = useMemo(() => {
-    const counts = {
-      publication: feedItems.filter((i) => i.type === 'publication').length,
-      news: feedItems.filter((i) => i.type === 'news').length,
-      deal: feedItems.filter((i) => i.type === 'deal').length,
-      regulatory: feedItems.filter((i) => i.type === 'regulatory').length,
-      clinical: feedItems.filter((i) => i.type === 'clinical').length,
-    };
-    return [
-      // NOTE: "All" needs an icon because the dropdown renders `f.icon` for every option.
-      { id: 'All' as const, label: 'All', icon: Filter, count: feedItems.length },
-      { id: 'publication' as const, label: 'Publications', icon: FileText, count: counts.publication },
-      { id: 'news' as const, label: 'News', icon: Newspaper, count: counts.news },
-      { id: 'clinical' as const, label: 'Trials', icon: FileText, count: counts.clinical },
-      { id: 'deal' as const, label: 'Deals', icon: Handshake, count: counts.deal },
-      { id: 'regulatory' as const, label: 'Regulatory', icon: Shield, count: counts.regulatory },
-    ];
-  }, [feedItems]);
+  const sourceFilterOptions = useMemo(
+    () => ['Papers', 'Preprints', 'News', 'Trials', 'All'] as SourceFilter[],
+    []
+  );
 
   const buildDemoDigestMarkdown = useMemo(() => {
     return (resp: IntelligenceFeedResponse, persona: string) => {
@@ -1402,10 +1183,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       };
 
       const buildQuestionSentence = (kind: FeedItemType) => {
-        if (kind === 'regulatory') return 'What exact label language (biomarker definition + monitoring expectations) will become the precedent—and how does it constrain the next trial design?';
+        if (kind === 'regulatory') return 'What exact label language (biomarker definition + monitoring expectations) will become the precedent - and how does it constrain the next trial design?';
         if (kind === 'clinical') return 'What is the single missing piece of data that would convert this from "interesting" to "decision-changing" (endpoint, subgroup, durability, or tolerability)?';
         if (kind === 'publication') return 'Which assumption is most likely wrong when translating this into the clinic (assay, heterogeneity, exposure-response, resistance), and how would we test it quickly?';
-        if (kind === 'deal') return "What specific proof point would shift leverage materially in the next negotiation window—and what's the shortest path to that proof?";
+        if (kind === 'deal') return "What specific proof point would shift leverage materially in the next negotiation window - and what's the shortest path to that proof?";
         return 'What primary data or label-grade confirmation would validate (or invalidate) the implied narrative before it hardens into consensus?';
       };
 
@@ -1436,11 +1217,11 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
           kindKey === 'publication'
             ? `Synthesis: Use the scientific anchors above to sanity-check biomarker and mechanism assumptions before over-weighting market narrative. ${cite(items[0])}`.trim()
             : kindKey === 'clinical'
-              ? `Synthesis: Treat the trial items as a roadmap for what the field considers "decision-grade" evidence—endpoint choices and patient selection will determine whether a readout changes practice. ${cite(items[0])}`.trim()
+              ? `Synthesis: Treat the trial items as a roadmap for what the field considers "decision-grade" evidence - endpoint choices and patient selection will determine whether a readout changes practice. ${cite(items[0])}`.trim()
               : kindKey === 'regulatory'
                 ? `Synthesis: Regulatory items set the constraint set: label language, definitions, and monitoring expectations that shape both development strategy and adoption. ${cite(items[0])}`.trim()
                 : kindKey === 'deal'
-                  ? `Synthesis: Deal items should be interpreted as underwriting signals—what is being funded/partnered, and what execution risks remain. ${cite(items[0])}`.trim()
+                  ? `Synthesis: Deal items should be interpreted as underwriting signals - what is being funded/partnered, and what execution risks remain. ${cite(items[0])}`.trim()
                   : `Synthesis: News items are best used to track the narrative and competitive framing; validate with primary data where possible. ${cite(items[0])}`.trim();
 
         return [`#### ${label}`, bullets, '', synthesis, ''].join('\n');
@@ -1492,7 +1273,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       const sonnyRead = `${seedRead} ${readPad} ${cite(topDevelopments[0])}`.trim();
 
       return [
-        `## Intelligence Digest — ${titleTarget}`,
+        `## Intelligence Digest - ${titleTarget}`,
         '',
         `**Generated:** ${now} | **Items analyzed:** ${sourcesRows.length} | **Voice:** ${persona} (demo)`,
         '',
@@ -1536,22 +1317,6 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       ].join('\n');
     };
   }, []);
-
-  const relevanceOptions = useMemo(
-    () =>
-      [
-        { id: 'All' as const, label: 'All relevance' },
-        { id: 'Target-specific' as const, label: 'Target-specific' },
-        { id: 'Market' as const, label: 'Market' },
-        { id: 'Competitive' as const, label: 'Competitive' },
-      ] satisfies Array<{ id: RelevanceFilter; label: string }>,
-    []
-  );
-
-  const activeTypeFilter = useMemo(
-    () => typeFilters.find((f) => f.id === typeFilter) ?? typeFilters[0],
-    [typeFilter, typeFilters]
-  );
 
   const startSonnyDigest = async () => {
     if (!data) return;
@@ -1636,85 +1401,65 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
     }
   };
 
+  const autoDigestKey = data
+    ? `${data.queryPack?.target || data.query || requestParams.target || requestParams.q || 'feed'}:${data.fetchedAt || ''}`
+    : '';
+
+  useEffect(() => {
+    if (!data || !autoDigestKey || autoDigestKey === lastAutoDigestKey) return;
+    setLastAutoDigestKey(autoDigestKey);
+    void startSonnyDigest();
+    // The digest is keyed to the loaded selection; the function intentionally runs once per key.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoDigestKey, data, lastAutoDigestKey]);
+
   return (
-    <section className="relative max-w-6xl mx-auto">
+    <section className="relative mx-auto max-w-6xl">
       {/* Outer rounded container (matches dashboard section styling) */}
-      <div className="relative overflow-hidden rounded-3xl border border-border bg-surface shadow-2xl shadow-black/10">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(29,78,216,0.08),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(29,78,216,0.05),transparent_40%)]" />
+      <div className="surface-card relative overflow-hidden">
         <div className="relative">
       {/* Sticky glass header */}
-      <header className="sticky top-0 z-40 glass border-b border-border">
+      <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-xl">
         <div className="px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/25 via-primary/10 to-cyan-500/10 border border-border flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-xl font-semibold tracking-tight text-textPrimary flex items-center gap-2">
+                <h1 className="t-h2 flex items-center gap-2 text-textPrimary">
                   Intelligence feed
                   {isDemoMode && (
-                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{background:'linear-gradient(135deg,#FEF3C7,#FCE4A8)',border:'1px solid rgba(217,119,6,.18)',color:'#92400E'}}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+                    <span className="t-eyebrow inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-primary">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />
                       DEMO DATA
                     </span>
                   )}
                 </h1>
-                <p className="text-xs text-textSecondary mt-0.5">
-                  Latest papers, trials, and patents across your watchlist, each read by Sonny for what it changes.
+                <p className="t-meta mt-0.5 text-textSecondary">
+                  A live monitor for the targets and topics you follow, read for what changes.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => triggerRefresh(true)}
-                disabled={isFetching}
-                className="p-2.5 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors disabled:opacity-50"
-                title="Refresh"
-                aria-label="Refresh"
-              >
-                <RefreshCw className={`w-5 h-5 ${isFetching ? 'animate-spin' : ''}`} />
-              </button>
-              <button
-                onClick={() => setShowFilters((v) => !v)}
-                className={`p-2.5 rounded-xl transition-colors ${
-                  showFilters ? 'bg-primary/15 text-primary border border-primary/30' : 'text-textSecondary hover:text-textPrimary hover:bg-subtle'
-                }`}
-                title="Filters"
-                aria-label="Filters"
-              >
-                <Filter className="w-5 h-5" />
-              </button>
-              <button
-                onClick={startSonnyDigest}
-                disabled={!data || isDigestLoading}
-                className="p-2.5 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors disabled:opacity-50"
-                title="Generate Sonny synthesis"
-                aria-label="Generate Sonny synthesis"
-              >
-                <Sparkles className="w-5 h-5" />
-              </button>
-
-              <div className="relative">
+            <div className="relative shrink-0">
                 <button
                   onClick={() => setShowExportMenu((v) => !v)}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-100 text-black rounded-xl font-semibold text-sm transition-all shadow-lg shadow-white/10"
-                  title="Export"
-                  aria-label="Export"
+                  className="icon-action h-10 w-10"
+                  title="Feed options"
+                  aria-label="Feed options"
                 >
-                  <Download className="w-4 h-4" />
-                  Export
+                  <MoreHorizontal className="w-5 h-5" />
                 </button>
                 {showExportMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-56 glass-elevated rounded-xl shadow-2xl overflow-hidden border border-border">
+                  <div className="surface-card absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden">
                     <button
                       type="button"
                       onClick={() => {
                         setShowExportMenu(false);
                         exportFeedCsv();
                       }}
-                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-subtle"
+                      className="quiet-action t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle"
                     >
                       Export feed (.csv)
                     </button>
@@ -1725,104 +1470,91 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         setShowExportMenu(false);
                         exportDigest();
                       }}
-                      className="w-full px-3 py-2.5 text-left text-sm text-textPrimary hover:bg-subtle disabled:opacity-50"
+                      className="quiet-action t-body w-full px-3 py-2.5 text-left text-textPrimary hover:bg-subtle disabled:opacity-50"
                     >
                       Export Sonny digest (.md)
                     </button>
+                    <div className="border-t border-border" />
+                    <button
+                      type="button"
+                      onClick={() => setCuratedOnly(!isCuratedOnly)}
+                      className="quiet-action t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
+                    >
+                      {isCuratedOnly ? 'Use all live sources' : 'Use curated live sources'}
+                    </button>
+                    {hiddenCount > 0 || hiddenItemCount > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          clearHiddenSources();
+                          clearHiddenItems();
+                          setShowExportMenu(false);
+                        }}
+                        className="quiet-action t-body w-full px-3 py-2.5 text-left text-textSecondary hover:bg-subtle"
+                      >
+                        Restore hidden items
+                      </button>
+                    ) : null}
                   </div>
                 )}
-              </div>
             </div>
           </div>
         </div>
 
         {/* Target selector + search */}
         <div className="px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 flex-wrap">
-              {trackedTargetsForHeader.map((t) => {
-                const active = (requestParams.target || data?.queryPack?.target || currentTarget?.name || '').toLowerCase() === t.toLowerCase();
-                const unread = unreadByTarget.get(t) ?? 0;
-                return (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => {
-                      setTargetOverride(normalizeTargetInput(t));
-                      setHasCustomTopic(false);
-                      setTopicQuery(defaultTopic);
-                      setFeedSearchInput('');
-                      triggerRefresh(true);
-                    }}
-                    className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
-                      active ? 'bg-primary/15 text-primary border border-primary/30' : 'bg-subtle text-textSecondary hover:text-textPrimary border border-transparent hover:border-border'
-                    }`}
-                    title={t}
-                  >
-                    {t}
-                    {unread > 0 ? (
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${active ? 'bg-primary/25' : 'bg-subtle'}`}>{unread}</span>
-                    ) : null}
-                    {unread > 0 ? (
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface" />
-                    ) : null}
-                  </button>
-                );
-              })}
-
-              <div className="relative">
-                {isAddingTarget ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      value={addTargetInput}
-                      onChange={(e) => setAddTargetInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Escape') {
-                          setIsAddingTarget(false);
-                          setAddTargetInput('');
-                        }
-                        if (e.key === 'Enter') {
-                          const next = formatTargetDisplayName(addTargetInput);
-                          if (next) {
-                            const has = trackedTargets.some((p) => p.toLowerCase() === next.toLowerCase());
-                            if (!has) useWatchlistStore.getState().add(next);
-                          }
-                          setIsAddingTarget(false);
-                          setAddTargetInput('');
-                        }
-                      }}
-                      placeholder="Add target…"
-                      className="w-40 px-3 py-2 rounded-xl bg-subtle border border-border text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
-                      autoFocus
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsAddingTarget(false);
-                        setAddTargetInput('');
-                      }}
-                      className="p-2 rounded-xl text-textSecondary hover:text-textPrimary hover:bg-subtle"
-                      aria-label="Cancel add target"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setIsAddingTarget(true)}
-                    className="p-2 text-textSecondary hover:text-textPrimary hover:bg-subtle rounded-xl transition-colors border border-dashed border-border hover:border-primary/30"
-                    aria-label="Add target"
-                    title="Add target"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                )}
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)] lg:items-end">
+            <nav aria-label="Intelligence subscriptions" className="min-w-0 space-y-2">
+              <div className="surface-inset grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3 border-transparent bg-subtle/60 px-3 py-2.5">
+                <span className="t-eyebrow text-textTertiary">Targets</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {trackedTargetSubscriptions.map((subscription) => {
+                    const active = selectedSubscriptionLabel.toLowerCase() === subscription.toLowerCase();
+                    const unread = unreadByTarget.get(subscription) ?? 0;
+                    return (
+                      <button
+                        key={subscription}
+                        type="button"
+                        onClick={() => selectSubscription(subscription)}
+                        className={`t-body rounded-lg border px-3 py-1.5 font-medium transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                          active
+                            ? 'bg-primary text-white border-primary shadow-sm'
+                            : 'bg-surface border-border text-textSecondary hover:text-primary hover:border-primary/30'
+                        }`}
+                      >
+                        {subscription}
+                        {unread > 0 ? <span className="t-meta ml-1.5 font-mono opacity-70">{unread}</span> : null}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+              <div className="surface-inset grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3 border-transparent bg-subtle/60 px-3 py-2.5">
+                <span className="t-eyebrow text-textTertiary">Topics</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {trackedTopicSubscriptions.map((subscription) => {
+                    const active = selectedSubscriptionLabel.toLowerCase() === subscription.toLowerCase();
+                    return (
+                      <button
+                        key={subscription}
+                        type="button"
+                        onClick={() => selectSubscription(subscription)}
+                        className={`t-body rounded-lg border px-3 py-1.5 font-medium transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                          active
+                            ? 'bg-primary text-white border-primary shadow-sm'
+                            : 'bg-surface border-border text-textSecondary hover:text-primary hover:border-primary/30'
+                        }`}
+                      >
+                        {subscription}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </nav>
 
-            <div className="flex-1 flex items-center gap-2 justify-end">
-              <div className="relative w-full max-w-md">
+            <div className="w-full">
+              <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textTertiary" />
                 <input
                   type="text"
@@ -1834,14 +1566,14 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                       submitFeedSearch();
                     }
                   }}
-                  placeholder="Search targets or topics (e.g., TROP2, HER3, Nectin-4)…"
-                  className="w-full pl-10 pr-20 py-2.5 bg-subtle border border-border rounded-xl text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all"
+                  placeholder="Add a target or topic"
+                  className="quiet-action t-body w-full rounded-[10px] border border-border bg-white py-2.5 pl-10 pr-20 text-textPrimary placeholder:text-textTertiary hover:border-primary/20 focus:border-primary/40 focus:outline-none"
                 />
                 {feedSearchInput ? (
                   <button
                     type="button"
                     onClick={() => setFeedSearchInput('')}
-                    className="absolute right-14 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-textSecondary hover:text-textPrimary hover:bg-subtle"
+                    className="quiet-action absolute right-14 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-textSecondary hover:bg-subtle hover:text-primary"
                     aria-label="Clear search"
                   >
                     <X className="w-4 h-4" />
@@ -1851,145 +1583,39 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   type="button"
                   onClick={() => submitFeedSearch()}
                   disabled={!feedSearchInput.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-subtle hover:bg-subtle text-textPrimary text-xs font-semibold disabled:opacity-50"
+                  className="quiet-action t-meta absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-subtle px-3 py-1.5 font-semibold text-textSecondary hover:bg-primary/[0.06] hover:text-primary disabled:opacity-50"
                 >
-                  Fetch
+                  Add
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Filter bar */}
-          <div
-            className={`overflow-hidden transition-all duration-300 ${
-              showFilters ? 'max-h-48 opacity-100 mt-4' : 'max-h-0 opacity-0'
-            }`}
-          >
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-xs text-textTertiary font-medium">Filter:</span>
-              {typeFilters.map((f) => (
+          <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="surface-inset inline-flex w-fit items-center gap-1 border-transparent p-1" aria-label="Source filter">
+              {sourceFilterOptions.map((option) => (
                 <button
-                  key={f.id}
+                  key={option}
                   type="button"
-                  onClick={() => setTypeFilter(f.id)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-colors ${
-                    typeFilter === f.id ? 'bg-primary/10 border-transparent text-primary' : 'bg-white border-border text-textSecondary hover:text-textPrimary hover:border-primary/30'
+                  onClick={() => setSourceFilter(option)}
+                  aria-pressed={sourceFilter === option}
+                  className={`t-meta rounded-lg px-2.5 py-1.5 font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                    sourceFilter === option ? 'bg-surface text-primary shadow-sm' : 'text-textTertiary hover:text-textPrimary'
                   }`}
                 >
-                  {f.label}
-                  <span className="ml-1.5 text-[10px] opacity-60">{f.count}</span>
+                  {option}
                 </button>
               ))}
-              <span className="w-px h-4 bg-border" />
-              {relevanceOptions.map((r) => (
-                <button
-                  key={r.id}
-                  type="button"
-                  onClick={() => setRelevanceFilter(r.id)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                    relevanceFilter === r.id ? 'bg-primary/15 border-primary/30 text-primary' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
-                  }`}
-                >
-                  {r.label}
-                </button>
-              ))}
-              <span className="w-px h-4 bg-border" />
-              <button
-                type="button"
-                onClick={() => setCuratedOnly(!isCuratedOnly)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                  isCuratedOnly ? 'bg-go-tint border-emerald-500/30 text-go-text' : 'bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle'
-                }`}
-                title="Curated-only sources"
-              >
-                Curated only
-              </button>
-              <button
-                type="button"
-                onClick={applyDemoPreset}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg border bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors"
-                title="Demo preset (curated + target-specific)"
-              >
-                Demo preset
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowAdvanced((v) => !v)}
-                className="ml-auto px-3 py-1.5 text-xs font-medium rounded-lg border bg-subtle border-border text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors flex items-center gap-2"
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                Advanced
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
-              </button>
             </div>
-
-            {showAdvanced ? (
-              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  value={feedFilterInput}
-                  onChange={(e) => setFeedFilterInput(e.target.value)}
-                  placeholder="Search within loaded items…"
-                  className="w-full px-3 py-2.5 bg-subtle border border-border rounded-xl text-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
-                />
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setTypeFilter('All');
-                      setRelevanceFilter('All');
-                      setFeedFilterInput('');
-                    }}
-                    className="px-3 py-2.5 rounded-xl bg-subtle border border-border text-sm text-textSecondary hover:text-textPrimary hover:bg-subtle transition-colors"
-                  >
-                    Clear
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowFilters(false)}
-                    className="px-3 py-2.5 rounded-xl bg-primary/15 border border-primary/30 text-sm text-primary font-semibold hover:bg-primary/20 transition-colors"
-                  >
-                    Done
-                  </button>
-                </div>
-              </div>
-            ) : null}
-
-            {hiddenCount > 0 || hiddenItemCount > 0 ? (
-              <div className="mt-3 flex items-center justify-between gap-3 text-xs text-textTertiary">
-                <span className="truncate">
-                  Hidden: {hiddenCount} (source) • {hiddenItemCount} (items)
-                </span>
-                <div className="flex items-center gap-2 shrink-0">
-                  {hiddenCount > 0 ? (
-                    <button
-                      type="button"
-                      onClick={clearHiddenSources}
-                      className="px-2 py-1 rounded-lg bg-subtle border border-border text-textSecondary hover:text-textPrimary hover:bg-subtle"
-                    >
-                      Clear hidden sources
-                    </button>
-                  ) : null}
-                  {hiddenItemCount > 0 ? (
-                    <button
-                      type="button"
-                      onClick={clearHiddenItems}
-                      className="px-2 py-1 rounded-lg bg-subtle border border-border text-textSecondary hover:text-textPrimary hover:bg-subtle"
-                    >
-                      Clear hidden items
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-            ) : null}
-
-            {data?.errors?.length ? (
-              <div className="mt-3 text-xs text-warning">
-                Some sources failed to load ({data.errors.length}). Results shown are partial.
-              </div>
-            ) : null}
+            <p className="t-eyebrow text-textTertiary">
+              {isFetching ? 'Updating automatically' : `Monitoring ${feedItems.length} grounded sources`}
+            </p>
           </div>
+          {data?.errors?.length ? (
+            <p className="t-meta mt-3 text-textSecondary">
+              {data.errors.length} source connection{data.errors.length === 1 ? '' : 's'} did not respond. Available results are shown.
+            </p>
+          ) : null}
         </div>
       </header>
 
@@ -1997,7 +1623,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       {toast ? (
         <div className="fixed top-20 right-6 z-50 animate-slide-up">
           <div
-            className={`glass-elevated rounded-xl px-4 py-3 text-sm font-medium border ${
+            className={`t-body glass-elevated rounded-xl border px-4 py-3 font-medium ${
               toast.tone === 'success'
                 ? 'border-emerald-500/30 text-go-text'
                 : toast.tone === 'error'
@@ -2010,120 +1636,26 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
         </div>
       ) : null}
 
-      <main className="px-6 py-8 space-y-6">
-        {/* Sonny synthesis */}
-        <section>
-          <div className="bg-surface border border-primary/20 rounded-2xl overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setIsSynthesisExpanded((v) => !v)}
-              className="w-full flex items-center justify-between p-5 hover:bg-subtle transition-colors text-left"
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/25">
-                  <Sparkles className="w-5 h-5 text-white" />
+      <main className="space-y-6 px-6 py-8">
+        <section aria-labelledby="sonny-read-heading" className="surface-card relative overflow-hidden border-primary/15 bg-primary/[0.025] p-5">
+          <div className="flex items-start gap-4">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-primary/15 bg-white text-primary shadow-card">
+              <Sparkles className="w-4 h-4 text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <div>
+                  <p className="t-eyebrow text-primary">Automatic digest</p>
+                  <h2 id="sonny-read-heading" className="t-h3 text-textPrimary">Sonny's read</h2>
                 </div>
-                <div className="min-w-0">
-                  <h2 className="text-sm font-semibold text-textPrimary flex items-center gap-2">
-                    Sonny Synthesis
-                    <span className="text-[10px] px-2 py-0.5 bg-primary/20 text-primary rounded-full font-medium">
-                      {isDemoMode ? 'DEMO' : 'AI'}
-                    </span>
-                  </h2>
-                  <p className="text-xs text-textSecondary mt-0.5 truncate">
-                    {digestJobStatus
-                      ? `Status: ${digestJobStatus.status}${typeof digestJobStatus.progress === 'number' ? ` • ${(digestJobStatus.progress * 100).toFixed(0)}%` : ''}${digestJobStatus.message ? ` • ${digestJobStatus.message}` : ''}`
-                      : digestMeta
-                        ? `Generated ${format(parseISO(digestMeta.generatedAt), 'MMM d • h:mm a')} • ${digestMeta.persona}`
-                        : 'Cross-source analysis (collapsed by default)'}
-                  </p>
-                </div>
+                <span className="t-meta font-mono text-textTertiary">{selectedSubscriptionLabel} / {feedItems.length} sources</span>
               </div>
-
-              <div className="flex items-center gap-4 shrink-0">
-                <ConfidenceMeter value={digestSynthesis.confidence} />
-                {isSynthesisExpanded ? <ChevronUp className="w-5 h-5 text-textSecondary" /> : <ChevronDown className="w-5 h-5 text-textSecondary" />}
-              </div>
-            </button>
-
-            <div className={`overflow-hidden transition-all duration-300 ${isSynthesisExpanded ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="px-5 pb-5 space-y-4">
-                {digestError ? <p className="text-sm text-danger">{digestError}</p> : null}
-
-                {digestSynthesis.summary ? (
-                  <div className="p-4 bg-subtle rounded-xl border border-border">
-                    <p className="text-sm text-textSecondary leading-relaxed">{digestSynthesis.summary}</p>
-                  </div>
-                ) : (
-                  <div className="p-4 bg-subtle rounded-xl border border-border">
-                    <p className="text-sm text-textSecondary leading-relaxed">
-                      Generate a synthesis to get a structured, decision-grade summary (with source links).
-                    </p>
-                  </div>
-                )}
-
-                {digestSynthesis.keyThemes.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {digestSynthesis.keyThemes.map((t, idx) => (
-                      <div key={idx} className="p-3 bg-subtle rounded-xl border border-border hover:border-border transition-colors">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span
-                            className={`w-2 h-2 rounded-full ${
-                              t.direction === 'positive' ? 'bg-emerald-500' : t.direction === 'watch' ? 'bg-amber-500' : 'bg-slate-500'
-                            }`}
-                          />
-                          <span className="text-[10px] font-bold text-textTertiary uppercase tracking-wider">
-                            {t.direction === 'positive' ? 'Tailwind' : t.direction === 'watch' ? 'Monitor' : 'Neutral'}
-                          </span>
-                        </div>
-                        <h3 className="text-sm font-semibold text-textPrimary mb-1 line-clamp-2">{t.theme}</h3>
-                        <p className="text-xs text-textSecondary leading-relaxed line-clamp-3">{t.detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-
-                <div className="flex items-center justify-between gap-3 pt-2">
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={startSonnyDigest}
-                      disabled={!data || isDigestLoading}
-                      className="px-4 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textPrimary text-sm font-semibold disabled:opacity-50"
-                    >
-                      {digestMarkdown ? 'Regenerate' : 'Generate'}
-                    </button>
-                    <button
-                      type="button"
-                      disabled={!digestMarkdown}
-                      onClick={() => setIsFullDigestExpanded((v) => !v)}
-                      className="px-4 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textSecondary text-sm font-medium disabled:opacity-50 flex items-center gap-2"
-                    >
-                      {isFullDigestExpanded ? 'Hide full digest' : 'View full digest'}
-                      {isFullDigestExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    disabled={!digestMarkdown}
-                    onClick={exportDigest}
-                    className="px-4 py-2 rounded-xl bg-white text-black hover:bg-slate-100 text-sm font-semibold disabled:opacity-50"
-                  >
-                    Export digest
-                  </button>
-                </div>
-
-                {isFullDigestExpanded && digestMarkdownLinked ? (
-                  <div className="pt-2">
-                    <CitedMarkdown
-                      content={digestMarkdownLinked}
-                      className="w-full"
-                      tone={{ gradient: 'from-primary/15 via-purple-500/10 to-cyan-500/10', border: 'border-border' }}
-                      isDemo={isDemoMode}
-                    />
-                  </div>
-                ) : null}
-              </div>
+              <p className="t-lead mt-3 max-w-[82ch] font-display text-textSecondary line-clamp-5">
+                {automaticSonnyRead}
+              </p>
+              {digestError && !selectedDemoPack ? (
+                <p className="t-meta mt-2 text-textTertiary">The live digest is waiting for a grounded response. Feed items remain available below.</p>
+              ) : null}
             </div>
           </div>
         </section>
@@ -2132,41 +1664,34 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
         <section>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <h2 className="text-lg font-semibold text-textPrimary">Latest updates</h2>
-              <span className="text-xs px-2 py-1 bg-subtle text-textSecondary rounded-lg border border-border">
+              <h2 className="t-h3 text-textPrimary">Latest updates</h2>
+              <span className="t-meta rounded-lg border border-border bg-subtle px-2 py-1 text-textSecondary">
                 {filteredItems.length} items
               </span>
               {pinnedItems.length > 0 ? (
-                <span className="text-xs px-2 py-1 bg-watch-tint text-watch-text rounded-lg border border-amber-500/20">
+                <span className="t-meta rounded-lg border border-primary/20 bg-primary/5 px-2 py-1 text-primary">
                   {pinnedItems.length} pinned
                 </span>
               ) : null}
             </div>
-            <div className="text-xs text-textTertiary">
+            <div className="t-meta text-textTertiary">
               Showing{' '}
               <span className="font-mono">
-                {requestParams.target || requestParams.q || data?.queryPack?.target || currentTarget?.name || '—'}
+                {selectedSubscriptionLabel || '-'}
               </span>
             </div>
           </div>
 
           {isError ? (
-            <div className="glass rounded-2xl p-5">
-              <p className="text-textPrimary font-semibold mb-1">Couldn't load feed</p>
-              <p className="text-sm text-textSecondary">{error instanceof Error ? error.message : 'Unknown error'}</p>
-              <div className="mt-4">
-                <button
-                  onClick={() => triggerRefresh(true)}
-                  className="px-4 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textPrimary text-sm font-semibold"
-                >
-                  Try again
-                </button>
-              </div>
+            <div className="surface-inset p-6">
+              <p className="t-h3 mb-1 text-textPrimary">No monitored sources are available for this selection yet.</p>
+              <p className="t-body text-textSecondary">
+                {error instanceof Error ? error.message : 'The monitor will update automatically when a grounded source is available.'}
+              </p>
             </div>
           ) : filteredItems.length > 0 ? (
             <div className="space-y-4">
               {filteredItems.map((item) => {
-                const Icon = getTypeIcon(item.type);
                 const confidence = computeItemConfidencePct(item);
                 const pinned = pinnedIdSet.has(item.id);
                 const analysis = articleAnalysisById[item.id];
@@ -2215,211 +1740,93 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   return 'Open paper';
                 })();
 
-                const activeTarget =
-                  requestParams.target || data?.queryPack?.target || currentTarget?.name || null;
-
-                const sonnysRead = analysis?.sections?.theImplication?.text || buildImplicationSentence(item.type);
-
-                const relevanceLabel =
-                  item.relevance === 'high' ? 'High' : item.relevance === 'medium' ? 'Medium' : 'Low';
-                const relevanceClass =
-                  item.relevance === 'high'
-                    ? 'text-go-text'
-                    : item.relevance === 'medium'
-                      ? 'text-watch-text'
-                      : 'text-textSecondary';
+                const sonnyContext = analysis?.sections?.theContext?.text || buildContextSentence(item.type);
+                const sonnyImplication = analysis?.sections?.theImplication?.text || buildImplicationSentence(item.type);
+                const sonnyQuestion = analysis?.sections?.theQuestion?.text || buildQuestionSentence(item.type);
+                const sonnysRead = analysis?.sections?.theImplication?.text || `${item.summary} ${sonnyImplication}`;
 
                 return (
                   <article
                     key={item.id}
                     className={[
-                      'group border rounded-2xl overflow-hidden',
-                      'shadow-[0_1px_2px_rgba(15,23,42,.04),0_2px_8px_rgba(15,23,42,.035)]',
-                      'transition-all duration-200',
-                      'hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(15,23,42,.10),0_2px_8px_rgba(15,23,42,.05)]',
-                      'active:translate-y-0 motion-reduce:hover:translate-y-0 motion-reduce:transition-none',
+                      'surface-card surface-card-interactive group overflow-hidden',
+                      'motion-reduce:hover:translate-y-0 motion-reduce:transition-none',
                       pinned
-                        ? 'border-amber-500/30 ring-1 ring-amber-500/10 bg-white hover:border-amber-500/40'
-                        : 'border-border bg-white hover:border-blue-200',
+                        ? 'border-primary/30 ring-1 ring-primary/10 bg-white hover:border-primary/40'
+                        : 'border-border bg-white hover:border-primary/30',
                     ].join(' ')}
                   >
-                    <div className="p-[17px_19px]">
+                    <div className="p-5">
 
-                      {/* 1. Meta row: source pill + type badge + target tag + time + icon controls */}
+                      {/* Source, kind, and date */}
                       <div className="flex items-center gap-2 flex-wrap">
                         {pinned ? (
-                          <div className="flex items-center gap-1 text-watch-text mr-1">
+                          <div className="flex items-center gap-1 text-primary mr-1">
                             <Pin className="w-3 h-3" />
-                            <span className="text-[10px] font-semibold uppercase tracking-wider">Pinned</span>
+                            <span className="t-eyebrow">Pinned</span>
                           </div>
                         ) : null}
-                        <SourcePill source={item.source} url={item.link} />
-                        <span className={`text-[11px] font-medium ${getTypeTone(item.type)}`}>{typeLabel}</span>
-                        {activeTarget ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-amber-500/30 text-[10.5px] font-semibold text-watch-text bg-transparent">
-                            {activeTarget}
-                          </span>
-                        ) : null}
+                        <span className="t-eyebrow inline-flex items-center rounded-md border border-primary/20 bg-primary/[0.045] px-2 py-1 text-primary">
+                          {typeLabel}
+                        </span>
+                        <span className="t-meta inline-flex items-center rounded-md border border-border bg-subtle px-2 py-1 font-mono text-textSecondary">{item.source}</span>
+                        <span className="t-meta font-mono text-textTertiary">{selectedSubscriptionLabel}</span>
                         <span className="flex-1" />
-                        <span className="text-[11px] text-textTertiary">{formatRelativeTime(item.date)}</span>
-                        <button
-                          type="button"
-                          onClick={() => togglePinned(item.id)}
-                          className={`p-1.5 rounded-lg hover:bg-subtle transition-colors ${pinned ? 'text-watch-text' : 'text-textTertiary hover:text-textPrimary'}`}
-                          title={pinned ? 'Unpin' : 'Pin'}
-                          aria-label={pinned ? 'Unpin' : 'Pin'}
-                        >
-                          <Pin className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setWhyOpenId((prev) => (prev === item.id ? '' : item.id))}
-                          className="p-1.5 rounded-lg hover:bg-subtle transition-colors text-textTertiary hover:text-textPrimary"
-                          title="Why included?"
-                          aria-label="Why included"
-                        >
-                          <Info className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => hideItemUrlForContext(item.link)}
-                          className="p-1.5 rounded-lg hover:bg-subtle transition-colors text-textTertiary hover:text-textPrimary"
-                          title="Hide this item"
-                          aria-label="Hide this item"
-                        >
-                          <EyeOff className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => hideSourceForContext(item.link)}
-                          className="p-1.5 rounded-lg hover:bg-subtle transition-colors text-textTertiary hover:text-textPrimary"
-                          title="Hide this source"
-                          aria-label="Hide this source"
-                        >
-                          <Ban className="w-3.5 h-3.5" />
-                        </button>
+                        <time dateTime={item.date} className="t-meta font-mono text-textTertiary">{formatRelativeTime(item.date)}</time>
                       </div>
 
-                      {/* 2. Title - clickable link */}
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block mt-[11px] group/link"
-                      >
-                        <h3 className="text-[15px] font-semibold text-textPrimary leading-[1.35] hover:text-primary transition-colors">
-                          {highlightText(item.title, item.matchedTerms || [])}
-                        </h3>
-                      </a>
+                      <h3 className="t-h3 mt-3 text-balance text-textPrimary">
+                        {highlightText(item.title, item.matchedTerms || [])}
+                      </h3>
 
                       {/* 3. Sonny's read - inline implication */}
-                      <div className="mt-[10px] flex gap-[9px] items-start">
+                      <div className="surface-inset mt-3 flex items-start gap-2.5 border-transparent bg-subtle/65 px-3 py-2.5">
                         <Sparkles className="w-[15px] h-[15px] text-primary flex-none mt-[3px]" />
                         <div className="flex-1 min-w-0">
-                          <span className="text-[10px] font-semibold uppercase tracking-[.05em] text-textTertiary block mb-0.5">
+                          <span className="t-eyebrow mb-0.5 block text-textTertiary">
                             {"Sonny's read"}
                           </span>
-                          <p className="font-display text-[14.5px] leading-[1.6] text-textSecondary m-0 max-w-[64ch]">
+                          <p className="t-body m-0 max-w-[76ch] font-display text-textSecondary line-clamp-2">
                             {sonnysRead}
                           </p>
                         </div>
                       </div>
 
-                      {/* Why included - collapsible */}
-                      {whyOpenId === item.id ? (
-                        <div className="mt-4 p-4 rounded-xl bg-subtle border border-border text-xs text-textSecondary">
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="font-semibold text-textPrimary">Why included</p>
-                            <button
-                              type="button"
-                              onClick={() => setWhyOpenId('')}
-                              className="text-textTertiary hover:text-textPrimary"
-                              aria-label="Close why included"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                          <div className="mt-2 space-y-1">
-                            <div>
-                              <span className="text-textSecondary">Matched:</span>{' '}
-                              <span className="font-mono">{uniqueTerms(item.matchedTerms || []).slice(0, 8).join(', ') || '\u2014'}</span>
-                            </div>
-                            <div>
-                              <span className="text-textSecondary">Field:</span>{' '}
-                              <span>
-                                {item.matchedFields?.includes('title')
-                                  ? 'title'
-                                  : item.matchedFields?.includes('summary')
-                                    ? 'summary'
-                                    : '\u2014'}
-                              </span>
-                            </div>
-                            <div>
-                              <span className="text-textSecondary">Score:</span>{' '}
-                              <span className="font-mono">{typeof item.score === 'number' ? item.score.toFixed(2) : '\u2014'}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ) : null}
-
-                      {/* 4. Footer row: relevance + identifier + actions */}
+                      {/* One primary action; source and management controls live inside the expansion. */}
                       <div className="flex items-center gap-3 mt-[14px] flex-wrap">
-                        <span className="text-[11px] font-medium text-textSecondary">
-                          Relevance{' '}
-                          <span className={`font-bold ${relevanceClass}`}>{relevanceLabel}</span>
-                        </span>
+                        <span className="t-eyebrow text-textTertiary">{item.relevance} relevance</span>
                         {itemId ? (
-                          <span className="font-mono text-[11px] text-textTertiary">{itemId}</span>
+                          <span className="t-meta font-mono text-textTertiary">{itemId}</span>
                         ) : null}
                         <span className="flex-1" />
-                        <a
-                          href={item.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] bg-white border border-border text-[12.5px] font-semibold text-textPrimary hover:border-blue-200 hover:shadow-[0_1px_3px_rgba(15,23,42,.05)] transition-all active:scale-[.98]"
-                        >
-                          {openLabel}
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                        {/* Synthesize - toggles the full 4-panel analysis expand */}
                         <button
                           type="button"
                           onClick={() => {
                             const next = expanded ? '' : item.id;
                             setExpandedItemId(next);
-                            if (next) void ensureArticleAnalysis(item);
+                            if (next && !isDemoMode) void ensureArticleAnalysis(item);
                           }}
-                          className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] bg-primary text-white text-[12.5px] font-semibold shadow-[0_1px_2px_rgba(29,78,216,.35)] hover:bg-primary/90 transition-all active:scale-[.98]"
+                          className="quiet-action t-meta inline-flex items-center gap-1.5 rounded-[10px] bg-primary px-3 py-2 font-semibold text-white shadow-sm hover:bg-primary/90"
                         >
                           {expanded ? (
-                            <>Collapse <ChevronUp className="w-3.5 h-3.5" /></>
+                            <>Close read <ChevronUp className="w-3.5 h-3.5" /></>
                           ) : (
                             <>
-                              Synthesize
+                              Read Sonny's take
                               {analysisState === 'loading' ? (
-                                <span className="text-[10px] opacity-70">...</span>
+                                <span className="t-meta opacity-70">...</span>
                               ) : (
                                 <ChevronDown className="w-3.5 h-3.5" />
                               )}
                             </>
                           )}
                         </button>
-                        {/* Extract sequences - honest coming-soon, only shown for genuine patent URLs */}
-                        {isPatent ? (
-                          <span
-                            className="inline-flex items-center gap-1.5 px-[13px] py-[7px] rounded-[9px] border border-border text-[12.5px] font-semibold text-textTertiary bg-white opacity-50 cursor-not-allowed select-none"
-                            title="Extract sequences - coming soon (patent PDF parser not yet connected)"
-                            aria-disabled="true"
-                          >
-                            Extract sequences
-                          </span>
-                        ) : null}
                       </div>
                     </div>
 
-                    {/* Expandable Sonny Analysis (full 4-panel) - toggled by Synthesize */}
+                    {/* Full grounded read and source actions */}
                     <div
-                      className={`border-t border-border overflow-hidden transition-all duration-300 ${
+                      className={`overflow-hidden border-t border-border transition-all duration-200 ${
                         expanded ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'
                       }`}
                     >
@@ -2427,9 +1834,9 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-xs font-semibold text-textPrimary">Sonny Analysis</span>
+                            <span className="t-body-sm font-semibold text-textPrimary">Sonny's full read</span>
                             {analysisState === 'loading' ? (
-                              <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-subtle border border-border text-textTertiary animate-pulse">
+                              <span className="t-meta ml-2 animate-pulse rounded-full border border-border bg-subtle px-2 py-0.5 text-textTertiary">
                                 generating...
                               </span>
                             ) : null}
@@ -2437,15 +1844,15 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           <ConfidenceMeter value={effectiveConfidence} />
                         </div>
 
-                        {analysisError ? (
+                        {analysisError && !isDemoMode ? (
                           <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                            <p className="text-sm text-nogo-text">{"Couldn't generate analysis."}</p>
-                            <p className="text-xs text-nogo-text/70 mt-1 line-clamp-2">{analysisError}</p>
+                            <p className="t-body text-textPrimary">The live analysis is not available yet.</p>
+                            <p className="t-meta mt-1 text-nogo-text/70 line-clamp-2">{analysisError}</p>
                             <div className="mt-3">
                               <button
                                 type="button"
                                 onClick={() => void ensureArticleAnalysis(item)}
-                                className="px-3 py-2 rounded-xl bg-subtle hover:bg-subtle border border-border text-textPrimary text-sm font-semibold"
+                                className="quiet-action t-body rounded-[10px] border border-border bg-white px-3 py-2 font-semibold text-textPrimary hover:border-primary/25 hover:text-primary"
                               >
                                 Retry
                               </button>
@@ -2455,27 +1862,25 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
-                            <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                              <Newspaper className="w-3 h-3 text-cyan-400" />
+                            <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
+                              <Newspaper className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wide block mb-1">The News</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
-                                {analysis?.sections?.theNews?.text ||
-                                  (analysisState === 'loading' ? 'Generating a grounded summary from the source...' : 'Generate analysis to view this section.')}
+                              <span className="t-eyebrow mb-1 block text-primary">The source</span>
+                              <p className="t-body text-textSecondary">
+                                {analysis?.sections?.theNews?.text || item.summary}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-start gap-3">
                             <div className="w-7 h-7 rounded-lg bg-subtle border border-border flex items-center justify-center shrink-0 mt-0.5">
-                              <Target className="w-3 h-3 text-slate-400" />
+                              <Target className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block mb-1">The Context</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
-                                {analysis?.sections?.theContext?.text ||
-                                  (analysisState === 'loading' ? 'Weighting this signal by source tier + landscape...' : 'Generate analysis to view this section.')}
+                              <span className="t-eyebrow mb-1 block text-primary">The context</span>
+                              <p className="t-body text-textSecondary">
+                                {sonnyContext}
                               </p>
                             </div>
                           </div>
@@ -2485,23 +1890,21 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <Lightbulb className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-wide block mb-1">The Implication</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
-                                {analysis?.sections?.theImplication?.text ||
-                                  (analysisState === 'loading' ? 'Deriving second/third-order implications...' : 'Generate analysis to view this section.')}
+                              <span className="t-eyebrow mb-1 block text-primary">The implication</span>
+                              <p className="t-body text-textSecondary">
+                                {sonnyImplication}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-start gap-3">
-                            <div className="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                              <HelpCircle className="w-3 h-3 text-amber-400" />
+                            <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
+                              <HelpCircle className="w-3 h-3 text-primary" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wide block mb-1">The Question</span>
-                              <p className="text-sm text-textSecondary leading-relaxed">
-                                {analysis?.sections?.theQuestion?.text ||
-                                  (analysisState === 'loading' ? 'Identifying the single highest-leverage follow-up question...' : 'Generate analysis to view this section.')}
+                              <span className="t-eyebrow mb-1 block text-primary">The question</span>
+                              <p className="t-body text-textSecondary">
+                                {sonnyQuestion}
                               </p>
                             </div>
                           </div>
@@ -2509,18 +1912,12 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                         {analysis?.keyThemes?.length ? (
                           <div className="pt-1">
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-textTertiary mb-2">Key themes</p>
+                            <p className="t-eyebrow mb-2 text-textTertiary">Key themes</p>
                             <div className="flex flex-wrap gap-2">
                               {analysis.keyThemes.slice(0, 4).map((t, idx) => (
                                 <span
                                   key={`${t.theme}-${idx}`}
-                                  className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
-                                    t.direction === 'positive'
-                                      ? 'bg-go-tint border-emerald-500/20 text-go-text'
-                                      : t.direction === 'watch'
-                                        ? 'bg-watch-tint border-amber-500/20 text-watch-text'
-                                        : 'bg-subtle border-border text-textSecondary'
-                                  }`}
+                                  className="t-meta rounded-md border border-primary/20 bg-primary/5 px-2.5 py-1 font-semibold text-primary"
                                   title={t.rationale}
                                 >
                                   {t.theme}
@@ -2532,10 +1929,10 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
 
                         {analysis?.actions?.length ? (
                           <div className="pt-1">
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-textTertiary mb-2">Actions</p>
+                            <p className="t-eyebrow mb-2 text-textTertiary">Actions</p>
                             <ul className="space-y-2">
                               {analysis.actions.slice(0, 3).map((a, idx) => (
-                                <li key={`${a.action}-${idx}`} className="text-sm text-textSecondary leading-relaxed">
+                                <li key={`${a.action}-${idx}`} className="t-body text-textSecondary">
                                   <span className="font-semibold text-textPrimary">{a.action}</span>
                                   <span className="text-textSecondary"> - {a.why}</span>
                                 </li>
@@ -2544,17 +1941,25 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           </div>
                         ) : null}
 
-                        <div className="flex items-center justify-between pt-3 border-t border-border">
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 border-t border-border">
                           <a
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-xs text-primary hover:text-primary/90 font-medium transition-colors"
+                            className="quiet-action t-meta flex items-center gap-2 rounded-md font-medium text-primary hover:text-primary/90"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
-                            Read full source
+                            {openLabel}
                           </a>
-                          <div className="flex items-center gap-2" />
+                          <button type="button" onClick={() => togglePinned(item.id)} className="quiet-action t-meta rounded-md text-textTertiary hover:text-primary">
+                            {pinned ? 'Unpin' : 'Pin'}
+                          </button>
+                          <button type="button" onClick={() => hideItemUrlForContext(item.link)} className="quiet-action t-meta rounded-md text-textTertiary hover:text-primary">
+                            Hide item
+                          </button>
+                          <button type="button" onClick={() => hideSourceForContext(item.link)} className="quiet-action t-meta rounded-md text-textTertiary hover:text-primary">
+                            Hide source
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -2565,21 +1970,18 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
           ) : (
             <div className="text-center py-16">
               <FileText className="w-12 h-12 text-textTertiary mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium text-textSecondary mb-2">{isLoading ? 'Loading…' : 'No results'}</p>
-              <p className="text-sm text-textSecondary">{isLoading ? 'Fetching the latest items…' : 'Try adjusting filters or search.'}</p>
+              <p className="t-h3 mb-2 text-textSecondary">{isLoading ? 'Reading monitored sources...' : 'No items match this source view.'}</p>
+              <p className="t-body text-textSecondary">{isLoading ? 'The feed will appear as soon as the monitor responds.' : 'Choose another source type or add a different subscription.'}</p>
             </div>
           )}
         </section>
       </main>
 
       {/* click-outside overlays */}
-      {(showExportMenu || showFilters) && (
+      {showExportMenu && (
         <div
           className="fixed inset-0 z-30"
-          onClick={() => {
-            setShowExportMenu(false);
-            setShowFilters(false);
-          }}
+          onClick={() => setShowExportMenu(false)}
         />
       )}
         </div>

@@ -21,7 +21,7 @@ export default {
         info: '#1D4ED8',
         textPrimary: '#0F172A',
         textSecondary: '#475569',
-        textTertiary: '#94A3B8',
+        textTertiary: '#5F6D80', // was #94A3B8 (~2.4:1, fails WCAG AA); ~4.95:1 on the page ground
         border: '#E6EBF2',
         // --- Forward role tokens (design-doc vocabulary for SP2/new work) ---
         page: '#F6F8FB',

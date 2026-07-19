@@ -78,10 +78,10 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           <BookOpen size={32} style={{ color: '#94A3B8' }} />
         </span>
 
-        <h2 className="font-display text-[22px] font-semibold text-textPrimary mb-2 text-center">
-          No dossiers yet
+        <h2 className="t-h3 mb-2 text-center text-textPrimary">
+          No reports yet
         </h2>
-        <p className="text-[14px] text-textSecondary text-center max-w-xs mb-8 leading-relaxed">
+        <p className="t-body mb-8 max-w-xs text-center text-textSecondary">
           Every completed Sonny research run lands here, grounded and re-openable
           with its full evidence.
         </p>
@@ -90,7 +90,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           <button
             type="button"
             onClick={onOpenSonny}
-            className="inline-flex items-center gap-2 text-[13px] font-semibold text-white rounded-lg px-4 py-2.5"
+            className="t-body-sm inline-flex items-center gap-2 rounded-lg px-4 py-2.5 font-semibold text-white"
             style={{
               background: '#1D4ED8',
               boxShadow: '0 1px 3px rgba(29,78,216,.25)',
@@ -123,12 +123,12 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
     <div style={{ maxWidth: 940, margin: '0 auto', padding: '40px 0 56px' }}>
       {/* Header */}
       <h1
-        className="font-display text-[27px] font-semibold text-textPrimary"
+        className="t-h2 text-textPrimary"
         style={{ letterSpacing: '-0.01em' }}
       >
-        Saved dossiers
+        Saved reports
       </h1>
-      <p className="text-[14px] text-textSecondary mt-1.5">
+      <p className="t-body mt-1.5 text-textSecondary">
         Every completed research run, grounded and re-openable with its evidence.
       </p>
 
@@ -141,7 +141,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
               key={tab.key}
               type="button"
               onClick={() => setFilter(tab.key)}
-              className="text-[12px] font-semibold rounded-full px-3 py-1.5 cursor-pointer"
+              className="t-meta cursor-pointer rounded-full px-3 py-1.5 font-semibold"
               style={{
                 background: isActive ? '#EFF6FF' : '#fff',
                 border: `1px solid ${isActive ? 'transparent' : '#E6EBF2'}`,
@@ -162,8 +162,8 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by target..."
-          aria-label="Search dossiers by target"
-          className="text-[14px] text-textPrimary placeholder:text-textTertiary rounded-lg px-3.5 py-2.5"
+          aria-label="Search reports by target"
+          className="t-body rounded-lg px-3.5 py-2.5 text-textPrimary placeholder:text-textTertiary"
           style={{
             background: '#fff',
             border: '1px solid #E6EBF2',
@@ -188,12 +188,12 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
         {visibleItems.length === 0 ? (
           // Filtered-to-empty - lighter inline message, distinct from the true-empty composition
           <div className="py-12 text-center">
-            <p className="text-[14px] text-textSecondary">
+            <p className="t-body text-textSecondary">
               {query
-                ? `No dossiers match "${query}"`
+                ? `No reports match "${query}"`
                 : filter !== 'all'
-                  ? `No ${filter} dossiers`
-                  : 'No dossiers found'}
+                  ? `No ${filter} reports`
+                  : 'No reports found'}
             </p>
           </div>
         ) : (

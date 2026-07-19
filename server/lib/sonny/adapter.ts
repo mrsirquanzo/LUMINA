@@ -61,7 +61,17 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
   handle.on('message', (m: WorkerMessage) => {
     if (finished) return;
     if (m.kind === 'trace') {
-      publish(input.runId, m.event);
+      // The engine uses trace-level `error` events for independently caught
+      // source/specialist degradation. Keep those visible without allowing the
+      // SSE router to mistake them for a fatal worker failure.
+      if (m.event.type === 'error') {
+        publish(input.runId, {
+          type: 'source_unavailable',
+          message: 'message' in m.event ? String(m.event.message) : 'A research source was unavailable.',
+        });
+      } else {
+        publish(input.runId, m.event);
+      }
     } else if (m.kind === 'done') {
       publish(input.runId, { type: 'done', briefing: m.briefing });
       void persist(input.runId, m.briefing).catch((err) => {

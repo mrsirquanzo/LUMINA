@@ -1,5 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
 import { useWatchlistStore } from '../lib/watchlist/store';
+import { getStoredAgentMode, onAgentModeUpdated } from '../lib/agentMode';
+import { resolveDemoFeedPack } from '../lib/intelligence/demoFeedPacks';
 
 export interface LatestSignal {
   id: string;
@@ -56,13 +59,43 @@ async function fetchLatest(target: string | undefined, limit: number): Promise<L
   }));
 }
 
-export function useLatestSignals(limit = 3): { items: LatestSignal[]; isLoading: boolean; isError: boolean } {
-  const target = useWatchlistStore((s) => s.targets[0]);
+// When the watchlist is empty, seed the home block with a relevant oncology
+// target so it shows live, on-topic intelligence instead of an untargeted feed.
+const SEED_TARGET = 'TROP2';
+
+export function useLatestSignals(
+  limit = 3,
+): { items: LatestSignal[]; isLoading: boolean; isError: boolean; target: string; seeded: boolean } {
+  const watchTarget = useWatchlistStore((s) => s.targets[0]);
+  const seeded = !watchTarget;
+  const target = watchTarget ?? SEED_TARGET;
+  const [agentMode, setAgentMode] = useState(() => getStoredAgentMode());
+  useEffect(() => onAgentModeUpdated(setAgentMode), []);
   const q = useQuery({
     queryKey: ['latest-signals', target, limit],
     queryFn: () => fetchLatest(target, limit),
     staleTime: 60_000,
     retry: false,
+    enabled: agentMode === 'live',
   });
-  return { items: q.data ?? [], isLoading: q.isLoading, isError: q.isError };
+  const demoItems = useMemo<LatestSignal[]>(() => {
+    if (agentMode !== 'demo') return [];
+    const pack = resolveDemoFeedPack(target);
+    return (pack?.snapshots[0]?.items ?? []).slice(0, limit).map((item) => ({
+      id: item.id,
+      title: item.title,
+      source: item.source,
+      target: pack?.target ?? target,
+      date: item.publishedAt,
+      url: item.url,
+    }));
+  }, [agentMode, limit, target]);
+
+  return {
+    items: agentMode === 'demo' ? demoItems : q.data ?? [],
+    isLoading: agentMode === 'live' && q.isLoading,
+    isError: agentMode === 'live' && q.isError,
+    target,
+    seeded,
+  };
 }

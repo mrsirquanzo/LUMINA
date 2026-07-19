@@ -57,22 +57,30 @@ function SkeletonRow() {
 // ---------------------------------------------------------------------------
 
 export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }) {
-  const { items, isLoading, isError } = useLatestSignals(3);
+  const { items, isLoading, isError, target, seeded } = useLatestSignals(3);
 
   return (
     <div>
       {/* Section header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="mb-3 flex items-center justify-between gap-4">
         <div>
-          <span className="text-textPrimary font-semibold" style={{ fontSize: 15 }}>
+          <span className="t-h3 text-textPrimary">
             Latest signals
           </span>
-          <span className="text-textTertiary text-sm ml-1.5">from your watchlist</span>
+          <span className="t-meta ml-1.5 text-textTertiary">
+            {seeded ? (
+              <>
+                live from the feed &middot; <span className="font-mono">{target}</span>
+              </>
+            ) : (
+              'from your watchlist'
+            )}
+          </span>
         </div>
         <button
           type="button"
           onClick={onOpenFeed}
-          className="text-primary text-sm tactile"
+          className="t-meta tactile shrink-0 font-semibold text-primary"
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
           Open feed -&gt;
@@ -81,30 +89,30 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
 
       {/* Body */}
       {isLoading ? (
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-borderSoft">
           <SkeletonRow />
           <SkeletonRow />
           <SkeletonRow />
         </div>
       ) : isError ? (
-        <p className="text-textTertiary text-sm py-2">Couldn't load latest signals.</p>
+        <p className="t-body-sm py-2 text-textTertiary">Couldn't load latest signals.</p>
       ) : items.length === 0 ? (
-        <p className="text-textSecondary text-sm py-2 leading-relaxed">
+        <p className="t-body-sm py-2 text-textSecondary">
           No recent signals yet - add targets to your watchlist and Sonny will surface new papers,
           trials, and patents here.
         </p>
       ) : (
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-borderSoft">
           {items.map((item) => {
             const ago = timeAgo(item.date);
             const metaParts = [item.source, item.target, ago].filter(Boolean);
             const inner = (
-              <div className="py-2.5 tactile">
-                <p className="text-textPrimary truncate" style={{ fontSize: 13.5 }}>
+              <div className="tactile rounded-lg px-2 py-3">
+                <p className="t-body-sm truncate text-textPrimary">
                   {item.title}
                 </p>
                 {metaParts.length > 0 && (
-                  <p className="text-textTertiary text-xs mt-0.5 truncate">
+                  <p className="t-meta mt-0.5 truncate text-textTertiary">
                     {metaParts.map((part, i) => (
                       <span key={i}>
                         {i > 0 && (

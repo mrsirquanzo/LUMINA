@@ -2,7 +2,7 @@
   "name": "lumina",
   "private": true,
   "version": "0.1.0",
-  "description": "Biotech target/asset diligence dashboard with a grounded, glass-box research agent (Sonny) that produces conclusion-first GO/WATCH/NO-GO dossiers.",
+  "description": "Biotech target/asset diligence dashboard with a grounded, glass-box research agent (Sonny) that produces conclusion-first GO/WATCH/NO-GO reports.",
   "license": "MIT",
   "author": "Quan Ho (@mrsirquanzo)",
   "type": "module",

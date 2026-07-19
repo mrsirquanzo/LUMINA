@@ -9,16 +9,6 @@ interface CitedMarkdownProps {
   content: string;
   className?: string;
   /**
-   * Optional theming for the inner markdown container.
-   * Pass Tailwind gradient/border classes to visually align outputs with an agent's color scheme.
-   */
-  tone?: {
-    /** Tailwind classes like: "from-purple-500/20 via-blue-500/12 to-cyan-500/18" */
-    gradient: string;
-    /** Tailwind border class like: "border-purple-500/20" */
-    border?: string;
-  };
-  /**
    * When explicitly provided, renders a Demo/Live indicator banner.
    * - true: DEMO banner
    * - false: LIVE banner
@@ -35,7 +25,7 @@ interface CitedMarkdownProps {
  * - Automatically extracts "Sources Referenced" section and renders it prominently
  * - Adds demo/live indicators for transparency
  */
-export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMarkdownProps) {
+export function CitedMarkdown({ content, className = '', isDemo }: CitedMarkdownProps) {
   // Parse out the Sources Referenced / References section - support both formats
   // Match with flexible newline handling (1 or 2 newlines after heading)
   const sourcesMatch = content.match(/## (?:📚 Sources Referenced|References)\n+([\s\S]*?)(?=\n##|$)/);
@@ -170,16 +160,8 @@ export function CitedMarkdown({ content, className = '', isDemo, tone }: CitedMa
     <div className={`min-w-0 overflow-x-hidden ${className}`}>
       {/* Main content with citation parsing */}
       <div
-        className={`agent-output relative max-w-none break-words overflow-x-hidden rounded-lg border p-4 ${
-          tone?.border ?? 'border-border'
-        } bg-subtle`}
+        className="agent-output relative max-w-none break-words overflow-x-hidden rounded-lg border border-border p-4 bg-subtle"
       >
-        {tone && (
-          <div
-            aria-hidden="true"
-            className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${tone.gradient} opacity-80`}
-          />
-        )}
         <div className="relative">
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
             {mainContent}

@@ -1,0 +1,190 @@
+{
+  "id": "western-blot",
+  "title": "Western blot densitometry",
+  "capability": "western-blot",
+  "question": "Does trastuzumab lower HER2 and drive compensatory HSP90 in BT474 cells, and by how much?",
+  "file": {
+    "name": "BT474_trastuzumab_blot.png",
+    "sizeMB": 0.3,
+    "instrument": "Western blot - BT474 (HER2-amplified breast cancer)",
+    "panel": "HER2, HSP90, GAPDH loading control",
+    "drugs": "trastuzumab 0 / 25 / 50 ug/mL, 72 h",
+    "readout": "band intensity (background-corrected integrated density)"
+  },
+  "reasoning": [
+    "Loading the blot image - three rows (HER2, HSP90, GAPDH) across three lanes (trastuzumab 0, 25, 50 ug/mL).",
+    "Inverting to grayscale so dark bands read as high signal, then locating the three protein rows by horizontal projection.",
+    "Finding the three lanes by vertical projection and snapping each region-of-interest onto the band centroid.",
+    "Measuring band signal as background-corrected integrated density - subtracting a local baseline rather than summing raw pixels.",
+    "Normalizing HER2 and HSP90 to GAPDH within each lane, then taking fold-change versus the untreated lane.",
+    "HER2 falls with trastuzumab while HSP90 rises - consistent with HER2 downregulation and a compensatory chaperone response.",
+    "This is a single blot (n=1); reporting the fold-changes as qualitative, not statistical."
+  ],
+  "assumptions": {
+    "checked": 2,
+    "inferred": 3,
+    "needsInput": 2,
+    "items": [
+      {
+        "label": "Blot image",
+        "chosen": "BT474 trastuzumab dose series (IJMS 2025, PMC12294885, CC BY)",
+        "impact": "high",
+        "source": "user-specified",
+        "status": "checked",
+        "alternatives": []
+      },
+      {
+        "label": "Loading control",
+        "chosen": "GAPDH (present in the same panel)",
+        "impact": "high",
+        "source": "user-specified",
+        "status": "checked",
+        "alternatives": []
+      },
+      {
+        "label": "Quantification",
+        "chosen": "Fold-change of each target vs untreated, normalized to GAPDH",
+        "impact": "high",
+        "source": "agent-inferred",
+        "status": "needs-input",
+        "alternatives": [
+          "Raw densitometry only",
+          "Per-lane ratios without fold-change",
+          "Statistical comparison (requires replicate blots)"
+        ]
+      },
+      {
+        "label": "Densitometry method",
+        "chosen": "Background-corrected integrated density (local baseline subtracted)",
+        "impact": "high",
+        "source": "agent-inferred",
+        "status": "needs-input",
+        "alternatives": [
+          "Raw pixel-sum (no background subtraction)",
+          "Rolling-ball background",
+          "Peak-area from lane profile"
+        ]
+      },
+      {
+        "label": "Band detection",
+        "chosen": "Projection-based row/lane detection with centroid-snapped ROIs",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Manual ROI placement",
+          "Blob detection"
+        ]
+      },
+      {
+        "label": "Polarity",
+        "chosen": "Dark bands = high signal (image inverted)",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Assume light bands"
+        ]
+      },
+      {
+        "label": "Replicates",
+        "chosen": "Single blot (n=1), treated as qualitative",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Aggregate across replicate blots if available"
+        ]
+      }
+    ]
+  },
+  "clarifications": [
+    {
+      "id": "quantify",
+      "type": "single-choice",
+      "required": true,
+      "question": "What should I quantify on this blot?",
+      "context": "Three targets across a trastuzumab dose series with a GAPDH loading control. I can report fold-change, raw densitometry, or per-lane ratios.",
+      "default": "Fold-change of each target vs untreated, normalized to GAPDH",
+      "options": [
+        "Fold-change of each target vs untreated, normalized to GAPDH",
+        "Raw densitometry only",
+        "Per-lane ratios without fold-change",
+        "Statistical comparison (requires replicate blots)"
+      ]
+    },
+    {
+      "id": "norm",
+      "type": "single-choice",
+      "required": true,
+      "question": "Which normalization should I use?",
+      "context": "GAPDH is the loading control present in the panel; total-protein normalization would need a stain-free image.",
+      "default": "Normalize to GAPDH",
+      "options": [
+        "Normalize to GAPDH",
+        "Total-protein normalization",
+        "No normalization (raw density)"
+      ]
+    }
+  ],
+  "plan": {
+    "total": 5,
+    "steps": [
+      {
+        "id": "load",
+        "title": "Load and inspect the blot image",
+        "figures": [
+          "/workbook/western/source_blot.png"
+        ]
+      },
+      {
+        "id": "detect",
+        "title": "Detect protein rows and lanes",
+        "figures": [
+          "/workbook/western/annotated.png"
+        ]
+      },
+      {
+        "id": "density",
+        "title": "Background-corrected densitometry",
+        "figures": []
+      },
+      {
+        "id": "normalize",
+        "title": "Normalize to GAPDH and compute fold-change",
+        "figures": [
+          "/workbook/western/foldchange.png"
+        ]
+      },
+      {
+        "id": "report",
+        "title": "Summarize the quantification",
+        "figures": []
+      }
+    ]
+  },
+  "report": {
+    "summary": [
+      "**BT474 (HER2+ breast cancer)** treated with **trastuzumab at 0, 25, 50 ug/mL** for 72 h; HER2, HSP90, and GAPDH quantified by background-corrected densitometry.",
+      "**HER2 decreases** with trastuzumab, to **0.68x** of untreated at 50 ug/mL (normalized to GAPDH).",
+      "**HSP90 increases** with dose, to **2.6x** at 25 and **5.2x** at 50 ug/mL - a compensatory chaperone response.",
+      "GAPDH is even across lanes, supporting equal loading.",
+      "**Single blot (n=1)** - fold-changes are qualitative, not statistical."
+    ],
+    "figures": [
+      {
+        "src": "/workbook/western/annotated.png",
+        "caption": "Band detection: three rows (HER2, HSP90, GAPDH) x three lanes, ROIs snapped to band centroids."
+      },
+      {
+        "src": "/workbook/western/foldchange.png",
+        "caption": "Fold-change vs untreated (normalized to GAPDH). HER2 down, HSP90 up with trastuzumab."
+      }
+    ],
+    "sections": {
+      "detailedAnswer": "Trastuzumab lowers HER2 and raises HSP90 in BT474 in a dose-dependent way. HER2, the drug target, falls to roughly four-fifths of untreated by 50 ug/mL, while HSP90, the chaperone that stabilizes HER2, rises several-fold - a plausible compensatory response that is itself a rationale for combining anti-HER2 therapy with HSP90 inhibition. GAPDH is even across lanes, so the changes are not a loading artifact.",
+      "methods": "Grayscale, inverted so bands are high-signal. Protein rows located by horizontal projection; lanes by vertical projection with ROIs snapped to the band intensity centroid. Signal = background-corrected integrated density (a local baseline strip subtracted before integrating), improving on a raw pixel sum. Each target normalized to GAPDH within its lane; fold-change taken vs the untreated lane. Reproducible from public/workbook/western/pipeline.py. Source blot: IJMS 2025, 26(14):6593 (PMC12294885), CC BY.",
+      "assumptionsNote": "Single blot, single replicate: fold-changes are qualitative and should be confirmed across replicate blots before any quantitative claim. Densitometry is sensitive to ROI placement and background choice; a real workflow would repeat with independent blots and report mean +/- SD."
+    }
+  }
+}

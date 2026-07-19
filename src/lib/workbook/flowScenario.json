@@ -1,0 +1,231 @@
+{
+  "id": "flow-cytometry-bcell",
+  "title": "Analyze flow cytometry data",
+  "capability": "flow-cytometry",
+  "file": {
+    "name": "A02 Well - A02 WLSM.fcs",
+    "sizeMB": 1.44,
+    "instrument": "Sony ID7000 spectral cytometer",
+    "panel": "13-colour B-cell immunophenotyping (CD19, CD3, IgD, IgM, CD27, CD38, CD86, CD80, CD40, HLA-DR, CD197, Zombie-NIR viability)"
+  },
+  "reasoning": [
+    "Parsing the FCS file - 19,364 events across 19 channels from a Sony ID7000 spectral cytometer, spectrally unmixed (WLSM).",
+    "This is a 13-colour B-cell immunophenotyping panel (CD19, CD3, IgD, IgM, CD27, CD38, CD86, CD80, CD40, HLA-DR, CD197, Zombie-NIR).",
+    "arcsinh-transforming the fluorescence channels (cofactor 6000) so positive and negative populations separate cleanly.",
+    "Gating sequentially: FSC/SSC to remove debris, then FSC-A vs FSC-H for singlets.",
+    "Setting the viability threshold on the Zombie-NIR distribution by Otsu, then isolating live cells.",
+    "Identifying the B-cell lineage as CD3-negative, CD19-positive; then characterising subsets and marker expression.",
+    "Assembling the figures, the subset table, and a grounded summary - every number traced to the gate that produced it."
+  ],
+  "assumptions": {
+    "checked": 3,
+    "inferred": 3,
+    "needsInput": 2,
+    "items": [
+      {
+        "label": "FCS file",
+        "chosen": "A02 Well - A02 WLSM.fcs",
+        "impact": "high",
+        "source": "user-specified",
+        "status": "checked",
+        "alternatives": []
+      },
+      {
+        "label": "Analysis scope",
+        "chosen": "Exploratory analysis: QC, viability and singlet gating, CD19+ B-cell identification, marker expression summary, and key visualizations (scatter, histograms, heatmap)",
+        "impact": "high",
+        "source": "agent-inferred",
+        "status": "needs-input",
+        "alternatives": [
+          "Automated clustering (FlowSOM, PhenoGraph)",
+          "Manual sequential gating with specific gate hierarchy",
+          "QC summary only",
+          "Specific subset analysis (memory B cells, plasmablasts)"
+        ]
+      },
+      {
+        "label": "Gating strategy",
+        "chosen": "Standard sequential gating: FSC/SSC scatter, singlets (FSC-A vs FSC-H), live cells, CD3-CD19+ B cells, then characterise by IgD, IgM, CD27, CD38, CD86, CD80, CD40, HLA-DR, CD197",
+        "impact": "high",
+        "source": "agent-inferred",
+        "status": "needs-input",
+        "alternatives": [
+          "Automated unsupervised gating",
+          "User-defined custom gates",
+          "No gating, raw data summary"
+        ]
+      },
+      {
+        "label": "Viability threshold",
+        "chosen": "Data-driven Otsu threshold on the Zombie-NIR distribution",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Fixed threshold",
+          "No viability gating"
+        ]
+      },
+      {
+        "label": "Transform",
+        "chosen": "arcsinh (cofactor 6000) on fluorescence channels",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Biexponential / logicle",
+          "Linear (no transform)"
+        ]
+      },
+      {
+        "label": "Visualization approach",
+        "chosen": "FSC/SSC scatter, singlet gate, viability histogram, CD3 vs CD19, IgD/CD27 subsets, marker correlation heatmap",
+        "impact": "medium",
+        "source": "agent-inferred",
+        "status": "inferred",
+        "alternatives": [
+          "Minimal plots",
+          "UMAP/tSNE dimensionality reduction"
+        ]
+      }
+    ]
+  },
+  "clarifications": [
+    {
+      "id": "scope",
+      "type": "single-choice",
+      "required": true,
+      "question": "What type of analysis would you like me to perform on this flow cytometry data?",
+      "context": "Your FCS file contains 19,364 events from a Sony ID7000 spectral cytometer with a B-cell immunophenotyping panel (CD19, CD3, IgD, IgM, CD27, CD38, CD86, CD80, CD40, HLA-DR, CD197, Zombie-NIR viability).",
+      "default": "Exploratory analysis - QC, gating, marker summary, and key plots",
+      "options": [
+        "Exploratory analysis - QC, gating, marker summary, and key plots",
+        "Automated clustering (FlowSOM / PhenoGraph)",
+        "Specific subset analysis (memory B cells, plasmablasts)",
+        "QC summary only"
+      ]
+    },
+    {
+      "id": "gating",
+      "type": "single-choice",
+      "required": true,
+      "question": "Which gating approach should I use?",
+      "context": "Standard sequential gating follows: FSC/SSC -> singlets -> live -> CD3-CD19+ B cells -> marker characterisation.",
+      "default": "Standard sequential manual gating (FSC/SSC -> singlets -> live -> CD3-CD19+)",
+      "options": [
+        "Standard sequential manual gating (FSC/SSC -> singlets -> live -> CD3-CD19+)",
+        "Automated unsupervised gating",
+        "User-defined custom gates"
+      ]
+    }
+  ],
+  "plan": {
+    "total": 8,
+    "steps": [
+      {
+        "id": "load",
+        "title": "Load and inspect FCS data",
+        "figures": []
+      },
+      {
+        "id": "cell",
+        "title": "FSC/SSC scatter plot and cell gating",
+        "figures": [
+          "/workbook/flow/01_cell_gate.png"
+        ],
+        "interactive": true
+      },
+      {
+        "id": "singlet",
+        "title": "Singlet gating",
+        "figures": [
+          "/workbook/flow/02_singlet.png"
+        ],
+        "interactive": true
+      },
+      {
+        "id": "viability",
+        "title": "Viability gating",
+        "figures": [
+          "/workbook/flow/03_viability.png"
+        ],
+        "interactive": true
+      },
+      {
+        "id": "lineage",
+        "title": "Lineage gating (CD3-CD19+ B cells)",
+        "figures": [
+          "/workbook/flow/04_lineage.png"
+        ],
+        "interactive": true
+      },
+      {
+        "id": "markers",
+        "title": "B-cell marker expression analysis",
+        "figures": [
+          "/workbook/flow/05_subsets.png"
+        ],
+        "interactive": true
+      },
+      {
+        "id": "heatmap",
+        "title": "Marker co-expression heatmap",
+        "figures": [
+          "/workbook/flow/06_heatmap.png"
+        ]
+      },
+      {
+        "id": "report",
+        "title": "Summary table and report",
+        "figures": [
+          "/workbook/flow/07_summary.png"
+        ]
+      }
+    ]
+  },
+  "report": {
+    "summary": [
+      "**19,364 total events** acquired on a Sony ID7000 spectral cytometer with a 13-colour B-cell immunophenotyping panel.",
+      "**Sequential gating** (FSC/SSC -> singlets -> live -> CD3-CD19+) yielded **6,216 B cells (32.1% of total; 42.1% of live singlets)**, with **85.4% viability**.",
+      "**B-cell subsets** (IgD/CD27): **41.1% naive**, 29.4% switched memory, 26.1% double-negative, 3.4% unswitched memory.",
+      "**Constitutively expressed markers**: HLA-DR (97.8% positive), CD40 (99.6%), and CD197/CCR7 (63.5%) were high on B cells.",
+      "**Activation markers** CD86 (27.4% positive) and CD80 (7.3% positive) showed heterogeneous expression, consistent with a largely resting B-cell population."
+    ],
+    "figures": [
+      {
+        "src": "/workbook/flow/01_cell_gate.png",
+        "caption": "Figure 1. FSC-A vs SSC-A scatter of all 19,364 events. Dashed rectangle indicates the cell gate (FSC-A 100k-500k, SSC-A 20k-400k), retaining 92.4% of events."
+      },
+      {
+        "src": "/workbook/flow/02_singlet.png",
+        "caption": "Figure 2. FSC-A vs FSC-H singlet discrimination. Dashed lines define the singlet gate by FSC-A/FSC-H ratio, retaining 96.5% of gated cells."
+      },
+      {
+        "src": "/workbook/flow/03_viability.png",
+        "caption": "Figure 3. Zombie-NIR viability histogram. Otsu threshold separates live (85.4%) from dead events."
+      },
+      {
+        "src": "/workbook/flow/04_lineage.png",
+        "caption": "Figure 4. CD3 vs CD19 lineage gating on live singlets. CD3-CD19+ B cells: 6,216 events (42.1% of live singlets)."
+      },
+      {
+        "src": "/workbook/flow/05_subsets.png",
+        "caption": "Figure 5. IgD vs CD27 B-cell subsets: naive 41.1%, switched memory 29.4%, double-negative 26.1%, unswitched memory 3.4%."
+      },
+      {
+        "src": "/workbook/flow/06_heatmap.png",
+        "caption": "Figure 6. Spearman rank correlation across 10 B-cell markers."
+      },
+      {
+        "src": "/workbook/flow/07_summary.png",
+        "caption": "Figure 7. B-cell subset composition."
+      }
+    ],
+    "sections": {
+      "detailedAnswer": "The sample is a viable, predominantly resting B-cell population. After removing debris, doublets, and dead cells, 6,216 CD3-CD19+ B cells were recovered (42.1% of live singlets). The subset structure is naive-dominant (41.1%) with a substantial switched-memory (29.4%) and double-negative (26.1%) compartment and a small unswitched-memory fraction (3.4%). Antigen-presentation machinery (HLA-DR, CD40) is uniformly high, while co-stimulatory activation markers CD86 and CD80 are expressed on a minority of cells, consistent with resting rather than activated B cells.",
+      "methods": "FCS parsed with fcsparser. Fluorescence channels arcsinh-transformed (cofactor 6000). Per-channel positivity thresholds set by Otsu's method. Cell gate: FSC-A 100k-500k, SSC-A 20k-400k. Singlets: FSC-A/FSC-H ratio between the 3rd and 99.5th percentile. Viability: Zombie-NIR below the Otsu threshold. Lineage: CD3-CD19+. Subsets: IgD/CD27 quadrant gating. Co-expression: Spearman rank correlation. Pipeline is deterministic and reproducible from public/workbook/flow/pipeline.py.",
+      "assumptionsNote": "Gating is fully automated (Otsu per channel), not FMO-informed; thresholds are data-driven and reproducible. Absolute subset percentages depend on threshold placement."
+    }
+  },
+  "gatingData": "/workbook/flow/gating_events.json"
+}

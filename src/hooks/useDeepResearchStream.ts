@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { createTraceStore } from '../lib/research/traceStore.js';
 import { createTraceBuffer } from '../lib/research/traceBuffer.js';
 import { useBriefingStore } from '../lib/research/briefingStore.js';
-import { startDeepResearch, fetchBriefing } from '../lib/research/api.js';
+import { startDeepResearch, fetchBriefing, fetchDemoBriefing } from '../lib/research/api.js';
 import type { ResearchTraceEvent, BriefingView } from '../lib/research/sseTypes.js';
 import { createSSEParser } from '../lib/research/sseParse.js';
+import { getStoredAgentMode } from '../lib/agentMode.js';
+import { buildDemoReplayEvents } from '../lib/research/deepResearchViewModel.js';
 
 export type RunStatus = 'idle' | 'hydrating' | 'running' | 'done' | 'error';
 
@@ -15,6 +17,7 @@ export interface UseDeepResearchStream {
   error: string | null;
   start(target: string, mode?: 'fast' | 'thorough'): Promise<void>;
   hydrate(runId: string): Promise<void>;
+  reset(): void;
 }
 
 export function useDeepResearchStream(): UseDeepResearchStream {
@@ -25,9 +28,11 @@ export function useDeepResearchStream(): UseDeepResearchStream {
 
   const storeRef = useRef<ReturnType<typeof createTraceStore> | null>(null);
   const bufferRef = useRef<ReturnType<typeof createTraceBuffer<ResearchTraceEvent>> | null>(null);
+  const replayTokenRef = useRef(0);
 
   useEffect(() => {
     return () => {
+      replayTokenRef.current += 1;
       bufferRef.current?.dispose();
     };
   }, []);
@@ -41,6 +46,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     setStatus('running');
     setError(null);
     setRunId(null);
+    replayTokenRef.current += 1;
 
     // Dispose previous buffer if any
     bufferRef.current?.dispose();
@@ -64,6 +70,37 @@ export function useDeepResearchStream(): UseDeepResearchStream {
       },
     });
     bufferRef.current = buffer;
+
+    if (getStoredAgentMode() === 'demo') {
+      const replayToken = replayTokenRef.current;
+      try {
+        const cached = await fetchDemoBriefing(target);
+        if (!cached) {
+          setStatus('error');
+          setError(`No cached report for ${target} in demo mode.`);
+          return;
+        }
+
+        setRunId(cached.runId);
+        const events = buildDemoReplayEvents(cached.briefing, target);
+
+        for (const event of events) {
+          await new Promise<void>((resolve) => window.setTimeout(resolve, 360));
+          if (replayTokenRef.current !== replayToken) return;
+          store.getState().applyBatch([event]);
+        }
+
+        if (replayTokenRef.current !== replayToken) return;
+        useBriefingStore.getState().setBriefing(cached.runId, cached.briefing);
+        setStatus('done');
+      } catch (err: unknown) {
+        if (replayTokenRef.current !== replayToken) return;
+        const msg = err instanceof Error ? err.message : String(err);
+        setStatus('error');
+        setError(msg);
+      }
+      return;
+    }
 
     let currentRunId: string | null = null;
     let currentStatus: RunStatus = 'running';
@@ -129,6 +166,10 @@ export function useDeepResearchStream(): UseDeepResearchStream {
   }
 
   async function hydrate(rid: string): Promise<void> {
+    replayTokenRef.current += 1;
+    bufferRef.current?.dispose();
+    setTraceStore(null);
+    setError(null);
     setStatus('hydrating');
     try {
       const b = await fetchBriefing(rid);
@@ -146,5 +187,16 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     }
   }
 
-  return { traceStore, status, runId, error, start, hydrate };
+  function reset(): void {
+    replayTokenRef.current += 1;
+    bufferRef.current?.dispose();
+    bufferRef.current = null;
+    storeRef.current = null;
+    setTraceStore(null);
+    setRunId(null);
+    setError(null);
+    setStatus('idle');
+  }
+
+  return { traceStore, status, runId, error, start, hydrate, reset };
 }

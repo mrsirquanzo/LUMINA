@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { saveBriefing, loadBriefing } from './runStore.js';
+import { saveBriefing, loadBriefing, loadDemoBriefing } from './runStore.js';
 import type { Briefing } from '@mrsirquanzo/sonny-shared';
 
 const briefing = { target: 'CDCP1', recommendation: { verdict: 'watch' } } as unknown as Briefing;
@@ -25,5 +25,12 @@ describe('runStore', () => {
 
   it('throws on an empty runId', async () => {
     await expect(saveBriefing('   ', briefing)).rejects.toThrow();
+  });
+
+  it('resolves the checked-in TROP2 briefing for demo replay', async () => {
+    const cached = await loadDemoBriefing('Create a deep research report on TROP2');
+
+    expect(cached?.runId).toMatch(/^TROP2-/);
+    expect(cached?.briefing.target).toBe('TROP2');
   });
 });

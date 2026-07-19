@@ -44,7 +44,7 @@ function VerdictPill({ verdict }: { verdict: string | undefined }) {
 
   return (
     <span
-      className={`inline-flex items-center flex-none font-bold text-xs tracking-wide rounded-full px-3 py-1 ${verdictPillClass(normalized)}`}
+      className={`t-meta inline-flex flex-none items-center rounded-full px-3 py-1 font-bold ${verdictPillClass(normalized)}`}
     >
       {label}
     </span>
@@ -63,7 +63,7 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
     <div
       role="button"
       tabIndex={0}
-      aria-label={`Open dossier for ${item.target ?? 'unknown target'}`}
+      aria-label={`Open report for ${item.target ?? 'unknown target'}`}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -90,13 +90,13 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
       <VerdictPill verdict={item.verdict} />
 
       <div className="flex-1 min-w-0">
-        <div className="text-[17px] font-semibold text-textPrimary truncate">
+        <div className="t-h3 truncate text-textPrimary">
           {item.target ?? (
             <span className="text-textSecondary italic">Untitled</span>
           )}
         </div>
         {item.snippet && (
-          <div className="text-[12.5px] text-textSecondary truncate mt-0.5">
+          <div className="t-body-sm mt-0.5 truncate text-textSecondary">
             {item.snippet}
           </div>
         )}
@@ -104,12 +104,12 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
 
       <div className="flex-none text-right">
         {relDate && (
-          <div className="text-[12px] font-medium text-textSecondary">{relDate}</div>
+          <div className="t-meta font-medium text-textSecondary">{relDate}</div>
         )}
         <div className="flex items-center justify-end gap-1 mt-0.5">
           <FileText size={11} className="text-textTertiary" />
-          <span className="font-mono text-[11px] text-textTertiary">
-            {item.refs && item.refs > 0 ? `${item.refs} refs` : 'dossier'}
+          <span className="t-meta font-mono text-textTertiary">
+            {item.refs && item.refs > 0 ? `${item.refs} refs` : 'report'}
           </span>
         </div>
       </div>

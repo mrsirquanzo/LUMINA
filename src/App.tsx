@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
-import Header from './components/Header';
+import { SonnyLogo } from './components/SonnyLogo';
+import { onAgentModeRequested, setStoredAgentMode } from './lib/agentMode';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
-import DossiersLibrary from './components/dossiers/DossiersLibrary';
 import WatchlistView from './components/watchlist/WatchlistView';
+import ProjectWorkspace from './components/projects/ProjectWorkspace';
+import { WorkbookRun } from './components/research/workbook/WorkbookRun';
 import DashboardSkeleton from './components/DashboardSkeleton';
 import SearchModal from './components/SearchModal';
 import SettingsModal from './components/SettingsModal';
@@ -14,6 +17,9 @@ import SkipLink from './components/SkipLink';
 import { TargetProvider, type TargetData } from './contexts/TargetContext';
 import { useToast } from './hooks/useToast';
 import { type ViewState } from './types';
+import { DEFAULT_PROJECTS, useProjectStore } from './lib/projects/store';
+import { getWorkbookScenario } from './lib/workbook/scenarios';
+import type { WorkbookRun as WorkbookRunData } from './lib/workbook/types';
 
 
 export interface Notification {
@@ -26,15 +32,42 @@ export interface Notification {
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<ViewState>('research');
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [workspaceWorkbook, setWorkspaceWorkbook] = useState<WorkbookRunData | null>(null);
   const [feedTarget, setFeedTarget] = useState<string | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [currentTarget, setCurrentTarget] = useState<TargetData | null>(null);
   const [isLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const openFeedForTarget = (target?: string) => { setFeedTarget(target ?? null); setCurrentView('feed'); };
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const openFeedForTarget = (target?: string) => {
+    setWorkspaceWorkbook(null);
+    setFeedTarget(target ?? null);
+    setCurrentView('feed');
+    setMobileNavOpen(false);
+  };
+  const changeView = (view: ViewState) => {
+    setWorkspaceWorkbook(null);
+    setCurrentView(view);
+    setMobileNavOpen(false);
+  };
+  const openProject = (projectId: string) => {
+    setWorkspaceWorkbook(null);
+    setSelectedProjectId(projectId);
+    setCurrentView('project');
+    setMobileNavOpen(false);
+  };
   const toast = useToast();
+
+  useEffect(() => {
+    useProjectStore.getState().seedIfEmpty(DEFAULT_PROJECTS);
+  }, []);
+
+  // Fulfill agent-mode requests. The Demo/Live toggles dispatch a request event;
+  // this single top-level handler applies it (persist + notify), which is what
+  // keeps every subscriber (sidebar, header, feed) in sync. Without it the
+  // toggles are a no-op.
+  useEffect(() => onAgentModeRequested((mode) => setStoredAgentMode(mode)), []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -106,17 +139,41 @@ function AppContent() {
       <div className="flex h-screen bg-background text-textPrimary overflow-hidden">
         <Sidebar
           currentView={currentView}
-          onViewChange={setCurrentView}
+          onViewChange={changeView}
           onOpenFeedForTarget={openFeedForTarget}
+          selectedProjectId={selectedProjectId}
+          onOpenProject={openProject}
+          mobileOpen={mobileNavOpen}
+          onMobileClose={() => setMobileNavOpen(false)}
         />
 
-        <main className="flex-1 flex flex-col min-w-0">
-          <Header
-            onSearch={handleSearch}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
+        {/* Mobile drawer backdrop */}
+        {mobileNavOpen && (
+          <button
+            type="button"
+            aria-label="Close navigation"
+            onClick={() => setMobileNavOpen(false)}
+            className="fixed inset-0 z-30 bg-ink/30 md:hidden"
           />
+        )}
 
+        <main className="flex-1 flex flex-col min-w-0">
+          {/* Mobile top bar with menu toggle (hidden on md+) */}
+          <div className="flex items-center gap-3 border-b border-border bg-surface px-4 py-3 md:hidden">
+            <button
+              type="button"
+              aria-label="Open navigation"
+              aria-expanded={mobileNavOpen}
+              onClick={() => setMobileNavOpen(true)}
+              className="icon-action h-9 w-9 rounded-md"
+            >
+              <Menu className="h-5 w-5" strokeWidth={1.8} />
+            </button>
+            <div className="flex items-center gap-2">
+              <SonnyLogo size={24} />
+              <span className="t-h2 relative top-[2px] select-none leading-none text-textPrimary">Sonny</span>
+            </div>
+          </div>
           <div
             id="main-content"
             className="flex-1 overflow-y-auto custom-scrollbar relative transition-all duration-300"
@@ -128,23 +185,31 @@ function AppContent() {
             <div className="min-h-full relative z-10 p-4 md:p-6 pb-20 w-full">
               {isLoading && <DashboardSkeleton />}
 
-              {currentView === 'feed' && (
+              {workspaceWorkbook ? (
+                <WorkbookRun run={workspaceWorkbook} onBack={() => setWorkspaceWorkbook(null)} />
+              ) : currentView === 'feed' && (
                 <Suspense fallback={<DashboardSkeleton />}>
                   <IntelligenceFeed initialTarget={feedTarget ?? undefined} />
                 </Suspense>
               )}
 
-              {currentView === 'research' && (
+              {!workspaceWorkbook && currentView === 'research' && (
                 <Suspense fallback={<DashboardSkeleton />}>
-                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => openFeedForTarget()} />
+                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => openFeedForTarget()} onOpenProject={openProject} />
                 </Suspense>
               )}
 
-              {currentView === 'dossiers' && (
-                <DossiersLibrary onOpenSonny={() => setCurrentView('research')} />
+              {!workspaceWorkbook && currentView === 'project' && selectedProjectId && (
+                <ProjectWorkspace
+                  projectId={selectedProjectId}
+                  onOpenWorkbook={(capability, scenarioId) => {
+                    const workbook = getWorkbookScenario(capability, scenarioId);
+                    if (workbook) setWorkspaceWorkbook(workbook);
+                  }}
+                />
               )}
 
-              {currentView === 'watchlist' && (
+              {!workspaceWorkbook && currentView === 'watchlist' && (
                 <WatchlistView onViewInFeed={openFeedForTarget} />
               )}
             </div>

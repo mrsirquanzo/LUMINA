@@ -1,177 +1,193 @@
-import { useState, useEffect } from 'react';
-import { Search, Zap, Clock, Upload } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Plus, AtSign, ArrowRight, X, FolderOpen, ChevronsUpDown } from 'lucide-react';
+import type { ResearchTemplate } from './CapabilityCards';
+import { useProjectStore } from '../../lib/projects/store';
+import {
+  hasUnresolvedTargetPlaceholder,
+  resolveRunTarget,
+  shouldClearRunTarget,
+  TARGET_PLACEHOLDER,
+} from './researchTemplateState';
 
 interface ResearchComposerProps {
   onStart: (target: string, mode: 'fast' | 'thorough') => void;
   initialQuery?: string;
+  seed?: ResearchTemplate;
+  onOpenProject?: (projectId: string) => void;
 }
 
-const EXAMPLE_CHIPS = ['CDCP1', 'TROP2', 'KRAS G12C'];
+export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }: ResearchComposerProps) {
+  const projects = useProjectStore((state) => state.projects);
+  const [projectMenuOpen, setProjectMenuOpen] = useState(false);
+  const projectMenuRef = useRef<HTMLDivElement>(null);
+  const activeSeed = initialQuery ? undefined : seed;
+  const [prompt, setPrompt] = useState(initialQuery ?? activeSeed?.prompt ?? '');
+  const [runTarget, setRunTarget] = useState(activeSeed?.target);
+  const [seededPrompt, setSeededPrompt] = useState(activeSeed?.prompt);
+  const [contextChip, setContextChip] = useState(activeSeed?.contextChip);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-export function ResearchComposer({ onStart, initialQuery }: ResearchComposerProps) {
-  const [target, setTarget] = useState(initialQuery ?? '');
-  const [mode, setMode] = useState<'fast' | 'thorough'>('fast');
-  // Sync initialQuery if parent passes one
+  const canRun = prompt.trim().length > 0 && !hasUnresolvedTargetPlaceholder(prompt);
+
   useEffect(() => {
-    if (initialQuery) setTarget(initialQuery);
-  }, [initialQuery]);
+    const placeholderStart = prompt.indexOf(TARGET_PLACEHOLDER);
+    if (placeholderStart === -1 || !activeSeed) return;
+
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.focus();
+    textarea.setSelectionRange(placeholderStart, placeholderStart + TARGET_PLACEHOLDER.length);
+  }, [activeSeed, prompt]);
 
   const handleStart = () => {
-    const trimmed = target.trim();
-    if (!trimmed) return;
-    onStart(trimmed, mode);
+    const trimmed = prompt.trim();
+    if (!trimmed || hasUnresolvedTargetPlaceholder(prompt)) return;
+    onStart(resolveRunTarget(prompt, runTarget), 'fast');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleStart();
+  const handlePromptChange = (nextPrompt: string) => {
+    setPrompt(nextPrompt);
+    if (shouldClearRunTarget(nextPrompt, seededPrompt)) {
+      setRunTarget(undefined);
+      setSeededPrompt(undefined);
+      if (runTarget) setContextChip(undefined);
+    }
+  };
+
+  // Close the project quick-nav menu on outside click.
+  useEffect(() => {
+    if (!projectMenuOpen) return;
+    const handleClick = (event: MouseEvent) => {
+      if (!projectMenuRef.current?.contains(event.target as Node)) setProjectMenuOpen(false);
+    };
+    window.addEventListener('mousedown', handleClick);
+    return () => window.removeEventListener('mousedown', handleClick);
+  }, [projectMenuOpen]);
+
+  // Enter submits; Shift+Enter inserts a newline.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleStart();
+    }
   };
 
   return (
     <div className="w-full">
-      {/* Radial atmosphere behind composer */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 760,
-          height: 220,
-          background: 'radial-gradient(ellipse at center, rgba(29,78,216,.07), transparent 68%)',
-          filter: 'blur(8px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
+      <div className="composer-shell relative">
+        {/* Prompt textarea */}
+        <textarea
+          ref={textareaRef}
+          value={prompt}
+          onChange={(e) => handlePromptChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Ask Sonny to research a target, screen drug combinations, or analyze data..."
+          rows={4}
+          className="command-center-input min-h-[128px] w-full resize-none bg-transparent px-6 pb-3 pt-6 text-textPrimary outline-none placeholder:text-textSecondary sm:min-h-[140px] sm:px-7 sm:pt-7"
+          autoFocus
+        />
 
-      {/* Composer shell - liquid-glass gradient border */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          background: 'linear-gradient(120deg,rgba(29,78,216,.55),rgba(29,78,216,.12) 60%,rgba(29,78,216,.04))',
-          padding: '1.5px',
-          borderRadius: 17,
-          boxShadow: '0 0 0 4px rgba(29,78,216,.10), 0 6px 22px rgba(15,23,42,.06)',
-        }}
-      >
-        <div className="bg-surface rounded-[15.5px]">
-          {/* Input row */}
-          <div className="flex items-center gap-3 px-3 py-2.5">
-            {/* Disabled upload button with hover tooltip */}
-            <span className="group relative inline-flex flex-none">
+        {contextChip && (
+          <div className="px-6 pb-3 sm:px-7">
+            <span className="t-eyebrow inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 text-textTertiary">
+              {contextChip}
               <button
                 type="button"
-                disabled
-                aria-label="Upload document (coming soon)"
-                className="w-[42px] h-[42px] flex items-center justify-center rounded-[11px] bg-subtle border border-border text-textSecondary cursor-not-allowed opacity-60"
+                onClick={() => setContextChip(undefined)}
+                aria-label={`Remove ${contextChip} context`}
+                className="rounded-sm text-textTertiary transition-colors hover:text-textPrimary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               >
-                <Upload className="w-[19px] h-[19px]" />
+                <X className="h-3 w-3" aria-hidden="true" />
               </button>
-              <span
-                role="tooltip"
-                className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-ink text-white text-xs font-medium whitespace-nowrap z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-                style={{ boxShadow: '0 4px 12px rgba(15,23,42,.22)' }}
-              >
-                Coming soon
-                <span
-                  aria-hidden="true"
-                  className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink"
-                />
-              </span>
-            </span>
-
-            {/* Text input */}
-            <input
-              type="text"
-              value={target}
-              onChange={(e) => setTarget(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="What should Sonny research?"
-              className="flex-1 bg-transparent text-textPrimary placeholder:text-textTertiary outline-none"
-              style={{ font: '400 17px var(--font-sans, Geist, sans-serif)', padding: '13px 0' }}
-              autoFocus
-            />
-
-            {/* Enter hint */}
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-textSecondary" style={{ fontSize: 11, fontWeight: 500, flexShrink: 0 }}>
-              <kbd className="border border-border rounded px-1.5 py-0.5 text-textSecondary bg-surface font-semibold" style={{ fontSize: 11 }}>
-                &#8629;
-              </kbd>
-              to run
             </span>
           </div>
+        )}
 
-          {/* Mode toggle + run button row */}
-          <div className="flex items-center gap-3 px-3 pb-3">
-            {/* Mode toggle */}
-            <div className="flex gap-0.5 bg-subtle border border-border rounded-lg p-0.5">
-              <button
-                type="button"
-                onClick={() => setMode('fast')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  mode === 'fast'
-                    ? 'bg-white border border-border text-textPrimary shadow-sm'
-                    : 'text-textSecondary hover:text-textPrimary'
-                }`}
-              >
-                <Zap className="w-3.5 h-3.5" />
-                Fast
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode('thorough')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  mode === 'thorough'
-                    ? 'bg-white border border-border text-textPrimary shadow-sm'
-                    : 'text-textSecondary hover:text-textPrimary'
-                }`}
-              >
-                <Clock className="w-3.5 h-3.5" />
-                Thorough
-              </button>
-            </div>
-
-            {/* Run button - tactile */}
+        {/* Bottom control bar */}
+        <div className="flex items-center gap-2 px-4 pb-4 pt-1 sm:px-5">
+          {/* Upload (coming soon) */}
+          <span className="group relative inline-flex">
             <button
               type="button"
-              onClick={handleStart}
-              disabled={!target.trim()}
-              className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-[9px] text-white text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{
-                background: 'rgb(29 78 216)',
-                boxShadow: '0 1px 2px rgba(29,78,216,.35)',
-              }}
-              onMouseEnter={(e) => {
-                if (!target.trim()) return;
-                (e.currentTarget as HTMLButtonElement).style.background = 'rgb(30 64 175)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = 'rgb(29 78 216)';
-              }}
+              disabled
+              aria-label="Upload data (coming soon)"
+              className="icon-action h-9 w-9 rounded-full"
             >
-              <Search className="w-4 h-4" />
-              Research
+              <Plus className="w-[18px] h-[18px]" />
             </button>
-          </div>
-        </div>
-      </div>
+            <span className="t-meta pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+              Upload - coming soon
+            </span>
+          </span>
 
-      {/* Example chips */}
-      <div className="flex items-center gap-2 mt-3.5 flex-wrap" style={{ position: 'relative', zIndex: 1 }}>
-        <span className="text-textSecondary font-medium" style={{ fontSize: 11 }}>Quick target</span>
-        {EXAMPLE_CHIPS.map((chip) => (
+          {/* Reference / mention (coming soon) */}
+          <span className="group relative inline-flex">
+            <button
+              type="button"
+              disabled
+              aria-label="Reference files (coming soon)"
+              className="icon-action h-9 w-9 rounded-full"
+            >
+              <AtSign className="w-[16px] h-[16px]" />
+            </button>
+            <span className="t-meta pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+              Reference files - coming soon
+            </span>
+          </span>
+
+          {/* Project quick-nav: jumps to a project workspace in the sidebar */}
+          {projects.length > 0 && onOpenProject && (
+            <div ref={projectMenuRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setProjectMenuOpen((open) => !open)}
+                aria-haspopup="menu"
+                aria-expanded={projectMenuOpen}
+                className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-white pl-3 pr-2.5 text-[13px] font-medium text-textSecondary transition-colors hover:border-primary/25 hover:text-textPrimary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
+              >
+                <FolderOpen className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+                Project
+                <ChevronsUpDown className="h-3.5 w-3.5 text-textTertiary" aria-hidden="true" />
+              </button>
+
+              {projectMenuOpen && (
+                <div
+                  role="menu"
+                  className="absolute bottom-full left-0 z-50 mb-2 max-h-72 w-64 overflow-y-auto rounded-xl border border-border bg-white p-1.5 shadow-[0_12px_32px_rgba(15,23,42,0.14)]"
+                >
+                  <p className="t-eyebrow px-2.5 pb-1.5 pt-1 text-textTertiary">Go to project</p>
+                  {projects.map((project) => (
+                    <button
+                      key={project.id}
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setProjectMenuOpen(false);
+                        onOpenProject(project.id);
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13.5px] text-textPrimary transition-colors hover:bg-subtle focus-visible:bg-subtle focus-visible:outline-none"
+                    >
+                      <span className="text-base leading-none" aria-hidden="true">{project.icon}</span>
+                      <span className="truncate">{project.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Primary submit - circular arrow */}
           <button
-            key={chip}
             type="button"
-            onClick={() => setTarget(chip)}
-            className="px-3 py-1.5 rounded-full bg-surface border border-border text-textSecondary hover:text-textPrimary hover:border-primary/30 transition-colors text-sm font-semibold"
-            style={{ boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)' }}
+            onClick={handleStart}
+            disabled={!canRun}
+            aria-label="Ask Sonny"
+            className="composer-send ml-auto"
           >
-            {chip}
+            <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2} />
           </button>
-        ))}
+        </div>
       </div>
     </div>
   );

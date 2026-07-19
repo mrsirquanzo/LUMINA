@@ -24,4 +24,13 @@ describe('foldTrace', () => {
     expect(EMPTY_AGGREGATE.log.length).toBe(0);
     expect(a.counts.evidence_registered).toBe(350);
   });
+
+  it('keeps a degraded source visible as a non-terminal trace line', () => {
+    const aggregate = foldTrace(EMPTY_AGGREGATE, [
+      { type: 'source_unavailable', message: 'seed clinical_trials_search failed' },
+      { type: 'lead_decompose', specialists: [] },
+    ]);
+    expect(aggregate.log[0]).toMatchObject({ role: 'degraded', label: 'source unavailable' });
+    expect(aggregate.phase).toBe('specialists');
+  });
 });
