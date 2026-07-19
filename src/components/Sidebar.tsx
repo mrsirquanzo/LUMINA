@@ -255,10 +255,7 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
     <aside className="flex w-[248px] flex-shrink-0 flex-col border-r border-border bg-[#FBFBFA]" aria-label="Main navigation">
       <header className="flex items-center gap-2.5 px-4 pb-3 pt-4">
         <SonnyLogo size={30} className="flex-shrink-0" />
-        <div className="min-w-0">
-          <span className="t-h2 block select-none leading-none text-textPrimary">Sonny</span>
-          <p className="t-eyebrow mt-1 text-textTertiary">Research workspace</p>
-        </div>
+        <span className="t-h2 select-none leading-none text-textPrimary">Sonny</span>
       </header>
 
       <nav className="space-y-0.5 px-2 pb-2" aria-label="Workspace">
