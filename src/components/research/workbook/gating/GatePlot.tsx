@@ -166,7 +166,13 @@ export function GatePlot({ stepId }: { stepId: string }) {
     if (!shell) return;
     const update = () => {
       const width = Math.max(320, Math.floor(shell.clientWidth));
-      setSize({ width, height: Math.max(MIN_CANVAS_HEIGHT, Math.min(430, Math.round(width * 0.56))) });
+      const height = Math.max(MIN_CANVAS_HEIGHT, Math.min(430, Math.round(width * 0.56)));
+      // Bail when unchanged: the observed shell contains the canvas we resize, so
+      // always allocating a new {width,height} object re-renders on every
+      // observer callback and, when a scrollbar flaps clientWidth by a pixel,
+      // feeds back into the ResizeObserver - "Maximum update depth exceeded".
+      // Returning the previous reference on no change breaks that loop.
+      setSize((prev) => (prev.width === width && prev.height === height ? prev : { width, height }));
     };
     update();
     const observer = new ResizeObserver(update);
