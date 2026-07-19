@@ -31,22 +31,14 @@ export function formatRelativeDate(ts: number): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function verdictPillClass(normalized: 'GO' | 'WATCH' | 'NO-GO' | 'UNKNOWN'): string {
-  if (normalized === 'GO') return 'bg-go text-white';
-  if (normalized === 'WATCH') return 'bg-watch text-white';
-  if (normalized === 'NO-GO') return 'bg-nogo text-white';
-  return 'bg-subtle text-textSecondary';
-}
-
-function VerdictPill({ verdict }: { verdict: string | undefined }) {
-  const normalized = normalizeVerdict(verdict);
-  const label = normalized === 'UNKNOWN' ? '-' : normalized;
-
+// Reports are decision SUPPORT, not a verdict: Sonny assembles the evidence both
+// ways and leaves the GO/NO-GO call to the team. So the card leads with a neutral
+// "Assessment" tag rather than a GO/WATCH/NO-GO action pill.
+function AssessmentTag() {
   return (
-    <span
-      className={`t-meta inline-flex flex-none items-center rounded-full px-3 py-1 font-bold ${verdictPillClass(normalized)}`}
-    >
-      {label}
+    <span className="t-meta inline-flex flex-none items-center gap-1.5 rounded-full border border-border bg-subtle px-3 py-1 font-medium text-textSecondary">
+      <FileText size={12} className="text-textTertiary" />
+      Assessment
     </span>
   );
 }
@@ -87,7 +79,7 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
         e.currentTarget.style.outline = 'none';
       }}
     >
-      <VerdictPill verdict={item.verdict} />
+      <AssessmentTag />
 
       <div className="flex-1 min-w-0">
         <div className="t-h3 truncate text-textPrimary">

@@ -40,14 +40,6 @@ function dedupeClaims<T extends { text?: string }>(claims: T[]): T[] {
 }
 
 // Verdict fill pill - GO green / WATCH amber / NO-GO red fill, white text.
-function verdictPillClass(verdict: string): string {
-  const v = verdict.toUpperCase();
-  if (v === 'GO') return 'bg-go text-white';
-  if (v === 'NO-GO') return 'bg-nogo text-white';
-  if (v === 'WATCH') return 'bg-watch text-white';
-  return 'bg-subtle text-textSecondary';
-}
-
 // RAG section pill - border + tint, dot alongside.
 function ragPillClass(rag?: 'red' | 'amber' | 'green'): string {
   if (rag === 'green') return 'border border-go/30 text-go-text';
@@ -85,11 +77,13 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
   return (
     <div className="t-body">
 
-      {/* 1. Report masthead - target headline + conclusion-first verdict */}
-      {rec?.verdict && (
+      {/* 1. Report masthead - target headline + neutral assessment tag.
+          Decision support, not a verdict: the memo argues both cases and leaves
+          the GO/NO-GO call to the team, so no colored action pill here. */}
+      {rec && (
         <div className="pb-5 border-b border-border">
           <p className="t-eyebrow text-textTertiary">
-            due-diligence report
+            target assessment
           </p>
           <div className="mt-2.5 flex items-center gap-3 flex-wrap">
             {briefing.target && (
@@ -97,11 +91,8 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
                 {briefing.target}
               </h2>
             )}
-            <span
-              className={`t-body-sm inline-flex items-center rounded-full px-4 py-1.5 font-bold ${verdictPillClass(rec.verdict)}`}
-              style={{ boxShadow: rec.verdict.toUpperCase() === 'WATCH' ? '0 2px 8px rgba(217,119,6,.28)' : rec.verdict.toUpperCase() === 'GO' ? '0 2px 8px rgba(22,163,74,.25)' : rec.verdict.toUpperCase() === 'NO-GO' ? '0 2px 8px rgba(220,38,38,.25)' : 'none' }}
-            >
-              {rec.verdict.toUpperCase()}
+            <span className="t-meta inline-flex items-center gap-1.5 rounded-full border border-border bg-subtle px-3 py-1 font-medium text-textSecondary">
+              Grounded assessment · decision rests with the team
             </span>
             {(briefing.references ?? []).length > 0 && (
               <span className="t-meta ml-auto flex flex-none items-center gap-1.5 font-mono text-textTertiary">
