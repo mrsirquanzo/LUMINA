@@ -13,14 +13,24 @@ const flowScenario = flowScenarioData as WorkbookRunData;
 const westernScenario = westernScenarioData as WorkbookRunData;
 
 describe('CapabilityCards', () => {
-  it('offers Western blot analysis while keeping Patent sequence extraction coming soon', () => {
+  it('renders the five real capabilities with their figures and honest actions', () => {
     const html = renderToStaticMarkup(<CapabilityCards onSelectWorkbook={() => undefined} />);
 
+    expect(html).toContain('Combination drug screening');
+    expect(html).toContain('/workbook/combo/fig_synergy_matrices.png');
+    expect(html).toContain('Start screening');
     expect(html).toContain('Western blot analysis');
     expect(html).toContain('/workbook/western/annotated.png');
     expect(html).toContain('background-corrected densitometry');
+    expect(html).toContain('Analyze blot');
+    expect(html).toContain('Flow cytometry analysis');
+    expect(html).toContain('/workbook/flow/04_lineage.png');
+    expect(html).toContain('Open workbook');
+    expect(html).toContain('Deep target research');
+    expect(html).toContain('/deep-research.png');
+    expect(html).toContain('Start a report');
     expect(html).toContain('Patent sequence extraction');
-    expect(html.match(/Open workbook/g)).toHaveLength(3);
+    expect(html).toContain('/patent-ip.png');
     expect(html.match(/Coming soon/g)).toHaveLength(1);
   });
 });

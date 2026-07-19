@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Plus, AtSign, Maximize2, HelpCircle, ArrowRight, X } from 'lucide-react';
+import { Plus, AtSign, Maximize2, HelpCircle, ArrowRight, Search, X } from 'lucide-react';
 import type { ResearchTemplate } from './CapabilityCards';
 import {
   hasUnresolvedTargetPlaceholder,
@@ -60,12 +60,14 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
 
   return (
     <div className="w-full">
-      {/* Composer shell - tall, calm, Science-Machine-style */}
-      <div
-        className="composer-shell relative"
-      >
+      <div className="composer-shell relative">
+        <div className="flex items-center gap-2 px-5 pt-5 text-textTertiary sm:px-7 sm:pt-6">
+          <Search className="h-3.5 w-3.5 text-primary" strokeWidth={1.8} aria-hidden="true" />
+          <span className="t-eyebrow">Command center</span>
+        </div>
+
         {/* Top-right utility icons */}
-        <div className="absolute right-5 top-5 flex items-center gap-2 text-textSecondary">
+        <div className="absolute right-4 top-3.5 flex items-center gap-1 text-textSecondary sm:right-5 sm:top-4">
           <button type="button" aria-label="Expand" className="icon-action h-8 w-8 border-transparent bg-transparent">
             <Maximize2 className="w-[15px] h-[15px]" />
           </button>
@@ -80,14 +82,14 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
           value={prompt}
           onChange={(e) => handlePromptChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask Sonny to research a target, map a landscape, or analyze data..."
-          rows={5}
-          className="t-lead min-h-[176px] w-full resize-none bg-transparent px-5 pb-3 pr-28 pt-5 text-textPrimary outline-none placeholder:text-textSecondary sm:px-6 sm:pt-6"
+          placeholder="Ask Sonny to research a target, screen drug combinations, or analyze data..."
+          rows={4}
+          className="command-center-input min-h-[142px] w-full resize-none bg-transparent px-5 pb-4 pt-5 text-textPrimary outline-none placeholder:text-textSecondary sm:min-h-[154px] sm:px-7 sm:pb-5 sm:pt-6"
           autoFocus
         />
 
         {contextChip && (
-          <div className="px-5 pb-3 sm:px-6">
+          <div className="px-5 pb-4 sm:px-7">
             <span className="t-eyebrow inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 text-textTertiary">
               {contextChip}
               <button
@@ -103,7 +105,7 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
         )}
 
         {/* Bottom control bar */}
-        <div className="flex items-center gap-2 border-t border-borderSoft px-5 pb-4 pt-3">
+        <div className="flex items-center gap-2 border-t border-borderSoft px-5 pb-4 pt-3 sm:px-7 sm:pb-5">
           {/* Upload (coming soon) */}
           <span className="group relative inline-flex">
             <button
@@ -134,19 +136,19 @@ export function ResearchComposer({ onStart, initialQuery, seed }: ResearchCompos
             </span>
           </span>
 
-          {/* Circular submit */}
+          {/* Primary submit */}
           <button
             type="button"
             onClick={handleStart}
             disabled={!canRun}
-            aria-label="Run"
-            className="quiet-action ml-auto flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-sm hover:bg-primary/90 hover:shadow-md disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+            aria-label="Ask Sonny"
+            className="premium-cta ml-auto min-w-[122px] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
           >
-            <ArrowRight className="w-[18px] h-[18px]" />
+            Ask Sonny
+            <ArrowRight className="h-4 w-4" />
           </button>
         </div>
       </div>
-
     </div>
   );
 }

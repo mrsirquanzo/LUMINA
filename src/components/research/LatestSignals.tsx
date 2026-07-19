@@ -62,7 +62,7 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
   return (
     <div>
       {/* Section header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="mb-3 flex items-center justify-between gap-4">
         <div>
           <span className="t-h3 text-textPrimary">
             Latest signals
@@ -80,7 +80,7 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
         <button
           type="button"
           onClick={onOpenFeed}
-          className="t-meta tactile text-primary"
+          className="t-meta tactile shrink-0 font-semibold text-primary"
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
           Open feed -&gt;
@@ -89,7 +89,7 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
 
       {/* Body */}
       {isLoading ? (
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-borderSoft">
           <SkeletonRow />
           <SkeletonRow />
           <SkeletonRow />
@@ -102,12 +102,12 @@ export default function LatestSignals({ onOpenFeed }: { onOpenFeed: () => void }
           trials, and patents here.
         </p>
       ) : (
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-borderSoft">
           {items.map((item) => {
             const ago = timeAgo(item.date);
             const metaParts = [item.source, item.target, ago].filter(Boolean);
             const inner = (
-              <div className="py-2.5 tactile">
+              <div className="tactile rounded-lg px-2 py-3">
                 <p className="t-body-sm truncate text-textPrimary">
                   {item.title}
                 </p>
