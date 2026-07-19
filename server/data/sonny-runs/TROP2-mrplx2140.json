@@ -1,0 +1,200 @@
+{
+  "target": "TROP2",
+  "recommendation": {
+    "verdict": "watch",
+    "thesis": "TROP2 shows promise as a target for imaging and therapy across various cancers, but further research is needed to understand its role in resistance mechanisms and survival outcomes.",
+    "bull": [],
+    "bear": [],
+    "conditions": [
+      "Further investigation into TROP2's role in resistance mechanisms and survival outcomes",
+      "Completion of mechanism of action, clinical landscape, competitive & IP landscape, and developability studies"
+    ]
+  },
+  "executiveRead": "TROP2 is a potential target for imaging and therapy across various cancers due to its overexpression and correlation with treatment response. However, the lack of comprehensive research on resistance mechanisms, survival outcomes, and other critical aspects means that further investigation is necessary before pursuing it as a therapeutic target.",
+  "sections": [
+    {
+      "id": "target_biology",
+      "title": "Target Biology",
+      "takeaway": "TROP2 is a promising target for imaging and therapy across various cancers, particularly breast cancer. Its expression correlates with treatment response and immune checkpoint blockade efficacy but also poses challenges due to its presence in normal tissues.",
+      "claims": [],
+      "sources": [],
+      "rag": "red",
+      "critiques": [
+        {
+          "evidenceId": "PMID:22419550",
+          "studyDesign": "in_vitro",
+          "sampleSize": null,
+          "redFlags": [
+            {
+              "category": "surrogate_endpoint",
+              "biasRisk": "low",
+              "explanation": "The study uses cell proliferation and colony formation as endpoints, which are surrogate markers for tumour growth."
+            },
+            {
+              "category": "p_hacking",
+              "biasRisk": "moderate",
+              "explanation": "The study performs multiple post-hoc analyses (e.g., effects of TROP2 expression on AKT activation, ERK activation, and cell proliferation) without clear a priori hypotheses or corrections for multiple testing."
+            },
+            {
+              "category": "active_control_mismatch",
+              "biasRisk": "low",
+              "explanation": "The study uses different cell lines (e.g., H1299 vs. A549) as controls, which may not be directly comparable due to differences in tumourigenicity and IGF-1R signalling."
+            },
+            {
+              "category": "unblinded",
+              "biasRisk": "low",
+              "explanation": "The study does not mention blinding of the researchers or cell lines to treatment conditions, which could introduce bias in data interpretation."
+            }
+          ]
+        },
+        {
+          "evidenceId": "PMID:26000093",
+          "studyDesign": "observational",
+          "sampleSize": null,
+          "redFlags": [
+            {
+              "category": "surrogate_endpoint",
+              "biasRisk": "low",
+              "explanation": "The study focuses on Trop2 overexpression as a prognostic biomarker and therapeutic target, but does not explicitly state the primary endpoint of interest."
+            },
+            {
+              "category": "p_hacking",
+              "biasRisk": "moderate",
+              "explanation": "The review mentions several strategies targeting Trop2, including antibodies, antibody fusion proteins, chemical inhibitors, nanoparticles, etc., which may indicate post-hoc or subgroup analyses to support the therapeutic potential of these approaches."
+            },
+            {
+              "category": "active_control_mismatch",
+              "biasRisk": "low",
+              "explanation": "The review mentions a clinical study using IMMU-132 in patients with epithelial cancers, but does not provide information on the control group or comparator arm."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moa_pathway",
+      "title": "Mechanism of Action & Pathway",
+      "takeaway": "Research could not complete: fetch failed",
+      "claims": [],
+      "sources": [],
+      "rag": "red"
+    },
+    {
+      "id": "disease_indications",
+      "title": "Disease & Indications",
+      "takeaway": "TROP2 is overexpressed in multiple epithelial-derived cancers, particularly colorectal and pancreatic cancers, where it correlates with poor prognosis. It shows promise as a therapeutic target and diagnostic marker but requires further investigation into its role in resistance mechanisms and survival outcomes.",
+      "claims": [],
+      "sources": [],
+      "rag": "red",
+      "critiques": [
+        {
+          "evidenceId": "PMID:26000093",
+          "studyDesign": "observational",
+          "sampleSize": null,
+          "redFlags": [
+            {
+              "category": "surrogate_endpoint",
+              "biasRisk": "low",
+              "explanation": "The study focuses on Trop2 overexpression as a prognostic biomarker and therapeutic target, but does not explicitly state the primary endpoint of interest."
+            },
+            {
+              "category": "p_hacking",
+              "biasRisk": "moderate",
+              "explanation": "The review mentions several strategies targeting Trop2, including antibodies, antibody fusion proteins, chemical inhibitors, nanoparticles, etc., which may indicate post-hoc or subgroup analyses to support the therapeutic potential of these approaches."
+            },
+            {
+              "category": "active_control_mismatch",
+              "biasRisk": "low",
+              "explanation": "The review mentions a clinical study using IMMU-132 in patients with epithelial cancers, but does not provide information on the control group or comparator arm."
+            }
+          ]
+        },
+        {
+          "evidenceId": "PMID:26000093",
+          "studyDesign": "observational",
+          "sampleSize": null,
+          "redFlags": [
+            {
+              "category": "surrogate_endpoint",
+              "biasRisk": "low",
+              "explanation": "The study focuses on Trop2 overexpression as a prognostic biomarker and therapeutic target, but does not explicitly state the primary endpoint of interest."
+            },
+            {
+              "category": "p_hacking",
+              "biasRisk": "moderate",
+              "explanation": "The review mentions several strategies targeting Trop2, including antibodies, antibody fusion proteins, chemical inhibitors, nanoparticles, etc., which may indicate post-hoc or subgroup analyses to support the therapeutic potential of these approaches."
+            },
+            {
+              "category": "active_control_mismatch",
+              "biasRisk": "low",
+              "explanation": "The review mentions a clinical study using IMMU-132 in patients with epithelial cancers, but does not provide information on the control group or comparator arm."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clinical_landscape",
+      "title": "Clinical Landscape",
+      "takeaway": "Research could not complete: fetch failed",
+      "claims": [],
+      "sources": [],
+      "rag": "red"
+    },
+    {
+      "id": "competitive_ip",
+      "title": "Competitive & IP Landscape",
+      "takeaway": "Research could not complete: fetch failed",
+      "claims": [],
+      "sources": [],
+      "rag": "red"
+    },
+    {
+      "id": "modality_developability",
+      "title": "Modality & Developability",
+      "takeaway": "Research could not complete: fetch failed",
+      "claims": [],
+      "sources": [],
+      "rag": "red",
+      "developabilityRisks": []
+    }
+  ],
+  "weighing": {
+    "takeaway": "TROP2 is a promising target for imaging and therapy in multiple cancers, but further research is needed to understand its role in resistance mechanisms and survival outcomes.",
+    "claims": []
+  },
+  "references": [],
+  "kolCluster": {
+    "target": "TROP2",
+    "labs": [
+      {
+        "investigator": "Yao Q",
+        "paperCount": 2,
+        "weight": 4,
+        "evidenceIds": [
+          "PMID:20858281",
+          "PMID:19683559"
+        ]
+      },
+      {
+        "investigator": "Witte ON",
+        "paperCount": 3,
+        "weight": 3,
+        "evidenceIds": [
+          "PMID:19088204",
+          "PMID:23070813",
+          "PMID:19938015"
+        ]
+      },
+      {
+        "investigator": "Agatsuma T",
+        "institution": "Daiichi Sankyo Co., Ltd., Tokyo, Japan.",
+        "paperCount": 1,
+        "weight": 3,
+        "evidenceIds": [
+          "PMID:34413126"
+        ]
+      }
+    ]
+  }
+}

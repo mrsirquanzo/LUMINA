@@ -1,0 +1,500 @@
+{
+  "target": "CDCP1",
+  "recommendation": {
+    "verdict": "watch",
+    "thesis": "CDCP1 (CUB domain\u2011containing protein 1) is a single\u2011pass membrane glycoprotein with an extracellular domain that can be accessed by antibodies or ADCs. The central tension lies in its strong tumor\u2011selective expression and rapid antibody\u2011induced internalization versus the absence of clinical ADC data, a developability flag, and potential on\u2011target/off\u2011tumor safety concerns in the pituitary.",
+    "bull": [
+      {
+        "point": "CDCP1 is over\u2011expressed on the surface of many tumors, including ~30\u202f% of lung adenocarcinomas with high membrane staining that correlates with poorer prognosis, providing a tumor\u2011selective antigen density suitable for ADC targeting.",
+        "citations": [
+          "PMID:19077003"
+        ]
+      },
+      {
+        "point": "Across a broad range of malignancies (lung, breast, colorectal, ovarian, kidney, liver, pancreatic) CDCP1 mRNA is up\u2011regulated, supporting a pan\u2011cancer ADC opportunity.",
+        "citations": [
+          "PMID:33509939"
+        ]
+      },
+      {
+        "point": "The protein is a type\u202fI transmembrane glycoprotein with a single extracellular domain, making it readily reachable by antibody\u2011based modalities.",
+        "citations": [
+          "UNIPROT:Q9H5V8#localization",
+          "ENSG00000163814#localization"
+        ]
+      },
+      {
+        "point": "Antibody binding (e.g., mAbs 10D7, 41\u20112, RG7287) drives rapid, Src\u2011dependent internalization and lysosomal degradation, a mechanistic prerequisite for effective ADC payload delivery.",
+        "citations": [
+          "PMCID:PMC7019151#sec-4",
+          "PMCID:PMC7019151#sec-5",
+          "PMID:24055141"
+        ]
+      },
+      {
+        "point": "In pre\u2011clinical models the 10D7\u2011MMAE ADC kills CDCP1\u2011positive cells at low nanomolar concentrations and achieves high tumor accumulation (~48\u202f%ID/g) in xenografts, demonstrating functional ADC activity.",
+        "citations": [
+          "PMCID:PMC7019151#sec-7",
+          "PMID:24055141"
+        ]
+      },
+      {
+        "point": "Normal tissue expression is low except for the pituitary gland and pancreas, implying a favorable therapeutic window for lung\u2011focused ADCs where normal lung expression is negligible.",
+        "citations": [
+          "ENSG00000163814#expression"
+        ]
+      }
+    ],
+    "bear": [
+      {
+        "point": "No CDCP1\u2011directed ADC has entered clinical trials for NSCLC; all available data are pre\u2011clinical, leaving translational risk unquantified.",
+        "citations": [
+          "PMID:36276654",
+          "PMID:32104500",
+          "PMID:32226543",
+          "PMID:35166238",
+          "PMID:29359686"
+        ]
+      },
+      {
+        "point": "Quantitative prevalence of high CDCP1 protein expression in NSCLC patient cohorts is not reported, making it unclear what fraction of the indication would be targetable.",
+        "citations": [
+          "PMID:26227951",
+          "PMID:40693605",
+          "ENSG00000163814#expression"
+        ]
+      },
+      {
+        "point": "Pituitary gland expresses CDCP1 at the highest normal level, raising a potential on\u2011target/off\u2011tumor safety liability for ADCs that could affect endocrine function.",
+        "citations": [
+          "ENSG00000163814#expression",
+          "PMID:19077003"
+        ]
+      },
+      {
+        "point": "Developability assessment flags no antibody/ADC tractability bucket achieved, indicating possible manufacturability or IP obstacles for an antibody\u2011based modality.",
+        "citations": [
+          "ENSG00000163814#tractability"
+        ]
+      },
+      {
+        "point": "The competitive and IP landscape for CDCP1\u2011targeted ADCs is not characterized, creating uncertainty around freedom\u2011to\u2011operate.",
+        "citations": []
+      }
+    ],
+    "conditions": [
+      "CDCP1 appears strongest as an ADC target in a subset of NSCLC tumors that exhibit high surface expression and rapid antibody\u2011mediated internalization, positioning it for a biomarker\u2011enriched development path. The biggest open risks are the lack of clinical ADC experience, undefined prevalence of target\u2011positive NSCLC patients, and the pituitary safety signal coupled with developability concerns. Generating robust prevalence data, confirming internalization in NSCLC\u2011relevant models, and addressing manufacturability/IP issues would materially shift the risk\u2013benefit balance. The decision on whether to pursue should rest with the team after these gaps are probed.",
+      "What would change this read: Quantify the proportion of NSCLC tumors (by histology and stage) with membrane CDCP1 density above a defined ADC threshold.",
+      "What would change this read: Demonstrate antibody\u2011induced internalization and payload delivery in multiple NSCLC cell lines and patient\u2011derived xenograft models.",
+      "What would change this read: Conduct developability studies (expression, stability, aggregation) for candidate anti\u2011CDCP1 antibodies and assess manufacturability.",
+      "What would change this read: Perform pre\u2011clinical safety studies focusing on pituitary exposure and endocrine function after ADC administration.",
+      "What would change this read: Complete a freedom\u2011to\u2011operate/IP landscape analysis for CDCP1\u2011directed antibodies and ADCs."
+    ]
+  },
+  "executiveRead": "CDCP1 (CUB domain\u2011containing protein 1) is a single\u2011pass membrane glycoprotein with an extracellular domain that can be accessed by antibodies or ADCs. The central tension lies in its strong tumor\u2011selective expression and rapid antibody\u2011induced internalization versus the absence of clinical ADC data, a developability flag, and potential on\u2011target/off\u2011tumor safety concerns in the pituitary.\n\nBottom line: CDCP1 appears strongest as an ADC target in a subset of NSCLC tumors that exhibit high surface expression and rapid antibody\u2011mediated internalization, positioning it for a biomarker\u2011enriched development path. The biggest open risks are the lack of clinical ADC experience, undefined prevalence of target\u2011positive NSCLC patients, and the pituitary safety signal coupled with developability concerns. Generating robust prevalence data, confirming internalization in NSCLC\u2011relevant models, and addressing manufacturability/IP issues would materially shift the risk\u2013benefit balance. The decision on whether to pursue should rest with the team after these gaps are probed.",
+  "sections": [
+    {
+      "id": "target_biology",
+      "title": "Target Biology",
+      "takeaway": "Research could not complete: openai-compat request failed (400): {\"error\":{\"message\":\"Tool call validation failed: tool call validation failed: parameters for tool emit did not match schema: errors: [`/claims/0`: missing properties: 'id', `/claims/1`: missing properties: 'id', `/claims/2`: missing properties: 'id', additionalProperties 'id' not allowed]\",\"type\":\"",
+      "claims": [
+        {
+          "id": "c1",
+          "text": "Subcellular location: Cell membrane. 1 transmembrane region(s) with an extracellular domain. The extracellular/transmembrane topology supports an antibody- or ADC-accessible cell-surface epitope. (UniProt)",
+          "citations": [
+            "UNIPROT:Q9H5V8#localization"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c2",
+          "text": "Annotated domains: CUB. (UniProt)",
+          "citations": [
+            "UNIPROT:Q9H5V8#domains"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c3",
+          "text": "Subcellular location: Cell membrane ; Single- pass membrane protein; Secreted; Nucleoplasm; Vesicles; Nuclear bodies. Consistent with a cell-surface / membrane target accessible to an antibody or ADC. (Open Targets)",
+          "citations": [
+            "ENSG00000163814#localization"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c4",
+          "text": "In normal human tissues CDCP1 protein is most abundant in pituitary gland (mass\u2011spectrometry proteomics value 347) and also expressed in endocrine pancreas (value 109) and exocrine pancreas (values ranging from 47 to 83).",
+          "citations": [
+            "ENSG00000163814#expression"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c5",
+          "text": "Normal tissue expression of CDCP1 is otherwise low, making the pituitary gland the primary on\u2011target/off\u2011tumor safety consideration for ADCs.",
+          "citations": [
+            "ENSG00000163814#expression"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c6",
+          "text": "In non\u2011small cell lung cancer (NSCLC) CDCP1 is over\u2011expressed in a subset of tumors; immunohistochemistry of 200 lung adenocarcinomas identified 30\u202f% with high membrane staining, which correlates with poorer prognosis.",
+          "citations": [
+            "PMID:19077003"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c7",
+          "text": "CDCP1 mRNA is up\u2011regulated across many malignancies, including lung, breast, colorectal, ovarian, kidney, liver and pancreatic cancers.",
+          "citations": [
+            "PMID:33509939"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c8",
+          "text": "Pancreatic ductal adenocarcinoma tumors exhibit high CDCP1 expression that correlates with poor survival and provides sufficient target density for effective imaging and ADC therapy.",
+          "citations": [
+            "PMID:32226543",
+            "PMID:32341034"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c9",
+          "text": "Bladder cancer shows CDCP1 expression ranging from 10^5 to 10^6 receptors per cell, with the basal/squamous subtype having the highest levels.",
+          "citations": [
+            "PMID:36648492"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c10",
+          "text": "Overall, CDCP1 displays a tumor\u2011selective expression profile: low to moderate in most normal tissues and markedly elevated in many tumor types, supporting its viability as an ADC target in NSCLC.",
+          "citations": [
+            "ENSG00000163814#expression",
+            "PMID:19077003",
+            "PMID:33509939"
+          ],
+          "confidence": 0.85
+        }
+      ],
+      "sources": [],
+      "rag": "green",
+      "critiques": []
+    },
+    {
+      "id": "clinical_landscape",
+      "title": "Clinical Landscape",
+      "takeaway": "Current evidence supports CDCP1 as a theoretically tractable ADC target in NSCLC, but key gaps remain in tumor prevalence, NSCLC\u2011specific internalization, and safety profiling.",
+      "claims": [
+        {
+          "id": "c1",
+          "text": "No CDCP1-directed antibody-drug conjugate has been reported as evaluated in clinical trials for non\u2011small cell lung cancer; the provided evidence only describes pre\u2011clinical studies and no trial identifiers, sponsors, phases, or outcomes for NSCLC are present.",
+          "citations": [
+            "PMID:36276654",
+            "PMID:32104500",
+            "PMID:32226543",
+            "PMID:35166238",
+            "PMID:29359686"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c2",
+          "text": "CDCP1 is a type I transmembrane glycoprotein localized to the cell membrane, providing an extracellular epitope accessible to antibodies or ADCs.",
+          "citations": [
+            "UNIPROT:Q9H5V8#localization",
+            "ENSG00000163814#localization"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c3",
+          "text": "Baseline protein expression of CDCP1 across normal tissues is highest in pituitary and pancreas, with no notable expression reported for normal lung, indicating low baseline CDCP1 levels in healthy lung tissue.",
+          "citations": [
+            "ENSG00000163814#expression"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c4",
+          "text": "CDCP1 is up\u2011regulated in lung cancer, including NSCLC, as demonstrated by immunohistochemical and transcriptomic analyses.",
+          "citations": [
+            "PMID:18467693",
+            "PMID:33509939"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c5",
+          "text": "Elevated CDCP1 expression in lung malignancies is associated with progressive disease and poorer survival, indicating a correlation with advanced disease stage.",
+          "citations": [
+            "PMID:33509939"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c6",
+          "text": "Because normal lung tissue shows low CDCP1 expression while lung tumors exhibit up\u2011regulation, CDCP1 prevalence and expression levels are higher in NSCLC tumor samples compared with normal lung.",
+          "citations": [
+            "ENSG00000163814#expression",
+            "PMID:18467693",
+            "PMID:33509939"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c7",
+          "text": "CDCP1 is a single\u2011pass transmembrane protein with an extracellular domain, making it accessible to antibodies or ADCs.",
+          "citations": [
+            "UNIPROT:Q9H5V8#localization",
+            "ENSG00000163814#localization"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c8",
+          "text": "CDCP1 is expressed on the surface of lung carcinoma cells and its high expression correlates with poor prognosis in lung cancer.",
+          "citations": [
+            "PMCID:PMC7019151#sec-0"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c9",
+          "text": "Antibody binding (e.g., mAbs 10D7, 41\u20112, RG7287) triggers rapid CDCP1 internalization: clustering is visible within 30\u202fs, maximal intracellular overlap persists for minutes, surface loss occurs within 30\u202fmin, and total receptor degradation is evident by 3\u20138\u202fh.",
+          "citations": [
+            "PMCID:PMC7019151#sec-4",
+            "PMCID:PMC7019151#sec-2",
+            "PMID:24055141"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c10",
+          "text": "The internalization mechanism requires antibody bivalency\u2011induced clustering, Src\u2011family\u2011kinase\u2013mediated tyrosine phosphorylation of CDCP1 (Y734, Y743, Y762), and active Src signaling; Src inhibition (dasatinib) blocks both phosphorylation and internalization.",
+          "citations": [
+            "PMCID:PMC7019151#sec-5",
+            "PMID:24055141"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c11",
+          "text": "Rapid internalization and subsequent lysosomal/proteasomal degradation enable efficient payload delivery: the 10D7\u2011MMAE ADC kills CDCP1\u2011positive cells at ~0.1\u20130.2\u202f\u00b5g\u202fml\u207b\u00b9, and radiolabeled 10D7 accumulates in xenograft tumors (\u224848\u202f%ID/g), demonstrating tumor targeting capability.",
+          "citations": [
+            "PMCID:PMC7019151#sec-7",
+            "PMCID:PMC7019151#sec-7",
+            "PMID:24055141"
+          ],
+          "confidence": 0.85
+        },
+        {
+          "id": "c12",
+          "text": "The provided evidence does not include quantitative data on the proportion of NSCLC patient tumors (by histology or stage) that exhibit high CDCP1 protein expression sufficient for ADC targeting; NSCLC-specific prevalence percentages are absent.",
+          "citations": [
+            "PMID:26227951",
+            "PMID:40693605",
+            "UNIPROT:Q9H5V8#localization",
+            "ENSG00000163814#expression"
+          ],
+          "confidence": 0.85
+        }
+      ],
+      "sources": [],
+      "rag": "amber",
+      "critiques": []
+    }
+  ],
+  "weighing": {
+    "takeaway": "CDCP1 is surface-accessible with validated antibody-induced internalisation, but clinical ADC precedent is absent and normal pituitary/pancreas expression plus an unachieved tractability bucket temper confidence.",
+    "claims": []
+  },
+  "references": [
+    {
+      "id": "ENSG00000163814#expression",
+      "kind": "target",
+      "source": "Open Targets",
+      "title": "CDCP1 baseline normal-tissue expression",
+      "url": "https://platform.opentargets.org/target/ENSG00000163814?tab=expression"
+    },
+    {
+      "id": "ENSG00000163814#localization",
+      "kind": "target",
+      "source": "Open Targets",
+      "title": "CDCP1 subcellular localisation",
+      "url": "https://platform.opentargets.org/target/ENSG00000163814"
+    },
+    {
+      "id": "ENSG00000163814#tractability",
+      "kind": "target",
+      "source": "Open Targets",
+      "title": "CDCP1 tractability (antibody / ADC)",
+      "url": "https://platform.opentargets.org/target/ENSG00000163814?tab=tractability"
+    },
+    {
+      "id": "PMCID:PMC7019151#sec-0",
+      "kind": "publication",
+      "source": "PMC full text",
+      "title": "Introduction",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019151/"
+    },
+    {
+      "id": "PMCID:PMC7019151#sec-2",
+      "kind": "publication",
+      "source": "PMC full text",
+      "title": "41-2 and 10D7 induce internalization and degradation of CDCP1",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019151/"
+    },
+    {
+      "id": "PMCID:PMC7019151#sec-4",
+      "kind": "publication",
+      "source": "PMC full text",
+      "title": "10D7 induces rapid clustering and lysosomal trafficking of CDCP1",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019151/"
+    },
+    {
+      "id": "PMCID:PMC7019151#sec-5",
+      "kind": "publication",
+      "source": "PMC full text",
+      "title": "Tyrosine phosphorylation likely via Src is involved in 10D7-induced internalization and degradation of CDCP1",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019151/"
+    },
+    {
+      "id": "PMCID:PMC7019151#sec-7",
+      "kind": "publication",
+      "source": "PMC full text",
+      "title": "in vitro in vivo Cytotoxin-conjugated 10D7 inhibits proliferation of CDCP1 expressing EOC cellsand",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019151/"
+    },
+    {
+      "id": "PMID:18467693",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "CUB-domain-containing protein 1 regulates peritoneal dissemination of gastric scirrhous carcinoma.",
+      "url": "https://europepmc.org/article/MED/18467693"
+    },
+    {
+      "id": "PMID:19077003",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Expression of CUB domain containing protein (CDCP1) is correlated with prognosis and survival of patients with adenocarcinoma of lung.",
+      "url": "https://europepmc.org/article/MED/19077003"
+    },
+    {
+      "id": "PMID:24055141",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Antibody mediated CDCP1 degradation as mode of action for cancer targeted therapy.",
+      "url": "https://europepmc.org/article/MED/24055141"
+    },
+    {
+      "id": "PMID:26227951",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Identification of anti-tumour biologics using primary tumour models, 3-D phenotypic screening and image-based multi-parametric profiling.",
+      "url": "https://europepmc.org/article/MED/26227951"
+    },
+    {
+      "id": "PMID:29359686",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Targeting RAS-driven human cancer cells with antibodies to upregulated and essential cell-surface proteins.",
+      "url": "https://europepmc.org/article/MED/29359686"
+    },
+    {
+      "id": "PMID:32104500",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Anti-CDCP1 immuno-conjugates for detection and inhibition of ovarian cancer.",
+      "url": "https://europepmc.org/article/MED/32104500"
+    },
+    {
+      "id": "PMID:32226543",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Effective targeting of intact and proteolysed CDCP1 for imaging and treatment of pancreatic ductal adenocarcinoma.",
+      "url": "https://europepmc.org/article/MED/32226543"
+    },
+    {
+      "id": "PMID:32341034",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Theranostic Targeting of CUB Domain Containing Protein 1 (CDCP1) in Pancreatic Cancer.",
+      "url": "https://europepmc.org/article/MED/32341034"
+    },
+    {
+      "id": "PMID:33509939",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "The CDCP1 Signaling Hub: A Target for Cancer Detection and Therapeutic Intervention.",
+      "url": "https://europepmc.org/article/MED/33509939"
+    },
+    {
+      "id": "PMID:35166238",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Targeting a proteolytic neoepitope on CUB domain containing protein 1 (CDCP1) for RAS-driven cancers.",
+      "url": "https://europepmc.org/article/MED/35166238"
+    },
+    {
+      "id": "PMID:36276654",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "CUB Domain-Containing Protein 1 (CDCP1) is a rational target for the development of imaging tracers and antibody-drug conjugates for cancer detection and therapy.",
+      "url": "https://europepmc.org/article/MED/36276654"
+    },
+    {
+      "id": "PMID:36648492",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Theranostic Targeting of CUB Domain-Containing Protein 1 (CDCP1) in Multiple Subtypes of Bladder Cancer.",
+      "url": "https://europepmc.org/article/MED/36648492"
+    },
+    {
+      "id": "PMID:40693605",
+      "kind": "publication",
+      "source": "PubMed",
+      "title": "Proteomic Analysis of Extracellular Vesicles Identifies CDCP1 as Critical Metastasis-Related Glycoprotein in Lung Cancer.",
+      "url": "https://europepmc.org/article/MED/40693605"
+    },
+    {
+      "id": "UNIPROT:Q9H5V8#domains",
+      "kind": "target",
+      "source": "UniProt",
+      "title": "CDCP1 domain architecture",
+      "url": "https://www.uniprot.org/uniprotkb/Q9H5V8/entry"
+    },
+    {
+      "id": "UNIPROT:Q9H5V8#localization",
+      "kind": "target",
+      "source": "UniProt",
+      "title": "CDCP1 (CUB domain-containing protein 1) localisation & topology",
+      "url": "https://www.uniprot.org/uniprotkb/Q9H5V8/entry"
+    }
+  ],
+  "kolCluster": {
+    "target": "CDCP1",
+    "labs": [
+      {
+        "investigator": "Hooper JD",
+        "institution": "Mater Research Institute, University of Queensland",
+        "paperCount": 11
+      },
+      {
+        "investigator": "Kryza T",
+        "institution": "Mater Research Institute, University of Queensland",
+        "paperCount": 2
+      },
+      {
+        "investigator": "Wells JA",
+        "institution": "UCSF",
+        "paperCount": 2
+      }
+    ]
+  }
+}
