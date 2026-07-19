@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
+import { SonnyLogo } from './components/SonnyLogo';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
 import WatchlistView from './components/watchlist/WatchlistView';
@@ -36,19 +38,23 @@ function AppContent() {
   const [isLoading] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const openFeedForTarget = (target?: string) => {
     setWorkspaceWorkbook(null);
     setFeedTarget(target ?? null);
     setCurrentView('feed');
+    setMobileNavOpen(false);
   };
   const changeView = (view: ViewState) => {
     setWorkspaceWorkbook(null);
     setCurrentView(view);
+    setMobileNavOpen(false);
   };
   const openProject = (projectId: string) => {
     setWorkspaceWorkbook(null);
     setSelectedProjectId(projectId);
     setCurrentView('project');
+    setMobileNavOpen(false);
   };
   const toast = useToast();
 
@@ -130,9 +136,37 @@ function AppContent() {
           onOpenFeedForTarget={openFeedForTarget}
           selectedProjectId={selectedProjectId}
           onOpenProject={openProject}
+          mobileOpen={mobileNavOpen}
+          onMobileClose={() => setMobileNavOpen(false)}
         />
 
+        {/* Mobile drawer backdrop */}
+        {mobileNavOpen && (
+          <button
+            type="button"
+            aria-label="Close navigation"
+            onClick={() => setMobileNavOpen(false)}
+            className="fixed inset-0 z-30 bg-ink/30 md:hidden"
+          />
+        )}
+
         <main className="flex-1 flex flex-col min-w-0">
+          {/* Mobile top bar with menu toggle (hidden on md+) */}
+          <div className="flex items-center gap-3 border-b border-border bg-surface px-4 py-3 md:hidden">
+            <button
+              type="button"
+              aria-label="Open navigation"
+              aria-expanded={mobileNavOpen}
+              onClick={() => setMobileNavOpen(true)}
+              className="icon-action h-9 w-9 rounded-md"
+            >
+              <Menu className="h-5 w-5" strokeWidth={1.8} />
+            </button>
+            <div className="flex items-center gap-2">
+              <SonnyLogo size={24} />
+              <span className="t-h2 relative top-[2px] select-none leading-none text-textPrimary">Sonny</span>
+            </div>
+          </div>
           <div
             id="main-content"
             className="flex-1 overflow-y-auto custom-scrollbar relative transition-all duration-300"

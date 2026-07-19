@@ -22,6 +22,9 @@ interface SidebarProps {
   onOpenFeedForTarget?: (target?: string) => void;
   selectedProjectId?: string | null;
   onOpenProject: (projectId: string) => void;
+  /** Mobile drawer state: below md the sidebar is off-canvas unless open. */
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 interface NavItem {
@@ -198,7 +201,7 @@ function EmojiPicker({
   );
 }
 
-const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedForTarget, selectedProjectId, onOpenProject }: SidebarProps) {
+const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedForTarget, selectedProjectId, onOpenProject, mobileOpen = false, onMobileClose }: SidebarProps) {
   const [agentMode, setAgentMode] = useState<AgentMode>(() => getStoredAgentMode());
   const [projectsOpen, setProjectsOpen] = useState(true);
   const [picker, setPicker] = useState<{ projectId: string; anchor: DOMRect } | null>(null);
@@ -252,7 +255,12 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
   };
 
   return (
-    <aside className="flex w-[248px] flex-shrink-0 flex-col border-r border-border bg-[#FBFBFA]" aria-label="Main navigation">
+    <aside
+      className={`fixed inset-y-0 left-0 z-40 flex w-[248px] flex-shrink-0 flex-col border-r border-border bg-[#FBFBFA] transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0 ${
+        mobileOpen ? 'translate-x-0 shadow-xl md:shadow-none' : '-translate-x-full'
+      }`}
+      aria-label="Main navigation"
+    >
       <header className="flex items-center gap-2.5 px-4 pb-3 pt-4">
         <SonnyLogo size={30} className="flex-shrink-0" />
         <span className="t-h2 relative top-[3px] select-none leading-none text-textPrimary">Sonny</span>
