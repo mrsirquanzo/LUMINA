@@ -154,7 +154,7 @@ function AppContent() {
 
               {!workspaceWorkbook && currentView === 'research' && (
                 <Suspense fallback={<DashboardSkeleton />}>
-                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => openFeedForTarget()} />
+                  <SonnyResearchDashboard initialQuery={sonnyQuery || undefined} onOpenFeed={() => openFeedForTarget()} onOpenProject={openProject} />
                 </Suspense>
               )}
 

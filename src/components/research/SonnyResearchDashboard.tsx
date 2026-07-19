@@ -13,9 +13,10 @@ import type { WorkbookRun as WorkbookRunData } from '../../lib/workbook/types';
 interface SonnyResearchDashboardProps {
   initialQuery?: string;
   onOpenFeed?: () => void;
+  onOpenProject?: (projectId: string) => void;
 }
 
-export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResearchDashboardProps) {
+export function SonnyResearchDashboard({ initialQuery, onOpenFeed, onOpenProject }: SonnyResearchDashboardProps) {
   const s = useDeepResearchStream();
   const [selectedWorkbook, setSelectedWorkbook] = useState<WorkbookRunData | null>(null);
   // Template seed keeps the displayed prompt separate from the canonical run target.
@@ -49,13 +50,24 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed }: SonnyResear
     return (
       <div className="sonny-home-canvas min-h-full w-full overflow-auto">
         <div className="relative mx-auto max-w-[1120px] px-4 pb-20 pt-9 sm:px-8 sm:pt-14 lg:px-10 lg:pb-24 lg:pt-[72px]">
+          {/* Welcome */}
+          <div className="relative z-[1] mb-7 text-center sm:mb-9">
+            <h1 className="font-serif text-[30px] leading-tight tracking-[-0.02em] text-textPrimary sm:text-[36px]">
+              Welcome to Sonny
+            </h1>
+            <p className="mt-2 text-[15px] text-textSecondary sm:text-base">
+              Research a target, screen drug combinations, or analyze your experimental data.
+            </p>
+          </div>
+
           {/* Composer */}
-          <div ref={composerRef} className="relative z-[1] mx-auto mb-14 max-w-[920px] sm:mb-16">
+          <div ref={composerRef} className="relative z-[1] mb-14 sm:mb-16">
             <ResearchComposer
               key={`${initialQuery ?? ''}:${seedRevision}`}
               onStart={(t, m) => s.start(t, m)}
               initialQuery={initialQuery}
               seed={seed}
+              onOpenProject={onOpenProject}
             />
           </div>
 
