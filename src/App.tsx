@@ -18,6 +18,8 @@ import { TargetProvider, type TargetData } from './contexts/TargetContext';
 import { useToast } from './hooks/useToast';
 import { type ViewState } from './types';
 import { DEFAULT_PROJECTS, useProjectStore } from './lib/projects/store';
+import { useBriefingStore } from './lib/research/briefingStore';
+import { fetchDemoBriefing } from './lib/research/api';
 import { getWorkbookScenario } from './lib/workbook/scenarios';
 import type { WorkbookRun as WorkbookRunData } from './lib/workbook/types';
 
@@ -61,6 +63,31 @@ function AppContent() {
 
   useEffect(() => {
     useProjectStore.getState().seedIfEmpty(DEFAULT_PROJECTS);
+  }, []);
+
+  // Seed cached target reports into the briefing store so a project workspace
+  // shows its report on first load, without the user having to run the deep
+  // research manually. Best-effort: targets with no cached run (404) are skipped.
+  useEffect(() => {
+    const have = new Set(
+      Object.values(useBriefingStore.getState().briefings)
+        .map((b) => b.target?.trim().toLowerCase())
+        .filter(Boolean),
+    );
+    const targets = [...new Set(DEFAULT_PROJECTS.map((p) => p.target?.trim()).filter((t): t is string => Boolean(t)))];
+    (async () => {
+      for (const target of targets) {
+        if (have.has(target.toLowerCase())) continue;
+        try {
+          const cached = await fetchDemoBriefing(target);
+          if (cached?.runId && cached?.briefing) {
+            useBriefingStore.getState().setBriefing(cached.runId, cached.briefing);
+          }
+        } catch {
+          // Seeding is best-effort; a missing cache must not break startup.
+        }
+      }
+    })();
   }, []);
 
   // Fulfill agent-mode requests. The Demo/Live toggles dispatch a request event;
