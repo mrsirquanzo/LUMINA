@@ -3,6 +3,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { Menu } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import { SonnyLogo } from './components/SonnyLogo';
+import { onAgentModeRequested, setStoredAgentMode } from './lib/agentMode';
 import IntelligenceFeed from './components/views/IntelligenceFeed';
 import SonnyResearchDashboard from './components/research/SonnyResearchDashboard';
 import WatchlistView from './components/watchlist/WatchlistView';
@@ -61,6 +62,12 @@ function AppContent() {
   useEffect(() => {
     useProjectStore.getState().seedIfEmpty(DEFAULT_PROJECTS);
   }, []);
+
+  // Fulfill agent-mode requests. The Demo/Live toggles dispatch a request event;
+  // this single top-level handler applies it (persist + notify), which is what
+  // keeps every subscriber (sidebar, header, feed) in sync. Without it the
+  // toggles are a no-op.
+  useEffect(() => onAgentModeRequested((mode) => setStoredAgentMode(mode)), []);
 
   // Keyboard shortcuts
   useEffect(() => {
