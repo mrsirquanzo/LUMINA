@@ -85,6 +85,13 @@ function AppContent() {
           const cached = await fetchDemoBriefing(target);
           if (cached?.runId && cached?.briefing) {
             useBriefingStore.getState().setBriefing(cached.runId, cached.briefing);
+            // Drop any older briefing for the same target (e.g. a prior run left
+            // in this browser) so each project shows exactly one canonical report.
+            const norm = target.trim().toLowerCase();
+            const store = useBriefingStore.getState();
+            Object.entries(store.briefings)
+              .filter(([runId, b]) => runId !== cached.runId && b?.target?.trim().toLowerCase() === norm)
+              .forEach(([runId]) => store.removeBriefing(runId));
           }
         } catch {
           // Seeding is best-effort; a missing cache must not break startup.
