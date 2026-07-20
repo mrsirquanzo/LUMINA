@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { Check, ChevronDown, Circle, LoaderCircle, RefreshCw } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Check, ChevronDown, Circle, LoaderCircle, Maximize2, RefreshCw, X } from 'lucide-react';
 import type { RuntimePlanStep } from '../../../lib/workbook/replayDriver';
+import { CorrelationHeatmap } from './gating/CorrelationHeatmap';
 import { GatePlot } from './gating/GatePlot';
+import { SubsetComposition } from './gating/SubsetComposition';
 
 interface AnalysisPlanProps {
   steps: RuntimePlanStep[];
@@ -33,6 +35,19 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
       else next.add(id);
       return next;
     });
+  };
+
+  // Remaining static step figures open in a lightbox, matching the Figures
+  // grid in the report - live gating outputs don't need it.
+  const [activeFigure, setActiveFigure] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const openFigure = (src: string) => {
+    setActiveFigure(src);
+    window.requestAnimationFrame(() => dialogRef.current?.showModal());
+  };
+  const closeFigure = () => {
+    dialogRef.current?.close();
+    setActiveFigure(null);
   };
 
   return (
@@ -75,13 +90,27 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
                 <div className={`grid gap-3 px-3 pb-4 sm:px-5 sm:pl-12 ${!step.interactive && step.figures.length > 1 ? 'sm:grid-cols-2' : ''}`}>
                   {step.interactive ? (
                     <GatePlot stepId={step.id} />
+                  ) : step.id === 'heatmap' ? (
+                    <CorrelationHeatmap />
+                  ) : step.id === 'report' ? (
+                    <SubsetComposition />
                   ) : step.figures.map((figure) => (
-                      <img
+                      <button
                         key={figure}
-                        src={figure}
-                        alt={`Output for ${step.title}`}
-                        className="surface-inset max-h-44 w-full max-w-sm object-contain p-2 motion-safe:animate-[fadeIn_.22s_ease-out]"
-                      />
+                        type="button"
+                        onClick={() => openFigure(figure)}
+                        aria-label={`Enlarge ${step.title}`}
+                        className="group surface-inset relative block w-full max-w-sm cursor-zoom-in overflow-hidden p-0 motion-safe:animate-[fadeIn_.22s_ease-out]"
+                      >
+                        <img
+                          src={figure}
+                          alt={`Output for ${step.title}`}
+                          className="max-h-44 w-full object-contain p-2"
+                        />
+                        <span className="absolute right-2 top-2 rounded-md bg-white/85 p-1 text-textTertiary opacity-0 shadow-sm transition-opacity group-hover:opacity-100">
+                          <Maximize2 className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                        </span>
+                      </button>
                     ))}
                 </div>
               )}
@@ -89,6 +118,28 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
           );
         })}
       </div>
+
+      <dialog
+        ref={dialogRef}
+        onCancel={(event) => { event.preventDefault(); closeFigure(); }}
+        onClick={(event) => { if (event.target === event.currentTarget) closeFigure(); }}
+        className="m-auto w-[min(94vw,1100px)] rounded-[14px] border border-border bg-white p-0 text-textPrimary shadow-card-hover backdrop:bg-slate-950/55"
+        aria-label="Expanded analysis figure"
+      >
+        {activeFigure && (
+          <div>
+            <div className="flex items-center justify-between border-b border-border px-4 py-3">
+              <p className="t-eyebrow text-textTertiary">Full figure</p>
+              <button type="button" onClick={closeFigure} className="icon-action h-8 w-8 border-transparent bg-transparent" aria-label="Close expanded figure">
+                <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+              </button>
+            </div>
+            <div className="max-h-[72dvh] overflow-auto bg-subtle p-3 sm:p-5">
+              <img src={activeFigure} alt="Expanded analysis figure" className="mx-auto max-h-[66dvh] w-auto max-w-full rounded-lg border border-border bg-white object-contain" />
+            </div>
+          </div>
+        )}
+      </dialog>
     </section>
   );
 }

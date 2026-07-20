@@ -60,6 +60,14 @@ export interface FlowMetrics {
   subsets: Record<keyof SubsetCounts, number>;
 }
 
+export const B_CELL_MARKERS: { field: FlowField; label: string }[] = [
+  { field: 'cd19', label: 'CD19' },
+  { field: 'cd3', label: 'CD3' },
+  { field: 'igd', label: 'IgD' },
+  { field: 'cd27', label: 'CD27' },
+  { field: 'zombie', label: 'Viability' },
+];
+
 const REPORT_BASELINE = {
   cellPct: 92.4,
   viabilityPct: 85.4,
@@ -85,6 +93,71 @@ export function cloneGateState(state: GateState): GateState {
 
 export function fieldIndexes(data: GatingData): Record<FlowField, number> {
   return Object.fromEntries(data.fields.map((field, index) => [field, index])) as Record<FlowField, number>;
+}
+
+function fractionalRanks(values: number[]): number[] {
+  const sorted = values
+    .map((value, index) => ({ value, index }))
+    .sort((a, b) => a.value - b.value);
+  const ranks = Array<number>(values.length);
+
+  let start = 0;
+  while (start < sorted.length) {
+    let end = start + 1;
+    while (end < sorted.length && sorted[end].value === sorted[start].value) end += 1;
+    const averageRank = (start + 1 + end) / 2;
+    for (let position = start; position < end; position += 1) {
+      ranks[sorted[position].index] = averageRank;
+    }
+    start = end;
+  }
+
+  return ranks;
+}
+
+export function spearmanMatrix(events: FlowEvent[], columnIndexes: number[]): number[][] {
+  const size = columnIndexes.length;
+  const matrix: number[][] = Array.from({ length: size }, (_, row) => (
+    Array.from({ length: size }, (_, column) => (row === column ? 1 : 0))
+  ));
+  if (events.length === 0) return matrix;
+
+  const rankedColumns = columnIndexes.map((columnIndex) => (
+    fractionalRanks(events.map((event) => event[columnIndex]))
+  ));
+  const means = rankedColumns.map((ranks) => (
+    ranks.reduce((sum, rank) => sum + rank, 0) / ranks.length
+  ));
+  const centered = rankedColumns.map((ranks, column) => (
+    ranks.map((rank) => rank - means[column])
+  ));
+  const sumSquares = centered.map((values) => (
+    values.reduce((sum, value) => sum + value * value, 0)
+  ));
+
+  for (let row = 0; row < size; row += 1) {
+    for (let column = row + 1; column < size; column += 1) {
+      const denominator = Math.sqrt(sumSquares[row] * sumSquares[column]);
+      const correlation = denominator > 0
+        ? centered[row].reduce((sum, value, index) => sum + value * centered[column][index], 0) / denominator
+        : 0;
+      matrix[row][column] = correlation;
+      matrix[column][row] = correlation;
+    }
+  }
+
+  return matrix;
+}
+
+export function bCellMarkerCorrelation(data: GatingData, cascade: GateCascade) {
+  const indexes = fieldIndexes(data);
+  const labels = B_CELL_MARKERS.map(({ label }) => label);
+  const columns = B_CELL_MARKERS.map(({ field }) => indexes[field]);
+  return {
+    labels,
+    matrix: spearmanMatrix(cascade.bCells, columns),
+    n: cascade.bCells.length,
+  };
 }
 
 export function computeCascade(data: GatingData, gates: GateState): GateCascade {

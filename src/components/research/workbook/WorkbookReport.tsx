@@ -1,7 +1,9 @@
 import { Fragment, useRef, useState } from 'react';
 import { Beaker, ChevronDown, Expand, FileQuestion, FlaskConical, RotateCcw, Search, X } from 'lucide-react';
 import type { WorkbookRun } from '../../../lib/workbook/types';
+import { CorrelationHeatmap } from './gating/CorrelationHeatmap';
 import { useGating } from './gating/gatingStore';
+import { SubsetComposition } from './gating/SubsetComposition';
 
 interface WorkbookReportProps {
   report: WorkbookRun['report'];
@@ -66,7 +68,14 @@ export function WorkbookReport({
     }
     return summary;
   }) : report.summary;
-  const displayedFigures = gating ? report.figures.map((figure, index) => {
+  const displayedFigures = report.figures.map((figure, index) => {
+    if (figure.src.endsWith('06_heatmap.png')) {
+      return { ...figure, caption: 'Spearman correlation across gated markers (CD19, CD3, IgD, CD27, viability), recomputed live from your gates.' };
+    }
+    if (figure.src.endsWith('07_summary.png')) {
+      return { ...figure, caption: 'B-cell subset composition, recomputed live from your gates.' };
+    }
+    if (!gating) return figure;
     const captions = [
       `Figure 1. Default-gate reference image. The current user cell gate retains ${gating.metrics.cellPct.toFixed(1)}% of events.`,
       `Figure 2. Default-gate reference image. The current singlet ratio band retains ${gating.metrics.singletPct.toFixed(1)}% of gated cells.`,
@@ -75,7 +84,7 @@ export function WorkbookReport({
       `Figure 5. Default-gate reference image. Current subsets are ${gating.metrics.subsets.naive.toFixed(1)}% naive, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, and ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory.`,
     ];
     return index < captions.length ? { ...figure, caption: captions[index] } : figure;
-  }) : report.figures;
+  });
   const displayedReportSections = gating ? {
     ...report.sections,
     detailedAnswer: `The current user-defined cascade recovers ${gating.metrics.bCellCount.toLocaleString()} CD3-CD19+ B cells (${gating.metrics.bCellLivePct.toFixed(1)}% of live singlets). The resulting subset structure is ${gating.metrics.subsets.naive.toFixed(1)}% naive, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, and ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory. Constitutive and activation marker observations use this current B-cell population.`,
@@ -252,17 +261,23 @@ export function WorkbookReport({
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {displayedFigures.map((figure, index) => (
               <figure key={figure.src} className="surface-card surface-card-interactive overflow-hidden">
-                <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
-                  <img src={figure.src} alt={`Analysis figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
-                  <button
-                    type="button"
-                    onClick={() => openFigure(figure)}
-                    className="icon-action absolute right-2.5 top-2.5 h-8 w-8 bg-white/95 shadow-card"
-                    aria-label={`Expand figure ${index + 1}`}
-                  >
-                    <Expand className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-                  </button>
-                </div>
+                {figure.src.endsWith('06_heatmap.png') ? (
+                  <CorrelationHeatmap />
+                ) : figure.src.endsWith('07_summary.png') ? (
+                  <SubsetComposition />
+                ) : (
+                  <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
+                    <img src={figure.src} alt={`Analysis figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
+                    <button
+                      type="button"
+                      onClick={() => openFigure(figure)}
+                      className="icon-action absolute right-2.5 top-2.5 h-8 w-8 bg-white/95 shadow-card"
+                      aria-label={`Expand figure ${index + 1}`}
+                    >
+                      <Expand className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
                 <figcaption className="t-meta px-4 py-3 text-textSecondary">{figure.caption}</figcaption>
               </figure>
             ))}

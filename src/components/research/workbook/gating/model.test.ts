@@ -1,10 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import gatingData from '../../../../../public/workbook/flow/gating_events.json';
-import { cloneGateState, computeCascade, computeMetrics, type GatingData } from './model';
+import { cloneGateState, computeCascade, computeMetrics, spearmanMatrix, type GatingData } from './model';
 
 const data = gatingData as GatingData;
 
 describe('flow gate cascade', () => {
+  it('computes perfect positive and negative Spearman correlations', () => {
+    const events = [
+      [1, 10, 4],
+      [2, 20, 3],
+      [3, 30, 2],
+      [4, 40, 1],
+    ];
+    const matrix = spearmanMatrix(events, [0, 1, 2]);
+
+    expect(matrix[0][1]).toBeCloseTo(1, 10);
+    expect(matrix[0][2]).toBeCloseTo(-1, 10);
+    expect(matrix[1][2]).toBeCloseTo(-1, 10);
+    expect(matrix[2][2]).toBe(1);
+  });
+
   it('reproduces the full-file baseline from the compact event sample', () => {
     const cascade = computeCascade(data, data.defaults);
     const metrics = computeMetrics(data, cascade);
