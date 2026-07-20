@@ -2,8 +2,21 @@ import { Fragment, useRef, useState } from 'react';
 import { Beaker, ChevronDown, Expand, FileQuestion, FlaskConical, RotateCcw, Search, X } from 'lucide-react';
 import type { WorkbookRun } from '../../../lib/workbook/types';
 import { CorrelationHeatmap } from './gating/CorrelationHeatmap';
+import { GatePlot } from './gating/GatePlot';
 import { useGating } from './gating/gatingStore';
 import { SubsetComposition } from './gating/SubsetComposition';
+
+// Report figures 1-5 are the same gated plots as the interactive steps, so we
+// render them live (they track the user's gates) instead of static PNGs.
+const GATE_STEP_BY_SRC: Record<string, string> = {
+  '01_cell_gate.png': 'cell',
+  '02_singlet.png': 'singlet',
+  '03_viability.png': 'viability',
+  '04_lineage.png': 'lineage',
+  '05_subsets.png': 'markers',
+};
+const gateStepForSrc = (src: string) =>
+  Object.entries(GATE_STEP_BY_SRC).find(([name]) => src.endsWith(name))?.[1];
 
 interface WorkbookReportProps {
   report: WorkbookRun['report'];
@@ -77,11 +90,11 @@ export function WorkbookReport({
     }
     if (!gating) return figure;
     const captions = [
-      `Figure 1. Default-gate reference image. The current user cell gate retains ${gating.metrics.cellPct.toFixed(1)}% of events.`,
-      `Figure 2. Default-gate reference image. The current singlet ratio band retains ${gating.metrics.singletPct.toFixed(1)}% of gated cells.`,
-      `Figure 3. Default-gate reference image. The current Zombie-NIR threshold retains ${gating.metrics.viabilityPct.toFixed(1)}% live cells.`,
-      `Figure 4. Default-gate reference image. The current lineage crosshair yields ${gating.metrics.bCellCount.toLocaleString()} B cells (${gating.metrics.bCellLivePct.toFixed(1)}% of live singlets).`,
-      `Figure 5. Default-gate reference image. Current subsets are ${gating.metrics.subsets.naive.toFixed(1)}% naive, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, and ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory.`,
+      `Figure 1. FSC-A vs SSC-A cell gate, live from your gates: retains ${gating.metrics.cellPct.toFixed(1)}% of events.`,
+      `Figure 2. FSC-A vs FSC-H singlet band, live from your gates: retains ${gating.metrics.singletPct.toFixed(1)}% of gated cells.`,
+      `Figure 3. Zombie-NIR viability threshold, live from your gates: ${gating.metrics.viabilityPct.toFixed(1)}% live cells.`,
+      `Figure 4. CD3 vs CD19 lineage gate, live from your gates: ${gating.metrics.bCellCount.toLocaleString()} B cells (${gating.metrics.bCellLivePct.toFixed(1)}% of live singlets).`,
+      `Figure 5. IgD vs CD27 subsets, live from your gates: ${gating.metrics.subsets.naive.toFixed(1)}% naive, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory.`,
     ];
     return index < captions.length ? { ...figure, caption: captions[index] } : figure;
   });
@@ -265,6 +278,8 @@ export function WorkbookReport({
                   <CorrelationHeatmap />
                 ) : figure.src.endsWith('07_summary.png') ? (
                   <SubsetComposition />
+                ) : gateStepForSrc(figure.src) ? (
+                  <GatePlot stepId={gateStepForSrc(figure.src)!} />
                 ) : (
                   <div className="group relative aspect-[16/10] overflow-hidden border-b border-border bg-subtle">
                     <img src={figure.src} alt={`Analysis figure ${index + 1}`} className="h-full w-full object-contain p-2" loading="eager" />
