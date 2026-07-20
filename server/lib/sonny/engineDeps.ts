@@ -20,7 +20,7 @@ export async function buildEngineDeps(backend: Backend, mode: 'fast' | 'thorough
   return {
     roster: core.RESEARCH_ROSTER,
     literatureTools: [mcp.europePmcSearchTool, mcp.pmcFullTextTool, mcp.europePmcCitationsTool],
-    structuredTools: [mcp.openTargetsTargetTool, mcp.clinicalTrialsTool],
+    structuredTools: [mcp.openTargetsTargetTool, mcp.uniProtTargetTool, mcp.clinicalTrialsTool, mcp.patentSearchTool],
     specialistModel: core.makeModel(),
     verifierModel: core.makeModel(),
     leadModel: core.makeModel(),
