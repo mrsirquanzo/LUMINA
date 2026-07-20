@@ -684,7 +684,7 @@
    "kind": "research",
    "id": "modality_developability",
    "title": "Modality & Developability",
-   "takeaway": "CDCP1 shows promising membrane accessibility and low normal‑tissue expression, but critical gaps remain in NSCLC‑specific receptor density, internalization data, and safety‑threshold benchmarks.",
+   "takeaway": "CDCP1 is membrane‑accessible with an MMAE‑payload ADC precedent (ch10D7‑MMAE) and rapid antibody‑driven lysosomal delivery; the therapeutic window rests on low normal‑tissue expression (pituitary/pancreas aside). The unquantified gaps are NSCLC receptor density and a defined tolerated‑exposure threshold, not payload or route.",
    "claims": [
     {
      "id": "struct-5",
@@ -794,6 +794,24 @@
       "PMID:17785447"
      ],
      "confidence": 0.95
+    },
+    {
+     "id": "payload",
+     "text": "ADC precedent for CDCP1 uses an auristatin (MMAE) payload: the ch10D7‑MMAE conjugate killed CDCP1‑positive tumour cells at low‑nanomolar potency with high tumour accumulation in xenografts, delivered through the rapid antibody‑induced lysosomal internalisation route. Competitor filings (e.g., Pheon Therapeutics) now claim CDCP1‑directed ADCs, so payload and linker design is an active, precedented space rather than an open question.",
+     "citations": [
+      "PMID:24055141",
+      "PMID:36276654",
+      "PATENT:WO2026105061A1"
+     ],
+     "confidence": 0.85
+    },
+    {
+     "id": "window",
+     "text": "The therapeutic window is set by CDCP1's low normal‑tissue expression - notable only in the pituitary gland and pancreas - against a potent cytotoxic payload; dosing would be intravenous per ADC norm. With no defined receptor‑density or tolerated‑exposure threshold in the evidence, the window is directionally favourable but unquantified.",
+     "citations": [
+      "ENSG00000163814#expression"
+     ],
+     "confidence": 0.8
     }
    ],
    "sources": [
@@ -812,7 +830,8 @@
     "UNIPROT:Q9H5V8#domains",
     "ENSG00000163814",
     "PMID:11466621",
-    "PMID:17785447"
+    "PMID:17785447",
+    "PATENT:WO2026105061A1"
    ],
    "rag": "amber",
    "critiques": [
