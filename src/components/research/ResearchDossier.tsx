@@ -11,18 +11,15 @@ function claimKey(text?: string): string {
   return (text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
-// Render a bull/bear point, appending only citations NOT already embedded in the
-// text (the engine often writes "...efficacy. [PMID:123]" inline, which would
-// otherwise render the PMID twice and look misaligned).
-function pointWithCitation(point?: string, citations?: string[]): ReactElement {
-  const text = point ?? '';
-  const missing = (citations ?? []).filter((c) => c && !text.includes(c));
+// Render a bull/bear point with compact numbered citations. Strip any raw ids
+// the engine embedded inline (e.g. "...efficacy. [PMID:123]") so they don't
+// double up with the numbered marker.
+function pointWithCitation(point?: string, citations?: string[], index?: Map<string, number>): ReactElement {
+  const text = (point ?? '').replace(/\s*\[[A-Za-z0-9:#._,\s-]+\]\s*$/, '').trim();
   return (
     <>
       {text}
-      {missing.length > 0 && (
-        <span className="t-meta ml-1 font-mono text-textTertiary">[{missing.join(', ')}]</span>
-      )}
+      {index && citeMarks(citations, index)}
     </>
   );
 }
@@ -55,8 +52,24 @@ function ragDotClass(rag?: 'red' | 'amber' | 'green'): string {
   return 'bg-textTertiary';
 }
 
+// Compact numbered citations: map each cited evidence id to its number in the
+// reference list, and render inline superscripts like [3,7] instead of long
+// monospace ids that break the sentence flow. Unknown ids (not in references)
+// are simply omitted from the marker; the underlying data is unchanged.
+function citeMarks(citations: string[] | undefined, index: Map<string, number>): ReactElement | null {
+  const nums = [...new Set((citations ?? []).map((c) => index.get(c)).filter((n): n is number => Boolean(n)))].sort((a, b) => a - b);
+  if (!nums.length) return null;
+  return (
+    <sup className="ml-0.5 whitespace-nowrap align-super text-[10px] font-medium text-primary/70">
+      [{nums.join(',')}]
+    </sup>
+  );
+}
+
 export default function ResearchDossier({ briefing }: Props): ReactElement {
   const rec = briefing.recommendation;
+  const refIndex = new Map<string, number>();
+  (briefing.references ?? []).forEach((r, i) => { if (r.id) refIndex.set(r.id, i + 1); });
 
   // Global dedup: specialists often restate the same fact across sections. Show
   // each unique claim once, in the first section it appears, so every section
@@ -116,16 +129,10 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
         </div>
       )}
 
-      {/* 2. Thesis */}
-      {rec?.thesis && (
-        <p className="t-body mt-4 font-semibold text-textPrimary">
-          {rec.thesis}
-        </p>
-      )}
-
-      {/* 3. Executive read - Newsreader, ~70ch */}
+      {/* Executive read - leads the report; the framing/bottom-line live here,
+          so no separate thesis line (it duplicated the framing). Full width. */}
       {briefing.executiveRead && (
-        <div className="t-lead mt-4 max-w-[70ch] font-display text-textSecondary">
+        <div className="t-lead mt-5 font-display text-textSecondary">
           <CitedMarkdown content={briefing.executiveRead} />
         </div>
       )}
@@ -138,12 +145,17 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
           </p>
           <div className="flex flex-col divide-y divide-border">
             {sectionsForRender.map(({ section, i, claims }) => (
-              <div key={section.id ?? i} className="py-4 first:pt-0 last:pb-0">
-                {/* Section header: pill + colored dot + title */}
-                <div className="flex items-center gap-2.5 flex-wrap">
+              <div key={section.id ?? i} className="py-6 first:pt-1 last:pb-0">
+                {/* Section header: clear title + RAG status pill */}
+                <div className="flex items-baseline gap-3 flex-wrap">
+                  {section.title && (
+                    <h3 className="font-display text-lg font-medium text-textPrimary">
+                      {section.title}
+                    </h3>
+                  )}
                   {section.rag && (
                     <span
-                      className={`t-meta inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold ${ragPillClass(section.rag)}`}
+                      className={`t-meta inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-semibold ${ragPillClass(section.rag)}`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full flex-none ${ragDotClass(section.rag)}`}
@@ -152,37 +164,24 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
                       {section.rag.toUpperCase()}
                     </span>
                   )}
-                  {section.title && (
-                    <span className="t-body-sm font-semibold text-textPrimary">
-                      {section.title}
-                    </span>
-                  )}
                 </div>
 
                 {/* Takeaway */}
                 {section.takeaway && (
-                  <p className="t-body-sm mt-2 text-textSecondary">
+                  <p className="t-body-sm mt-2 italic text-textSecondary">
                     {section.takeaway}
                   </p>
                 )}
 
-                {/* Claims with citation superscripts (globally deduped) */}
+                {/* Claims with compact numbered citations (globally deduped) */}
                 {claims.length > 0 && (
-                  <ul className="mt-2 space-y-1.5">
+                  <ul className="mt-2.5 space-y-2">
                     {claims.map((c, ci) => (
-                      <li key={ci} className="t-body-sm flex gap-2 text-textSecondary">
+                      <li key={ci} className="t-body-sm flex gap-2.5 text-textSecondary">
                         <span className="flex-none mt-[7px] w-1.5 h-1.5 rounded-full bg-border" aria-hidden="true" />
                         <span>
                           {c.text ?? ''}
-                          {(c.citations ?? []).length > 0 &&
-                            (c.citations ?? []).map((cit) => (
-                              <sup
-                                key={cit}
-                                className="t-meta ml-0.5 cursor-pointer rounded bg-primary/10 px-1 py-px align-super font-mono text-primary"
-                              >
-                                {cit}
-                              </sup>
-                            ))}
+                          {citeMarks(c.citations, refIndex)}
                         </span>
                       </li>
                     ))}
@@ -204,7 +203,7 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
             {(rec?.bull ?? []).map((b, i) => (
               <li key={i} className="t-body-sm flex gap-2 text-textSecondary">
                 <span className="flex-none text-go/70 font-bold mt-px">+</span>
-                <span>{pointWithCitation(b.point, b.citations)}</span>
+                <span>{pointWithCitation(b.point, b.citations, refIndex)}</span>
               </li>
             ))}
           </ul>
@@ -213,9 +212,7 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
 
       {/* 6. Adversarial review - the bear case, given prominence as a real skeptic voice */}
       {(rec?.bear ?? []).length > 0 && (
-        <div
-          className="mt-4 rounded-xl border border-nogo/25 bg-nogo-tint/40 p-4 border-l-[3px] border-l-nogo"
-        >
+        <div className="mt-4 rounded-xl border border-nogo/25 bg-nogo-tint/40 p-4">
           <div className="flex items-center gap-2 mb-1">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
@@ -231,7 +228,7 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
             {(rec?.bear ?? []).map((b, i) => (
               <li key={i} className="t-body-sm flex gap-2.5 text-textPrimary">
                 <span className="flex-none w-1.5 h-1.5 rounded-full bg-nogo mt-[7px]" aria-hidden="true" />
-                <span>{pointWithCitation(b.point, b.citations)}</span>
+                <span>{pointWithCitation(b.point, b.citations, refIndex)}</span>
               </li>
             ))}
           </ul>
@@ -292,22 +289,25 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
           <div className="flex flex-col gap-1.5">
             {briefing.references!.map((r, i) => (
               <div key={r.id ?? i} className="t-body-sm flex items-baseline gap-2.5">
-                {r.id && (
-                  <span className="t-meta flex-none font-mono text-primary">
-                    {r.id}
-                  </span>
-                )}
+                <span className="t-meta flex-none w-6 text-right font-mono text-primary/70 tabular-nums">
+                  {i + 1}.
+                </span>
                 {r.url ? (
                   <a
                     href={r.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-textSecondary hover:text-primary underline decoration-border hover:decoration-primary transition-colors truncate"
+                    className="min-w-0 truncate text-textSecondary underline decoration-border transition-colors hover:text-primary hover:decoration-primary"
+                    title={r.id}
                   >
                     {r.title ?? r.url}
+                    {r.id && <span className="t-meta ml-1.5 font-mono text-textTertiary">{r.id}</span>}
                   </a>
                 ) : (
-                  <span className="text-textSecondary truncate">{r.title ?? ''}</span>
+                  <span className="min-w-0 truncate text-textSecondary">
+                    {r.title ?? ''}
+                    {r.id && <span className="t-meta ml-1.5 font-mono text-textTertiary">{r.id}</span>}
+                  </span>
                 )}
               </div>
             ))}
