@@ -57,7 +57,7 @@ function ragDotClass(rag?: 'red' | 'amber' | 'green'): string {
 // monospace ids that break the sentence flow. Unknown ids (not in references)
 // are simply omitted from the marker; the underlying data is unchanged.
 function citeMarks(citations: string[] | undefined, index: Map<string, number>): ReactElement | null {
-  const nums = [...new Set((citations ?? []).map((c) => index.get(c)).filter((n): n is number => Boolean(n)))].sort((a, b) => a - b);
+  const nums = [...new Set((citations ?? []).map((c) => index.get(c.replace(/#.*$/, ''))).filter((n): n is number => Boolean(n)))].sort((a, b) => a - b);
   if (!nums.length) return null;
   return (
     <sup className="ml-0.5 whitespace-nowrap align-super text-[10px] font-medium text-primary/70">
@@ -68,8 +68,31 @@ function citeMarks(citations: string[] | undefined, index: Map<string, number>):
 
 export default function ResearchDossier({ briefing }: Props): ReactElement {
   const rec = briefing.recommendation;
-  const refIndex = new Map<string, number>();
-  (briefing.references ?? []).forEach((r, i) => { if (r.id) refIndex.set(r.id, i + 1); });
+
+  // Dedupe references by the underlying source. The engine cites individual PMC
+  // full-text SECTIONS (PMCID:...#sec-4, #sec-5) and separate database cards
+  // (ENSG...#expression, #tractability), which otherwise list one paper/source
+  // as many rows with section titles - reading as padded, duplicated sources.
+  // Collapse to one row per source (strip the #locator) and give it an honest,
+  // source-typed label instead of a misleading section title.
+  const baseOf = (id: string) => id.replace(/#.*$/, '');
+  const refLabel = (baseId: string, fallbackTitle?: string): string => {
+    if (baseId.startsWith('PMCID:')) return 'PubMed Central full text';
+    if (baseId.startsWith('ENSG')) return 'Open Targets - target record';
+    if (baseId.startsWith('UNIPROT:')) return 'UniProt - protein entry';
+    return fallbackTitle ?? baseId; // PMID and the like carry a real paper title
+  };
+  const dedupedRefs: { baseId: string; title: string; url?: string }[] = [];
+  const refNum = new Map<string, number>(); // baseId -> 1-based number
+  for (const r of briefing.references ?? []) {
+    if (!r.id) continue;
+    const b = baseOf(r.id);
+    if (refNum.has(b)) continue;
+    refNum.set(b, dedupedRefs.length + 1);
+    dedupedRefs.push({ baseId: b, title: refLabel(b, r.title), url: r.url ? baseOf(r.url) : r.url });
+  }
+  const refIndex = new Map<string, number>(); // maps ANY cited id (incl #locators) to its source number
+  refNum.forEach((n, b) => refIndex.set(b, n));
 
   // Global dedup: specialists often restate the same fact across sections. Show
   // each unique claim once, in the first section it appears, so every section
@@ -122,7 +145,7 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
                 >
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
-                Grounded · {briefing.references!.length} refs
+                Grounded · {dedupedRefs.length} sources
               </span>
             )}
           </div>
@@ -281,14 +304,14 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       )}
 
       {/* 8. References - Geist Mono ids, linked */}
-      {(briefing.references ?? []).length > 0 && (
+      {dedupedRefs.length > 0 && (
         <div className="mt-5">
           <p className="t-eyebrow mb-2 text-textTertiary">
-            References ({briefing.references!.length})
+            References ({dedupedRefs.length})
           </p>
           <div className="flex flex-col gap-1.5">
-            {briefing.references!.map((r, i) => (
-              <div key={r.id ?? i} className="t-body-sm flex items-baseline gap-2.5">
+            {dedupedRefs.map((r, i) => (
+              <div key={r.baseId} className="t-body-sm flex items-baseline gap-2.5">
                 <span className="t-meta flex-none w-6 text-right font-mono text-primary/70 tabular-nums">
                   {i + 1}.
                 </span>
@@ -298,15 +321,15 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="min-w-0 truncate text-textSecondary underline decoration-border transition-colors hover:text-primary hover:decoration-primary"
-                    title={r.id}
+                    title={r.baseId}
                   >
-                    {r.title ?? r.url}
-                    {r.id && <span className="t-meta ml-1.5 font-mono text-textTertiary">{r.id}</span>}
+                    {r.title}
+                    <span className="t-meta ml-1.5 font-mono text-textTertiary">{r.baseId}</span>
                   </a>
                 ) : (
                   <span className="min-w-0 truncate text-textSecondary">
-                    {r.title ?? ''}
-                    {r.id && <span className="t-meta ml-1.5 font-mono text-textTertiary">{r.id}</span>}
+                    {r.title}
+                    <span className="t-meta ml-1.5 font-mono text-textTertiary">{r.baseId}</span>
                   </span>
                 )}
               </div>
