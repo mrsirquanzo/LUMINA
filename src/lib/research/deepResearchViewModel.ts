@@ -34,7 +34,7 @@ function formatTraceLine(entry: TraceLogEntry): string {
     case 'section': return `Completed ${entry.detail ?? 'research section'}`;
     case 'audit': return `Method review${detail}`;
     case 'degraded': return `Continuing with degraded coverage${detail}`;
-    case 'verdict': return `Synthesized ${entry.detail ?? 'recommendation'}`;
+    case 'verdict': return 'Synthesized grounded assessment';
     default: return `${entry.label}${detail}`;
   }
 }
@@ -81,8 +81,9 @@ export function analysisPlan(
 
 export function briefingReport(briefing: BriefingView) {
   const recommendation = briefing.recommendation;
+  // executiveRead already carries the framing + bottom line, so we do NOT also
+  // emit recommendation.thesis (it repeats the opening paragraph verbatim).
   const summary = [
-    recommendation?.thesis,
     briefing.executiveRead,
     recommendation?.bull?.[0]?.point ? `Bull case: ${recommendation.bull[0].point}` : undefined,
     recommendation?.bear?.[0]?.point ? `Key risk: ${recommendation.bear[0].point}` : undefined,

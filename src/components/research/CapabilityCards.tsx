@@ -26,7 +26,7 @@ interface Capability {
 }
 
 const DEEP_RESEARCH_TEMPLATE: ResearchTemplate = {
-  prompt: 'Run a full due-diligence report on [target]. I want a conclusion-first GO / WATCH / NO-GO verdict, grounded in literature and public data, with every claim cited to source.',
+  prompt: 'Run a full due-diligence report on [target]. I want a conclusion-first, balanced assessment - the case for and the case against - grounded in literature and public data, with every claim cited to source.',
   target: undefined,
   contextChip: 'DepMap · GTEx · PubMed',
 };
@@ -65,10 +65,10 @@ const CAPABILITIES: Capability[] = [
   {
     id: 'deep-research',
     title: 'Deep target research',
-    description: 'Six specialists read literature and public data and return a cited GO / WATCH / NO-GO report.',
+    description: 'Six specialists read literature and public data and return a cited, balanced assessment - the case for and against.',
     status: 'available',
     image: '/deep-research.png',
-    alt: 'Grounded due-diligence report with a verdict and cited claims',
+    alt: 'Grounded due-diligence report with a balanced assessment and cited claims',
     cta: 'Start a report',
     icon: GitBranch,
     template: DEEP_RESEARCH_TEMPLATE,

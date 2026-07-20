@@ -84,7 +84,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
             <WorkbookReport
               report={mappedReport.report}
               title={`${target} report`}
-              eyebrow={`${briefing?.recommendation?.verdict?.toUpperCase() ?? 'RESEARCH'} - ANALYSIS COMPLETE`}
+              eyebrow="GROUNDED ASSESSMENT"
               contentSections={mappedReport.contentSections}
             />
           )}
