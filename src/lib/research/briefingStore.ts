@@ -54,6 +54,7 @@ interface BriefingStore {
   savedAt: Record<string, number>;
   setBriefing(runId: string, b: BriefingView): void;
   getBriefing(runId: string): BriefingView | undefined;
+  removeBriefing(runId: string): void;
 }
 
 export const useBriefingStore = create<BriefingStore>()((set, get) => ({
@@ -67,4 +68,13 @@ export const useBriefingStore = create<BriefingStore>()((set, get) => ({
       return { briefings, savedAt };
     }),
   getBriefing: (runId) => get().briefings[runId],
+  removeBriefing: (runId) =>
+    set((s) => {
+      if (!(runId in s.briefings)) return s;
+      const { [runId]: _drop, ...briefings } = s.briefings;
+      const { [runId]: _dropAt, ...savedAt } = s.savedAt;
+      saveBriefings(briefings);
+      saveSavedAt(savedAt);
+      return { briefings, savedAt };
+    }),
 }));

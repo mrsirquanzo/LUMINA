@@ -69,15 +69,18 @@ function AppContent() {
   // shows its report on first load, without the user having to run the deep
   // research manually. Best-effort: targets with no cached run (404) are skipped.
   useEffect(() => {
-    const have = new Set(
-      Object.values(useBriefingStore.getState().briefings)
-        .map((b) => b.target?.trim().toLowerCase())
-        .filter(Boolean),
-    );
+    // Drop stale test-fixture briefings that pollute project reports (empty
+    // stubs left in a browser from earlier builds).
+    Object.keys(useBriefingStore.getState().briefings)
+      .filter((runId) => runId.startsWith('test-'))
+      .forEach((runId) => useBriefingStore.getState().removeBriefing(runId));
+
+    // Always (re)load the canonical cached report for each default project
+    // target so the current report shows - keyed by its stable runId, so a
+    // returning browser gets refreshed rather than stuck on an old copy.
     const targets = [...new Set(DEFAULT_PROJECTS.map((p) => p.target?.trim()).filter((t): t is string => Boolean(t)))];
     (async () => {
       for (const target of targets) {
-        if (have.has(target.toLowerCase())) continue;
         try {
           const cached = await fetchDemoBriefing(target);
           if (cached?.runId && cached?.briefing) {
