@@ -1,6 +1,8 @@
 import type { ThreadBrief, ResearchBudget, StructuredModel } from '@mrsirquanzo/sonny-core';
 import type { Tool } from '@mrsirquanzo/sonny-mcp-gateway';
 import { makeDocumentTool, type UploadedDocument } from './documentTool.js';
+import { gtexExpressionTool } from './gtexTool.js';
+import { humanProteinAtlasTool } from './hpaTool.js';
 
 export type Backend = 'ollama' | 'anthropic';
 
@@ -25,6 +27,7 @@ export async function buildEngineDeps(
   const documentTool = makeDocumentTool(documents);
   const structuredTools: Tool[] = [
     mcp.openTargetsTargetTool, mcp.uniProtTargetTool, mcp.clinicalTrialsTool, mcp.patentSearchTool,
+    humanProteinAtlasTool, gtexExpressionTool,
     ...(documentTool ? [documentTool] : []),
   ];
   return {
