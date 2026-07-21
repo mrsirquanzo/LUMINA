@@ -13,17 +13,13 @@ export interface AttachedDocument {
   text: string;
 }
 
-export interface ResearchScope {
-  indication?: string;
-  modality?: string;
-}
-
 export async function startDeepResearch(
   target: string,
   mode: 'fast' | 'thorough',
   documents: AttachedDocument[] = [],
-  scope?: ResearchScope,
 ): Promise<Response> {
+  // The target field carries the full request text; Sonny parses the target
+  // symbol, indication, and modality from it server-side.
   return fetch(deepResearchPath(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -32,7 +28,6 @@ export async function startDeepResearch(
       target,
       mode,
       ...(documents.length ? { documents } : {}),
-      ...(scope && (scope.indication || scope.modality) ? { context: scope } : {}),
     }),
   });
 }

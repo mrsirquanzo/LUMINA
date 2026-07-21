@@ -7,7 +7,6 @@ import {
   fetchBriefing,
   fetchDemoBriefing,
   type AttachedDocument,
-  type ResearchScope,
 } from '../lib/research/api.js';
 import type { ResearchTraceEvent, BriefingView } from '../lib/research/sseTypes.js';
 import { createSSEParser } from '../lib/research/sseParse.js';
@@ -23,7 +22,7 @@ export interface UseDeepResearchStream {
   runId: string | null;
   error: string | null;
   runMeta: RunMeta | null;
-  start(target: string, mode?: 'fast' | 'thorough', documents?: AttachedDocument[], scope?: ResearchScope): Promise<void>;
+  start(target: string, mode?: 'fast' | 'thorough', documents?: AttachedDocument[]): Promise<void>;
   hydrate(runId: string): Promise<void>;
   reset(): void;
 }
@@ -50,7 +49,6 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     target: string,
     mode: 'fast' | 'thorough' = 'thorough',
     documents: AttachedDocument[] = [],
-    scope?: ResearchScope,
   ): Promise<void> {
     // Create a fresh trace store for this run
     const store = createTraceStore();
@@ -121,7 +119,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     let currentStatus: RunStatus = 'running';
 
     try {
-      const res = await startDeepResearch(target, mode, documents, scope);
+      const res = await startDeepResearch(target, mode, documents);
       if (!res.ok) {
         throw new Error(`Request failed: ${res.status} ${res.statusText}`);
       }
