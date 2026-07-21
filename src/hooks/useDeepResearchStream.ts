@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { createTraceStore } from '../lib/research/traceStore.js';
 import { createTraceBuffer } from '../lib/research/traceBuffer.js';
 import { useBriefingStore } from '../lib/research/briefingStore.js';
-import { startDeepResearch, fetchBriefing, fetchDemoBriefing } from '../lib/research/api.js';
+import { startDeepResearch, fetchBriefing, fetchDemoBriefing, type AttachedDocument } from '../lib/research/api.js';
 import type { ResearchTraceEvent, BriefingView } from '../lib/research/sseTypes.js';
 import { createSSEParser } from '../lib/research/sseParse.js';
 import { getStoredAgentMode } from '../lib/agentMode.js';
@@ -15,7 +15,7 @@ export interface UseDeepResearchStream {
   status: RunStatus;
   runId: string | null;
   error: string | null;
-  start(target: string, mode?: 'fast' | 'thorough'): Promise<void>;
+  start(target: string, mode?: 'fast' | 'thorough', documents?: AttachedDocument[]): Promise<void>;
   hydrate(runId: string): Promise<void>;
   reset(): void;
 }
@@ -37,7 +37,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     };
   }, []);
 
-  async function start(target: string, mode: 'fast' | 'thorough' = 'thorough'): Promise<void> {
+  async function start(target: string, mode: 'fast' | 'thorough' = 'thorough', documents: AttachedDocument[] = []): Promise<void> {
     // Create a fresh trace store for this run
     const store = createTraceStore();
     store.getState().reset();
@@ -106,7 +106,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     let currentStatus: RunStatus = 'running';
 
     try {
-      const res = await startDeepResearch(target, mode);
+      const res = await startDeepResearch(target, mode, documents);
       if (!res.ok) {
         throw new Error(`Request failed: ${res.status} ${res.statusText}`);
       }

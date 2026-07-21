@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Plus, AtSign, ArrowRight, X, FolderOpen, ChevronsUpDown } from 'lucide-react';
+import { Plus, ArrowRight, X, FolderOpen, ChevronsUpDown, FileText, Loader2 } from 'lucide-react';
 import type { ResearchTemplate } from './CapabilityCards';
+import type { AttachedDocument } from '../../lib/research/api';
 import { useProjectStore } from '../../lib/projects/store';
 import {
   hasUnresolvedTargetPlaceholder,
@@ -10,11 +11,14 @@ import {
 } from './researchTemplateState';
 
 interface ResearchComposerProps {
-  onStart: (target: string, mode: 'fast' | 'thorough') => void;
+  onStart: (target: string, mode: 'fast' | 'thorough', documents?: AttachedDocument[]) => void;
   initialQuery?: string;
   seed?: ResearchTemplate;
   onOpenProject?: (projectId: string) => void;
 }
+
+// Client-side guard mirroring the server's markitdown limit.
+const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
 export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }: ResearchComposerProps) {
   const projects = useProjectStore((state) => state.projects);
@@ -26,8 +30,46 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
   const [seededPrompt, setSeededPrompt] = useState(activeSeed?.prompt);
   const [contextChip, setContextChip] = useState(activeSeed?.contextChip);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [attachments, setAttachments] = useState<AttachedDocument[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const canRun = prompt.trim().length > 0 && !hasUnresolvedTargetPlaceholder(prompt);
+  const canRun = prompt.trim().length > 0 && !hasUnresolvedTargetPlaceholder(prompt) && !uploading;
+
+  const handleFilesSelected = async (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    setUploadError(null);
+    setUploading(true);
+    try {
+      for (const file of Array.from(fileList)) {
+        if (file.size > MAX_UPLOAD_BYTES) {
+          setUploadError(`${file.name} is larger than 20 MB.`);
+          continue;
+        }
+        const body = new FormData();
+        body.append('file', file);
+        const res = await fetch('/api/upload', { method: 'POST', credentials: 'include', body });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data?.text) {
+          setUploadError(data?.error ?? `Could not read ${file.name}.`);
+          continue;
+        }
+        setAttachments((prev) => {
+          const next = prev.filter((a) => a.name !== data.fileName);
+          return [...next, { name: data.fileName as string, text: data.text as string }];
+        });
+      }
+    } catch {
+      setUploadError('Upload failed. Is the analysis server running?');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const removeAttachment = (name: string) =>
+    setAttachments((prev) => prev.filter((a) => a.name !== name));
 
   useEffect(() => {
     const placeholderStart = prompt.indexOf(TARGET_PLACEHOLDER);
@@ -42,8 +84,8 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
 
   const handleStart = () => {
     const trimmed = prompt.trim();
-    if (!trimmed || hasUnresolvedTargetPlaceholder(prompt)) return;
-    onStart(resolveRunTarget(prompt, runTarget), 'fast');
+    if (!trimmed || hasUnresolvedTargetPlaceholder(prompt) || uploading) return;
+    onStart(resolveRunTarget(prompt, runTarget), 'fast', attachments.length ? attachments : undefined);
   };
 
   const handlePromptChange = (nextPrompt: string) => {
@@ -104,35 +146,53 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
           </div>
         )}
 
+        {/* Attached documents (converted to Markdown, grounded as evidence) */}
+        {(attachments.length > 0 || uploadError) && (
+          <div className="flex flex-wrap items-center gap-2 px-6 pb-3 sm:px-7">
+            {attachments.map((doc) => (
+              <span
+                key={doc.name}
+                className="t-eyebrow inline-flex items-center gap-1.5 rounded-md border border-border bg-subtle px-2 py-1 text-textSecondary"
+              >
+                <FileText className="h-3.5 w-3.5 text-textTertiary" aria-hidden="true" />
+                <span className="max-w-[220px] truncate" title={doc.name}>{doc.name}</span>
+                <button
+                  type="button"
+                  onClick={() => removeAttachment(doc.name)}
+                  aria-label={`Remove ${doc.name}`}
+                  className="rounded-sm text-textTertiary transition-colors hover:text-textPrimary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
+              </span>
+            ))}
+            {uploadError && <span className="t-meta text-danger">{uploadError}</span>}
+          </div>
+        )}
+
         {/* Bottom control bar */}
         <div className="flex items-center gap-2 px-4 pb-4 pt-1 sm:px-5">
-          {/* Upload (coming soon) */}
+          {/* Upload a document - converted to Markdown by markitdown, then read + cited */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.txt,.md,.html,.htm,.json"
+            className="hidden"
+            onChange={(e) => handleFilesSelected(e.target.files)}
+          />
           <span className="group relative inline-flex">
             <button
               type="button"
-              disabled
-              aria-label="Upload data (coming soon)"
-              className="icon-action h-9 w-9 rounded-full"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              aria-label="Upload a document"
+              className="icon-action h-9 w-9 rounded-full disabled:opacity-50"
             >
-              <Plus className="w-[18px] h-[18px]" />
+              {uploading ? <Loader2 className="w-[18px] h-[18px] animate-spin" /> : <Plus className="w-[18px] h-[18px]" />}
             </button>
             <span className="t-meta pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
-              Upload - coming soon
-            </span>
-          </span>
-
-          {/* Reference / mention (coming soon) */}
-          <span className="group relative inline-flex">
-            <button
-              type="button"
-              disabled
-              aria-label="Reference files (coming soon)"
-              className="icon-action h-9 w-9 rounded-full"
-            >
-              <AtSign className="w-[16px] h-[16px]" />
-            </button>
-            <span className="t-meta pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
-              Reference files - coming soon
+              {uploading ? 'Converting…' : 'Upload a document'}
             </span>
           </span>
 

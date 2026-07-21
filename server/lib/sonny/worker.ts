@@ -1,5 +1,6 @@
 import type { TraceEvent, Briefing } from '@mrsirquanzo/sonny-shared';
 import { buildEngineDeps, type EngineDeps, type Backend } from './engineDeps.js';
+import type { UploadedDocument } from './documentTool.js';
 
 export type WorkerMessage =
   | { kind: 'trace'; event: TraceEvent }
@@ -11,12 +12,13 @@ export interface WorkerOpts {
   target: string;
   mode: 'fast' | 'thorough';
   backend: Backend;
+  documents?: UploadedDocument[];
 }
 
 // Injectable engine boundary (defaults to the real engine when omitted).
 export interface EngineInjection {
   produceBriefing: (opts: { target: string; emit: (e: TraceEvent) => void } & EngineDeps) => Promise<Briefing>;
-  buildEngineDeps: (backend: Backend, mode: 'fast' | 'thorough') => Promise<EngineDeps>;
+  buildEngineDeps: (backend: Backend, mode: 'fast' | 'thorough', documents?: UploadedDocument[]) => Promise<EngineDeps>;
 }
 
 export async function runInWorker(
@@ -28,7 +30,7 @@ export async function runInWorker(
     const produceBriefing = engine?.produceBriefing
       ?? (await import('@mrsirquanzo/sonny-core')).produceBriefing;
     const build = engine?.buildEngineDeps ?? buildEngineDeps;
-    const deps = await build(opts.backend, opts.mode);
+    const deps = await build(opts.backend, opts.mode, opts.documents);
     const briefing = await produceBriefing({
       target: opts.target, ...deps,
       emit: (event) => post({ kind: 'trace', event }),

@@ -8,15 +8,21 @@ export function deepResearchPath(): string {
     : '/api/deep-research';
 }
 
+export interface AttachedDocument {
+  name: string;
+  text: string;
+}
+
 export async function startDeepResearch(
   target: string,
-  mode: 'fast' | 'thorough'
+  mode: 'fast' | 'thorough',
+  documents: AttachedDocument[] = []
 ): Promise<Response> {
   return fetch(deepResearchPath(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ target, mode }),
+    body: JSON.stringify({ target, mode, ...(documents.length ? { documents } : {}) }),
   });
 }
 
