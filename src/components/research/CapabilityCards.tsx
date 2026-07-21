@@ -45,6 +45,16 @@ const CAPABILITIES: Capability[] = [
     template: DEEP_RESEARCH_TEMPLATE,
   },
   {
+    id: 'ihc-analysis',
+    title: 'IHC analysis',
+    description: 'Deconvolve DAB from counterstain, then score expression by H-score and % positivity - grounded and reproducible.',
+    status: 'available',
+    image: '/workbook/ihc/05_intensity_bins.png',
+    alt: 'CDCP1 IHC tissue pixels classified into negative, 1+, 2+, and 3+ DAB intensity bins',
+    cta: 'Open workbook',
+    icon: Microscope,
+  },
+  {
     id: 'flow-cytometry',
     title: 'Flow cytometry analysis',
     description: 'Gate, phenotype, and summarize FCS data, every step grounded and reproducible.',
@@ -63,16 +73,6 @@ const CAPABILITIES: Capability[] = [
     alt: 'Annotated western blot with detected band regions',
     cta: 'Analyze blot',
     icon: Layers3,
-  },
-  {
-    id: 'ihc-analysis',
-    title: 'IHC analysis',
-    description: 'Deconvolve DAB from counterstain, then score expression by H-score and % positivity - grounded and reproducible.',
-    status: 'available',
-    image: '/workbook/ihc/05_intensity_bins.png',
-    alt: 'CDCP1 IHC tissue pixels classified into negative, 1+, 2+, and 3+ DAB intensity bins',
-    cta: 'Open workbook',
-    icon: Microscope,
   },
   {
     id: 'combination-screening',

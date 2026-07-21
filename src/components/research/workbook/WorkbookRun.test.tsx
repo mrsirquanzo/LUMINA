@@ -16,7 +16,7 @@ describe('CapabilityCards', () => {
   it('renders the capabilities with their figures and honest actions', () => {
     const html = renderToStaticMarkup(<CapabilityCards onSelectWorkbook={() => undefined} />);
 
-    // Available capabilities, in order: deep research, flow, western, IHC.
+    // Available capabilities, in order: deep research, IHC, flow, western.
     expect(html).toContain('Deep target research');
     expect(html).toContain('/deep-research.png');
     expect(html).toContain('Start a report');
