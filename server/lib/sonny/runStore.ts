@@ -64,7 +64,16 @@ export async function loadDemoBriefing(input: string): Promise<CachedBriefing | 
     return null;
   }
 
-  let containedMatch: CachedBriefing | null = null;
+  // Prefer the RICHEST briefing (most sections) among target matches, not the
+  // first by filename. This immunizes the demo against stub/test fixtures that
+  // share a target (e.g. runStore.test writes a 0-section CDCP1 stub into this
+  // dir): a real report always outscores a stub and wins.
+  const score = (b: Briefing): number => (Array.isArray(b.sections) ? b.sections.length : 0);
+  let bestExact: CachedBriefing | null = null;
+  let bestExactScore = -1;
+  let bestContained: CachedBriefing | null = null;
+  let bestContainedScore = -1;
+
   for (const file of files) {
     try {
       const raw = await fs.readFile(path.join(RUNS_DIR, file), 'utf-8');
@@ -74,14 +83,16 @@ export async function loadDemoBriefing(input: string): Promise<CachedBriefing | 
 
       const normalized = normalizeTarget(target);
       const match = { runId: file.slice(0, -'.json'.length), briefing };
-      if (requested === normalized) return match;
-      if (!containedMatch && normalized.length >= 4 && requested.includes(normalized)) {
-        containedMatch = match;
+      const s = score(briefing);
+      if (requested === normalized) {
+        if (s > bestExactScore) { bestExact = match; bestExactScore = s; }
+      } else if (normalized.length >= 4 && requested.includes(normalized)) {
+        if (s > bestContainedScore) { bestContained = match; bestContainedScore = s; }
       }
     } catch {
       // A malformed cache entry must not make demo lookup fail.
     }
   }
 
-  return containedMatch;
+  return bestExact ?? bestContained;
 }
