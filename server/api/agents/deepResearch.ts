@@ -61,8 +61,10 @@ export function makeDeepResearchRouter(deps: DeepResearchDeps): Router {
       return;
     }
 
-    const resolvedMode: 'fast' | 'thorough' =
-      mode === 'fast' ? 'fast' : 'thorough';
+    // Fast mode is retired - every run is thorough (4 rounds), regardless of
+    // what the client sends.
+    void mode;
+    const resolvedMode: 'fast' | 'thorough' = 'thorough';
 
     const runId = deps.makeRunId(target);
 

@@ -85,7 +85,7 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
   const handleStart = () => {
     const trimmed = prompt.trim();
     if (!trimmed || hasUnresolvedTargetPlaceholder(prompt) || uploading) return;
-    onStart(resolveRunTarget(prompt, runTarget), 'fast', attachments.length ? attachments : undefined);
+    onStart(resolveRunTarget(prompt, runTarget), 'thorough', attachments.length ? attachments : undefined);
   };
 
   const handlePromptChange = (nextPrompt: string) => {
