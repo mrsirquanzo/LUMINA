@@ -14,11 +14,16 @@ export interface WorkerOpts {
   mode: 'fast' | 'thorough';
   backend: Backend;
   documents?: UploadedDocument[];
+  context?: { indication?: string; modality?: string };
 }
 
 // Injectable engine boundary (defaults to the real engine when omitted).
 export interface EngineInjection {
-  produceBriefing: (opts: { target: string; emit: (e: TraceEvent) => void } & EngineDeps) => Promise<Briefing>;
+  produceBriefing: (opts: {
+    target: string;
+    emit: (e: TraceEvent) => void;
+    context?: { indication?: string; modality?: string };
+  } & EngineDeps) => Promise<Briefing>;
   buildEngineDeps: (backend: Backend, mode: 'fast' | 'thorough', documents?: UploadedDocument[]) => Promise<EngineDeps>;
 }
 
@@ -39,6 +44,7 @@ export async function runInWorker(
       briefing = await produceBriefing({
         target: opts.target, ...deps,
         emit: (event) => post({ kind: 'trace', event }),
+        ...(opts.context ? { context: opts.context } : {}),
       });
     } finally {
       sniffer.restore();

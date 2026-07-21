@@ -2,7 +2,13 @@ import { useState, useRef, useEffect } from 'react';
 import { createTraceStore } from '../lib/research/traceStore.js';
 import { createTraceBuffer } from '../lib/research/traceBuffer.js';
 import { useBriefingStore } from '../lib/research/briefingStore.js';
-import { startDeepResearch, fetchBriefing, fetchDemoBriefing, type AttachedDocument } from '../lib/research/api.js';
+import {
+  startDeepResearch,
+  fetchBriefing,
+  fetchDemoBriefing,
+  type AttachedDocument,
+  type ResearchScope,
+} from '../lib/research/api.js';
 import type { ResearchTraceEvent, BriefingView } from '../lib/research/sseTypes.js';
 import { createSSEParser } from '../lib/research/sseParse.js';
 import { getStoredAgentMode } from '../lib/agentMode.js';
@@ -17,7 +23,7 @@ export interface UseDeepResearchStream {
   runId: string | null;
   error: string | null;
   runMeta: RunMeta | null;
-  start(target: string, mode?: 'fast' | 'thorough', documents?: AttachedDocument[]): Promise<void>;
+  start(target: string, mode?: 'fast' | 'thorough', documents?: AttachedDocument[], scope?: ResearchScope): Promise<void>;
   hydrate(runId: string): Promise<void>;
   reset(): void;
 }
@@ -40,7 +46,12 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     };
   }, []);
 
-  async function start(target: string, mode: 'fast' | 'thorough' = 'thorough', documents: AttachedDocument[] = []): Promise<void> {
+  async function start(
+    target: string,
+    mode: 'fast' | 'thorough' = 'thorough',
+    documents: AttachedDocument[] = [],
+    scope?: ResearchScope,
+  ): Promise<void> {
     // Create a fresh trace store for this run
     const store = createTraceStore();
     store.getState().reset();
@@ -110,7 +121,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     let currentStatus: RunStatus = 'running';
 
     try {
-      const res = await startDeepResearch(target, mode, documents);
+      const res = await startDeepResearch(target, mode, documents, scope);
       if (!res.ok) {
         throw new Error(`Request failed: ${res.status} ${res.statusText}`);
       }

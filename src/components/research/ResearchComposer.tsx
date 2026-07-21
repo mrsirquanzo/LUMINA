@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Plus, ArrowRight, X, FolderOpen, ChevronsUpDown, FileText, Loader2 } from 'lucide-react';
 import type { ResearchTemplate } from './CapabilityCards';
-import type { AttachedDocument } from '../../lib/research/api';
+import type { AttachedDocument, ResearchScope } from '../../lib/research/api';
 import { useProjectStore } from '../../lib/projects/store';
 import {
   hasUnresolvedTargetPlaceholder,
@@ -11,7 +11,12 @@ import {
 } from './researchTemplateState';
 
 interface ResearchComposerProps {
-  onStart: (target: string, mode: 'fast' | 'thorough', documents?: AttachedDocument[]) => void;
+  onStart: (
+    target: string,
+    mode: 'fast' | 'thorough',
+    documents?: AttachedDocument[],
+    scope?: ResearchScope,
+  ) => void;
   initialQuery?: string;
   seed?: ResearchTemplate;
   onOpenProject?: (projectId: string) => void;
@@ -32,6 +37,8 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [attachments, setAttachments] = useState<AttachedDocument[]>([]);
+  const [indication, setIndication] = useState('');
+  const [modality, setModality] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
@@ -85,7 +92,16 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
   const handleStart = () => {
     const trimmed = prompt.trim();
     if (!trimmed || hasUnresolvedTargetPlaceholder(prompt) || uploading) return;
-    onStart(resolveRunTarget(prompt, runTarget), 'fast', attachments.length ? attachments : undefined);
+    const scope: ResearchScope = {
+      indication: indication.trim() || undefined,
+      modality: modality.trim() || undefined,
+    };
+    onStart(
+      resolveRunTarget(prompt, runTarget),
+      'thorough',
+      attachments.length ? attachments : undefined,
+      scope.indication || scope.modality ? scope : undefined,
+    );
   };
 
   const handlePromptChange = (nextPrompt: string) => {
@@ -169,6 +185,30 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
             {uploadError && <span className="t-meta text-danger">{uploadError}</span>}
           </div>
         )}
+
+        {/* Optional disease and treatment scope for specialist research questions */}
+        <div className="flex flex-wrap items-center gap-2 px-6 pb-3 sm:px-7">
+          <label className="inline-flex items-center gap-2">
+            <span className="t-meta text-textTertiary">Indication</span>
+            <input
+              type="text"
+              value={indication}
+              onChange={(e) => setIndication(e.target.value)}
+              placeholder="NSCLC"
+              className="h-8 w-28 rounded-md border border-border bg-subtle px-2.5 text-[13px] text-textPrimary outline-none transition-colors placeholder:text-textTertiary focus:border-primary/30 focus:ring-2 focus:ring-primary/10"
+            />
+          </label>
+          <label className="inline-flex items-center gap-2">
+            <span className="t-meta text-textTertiary">Modality</span>
+            <input
+              type="text"
+              value={modality}
+              onChange={(e) => setModality(e.target.value)}
+              placeholder="ADC"
+              className="h-8 w-24 rounded-md border border-border bg-subtle px-2.5 text-[13px] text-textPrimary outline-none transition-colors placeholder:text-textTertiary focus:border-primary/30 focus:ring-2 focus:ring-primary/10"
+            />
+          </label>
+        </div>
 
         {/* Bottom control bar */}
         <div className="flex items-center gap-2 px-4 pb-4 pt-1 sm:px-5">

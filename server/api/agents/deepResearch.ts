@@ -10,9 +10,21 @@ export type { BusEvent };
 
 export interface UploadedDocumentInput { name: string; text: string; }
 
+export interface ResearchContextInput {
+  indication?: string;
+  modality?: string;
+}
+
 export interface DeepResearchDeps {
   makeRunId: (target: string) => string;
-  startRun: (input: { runId: string; target: string; mode: 'fast' | 'thorough'; backend?: string; documents?: UploadedDocumentInput[] }) => void;
+  startRun: (input: {
+    runId: string;
+    target: string;
+    mode: 'fast' | 'thorough';
+    backend?: string;
+    documents?: UploadedDocumentInput[];
+    context?: ResearchContextInput;
+  }) => void;
   subscribe: (runId: string, fn: (e: BusEvent) => void) => () => void;
   loadBriefing: (runId: string) => Promise<Briefing | null>;
   loadDemoBriefing: (target: string) => Promise<{ runId: string; briefing: Briefing } | null>;
@@ -20,6 +32,7 @@ export interface DeepResearchDeps {
 
 const MAX_DOCUMENTS = 8;
 const MAX_DOCUMENT_CHARS = 400_000; // total across all attached documents
+const MAX_CONTEXT_CHARS = 80;
 
 // Accept only well-formed {name, text} entries and bound the total payload so a
 // pasted document can't blow up the worker context.
@@ -42,6 +55,22 @@ function sanitizeDocuments(raw: unknown): UploadedDocumentInput[] {
   return out;
 }
 
+function sanitizeContext(raw: unknown): ResearchContextInput | undefined {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const input = raw as { indication?: unknown; modality?: unknown };
+  const indication = typeof input.indication === 'string'
+    ? input.indication.trim().slice(0, MAX_CONTEXT_CHARS)
+    : '';
+  const modality = typeof input.modality === 'string'
+    ? input.modality.trim().slice(0, MAX_CONTEXT_CHARS)
+    : '';
+  if (!indication && !modality) return undefined;
+  return {
+    ...(indication ? { indication } : {}),
+    ...(modality ? { modality } : {}),
+  };
+}
+
 let counter = 0;
 
 function defaultMakeRunId(target: string): string {
@@ -55,14 +84,17 @@ export function makeDeepResearchRouter(deps: DeepResearchDeps): Router {
   router.post('/', (req: Request, res: Response) => {
     const { target, mode } = req.body;
     const documents = sanitizeDocuments(req.body?.documents);
+    const context = sanitizeContext(req.body?.context);
 
     if (!target || typeof target !== 'string') {
       res.status(400).json({ error: 'target is required and must be a non-empty string' });
       return;
     }
 
-    const resolvedMode: 'fast' | 'thorough' =
-      mode === 'fast' ? 'fast' : 'thorough';
+    // Fast mode is retired - every run is thorough (4 rounds), regardless of
+    // what the client sends.
+    void mode;
+    const resolvedMode: 'fast' | 'thorough' = 'thorough';
 
     const runId = deps.makeRunId(target);
 
@@ -82,6 +114,7 @@ export function makeDeepResearchRouter(deps: DeepResearchDeps): Router {
       mode: resolvedMode,
       backend: process.env.SONNY_BACKEND || 'ollama',
       ...(documents.length ? { documents } : {}),
+      ...(context ? { context } : {}),
     });
 
     // Subscribe and forward bus events

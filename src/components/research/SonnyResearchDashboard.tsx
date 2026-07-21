@@ -64,7 +64,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed, onOpenProject
           <div ref={composerRef} className="relative z-[1] mb-14 sm:mb-16">
             <ResearchComposer
               key={`${initialQuery ?? ''}:${seedRevision}`}
-              onStart={(t, m, docs) => s.start(t, m, docs)}
+              onStart={(t, m, docs, scope) => s.start(t, m, docs, scope)}
               initialQuery={initialQuery}
               seed={seed}
               onOpenProject={onOpenProject}
