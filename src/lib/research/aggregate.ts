@@ -41,6 +41,14 @@ function describe(e: ResearchTraceEvent): TraceLogEntry {
     }
     case 'evidence_registered':
       return { type, role: 'evidence', label: 'evidence', detail: str(e.title) ?? str(e.id) };
+    case 'query_parsed': {
+      const scope = [
+        str(e.target) ? `target ${str(e.target)}` : undefined,
+        str(e.indication) ? `indication ${str(e.indication)}` : undefined,
+        str(e.modality) ? `modality ${str(e.modality)}` : undefined,
+      ].filter(Boolean).join(' · ');
+      return { type, role: 'read', label: 'understood request', detail: scope || undefined };
+    }
     case 'research_read': {
       const src = [str(e.sourceId), str(e.locator)].filter(Boolean).join(' · ');
       return { type, role: 'read', label: str(e.specialist) ? `${str(e.specialist)} reading` : 'reading', detail: src || undefined };
