@@ -1,0 +1,92 @@
+{
+  "analysis": {
+    "target": "CDCP1 / ENSG00000163814",
+    "antibody_source": "Human Protein Atlas",
+    "chromogen": "DAB",
+    "counterstain": "hematoxylin",
+    "color_deconvolution": "skimage.color.rgb2hed (Ruifrok-Johnston HED)",
+    "scoring_unit": "tissue pixels",
+    "tissue_mask": "luminance optical density > 0.12; objects smaller than 64 pixels removed",
+    "dab_thresholds": {
+      "negative_to_1_plus": 0.04,
+      "1_plus_to_2_plus": 0.08,
+      "2_plus_to_3_plus": 0.16,
+      "units": "rgb2hed DAB optical density"
+    },
+    "h_score_definition": "1*pct_1_plus + 2*pct_2_plus + 3*pct_3_plus"
+  },
+  "images": {
+    "lung_cancer_high": {
+      "source_file": "source_lungcancer_high.jpg",
+      "label": "HIGH core",
+      "h_score": 23.61,
+      "pct_positive": 18.27,
+      "bin_percentages": {
+        "0": 81.73,
+        "1+": 13.66,
+        "2+": 3.9,
+        "3+": 0.72
+      },
+      "tissue_area_px": 4774040,
+      "tissue_fraction_pct": 53.04,
+      "thresholds_used": {
+        "negative_to_1_plus": 0.04,
+        "1_plus_to_2_plus": 0.08,
+        "2_plus_to_3_plus": 0.16,
+        "units": "rgb2hed DAB optical density"
+      },
+      "hpa_reference_call": "HIGH"
+    },
+    "lung_cancer_high_field_2": {
+      "source_file": "source_lungcancer_high_2.jpg",
+      "label": "HIGH field 2",
+      "h_score": 20.22,
+      "pct_positive": 18.39,
+      "bin_percentages": {
+        "0": 81.61,
+        "1+": 16.6,
+        "2+": 1.74,
+        "3+": 0.04
+      },
+      "tissue_area_px": 4196343,
+      "tissue_fraction_pct": 46.63,
+      "thresholds_used": {
+        "negative_to_1_plus": 0.04,
+        "1_plus_to_2_plus": 0.08,
+        "2_plus_to_3_plus": 0.16,
+        "units": "rgb2hed DAB optical density"
+      },
+      "hpa_reference_call": "HIGH"
+    },
+    "normal_lung": {
+      "source_file": "source_normal_lung.jpg",
+      "label": "Normal lung",
+      "h_score": 3.6,
+      "pct_positive": 3.59,
+      "bin_percentages": {
+        "0": 96.41,
+        "1+": 3.58,
+        "2+": 0.01,
+        "3+": 0.0
+      },
+      "tissue_area_px": 1161999,
+      "tissue_fraction_pct": 12.91,
+      "thresholds_used": {
+        "negative_to_1_plus": 0.04,
+        "1_plus_to_2_plus": 0.08,
+        "2_plus_to_3_plus": 0.16,
+        "units": "rgb2hed DAB optical density"
+      },
+      "hpa_reference_call": "NOT DETECTED"
+    }
+  },
+  "figures": [
+    "01_source.png",
+    "02_hematoxylin.png",
+    "03_dab.png",
+    "04_tissue_mask.png",
+    "05_intensity_bins.png",
+    "06_scorecard.png",
+    "07_crossref.png"
+  ]
+}

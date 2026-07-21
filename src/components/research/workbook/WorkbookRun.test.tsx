@@ -13,25 +13,31 @@ const flowScenario = flowScenarioData as WorkbookRunData;
 const westernScenario = westernScenarioData as WorkbookRunData;
 
 describe('CapabilityCards', () => {
-  it('renders the five real capabilities with their figures and honest actions', () => {
+  it('renders the capabilities with their figures and honest actions', () => {
     const html = renderToStaticMarkup(<CapabilityCards onSelectWorkbook={() => undefined} />);
 
-    expect(html).toContain('Combination drug screening');
-    expect(html).toContain('/workbook/combo/fig_synergy_matrices.png');
-    expect(html).toContain('Start screening');
+    // Available capabilities, in order: deep research, flow, western, IHC.
+    expect(html).toContain('Deep target research');
+    expect(html).toContain('/deep-research.png');
+    expect(html).toContain('Start a report');
+    expect(html).toContain('Flow cytometry analysis');
+    expect(html).toContain('/workbook/flow/04_lineage.png');
     expect(html).toContain('Western blot analysis');
     expect(html).toContain('/workbook/western/annotated.png');
     expect(html).toContain('background-corrected densitometry');
     expect(html).toContain('Analyze blot');
-    expect(html).toContain('Flow cytometry analysis');
-    expect(html).toContain('/workbook/flow/04_lineage.png');
-    expect(html).toContain('Open workbook');
-    expect(html).toContain('Deep target research');
-    expect(html).toContain('/deep-research.png');
-    expect(html).toContain('Start a report');
+    expect(html).toContain('IHC analysis');
+    expect(html).toContain('/workbook/ihc/05_intensity_bins.png');
+    expect(html).toContain('H-score and % positivity');
+    // "Open workbook" is the action for both flow and IHC.
+    expect(html.match(/Open workbook/g)?.length).toBeGreaterThanOrEqual(2);
+
+    // Combination screening and patent extraction are both coming soon.
+    expect(html).toContain('Combination drug screening');
+    expect(html).toContain('/workbook/combo/fig_synergy_matrices.png');
     expect(html).toContain('Patent sequence extraction');
     expect(html).toContain('/patent-ip.png');
-    expect(html.match(/Coming soon/g)).toHaveLength(1);
+    expect(html.match(/Coming soon/g)).toHaveLength(2);
   });
 });
 
