@@ -99,13 +99,21 @@ export function briefingReport(briefing: BriefingView) {
         assumptionsNote: '',
       },
     },
-    contentSections: (briefing.sections ?? []).map((section, index) => ({
-      id: section.id ?? `section-${index + 1}`,
-      title: section.title ?? `Research section ${index + 1}`,
-      content: [
-        section.takeaway,
-        ...(section.claims ?? []).slice(0, 4).map((claim) => claim.text),
-      ].filter(Boolean).join(' '),
-    })),
+    contentSections: (briefing.sections ?? []).map((section, index) => {
+      const claims = (section.claims ?? [])
+        .slice(0, 4)
+        .map((claim) => ({
+          text: claim.text ?? '',
+          citations: claim.citations ?? [],
+        }))
+        .filter((claim) => Boolean(claim.text));
+
+      return {
+        id: section.id ?? `section-${index + 1}`,
+        title: section.title ?? `Research section ${index + 1}`,
+        content: section.takeaway ?? '',
+        ...(claims.length > 0 ? { claims } : {}),
+      };
+    }),
   };
 }

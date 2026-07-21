@@ -78,6 +78,30 @@ describe('WorkbookReport western blot output', () => {
     expect(html).toContain('Assumptions Made');
     expect(html).not.toContain('Proposed hypotheses for wet-lab testing');
   });
+
+  it('renders research claim citations as accessible evidence buttons', () => {
+    const html = renderToStaticMarkup(
+      <WorkbookReport
+        report={westernScenario.report}
+        contentSections={[{
+          id: 'expression',
+          title: 'Expression',
+          content: 'Normal tissue baseline.',
+          claims: [{ text: 'CDCP1 is tissue enhanced.', citations: ['HPA:CDCP1'] }],
+        }]}
+        references={[{
+          id: 'HPA:CDCP1',
+          source: 'Human Protein Atlas',
+          title: 'CDCP1 expression and localization',
+          url: 'https://www.proteinatlas.org/ENSG00000163814',
+        }]}
+      />,
+    );
+
+    expect(html).toContain('HPA:CDCP1');
+    expect(html).toContain('aria-haspopup="dialog"');
+    expect(html).toContain('aria-label="Review evidence HPA:CDCP1"');
+  });
 });
 
 describe('WorkbookReport synergy ranking', () => {

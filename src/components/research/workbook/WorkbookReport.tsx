@@ -1,6 +1,8 @@
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useCallback, useRef, useState } from 'react';
 import { Beaker, ChevronDown, Expand, FileQuestion, FlaskConical, RotateCcw, Search, X } from 'lucide-react';
 import type { WorkbookRun } from '../../../lib/workbook/types';
+import type { EvidenceReference } from '../../../lib/research/evidenceResolver';
+import { EvidenceViewer } from '../EvidenceViewer';
 import { CorrelationHeatmap } from './gating/CorrelationHeatmap';
 import { GatePlot } from './gating/GatePlot';
 import { useGating } from './gating/gatingStore';
@@ -18,11 +20,19 @@ const GATE_STEP_BY_SRC: Record<string, string> = {
 const gateStepForSrc = (src: string) =>
   Object.entries(GATE_STEP_BY_SRC).find(([name]) => src.endsWith(name))?.[1];
 
+interface ReportContentSection {
+  id: string;
+  title: string;
+  content: string;
+  claims?: Array<{ text: string; citations: string[] }>;
+}
+
 interface WorkbookReportProps {
   report: WorkbookRun['report'];
   title?: string;
   eyebrow?: string;
-  contentSections?: Array<{ id: string; title: string; content: string }>;
+  contentSections?: ReportContentSection[];
+  references?: readonly EvidenceReference[];
   rankings?: WorkbookRun['rankings'];
   selectedSynergyModel?: string;
 }
@@ -50,12 +60,15 @@ export function WorkbookReport({
   title = 'Flow cytometry report',
   eyebrow = 'ANALYSIS COMPLETE',
   contentSections,
+  references = [],
   rankings,
   selectedSynergyModel = 'Bliss independence',
 }: WorkbookReportProps) {
   const gating = useGating();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [activeFigure, setActiveFigure] = useState<WorkbookRun['report']['figures'][number] | null>(null);
+  const [activeCitationId, setActiveCitationId] = useState<string | null>(null);
+  const closeEvidenceViewer = useCallback(() => setActiveCitationId(null), [setActiveCitationId]);
   const usesHsa = selectedSynergyModel === 'HSA (highest single agent)';
   const usesFallback = selectedSynergyModel === 'Loewe additivity' || selectedSynergyModel === 'ZIP';
   const rankingModel = usesHsa ? 'hsa' : 'bliss';
@@ -103,6 +116,11 @@ export function WorkbookReport({
     detailedAnswer: `The current user-defined cascade recovers ${gating.metrics.bCellCount.toLocaleString()} CD3-CD19+ B cells (${gating.metrics.bCellLivePct.toFixed(1)}% of live singlets). The resulting subset structure is ${gating.metrics.subsets.naive.toFixed(1)}% naive, ${gating.metrics.subsets.switched.toFixed(1)}% switched memory, ${gating.metrics.subsets.doubleNegative.toFixed(1)}% double-negative, and ${gating.metrics.subsets.unswitched.toFixed(1)}% unswitched memory. Constitutive and activation marker observations use this current B-cell population.`,
     methods: `FCS fluorescence channels were arcsinh-transformed with cofactor 6000. The scientist set the FSC/SSC cell rectangle, FSC-A/FSC-H singlet ratio band, Zombie-NIR viability threshold, CD3/CD19 lineage crosshair, and IgD/CD27 subset crosshair. Each gate is applied sequentially in the browser to the real event sample, with results projected to ${gating.metrics.total.toLocaleString()} source events.`,
   } : report.sections;
+  const displayedContentSections: ReportContentSection[] = contentSections ?? ACCORDIONS.map(({ key, title }) => ({
+    id: key,
+    title,
+    content: displayedReportSections[key],
+  }));
 
   const openFigure = (figure: WorkbookRun['report']['figures'][number]) => {
     setActiveFigure(figure);
@@ -301,11 +319,7 @@ export function WorkbookReport({
       )}
 
       <div className="surface-card overflow-hidden">
-        {(contentSections ?? ACCORDIONS.map(({ key, title }) => ({
-          id: key,
-          title,
-          content: displayedReportSections[key],
-        }))).map((section, index) => {
+        {displayedContentSections.map((section, index) => {
           const Icon = contentSections ? Search : ACCORDIONS[index]?.icon ?? Search;
           return (
             <details
@@ -318,8 +332,40 @@ export function WorkbookReport({
                 <span className="t-body-sm flex-1 font-semibold text-textPrimary">{section.title}</span>
                 <ChevronDown className="h-4 w-4 text-textTertiary transition-transform group-open:rotate-180" strokeWidth={1.75} aria-hidden="true" />
               </summary>
-              <div className="t-body-sm px-5 pb-5 pl-12 text-textSecondary">
-                {section.content}
+              <div className="px-5 pb-5 pl-12">
+                {section.content && (
+                  <p className="t-body-sm text-textSecondary">{section.content}</p>
+                )}
+                {(section.claims ?? []).length > 0 && (
+                  <ul className={`${section.content ? 'mt-3' : ''} space-y-3`}>
+                    {section.claims?.map((claim, claimIndex) => (
+                      <li key={`${section.id}-claim-${claimIndex}`} className="t-body-sm flex items-start gap-2.5 text-textSecondary">
+                        <span className="mt-[7px] h-1.5 w-1.5 flex-none rounded-full bg-border" aria-hidden="true" />
+                        <div className="min-w-0">
+                          <p>{claim.text}</p>
+                          {claim.citations.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1.5" aria-label="Claim citations">
+                              {[...new Set(claim.citations)].map((citationId) => (
+                                <button
+                                  key={citationId}
+                                  type="button"
+                                  role="button"
+                                  tabIndex={0}
+                                  aria-haspopup="dialog"
+                                  aria-label={`Review evidence ${citationId}`}
+                                  onClick={() => setActiveCitationId(citationId)}
+                                  className="quiet-action t-meta inline-flex max-w-full items-center rounded-md border border-primary/20 bg-primary/[0.045] px-2 py-1 font-mono font-semibold text-primary hover:border-primary/35 hover:bg-primary/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
+                                >
+                                  <span className="break-all">{citationId}</span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </details>
           );
@@ -351,6 +397,12 @@ export function WorkbookReport({
           </div>
         )}
       </dialog>
+
+      <EvidenceViewer
+        citationId={activeCitationId}
+        references={references}
+        onClose={closeEvidenceViewer}
+      />
     </section>
   );
 }
