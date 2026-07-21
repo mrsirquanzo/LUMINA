@@ -61,16 +61,16 @@
     "normal_lung": {
       "source_file": "source_normal_lung.jpg",
       "label": "Normal lung",
-      "h_score": 3.6,
-      "pct_positive": 3.59,
+      "h_score": 8.01,
+      "pct_positive": 7.77,
       "bin_percentages": {
-        "0": 96.41,
-        "1+": 3.58,
-        "2+": 0.01,
-        "3+": 0.0
+        "0": 92.23,
+        "1+": 7.53,
+        "2+": 0.23,
+        "3+": 0.01
       },
-      "tissue_area_px": 1161999,
-      "tissue_fraction_pct": 12.91,
+      "tissue_area_px": 2063316,
+      "tissue_fraction_pct": 22.93,
       "thresholds_used": {
         "negative_to_1_plus": 0.04,
         "1_plus_to_2_plus": 0.08,
