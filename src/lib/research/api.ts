@@ -13,16 +13,27 @@ export interface AttachedDocument {
   text: string;
 }
 
+export interface ResearchScope {
+  indication?: string;
+  modality?: string;
+}
+
 export async function startDeepResearch(
   target: string,
   mode: 'fast' | 'thorough',
-  documents: AttachedDocument[] = []
+  documents: AttachedDocument[] = [],
+  scope?: ResearchScope,
 ): Promise<Response> {
   return fetch(deepResearchPath(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ target, mode, ...(documents.length ? { documents } : {}) }),
+    body: JSON.stringify({
+      target,
+      mode,
+      ...(documents.length ? { documents } : {}),
+      ...(scope && (scope.indication || scope.modality) ? { context: scope } : {}),
+    }),
   });
 }
 
