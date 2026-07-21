@@ -7,8 +7,11 @@ export interface UploadedDocument {
 }
 
 const MAX_CHUNK_CHARS = 1400;
-const MAX_CHUNKS_PER_DOC = 24;
-const MAX_TOTAL_CHUNKS = 60;
+// Bounds sized to the route's 400k-char total-payload cap (~286 chunks): a single
+// long report (~150 chunks ≈ 210k chars) ingests whole, and the total is capped
+// so retrieval context stays bounded across multiple attachments.
+const MAX_CHUNKS_PER_DOC = 150;
+const MAX_TOTAL_CHUNKS = 300;
 
 function slug(name: string): string {
   return name.replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 48) || 'document';
