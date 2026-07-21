@@ -44,7 +44,7 @@ function formatTpm(value: number): string {
 export const gtexExpressionTool: Tool = {
   name: 'gtex_expression',
   description:
-    'Fetch GTEx v8 median expression across normal human tissues for a gene, providing an off-tumor safety-window baseline.',
+    'GTEx v8 normal-tissue expression - the authoritative baseline for how much a target is expressed across ~54 healthy human tissues (median TPM). Use this to quantify normal-tissue / off-tumor expression that defines an ADC or targeted-therapy safety window, and to judge tumor-vs-normal selectivity against a normal baseline.',
   async call(args, fetchImpl = fetch): Promise<Evidence[]> {
     const gene = String(args.symbol ?? args.query ?? args.target ?? args.gene ?? '').trim();
     if (!gene) return [];

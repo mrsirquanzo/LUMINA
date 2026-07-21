@@ -95,7 +95,7 @@ function buildSnippet(record: JsonRecord): string {
 export const humanProteinAtlasTool: Tool = {
   name: 'human_protein_atlas',
   description:
-    'Fetch Human Protein Atlas expression, tissue specificity, subcellular localisation, and cancer prognostic annotations for a human gene symbol.',
+    'Human Protein Atlas - the authoritative source for a target’s protein/RNA expression across normal AND tumor tissues, tissue specificity, subcellular localization, and cancer prognostic association. Use this to ground tumor-vs-normal selectivity, membrane localization, and therapeutic-window claims (which tissues express the target and how selectively).',
   async call(args, fetchImpl = fetch): Promise<Evidence[]> {
     const gene = String(args.symbol ?? args.query ?? args.target ?? args.gene ?? '').trim();
     if (!gene) return [];
