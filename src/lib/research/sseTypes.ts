@@ -40,6 +40,6 @@ export interface BriefingView {
   };
   executiveRead?: string;
   sections?: Array<{ id?: string; title?: string; takeaway?: string; rag?: 'red' | 'amber' | 'green'; claims?: Array<{ text?: string; citations?: string[] }> }>;
-  references?: Array<{ id?: string; title?: string; url?: string }>;
+  references?: Array<{ id?: string; kind?: string; source?: string; title?: string; url?: string; snippet?: string; raw?: unknown }>;
   kolCluster?: { labs?: Array<{ investigator?: string; institution?: string; paperCount?: number }> };
 }
