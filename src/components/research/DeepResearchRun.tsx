@@ -100,6 +100,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, ru
               title={`${target} report`}
               eyebrow="GROUNDED ASSESSMENT"
               contentSections={mappedReport.contentSections}
+              references={briefing?.references}
             />
           )}
           {status !== 'done' && !briefing && (
