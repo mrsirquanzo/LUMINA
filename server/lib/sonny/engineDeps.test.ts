@@ -6,7 +6,11 @@ describe('buildEngineDeps', () => {
     const d = await buildEngineDeps('ollama', 'thorough');
     expect(Array.isArray(d.roster)).toBe(true);
     expect(d.roster.length).toBe(6);
-    expect(d.literatureTools).toHaveLength(3);
+    // europePMC search/fulltext/citations + HPA + GTEx (callable mid-research)
+    expect(d.literatureTools).toHaveLength(5);
+    expect(d.literatureTools.map((t) => t.name)).toEqual(
+      expect.arrayContaining(['human_protein_atlas', 'gtex_expression']),
+    );
     // openTargets · uniProt · clinicalTrials · patentSearch · HPA · GTEx
     expect(d.structuredTools).toHaveLength(6);
     expect(d.structuredTools.map((tool) => tool.name)).toEqual(expect.arrayContaining([

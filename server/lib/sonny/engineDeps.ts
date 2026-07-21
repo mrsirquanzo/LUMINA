@@ -32,7 +32,13 @@ export async function buildEngineDeps(
   ];
   return {
     roster: core.RESEARCH_ROSTER,
-    literatureTools: [mcp.europePmcSearchTool, mcp.pmcFullTextTool, mcp.europePmcCitationsTool],
+    // HPA/GTEx are ALSO exposed as literature tools so a specialist can call them
+    // mid-research (the ACT loop calls literatureTools) and cite the result -
+    // seeding alone leaves them in the store but outside the retrieval pool.
+    literatureTools: [
+      mcp.europePmcSearchTool, mcp.pmcFullTextTool, mcp.europePmcCitationsTool,
+      humanProteinAtlasTool, gtexExpressionTool,
+    ],
     structuredTools,
     specialistModel: core.makeModel(),
     verifierModel: core.makeModel(),
