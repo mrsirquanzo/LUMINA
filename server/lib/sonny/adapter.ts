@@ -73,7 +73,7 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
         publish(input.runId, m.event);
       }
     } else if (m.kind === 'done') {
-      publish(input.runId, { type: 'done', briefing: m.briefing });
+      publish(input.runId, { type: 'done', briefing: m.briefing, runMeta: m.runMeta });
       void persist(input.runId, m.briefing).catch((err) => {
         console.error(`[sonny] failed to persist run ${input.runId}:`, err);
       });

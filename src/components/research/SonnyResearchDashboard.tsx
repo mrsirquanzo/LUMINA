@@ -98,6 +98,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed, onOpenProject
       traceStore={s.traceStore}
       briefing={briefing}
       error={s.error}
+      runMeta={s.runMeta}
       onBack={s.reset}
     />
   );
