@@ -1,9 +1,10 @@
 import type { TraceEvent, Briefing } from '@mrsirquanzo/sonny-shared';
+import type { RunMeta } from './runCost.js';
 
 export type BusEvent =
   | TraceEvent
   | { type: 'source_unavailable'; message: string }
-  | { type: 'done'; briefing: Briefing }
+  | { type: 'done'; briefing: Briefing; runMeta?: RunMeta }
   | { type: 'error'; message: string };
 
 const subscribers = new Map<string, Set<(e: BusEvent) => void>>();

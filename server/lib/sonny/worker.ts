@@ -1,9 +1,11 @@
 import type { TraceEvent, Briefing } from '@mrsirquanzo/sonny-shared';
 import { buildEngineDeps, type EngineDeps, type Backend } from './engineDeps.js';
+import type { UploadedDocument } from './documentTool.js';
+import { installUsageSniffer, type RunMeta } from './runCost.js';
 
 export type WorkerMessage =
   | { kind: 'trace'; event: TraceEvent }
-  | { kind: 'done'; briefing: Briefing }
+  | { kind: 'done'; briefing: Briefing; runMeta?: RunMeta }
   | { kind: 'error'; message: string };
 
 export interface WorkerOpts {
@@ -11,12 +13,13 @@ export interface WorkerOpts {
   target: string;
   mode: 'fast' | 'thorough';
   backend: Backend;
+  documents?: UploadedDocument[];
 }
 
 // Injectable engine boundary (defaults to the real engine when omitted).
 export interface EngineInjection {
   produceBriefing: (opts: { target: string; emit: (e: TraceEvent) => void } & EngineDeps) => Promise<Briefing>;
-  buildEngineDeps: (backend: Backend, mode: 'fast' | 'thorough') => Promise<EngineDeps>;
+  buildEngineDeps: (backend: Backend, mode: 'fast' | 'thorough', documents?: UploadedDocument[]) => Promise<EngineDeps>;
 }
 
 export async function runInWorker(
@@ -28,12 +31,20 @@ export async function runInWorker(
     const produceBriefing = engine?.produceBriefing
       ?? (await import('@mrsirquanzo/sonny-core')).produceBriefing;
     const build = engine?.buildEngineDeps ?? buildEngineDeps;
-    const deps = await build(opts.backend, opts.mode);
-    const briefing = await produceBriefing({
-      target: opts.target, ...deps,
-      emit: (event) => post({ kind: 'trace', event }),
-    });
-    post({ kind: 'done', briefing });
+    const deps = await build(opts.backend, opts.mode, opts.documents);
+    const sniffer = installUsageSniffer();
+    const startedAt = Date.now();
+    let briefing: Briefing;
+    try {
+      briefing = await produceBriefing({
+        target: opts.target, ...deps,
+        emit: (event) => post({ kind: 'trace', event }),
+      });
+    } finally {
+      sniffer.restore();
+    }
+    const runMeta: RunMeta = { backend: opts.backend, elapsedMs: Date.now() - startedAt, ...(await sniffer.summary(opts.backend)) };
+    post({ kind: 'done', briefing, runMeta });
   } catch (err) {
     post({ kind: 'error', message: err instanceof Error ? err.message : String(err) });
   }

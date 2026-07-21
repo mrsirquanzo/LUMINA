@@ -4,6 +4,7 @@ import type { RunStatus } from '../../hooks/useDeepResearchStream';
 import type { BriefingView } from '../../lib/research/sseTypes';
 import type { createTraceStore } from '../../lib/research/traceStore';
 import { analysisPlan, briefingReport, reasoningLines } from '../../lib/research/deepResearchViewModel';
+import { backendLabel, formatCost, formatDuration, formatTokens, type RunMeta } from '../../lib/research/runMeta';
 import { getStoredAgentMode } from '../../lib/agentMode';
 import { AnalysisPlan } from './workbook/AnalysisPlan';
 import { ReasoningTrail } from './workbook/ReasoningTrail';
@@ -15,10 +16,11 @@ interface DeepResearchRunProps {
   traceStore: ReturnType<typeof createTraceStore> | null;
   briefing?: BriefingView;
   error: string | null;
+  runMeta?: RunMeta | null;
   onBack: () => void;
 }
 
-export function DeepResearchRun({ status, runId, traceStore, briefing, error, onBack }: DeepResearchRunProps) {
+export function DeepResearchRun({ status, runId, traceStore, briefing, error, runMeta, onBack }: DeepResearchRunProps) {
   const aggregate = useStore(traceStore ?? EMPTY_STORE, (state) => state.agg);
   const plan = analysisPlan(aggregate, status, briefing?.sections?.length ?? 0);
   const mappedReport = briefing ? briefingReport(briefing) : null;
@@ -58,6 +60,18 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, on
               <p className="t-meta mt-1 text-textTertiary">
                 {status === 'done' ? 'Research complete' : 'Reading sources and synthesizing evidence'}
               </p>
+              {status === 'done' && runMeta && (
+                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                  <RunStat label="cost" value={formatCost(runMeta)} strong />
+                  <RunStat label="wall clock" value={formatDuration(runMeta.elapsedMs)} />
+                  <RunStat label="model calls" value={String(runMeta.modelCalls)} />
+                  <RunStat
+                    label="tokens"
+                    value={`${formatTokens(runMeta.promptTokens)} in / ${formatTokens(runMeta.completionTokens)} out`}
+                  />
+                  <span className="t-meta text-textTertiary">· {backendLabel(runMeta.backend)}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="t-eyebrow flex max-w-full items-center gap-2 overflow-hidden text-textTertiary sm:max-w-[320px]">
@@ -114,3 +128,12 @@ const EMPTY_STORE = {
   getInitialState: () => ({ agg: { phase: 'idle', counts: {}, sectionsRag: {}, auditFlags: 0, log: [] } }),
   subscribe: () => () => undefined,
 } as unknown as ReturnType<typeof createTraceStore>;
+
+function RunStat({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
+  return (
+    <span className="inline-flex items-baseline gap-1.5">
+      <span className="t-eyebrow text-textTertiary">{label}</span>
+      <span className={strong ? 't-meta font-semibold text-textPrimary' : 't-meta text-textSecondary'}>{value}</span>
+    </span>
+  );
+}

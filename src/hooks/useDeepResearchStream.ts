@@ -2,11 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { createTraceStore } from '../lib/research/traceStore.js';
 import { createTraceBuffer } from '../lib/research/traceBuffer.js';
 import { useBriefingStore } from '../lib/research/briefingStore.js';
-import { startDeepResearch, fetchBriefing, fetchDemoBriefing } from '../lib/research/api.js';
+import { startDeepResearch, fetchBriefing, fetchDemoBriefing, type AttachedDocument } from '../lib/research/api.js';
 import type { ResearchTraceEvent, BriefingView } from '../lib/research/sseTypes.js';
 import { createSSEParser } from '../lib/research/sseParse.js';
 import { getStoredAgentMode } from '../lib/agentMode.js';
 import { buildDemoReplayEvents } from '../lib/research/deepResearchViewModel.js';
+import { isRunMeta, type RunMeta } from '../lib/research/runMeta.js';
 
 export type RunStatus = 'idle' | 'hydrating' | 'running' | 'done' | 'error';
 
@@ -15,7 +16,8 @@ export interface UseDeepResearchStream {
   status: RunStatus;
   runId: string | null;
   error: string | null;
-  start(target: string, mode?: 'fast' | 'thorough'): Promise<void>;
+  runMeta: RunMeta | null;
+  start(target: string, mode?: 'fast' | 'thorough', documents?: AttachedDocument[]): Promise<void>;
   hydrate(runId: string): Promise<void>;
   reset(): void;
 }
@@ -25,6 +27,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
   const [status, setStatus] = useState<RunStatus>('idle');
   const [runId, setRunId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [runMeta, setRunMeta] = useState<RunMeta | null>(null);
 
   const storeRef = useRef<ReturnType<typeof createTraceStore> | null>(null);
   const bufferRef = useRef<ReturnType<typeof createTraceBuffer<ResearchTraceEvent>> | null>(null);
@@ -37,7 +40,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     };
   }, []);
 
-  async function start(target: string, mode: 'fast' | 'thorough' = 'thorough'): Promise<void> {
+  async function start(target: string, mode: 'fast' | 'thorough' = 'thorough', documents: AttachedDocument[] = []): Promise<void> {
     // Create a fresh trace store for this run
     const store = createTraceStore();
     store.getState().reset();
@@ -46,6 +49,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     setStatus('running');
     setError(null);
     setRunId(null);
+    setRunMeta(null);
     replayTokenRef.current += 1;
 
     // Dispose previous buffer if any
@@ -106,7 +110,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     let currentStatus: RunStatus = 'running';
 
     try {
-      const res = await startDeepResearch(target, mode);
+      const res = await startDeepResearch(target, mode, documents);
       if (!res.ok) {
         throw new Error(`Request failed: ${res.status} ${res.statusText}`);
       }
@@ -141,6 +145,7 @@ export function useDeepResearchStream(): UseDeepResearchStream {
             if (currentRunId && event.briefing) {
               useBriefingStore.getState().setBriefing(currentRunId, event.briefing as BriefingView);
             }
+            if (isRunMeta(event.runMeta)) setRunMeta(event.runMeta);
             currentStatus = 'done';
             setStatus('done');
           } else if (event.type === 'error') {
@@ -195,8 +200,9 @@ export function useDeepResearchStream(): UseDeepResearchStream {
     setTraceStore(null);
     setRunId(null);
     setError(null);
+    setRunMeta(null);
     setStatus('idle');
   }
 
-  return { traceStore, status, runId, error, start, hydrate, reset };
+  return { traceStore, status, runId, error, runMeta, start, hydrate, reset };
 }
