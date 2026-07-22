@@ -8,14 +8,14 @@
     "sizeMB": 0.78,
     "instrument": "Human Protein Atlas IHC (DAB / hematoxylin)",
     "panel": "CDCP1 antibody (HPA), ENSG00000163814",
-    "readout": "H-score + % positivity"
+    "readout": "% positivity + intensity grading"
   },
   "reasoning": [
     "Loading the 3000 x 3000 HPA lung cancer TMA core and preserving the supplied RGB pixels for a reproducible image-analysis record.",
     "Separating hematoxylin and DAB with skimage.color.rgb2hed, the Ruifrok-Johnston HED color-deconvolution method, so blue counterstain is not counted as brown CDCP1 signal.",
     "Building a tissue mask from luminance optical density greater than 0.12 and removing objects smaller than 64 pixels so white glass is excluded from the denominator.",
     "Classifying tissue pixels by fixed DAB optical-density cutoffs: negative below 0.04, 1+ from 0.04 to 0.08, 2+ from 0.08 to 0.16, and 3+ at or above 0.16.",
-    "Calculating % positive and H-score as 1 x %(1+) + 2 x %(2+) + 3 x %(3+), then repeating the same fixed analysis on a second HIGH field and normal lung.",
+    "Calculating % DAB-positive area and the fraction of tissue at each intensity (1+ / 2+ / 3+), then repeating the same fixed analysis on a second HIGH field and normal lung.",
     "Cross-referencing the automated separation with the independent HPA calls: HIGH for both cancer fields and NOT DETECTED for normal lung."
   ],
   "assumptions": {
@@ -41,7 +41,7 @@
       },
       {
         "label": "Scoring unit",
-        "chosen": "H-score on DAB optical-density bins across tissue pixels",
+        "chosen": "Area-based intensity grading (% positive + 0/1+/2+/3+ bins) on DAB optical density",
         "impact": "high",
         "source": "agent-inferred",
         "status": "inferred",
@@ -127,7 +127,7 @@
       },
       {
         "id": "score",
-        "title": "Calculate H-score and percent positivity",
+        "title": "Grade intensity and calculate percent positivity",
         "figures": [
           "/workbook/ihc/06_scorecard.png"
         ]
@@ -143,10 +143,10 @@
   },
   "report": {
     "summary": [
-      "**Primary lung cancer HIGH core:** automated pixel-area **H-score 23.61 / 300** with **18.27% DAB-positive tissue pixels** (13.66% 1+, 3.90% 2+, 0.72% 3+).",
-      "**Independent agreement:** the Human Protein Atlas pathologist called this cancer core **HIGH**, while the same fixed workflow scored the same-antibody normal-lung core at **H-score 8.01** and **7.77% positive**, matching its **NOT DETECTED** reference call.",
+      "**Primary lung cancer HIGH core:** **18.27% DAB-positive tissue area** (13.66% 1+, 3.90% 2+, 0.72% 3+) - membranous CDCP1 staining across the tumor glands.",
+      "**Independent agreement:** the Human Protein Atlas pathologist called this cancer core **HIGH**, while the same fixed workflow scored the same-antibody normal-lung core at just **7.77% positive area**, matching its **NOT DETECTED** reference call.",
       "**Technical repeat:** the second field from the HIGH case scored **20.22** with **18.39% positive**, supporting reproducibility across fields without changing thresholds.",
-      "**Clear case-control separation:** at the **2+/3+ intensities** that mark genuine antibody signal, the cancer core carried **4.62% of tissue versus 0.24%** in normal lung - about a **19-fold difference** (overall H-score 23.61 vs 8.01).",
+      "**Clear case-control separation:** at the **2+/3+ intensities** that mark genuine antibody signal, the cancer core carried **4.62% of tissue versus 0.24%** in normal lung - about a **19-fold difference** (overall positive area 18.27% vs 7.77%).",
       "**Biological context:** the cancer-high and near-zero normal pattern is consistent with tumor-enriched CDCP1 and with the approximately 30% CDCP1-high fraction reported in lung adenocarcinoma by Ikeda et al. (2009)."
     ],
     "figures": [
@@ -172,17 +172,17 @@
       },
       {
         "src": "/workbook/ihc/06_scorecard.png",
-        "caption": "Figure 6. Primary HIGH-core scorecard. Bin fractions were 81.73% negative, 13.66% 1+, 3.90% 2+, and 0.72% 3+, yielding H-score 23.61 and 18.27% positivity."
+        "caption": "Figure 6. Primary HIGH-core scorecard. Bin fractions were 81.73% negative, 13.66% 1+, 3.90% 2+, and 0.72% 3+ - 18.27% DAB-positive area, of which 4.62% reached 2+/3+."
       },
       {
         "src": "/workbook/ihc/07_crossref.png",
-        "caption": "Figure 7. Fixed-threshold cross-reference across both HIGH-case fields and normal lung. Automated H-scores were 23.61 and 20.22 for the HIGH fields versus 8.01 for the same-antibody normal-lung core, consistent with the HPA calls HIGH and NOT DETECTED."
+        "caption": "Figure 7. Fixed-threshold cross-reference across both HIGH-case fields and normal lung. DAB-positive area was 18.27% and 18.39% for the HIGH fields versus 7.77% for the same-antibody normal-lung core; the 2+/3+ strong-signal fraction was 4.62% vs 0.24%, consistent with the HPA calls HIGH and NOT DETECTED."
       }
     ],
     "sections": {
-      "detailedAnswer": "CDCP1 signal is clearly enriched in this lung cancer core relative to normal lung. The primary core produced a pixel-area H-score of 23.61 / 300 with 18.27% positive tissue area, while a second field from the same HPA HIGH case produced 20.22 with 18.39% positive area. The same-antibody normal-lung core produced 8.01 with 7.77% positive area under the identical fixed thresholds. The separation is clearest at the 2+/3+ intensities that mark genuine signal - 4.62% of cancer tissue versus 0.24% of normal, about 19-fold - so the automated result agrees directionally with the independent HPA calls of HIGH for cancer and NOT DETECTED for normal. The absolute H-score is modest because the denominator is all tissue pixels and much of the signal is membranous; this is not equivalent to a pathologist counting the percentage of positive cells. The tumor-high and low-normal pattern is also consistent with tumor-enriched CDCP1 and the approximately 30% CDCP1-high lung adenocarcinoma subgroup reported by Ikeda et al. (2009).",
-      "methods": "All three 3000 x 3000 RGB images were analyzed at full resolution with a deterministic Python pipeline. skimage.color.rgb2hed applied Ruifrok-Johnston HED color deconvolution to separate hematoxylin (channel 0) from DAB (channel 2). White glass was excluded using a luminance optical-density mask greater than 0.12, followed by removal of connected objects smaller than 64 pixels. Within tissue, DAB optical density was assigned to negative (<0.04), 1+ (0.04 to <0.08), 2+ (0.08 to <0.16), or 3+ (>=0.16) using fixed thresholds that were not refit by image. Percent positivity is the fraction of tissue pixels at 1+ or greater. H-score = 1 x %(1+) + 2 x %(2+) + 3 x %(3+), with range 0-300. The reproducible source and exact per-image outputs are stored in public/workbook/ihc/pipeline.py and public/workbook/ihc/ihc_data.json.",
-      "assumptionsNote": "This automated pixel-area H-score is a screening estimate, not a validated diagnostic result. Fixed DAB optical-density bins approximate pathologist intensity grades and have not been calibrated against control slides or manual annotations. The workflow does not segment cells or distinguish membrane from cytoplasm, so membranous signal occupies fewer pixels than a cell-level positive call and lowers the absolute H-score. Differences in tissue composition, section thickness, staining batch, scanner response, and threshold choice can shift the result. A diagnostic workflow would require compartment-aware segmentation, laboratory controls, pathologist review, and validation on an independent cohort."
+      "detailedAnswer": "CDCP1 signal is clearly enriched in this lung cancer core relative to normal lung. The primary core showed 18.27% DAB-positive tissue area, a second field from the same HPA HIGH case 18.39%, and the same-antibody normal-lung core 7.77%, all under identical fixed thresholds. The separation is clearest at the 2+/3+ intensities that mark genuine signal - 4.62% of cancer tissue versus 0.24% of normal, about 19-fold - so the automated result agrees directionally with the independent HPA calls of HIGH for cancer and NOT DETECTED for normal. These are area-based fractions, not a cell-based clinical H-score: because CDCP1 staining is membranous, positive membrane occupies only a small share of tissue pixels, which is why an area metric reads lower than a pathologist counting positive cells. The tumor-high, low-normal pattern is consistent with tumor-enriched CDCP1 and the approximately 30% CDCP1-high lung adenocarcinoma subgroup reported by Ikeda et al. (2009).",
+      "methods": "All three 3000 x 3000 RGB images were analyzed at full resolution with a deterministic Python pipeline. skimage.color.rgb2hed applied Ruifrok-Johnston HED color deconvolution to separate hematoxylin (channel 0) from DAB (channel 2). White glass was excluded using a luminance optical-density mask greater than 0.12, followed by removal of connected objects smaller than 64 pixels. Within tissue, DAB optical density was assigned to negative (<0.04), 1+ (0.04 to <0.08), 2+ (0.08 to <0.16), or 3+ (>=0.16) using fixed thresholds that were not refit by image. The primary readout is percent positivity (fraction of tissue pixels at 1+ or greater) and the fraction at each intensity bin. An area-based intensity index (1 x %(1+) + 2 x %(2+) + 3 x %(3+)) is also stored for reference, but it is not a cell-based clinical H-score and is not used as the headline metric. The reproducible source and exact per-image outputs are stored in public/workbook/ihc/pipeline.py and public/workbook/ihc/ihc_data.json.",
+      "assumptionsNote": "This automated area-based scoring is a screening estimate, not a validated diagnostic result, and is not a cell-based clinical H-score. Fixed DAB optical-density bins approximate pathologist intensity grades and have not been calibrated against control slides or manual annotations. The workflow does not segment cells or distinguish membrane from cytoplasm, so membranous signal occupies fewer pixels than a cell-level positive call and reads lower than a pathologist count. Differences in tissue composition, section thickness, staining batch, scanner response, and threshold choice can shift the result. A diagnostic workflow would require compartment-aware segmentation, laboratory controls, pathologist review, and validation on an independent cohort."
     }
   }
 }
