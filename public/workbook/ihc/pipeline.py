@@ -98,7 +98,7 @@ def quantify(key: str, filename: str, hpa_call: str, label: str) -> dict:
     bins[mask] = np.digitize(dab[mask], DAB_THRESHOLDS).astype(np.uint8)
     counts = np.bincount(bins[mask], minlength=4)
     percentages = counts / counts.sum() * 100.0
-    h_score = float(percentages @ np.arange(4))
+    intensity_index = float(percentages @ np.arange(4))
 
     threshold_record = {
         "negative_to_1_plus": DAB_THRESHOLDS[0],
@@ -109,7 +109,7 @@ def quantify(key: str, filename: str, hpa_call: str, label: str) -> dict:
     metrics = {
         "source_file": filename,
         "label": label,
-        "h_score": round(h_score, 2),
+        "area_intensity_index": round(intensity_index, 2),
         "pct_positive": round(float(100.0 - percentages[0]), 2),
         "bin_percentages": {
             "0": round(float(percentages[0]), 2),
@@ -234,10 +234,11 @@ def scorecard_figure(primary: dict) -> None:
     ax.set_xlabel("DAB intensity grade")
     ax.set_ylabel("% of tissue pixels")
     ax.set_title("CDCP1 DAB scorecard - lung cancer HIGH core")
+    strong = metrics["bin_percentages"]["2+"] + metrics["bin_percentages"]["3+"]
     ax.text(
         0.98,
         0.93,
-        f"H-score {metrics['h_score']:.2f} / 300\nPositive {metrics['pct_positive']:.2f}%",
+        f"{metrics['pct_positive']:.1f}% DAB-positive\n{strong:.1f}% at 2+/3+",
         transform=ax.transAxes,
         ha="right",
         va="top",
@@ -251,26 +252,26 @@ def scorecard_figure(primary: dict) -> None:
 
 def cross_reference_figure(results: list[dict]) -> None:
     labels = [result["metrics"]["label"] for result in results]
-    h_scores = [result["metrics"]["h_score"] for result in results]
     positives = [result["metrics"]["pct_positive"] for result in results]
+    strong = [result["metrics"]["bin_percentages"]["2+"] + result["metrics"]["bin_percentages"]["3+"] for result in results]
     calls = [result["metrics"]["hpa_reference_call"] for result in results]
     y = np.arange(len(results))
 
     fig, ax = plt.subplots(figsize=(7.2, 4.1))
     width = 0.34
-    bars_h = ax.barh(y + width / 2, h_scores, height=width, color=BROWN, label="H-score")
-    bars_p = ax.barh(y - width / 2, positives, height=width, color=TEAL, label="% positive")
+    bars_p = ax.barh(y + width / 2, positives, height=width, color=TEAL, label="% DAB-positive")
+    bars_s = ax.barh(y - width / 2, strong, height=width, color=BROWN, label="% at 2+/3+ (strong signal)")
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
-    ax.set_xlabel("Automated pixel-area score")
-    ax.set_title("Automated CDCP1 score vs HPA pathologist reference")
+    ax.set_xlabel("% of tissue area")
+    ax.set_title("Automated CDCP1 positivity vs HPA pathologist reference")
     ax.legend(loc="lower right", frameon=False)
-    ax.set_xlim(0, max(max(h_scores), max(positives)) * 1.48)
+    ax.set_xlim(0, max(max(positives), max(strong)) * 1.5)
 
-    for bar, value in zip(bars_h, h_scores):
-        ax.text(value + 0.45, bar.get_y() + bar.get_height() / 2, f"{value:.2f}", va="center", fontsize=8)
-    for bar, value, call in zip(bars_p, positives, calls):
-        ax.text(value + 0.45, bar.get_y() + bar.get_height() / 2, f"{value:.2f}%", va="center", fontsize=8)
+    for bar, value in zip(bars_p, positives):
+        ax.text(value + 0.3, bar.get_y() + bar.get_height() / 2, f"{value:.1f}%", va="center", fontsize=8)
+    for bar, value, call in zip(bars_s, strong, calls):
+        ax.text(value + 0.3, bar.get_y() + bar.get_height() / 2, f"{value:.1f}%", va="center", fontsize=8)
         ax.text(
             ax.get_xlim()[1] * 0.97,
             bar.get_y() + bar.get_height() / 2,
@@ -284,7 +285,7 @@ def cross_reference_figure(results: list[dict]) -> None:
     ax.text(
         0,
         -0.23,
-        "Fixed DAB-OD cutoffs: 0.04, 0.08, 0.16. H-score range: 0-300.",
+        "Fixed DAB-OD cutoffs: 0.04, 0.08, 0.16. Area-based fractions, not a cell-level pathologist score.",
         transform=ax.transAxes,
         color=SLATE_500,
         fontsize=8,
@@ -322,7 +323,7 @@ def main() -> None:
                 "2_plus_to_3_plus": DAB_THRESHOLDS[2],
                 "units": "rgb2hed DAB optical density",
             },
-            "h_score_definition": "1*pct_1_plus + 2*pct_2_plus + 3*pct_3_plus",
+            "area_intensity_index_definition": "1*pct_1_plus + 2*pct_2_plus + 3*pct_3_plus (area-based intensity index, not a cell-level pathologist score)",
         },
         "images": {result["key"]: result["metrics"] for result in results},
         "figures": [

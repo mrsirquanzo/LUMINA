@@ -13,13 +13,13 @@
       "2_plus_to_3_plus": 0.16,
       "units": "rgb2hed DAB optical density"
     },
-    "h_score_definition": "1*pct_1_plus + 2*pct_2_plus + 3*pct_3_plus"
+    "area_intensity_index_definition": "1*pct_1_plus + 2*pct_2_plus + 3*pct_3_plus (area-based intensity index, not a cell-level pathologist score)"
   },
   "images": {
     "lung_cancer_high": {
       "source_file": "source_lungcancer_high.jpg",
       "label": "HIGH core",
-      "h_score": 23.61,
+      "area_intensity_index": 23.61,
       "pct_positive": 18.27,
       "bin_percentages": {
         "0": 81.73,
@@ -40,7 +40,7 @@
     "lung_cancer_high_field_2": {
       "source_file": "source_lungcancer_high_2.jpg",
       "label": "HIGH field 2",
-      "h_score": 20.22,
+      "area_intensity_index": 20.22,
       "pct_positive": 18.39,
       "bin_percentages": {
         "0": 81.61,
@@ -61,7 +61,7 @@
     "normal_lung": {
       "source_file": "source_normal_lung.jpg",
       "label": "Normal lung",
-      "h_score": 8.01,
+      "area_intensity_index": 8.01,
       "pct_positive": 7.77,
       "bin_percentages": {
         "0": 92.23,
