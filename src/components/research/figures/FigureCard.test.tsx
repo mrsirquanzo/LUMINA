@@ -85,3 +85,64 @@ describe('FigureCard', () => {
     expect(html).toContain('<figcaption');
   });
 });
+
+const PROTEIN_FIGURE: FigureSpec = {
+  plot: 'protein_tissue_levels',
+  id: 'hpa:TACSTD2',
+  title: 'TACSTD2 protein across normal tissues',
+  subtitle: 'Abundant cytoplasmic and membranous expression in squamous epithelial cells.',
+  params: { gene: 'TACSTD2', dataset: 'HPA IHC', tissues: 48 },
+  stats: [
+    { label: 'detected', value: '21/48' },
+    { label: 'medium+', value: '10' },
+  ],
+  levels: [
+    { label: 'Skin 1', organ: 'Skin', level: 'high' },
+    { label: 'Esophagus', organ: 'Proximal digestive tract', level: 'medium' },
+    { label: 'Kidney', organ: 'Kidney & urinary bladder', level: 'low' },
+    { label: 'Liver', organ: 'Liver & Gallbladder', level: 'not detected' },
+  ],
+  source: {
+    label: 'Human Protein Atlas · IHC normal tissue',
+    url: 'https://www.proteinatlas.org/ENSG00000184292',
+    retrievedAt: '2026-07-28T18:00:00.000Z',
+    note: 'antibody reliability enhanced',
+  },
+};
+
+describe('FigureCard - protein tissue levels', () => {
+  it('renders the ordinal scale with all four scored buckets named', () => {
+    const html = renderToStaticMarkup(<FigureCard figure={PROTEIN_FIGURE} />);
+    for (const tick of ['none', 'low', 'med', 'high']) {
+      expect(html).toContain(`>${tick}</text>`);
+    }
+    expect(html).toContain('ordinal');
+  });
+
+  it('renders every tissue in the panel', () => {
+    const html = renderToStaticMarkup(<FigureCard figure={PROTEIN_FIGURE} />);
+    for (const row of PROTEIN_FIGURE.plot === 'protein_tissue_levels' ? PROTEIN_FIGURE.levels : []) {
+      expect(html).toContain(row.label);
+    }
+  });
+
+  it('shows assay reliability on the provenance line, not among the statistics', () => {
+    const html = renderToStaticMarkup(<FigureCard figure={PROTEIN_FIGURE} />);
+    expect(html).toContain('antibody reliability enhanced');
+    // It qualifies the source, so it sits after the source link, not in the <dl>.
+    expect(html.indexOf('antibody reliability')).toBeGreaterThan(html.indexOf('</dl>'));
+  });
+
+  it('renders a caveat as a warning rather than burying it', () => {
+    const html = renderToStaticMarkup(
+      <FigureCard figure={{ ...PROTEIN_FIGURE, caveat: 'reliability is uncertain' }} />,
+    );
+    expect(html).toContain('reliability is uncertain');
+    expect(html).toContain('text-watch-text');
+  });
+
+  it('renders no caveat block when there is nothing to warn about', () => {
+    const html = renderToStaticMarkup(<FigureCard figure={PROTEIN_FIGURE} />);
+    expect(html).not.toContain('text-watch-text');
+  });
+});

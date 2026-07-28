@@ -81,7 +81,9 @@ describe('foldTrace figures', () => {
     ]);
 
     expect(second.log.filter((entry) => entry.role === 'figure')).toHaveLength(1);
-    expect(second.figures['gtex:TACSTD2'].bars[0].value).toBe(1900);
+    const updated = second.figures['gtex:TACSTD2'];
+    if (updated.plot !== 'tissue_expression_bar') throw new Error('wrong variant');
+    expect(updated.bars[0].value).toBe(1900);
   });
 
   it('keeps distinct figure ids as separate entries', () => {
