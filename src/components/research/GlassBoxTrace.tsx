@@ -201,7 +201,11 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
         <p className="t-eyebrow mb-2 text-textTertiary">
           Live log
         </p>
-        <div className="max-h-[340px] overflow-y-auto flex flex-col gap-1.5 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border">
+        {/* 340px was sized for one-line text rows. A figure card is ~330px on
+            its own, so at the old cap a figure filled the window with no room
+            for the steps around it - you could see the chart or its context,
+            never both. */}
+        <div className="max-h-[640px] overflow-y-auto flex flex-col gap-1.5 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border">
           {log.length === 0 ? (
             <p className="t-meta italic text-textTertiary">Waiting for events...</p>
           ) : (
