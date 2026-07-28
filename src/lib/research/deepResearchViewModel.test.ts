@@ -27,7 +27,9 @@ describe('deep research workbook mapping', () => {
       sections: [{ id: 'biology', title: 'Target biology', takeaway: 'Strong expression.' }],
     });
 
-    expect(mapped.report.summary).toEqual(['Watch the target.', 'Executive summary']);
+    // thesis is deliberately NOT in the summary: executiveRead already carries
+    // the framing and bottom line, so emitting both repeats the opening verbatim.
+    expect(mapped.report.summary).toEqual(['Executive summary']);
     expect(mapped.report.figures).toEqual([]);
     expect(mapped.contentSections).toEqual([
       { id: 'biology', title: 'Target biology', content: 'Strong expression.' },

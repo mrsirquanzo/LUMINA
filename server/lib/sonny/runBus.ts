@@ -1,9 +1,11 @@
 import type { TraceEvent, Briefing } from '@mrsirquanzo/sonny-shared';
 import type { RunMeta } from './runCost.js';
+import type { FigureSpec } from '../../../shared/figures.js';
 
 export type BusEvent =
   | TraceEvent
   | { type: 'source_unavailable'; message: string }
+  | { type: 'figure'; figure: FigureSpec }
   | { type: 'done'; briefing: Briefing; runMeta?: RunMeta }
   | { type: 'error'; message: string };
 

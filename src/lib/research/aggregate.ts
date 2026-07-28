@@ -1,4 +1,5 @@
 import type { ResearchTraceEvent, TraceAggregate, TraceLogEntry } from './sseTypes.js';
+import { parseFigure, type FigureSpec } from '../../../shared/figures.js';
 
 const PHASE_MAP: Record<string, string> = {
   lead_decompose: 'specialists',
@@ -79,10 +80,26 @@ export function foldTrace(
   const counts: Record<string, number> = { ...prev.counts };
   const sectionsRag: Record<string, 'red' | 'amber' | 'green'> = { ...prev.sectionsRag };
   const log: TraceLogEntry[] = [...prev.log];
+  const figures: Record<string, FigureSpec> = { ...prev.figures };
 
   for (const e of events) {
     // Count every event
     counts[e.type] = (counts[e.type] ?? 0) + 1;
+
+    // Figures resolve out of `figures` by id, so the log only carries a marker.
+    // A re-emit for the same id updates the figure in place and does NOT append
+    // a second marker, keeping the trail a record of when the work happened.
+    if (e.type === 'figure') {
+      const figure = parseFigure(e.figure);
+      // A malformed figure is dropped whole rather than rendered with holes.
+      if (!figure) continue;
+      const isNew = !(figure.id in figures);
+      figures[figure.id] = figure;
+      if (isNew) {
+        log.push({ type: 'figure', role: 'figure', label: figure.title, figureId: figure.id });
+      }
+      continue;
+    }
 
     // Section RAG status
     if (
@@ -110,5 +127,17 @@ export function foldTrace(
   // Cap log to most recent 300 entries
   const cappedLog = log.length > 300 ? log.slice(log.length - 300) : log;
 
-  return { phase, counts, sectionsRag, auditFlags, log: cappedLog };
+  // Drop figures whose marker fell off the end of the capped log, so a long run
+  // cannot accumulate figure bodies that nothing can render any more.
+  let liveFigures = figures;
+  if (cappedLog.length !== log.length) {
+    const referenced = new Set(
+      cappedLog.map((entry) => entry.figureId).filter((id): id is string => typeof id === 'string'),
+    );
+    liveFigures = Object.fromEntries(
+      Object.entries(figures).filter(([id]) => referenced.has(id)),
+    );
+  }
+
+  return { phase, counts, sectionsRag, auditFlags, log: cappedLog, figures: liveFigures };
 }
