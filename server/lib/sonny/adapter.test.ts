@@ -67,15 +67,22 @@ describe('startRun adapter', () => {
     expect(got.map((e) => e.type)).toEqual(['done']); // no trailing error
   });
 
-  it('closes and terminates the run on a silent clean exit (code 0, no done posted)', () => {
+  it('reports an error on a silent clean exit (code 0, no done posted)', () => {
     const { spawn, emit, wasTerminated } = fakeSpawn();
-    const got: Array<{ type: string }> = [];
+    const got: Array<{ type: string; message?: string }> = [];
     subscribe('r4', (e) => got.push(e as never));
     startRun({ runId: 'r4', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
     emit('exit', 0);
     // run is now closed: a later publish is a no-op, and the worker was terminated
     publish('r4', { type: 'error', message: 'late' } as never);
-    expect(got).toEqual([]); // no terminal event fabricated for a clean exit
+
+    // This case used to publish nothing, on the reasoning that exit 0 is a
+    // clean exit. It is not clean if no briefing was produced: the SSE stream
+    // just stopped mid-event and the client waited forever on a report that
+    // was never coming. Observed on two real runs before it was caught.
+    expect(got).toHaveLength(1);
+    expect(got[0].type).toBe('error');
+    expect(got[0].message).toContain('stopped before producing a report');
     expect(wasTerminated()).toBe(true);
   });
 
@@ -85,7 +92,9 @@ describe('startRun adapter', () => {
     subscribe('r5', (e) => got.push(e as never));
     startRun({ runId: 'r5', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
     emit('exit', 3);
-    expect(got).toEqual([{ type: 'error', message: 'worker exited 3' }]);
+    expect(got).toEqual([
+      { type: 'error', message: 'The research worker exited unexpectedly (code 3).' },
+    ]);
     expect(wasTerminated()).toBe(true);
   });
 
