@@ -112,12 +112,21 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
 
   handle.on('exit', (code: number) => {
     if (finished) return;
-    // A worker that exits WITHOUT having posted done/error (silent exit) must still
-    // terminate the run, or its bus subscribers (e.g. an open SSE connection) are
-    // orphaned forever. Nonzero also surfaces an error; either way, finish() closes it.
-    if (code !== 0) {
-      publish(input.runId, { type: 'error', message: `worker exited ${code}` });
-    }
+    // Reaching exit while `finished` is false means the worker never delivered a
+    // briefing, whatever its exit code. Exit 0 used to be treated as benign and
+    // closed the run silently - the SSE stream simply stopped mid-event with no
+    // terminal frame, so the client sat on a report that never arrived and never
+    // said why. A worker that exits 0 without producing a briefing has failed;
+    // the only difference from a crash is that it declined to say so.
+    //
+    // Exit 0 here is usually the worker's event loop draining while work is
+    // still outstanding: a promise that can never settle, with no timer or
+    // socket left to hold the thread open.
+    const reason = code === 0
+      ? 'The research worker stopped before producing a report. This is usually a source request that never settled; the run has no partial result to show.'
+      : `The research worker exited unexpectedly (code ${code}).`;
+    console.error(`[sonny] run ${input.runId}: worker exited ${code} without a briefing`);
+    publish(input.runId, { type: 'error', message: reason });
     finish();
   });
 }
