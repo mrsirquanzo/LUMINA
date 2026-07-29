@@ -42,6 +42,17 @@ export const EMPTY_AGGREGATE: TraceAggregate = Object.freeze({
 
 export interface BriefingView {
   target?: string;
+  /**
+   * Figures produced during the run, attached to the briefing when it
+   * completes.
+   *
+   * Riding on the briefing rather than a parallel channel is what makes them
+   * durable for free: the briefing is what gets persisted server-side, what
+   * `GET /:runId` returns, and what the client keeps in localStorage. A figure
+   * you saw during the run is therefore still in the report when you reopen it
+   * tomorrow.
+   */
+  figures?: FigureSpec[];
   recommendation?: {
     verdict?: string;
     thesis?: string;

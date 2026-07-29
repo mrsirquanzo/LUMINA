@@ -111,3 +111,85 @@ describe('startRun adapter', () => {
     expect(calls2).toEqual([]);
   });
 });
+
+function figureMessage(id: string, title: string): WorkerMessage {
+  return {
+    kind: 'figure',
+    figure: {
+      plot: 'tissue_expression_bar',
+      id,
+      title,
+      params: { gene: 'TACSTD2' },
+      unit: 'TPM',
+      bars: [{ label: 'Esophagus Mucosa', value: 1419.1 }],
+      stats: [],
+      source: {
+        label: 'GTEx v8',
+        url: 'https://gtexportal.org/home/gene/TACSTD2',
+        retrievedAt: '2026-07-28T18:00:00.000Z',
+      },
+    },
+  } as WorkerMessage;
+}
+
+describe('startRun figure persistence', () => {
+  it('streams each figure live and also attaches them to the finished briefing', async () => {
+    const { spawn, emit } = fakeSpawn();
+    const streamed: string[] = [];
+    let persisted: Record<string, unknown> | null = null;
+    subscribe('fig-run', (e) => streamed.push(e.type));
+
+    startRun(
+      { runId: 'fig-run', target: 'TROP2', mode: 'fast', backend: 'ollama' },
+      spawn,
+      async (_runId, briefing) => { persisted = briefing as unknown as Record<string, unknown>; },
+    );
+
+    emit('message', figureMessage('gtex:TACSTD2', 'GTEx'));
+    emit('message', figureMessage('hpa:TACSTD2', 'HPA'));
+    emit('message', { kind: 'done', briefing: { target: 'TROP2' } } as unknown as WorkerMessage);
+
+    // Live: both figures went out as they happened.
+    expect(streamed).toEqual(['figure', 'figure', 'done']);
+
+    // Durable: both survive on the briefing that gets written to disk.
+    await Promise.resolve();
+    const figures = (persisted as unknown as { figures?: Array<{ id: string }> })?.figures ?? [];
+    expect(figures.map((f) => f.id)).toEqual(['gtex:TACSTD2', 'hpa:TACSTD2']);
+  });
+
+  it('keeps one entry per figure id when a figure is re-emitted', async () => {
+    const { spawn, emit } = fakeSpawn();
+    let persisted: Record<string, unknown> | null = null;
+    startRun(
+      { runId: 'fig-dedupe', target: 'TROP2', mode: 'fast', backend: 'ollama' },
+      spawn,
+      async (_runId, briefing) => { persisted = briefing as unknown as Record<string, unknown>; },
+    );
+
+    emit('message', figureMessage('gtex:TACSTD2', 'first'));
+    emit('message', figureMessage('gtex:TACSTD2', 'second'));
+    emit('message', { kind: 'done', briefing: { target: 'TROP2' } } as unknown as WorkerMessage);
+
+    await Promise.resolve();
+    const figures = (persisted as unknown as { figures?: Array<{ title: string }> })?.figures ?? [];
+    expect(figures).toHaveLength(1);
+    expect(figures[0].title).toBe('second');
+  });
+
+  it('leaves the briefing untouched when a run produced no figures', async () => {
+    const { spawn, emit } = fakeSpawn();
+    let persisted: Record<string, unknown> | null = null;
+    startRun(
+      { runId: 'fig-none', target: 'TROP2', mode: 'fast', backend: 'ollama' },
+      spawn,
+      async (_runId, briefing) => { persisted = briefing as unknown as Record<string, unknown>; },
+    );
+
+    emit('message', { kind: 'done', briefing: { target: 'TROP2' } } as unknown as WorkerMessage);
+
+    await Promise.resolve();
+    // No empty `figures: []` key on briefings that never had any.
+    expect(persisted).toEqual({ target: 'TROP2' });
+  });
+});

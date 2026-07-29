@@ -1,11 +1,12 @@
 import { AlertTriangle, ArrowLeft, Database, RotateCcw } from 'lucide-react';
 import { useStore } from 'zustand';
 import type { RunStatus } from '../../hooks/useDeepResearchStream';
-import type { BriefingView } from '../../lib/research/sseTypes';
+import { EMPTY_AGGREGATE, type BriefingView } from '../../lib/research/sseTypes';
 import type { createTraceStore } from '../../lib/research/traceStore';
 import { analysisPlan, briefingReport, reasoningLines } from '../../lib/research/deepResearchViewModel';
 import { backendLabel, formatCost, formatDuration, formatTokens, type RunMeta } from '../../lib/research/runMeta';
 import { getStoredAgentMode } from '../../lib/agentMode';
+import { parseFigure, type FigureSpec } from '../../../shared/figures';
 import { AnalysisPlan } from './workbook/AnalysisPlan';
 import { ReasoningTrail } from './workbook/ReasoningTrail';
 import { WorkbookReport } from './workbook/WorkbookReport';
@@ -24,6 +25,12 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, ru
   const aggregate = useStore(traceStore ?? EMPTY_STORE, (state) => state.agg);
   const plan = analysisPlan(aggregate, status, briefing?.sections?.length ?? 0);
   const mappedReport = briefing ? briefingReport(briefing) : null;
+  // Figures attached to the finished briefing. Re-narrowed because a briefing
+  // hydrated from disk or localStorage can carry a shape this build no longer
+  // draws - same gate the live stream goes through.
+  const reportFigures = (briefing?.figures ?? [])
+    .map((figure) => parseFigure(figure))
+    .filter((figure): figure is FigureSpec => figure !== null);
   const target = briefing?.target ?? runId?.split('-')[0] ?? 'Research target';
   const demo = getStoredAgentMode() === 'demo';
   const liveReasoning = reasoningLines(aggregate);
@@ -101,6 +108,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, ru
               eyebrow="GROUNDED ASSESSMENT"
               contentSections={mappedReport.contentSections}
               references={briefing?.references}
+              dataFigures={reportFigures}
             />
           )}
           {status !== 'done' && !briefing && (
@@ -124,9 +132,19 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, ru
   );
 }
 
+// Stand-in store for when there is no live run.
+//
+// `getState` MUST return the same object every call. useStore reads it as
+// getSnapshot, and a fresh literal each time looks like state that changed on
+// every render - React re-renders, calls getSnapshot again, gets another new
+// object, and the component loops until it throws "Maximum update depth
+// exceeded". Reusing the frozen EMPTY_AGGREGATE also means this snapshot picks
+// up new aggregate fields instead of silently going stale.
+const EMPTY_STATE = Object.freeze({ agg: EMPTY_AGGREGATE });
+
 const EMPTY_STORE = {
-  getState: () => ({ agg: { phase: 'idle', counts: {}, sectionsRag: {}, auditFlags: 0, log: [] } }),
-  getInitialState: () => ({ agg: { phase: 'idle', counts: {}, sectionsRag: {}, auditFlags: 0, log: [] } }),
+  getState: () => EMPTY_STATE,
+  getInitialState: () => EMPTY_STATE,
   subscribe: () => () => undefined,
 } as unknown as ReturnType<typeof createTraceStore>;
 

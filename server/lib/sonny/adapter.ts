@@ -6,6 +6,7 @@ import { publish, closeRun } from './runBus.js';
 import type { WorkerMessage, WorkerOpts } from './worker.js';
 import { saveBriefing } from './runStore.js';
 import type { Briefing } from '@mrsirquanzo/sonny-shared';
+import type { FigureSpec } from '../../../shared/figures.js';
 
 export type PersistBriefing = (runId: string, briefing: Briefing) => Promise<void>;
 
@@ -33,7 +34,13 @@ function resolveWorkerBundle(): string {
   fs.mkdirSync(path.dirname(out), { recursive: true });
   buildSync({
     entryPoints: [src], outfile: out, bundle: true, format: 'esm',
-    platform: 'node', target: 'node20', external: ['@mrsirquanzo/*'],
+    platform: 'node', target: 'node20',
+    // cheerio (via parse5/htmlparser2) reaches for `buffer`, `stream` and
+    // `string_decoder` through CJS interop. Bundled into ESM those become
+    // `__require(...)` calls that throw "Dynamic require of \"buffer\" is not
+    // supported" the moment the worker loads. Left external it resolves from
+    // node_modules at runtime, the way the engine packages already do.
+    external: ['@mrsirquanzo/*', 'cheerio'],
   });
   cachedWorkerBundle = out;
   return out;
@@ -50,6 +57,13 @@ const defaultSpawn: SpawnWorker = (opts) => {
 export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, persist: PersistBriefing = saveBriefing): void {
   const handle = spawn(input);
   let finished = false;
+
+  // Figures stream live, but the run also has to end with them. Collected by
+  // id (so a re-emit replaces rather than duplicates) and in arrival order,
+  // then attached to the briefing on completion - which is the object that
+  // gets persisted, re-served by GET /:runId, and cached client-side. Anything
+  // else would need a second durable channel to keep in sync with this one.
+  const figures = new Map<string, FigureSpec>();
 
   function finish(): void {
     if (finished) return;
@@ -73,10 +87,14 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
         publish(input.runId, m.event);
       }
     } else if (m.kind === 'figure') {
+      figures.set(m.figure.id, m.figure);
       publish(input.runId, { type: 'figure', figure: m.figure });
     } else if (m.kind === 'done') {
-      publish(input.runId, { type: 'done', briefing: m.briefing, runMeta: m.runMeta });
-      void persist(input.runId, m.briefing).catch((err) => {
+      const briefing = figures.size
+        ? ({ ...m.briefing, figures: [...figures.values()] } as Briefing)
+        : m.briefing;
+      publish(input.runId, { type: 'done', briefing, runMeta: m.runMeta });
+      void persist(input.runId, briefing).catch((err) => {
         console.error(`[sonny] failed to persist run ${input.runId}:`, err);
       });
       finish();
