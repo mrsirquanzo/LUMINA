@@ -124,3 +124,31 @@ describe('foldTrace figures', () => {
     expect(EMPTY_AGGREGATE.figures).toEqual({});
   });
 });
+
+describe('foldTrace logTotal', () => {
+  it('counts every entry ever appended, not just the ones still in the log', () => {
+    const many: ResearchTraceEvent[] = Array.from({ length: 350 }, () => ({
+      type: 'evidence_registered',
+    }));
+    const aggregate = foldTrace(EMPTY_AGGREGATE, many);
+
+    // Without this the UI cannot tell a 300-step run from a 350-step one whose
+    // start scrolled off, and would report both as 300.
+    expect(aggregate.log).toHaveLength(300);
+    expect(aggregate.logTotal).toBe(350);
+  });
+
+  it('matches the log length when nothing has been trimmed', () => {
+    const aggregate = foldTrace(EMPTY_AGGREGATE, [
+      { type: 'tool_call', tool: 'gtex_expression' },
+      { type: 'tool_result', tool: 'gtex_expression', count: 1 },
+    ]);
+    expect(aggregate.logTotal).toBe(aggregate.log.length);
+  });
+
+  it('does not double-count a re-emitted figure', () => {
+    const first = foldTrace(EMPTY_AGGREGATE, [figureEvent()]);
+    const second = foldTrace(first, [figureEvent()]);
+    expect(second.logTotal).toBe(1);
+  });
+});

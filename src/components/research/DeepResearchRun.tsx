@@ -99,7 +99,11 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, ru
               </div>
             </div>
           )}
-          <ReasoningTrail lines={visibleReasoning} />
+          <ReasoningTrail
+            lines={visibleReasoning}
+            live={status === 'running'}
+            trimmed={aggregate.logTotal > aggregate.log.length}
+          />
           <AnalysisPlan steps={plan.steps} current={plan.current} total={plan.total} />
           {mappedReport && (
             <WorkbookReport

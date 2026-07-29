@@ -35,15 +35,25 @@ function formatTraceLine(entry: TraceLogEntry): string {
     case 'audit': return `Method review${detail}`;
     case 'degraded': return `Continuing with degraded coverage${detail}`;
     case 'verdict': return 'Synthesized grounded assessment';
+    case 'figure': return `Plotted ${entry.label}`;
     default: return `${entry.label}${detail}`;
   }
 }
 
+/**
+ * Every reasoning step the run has taken, oldest first.
+ *
+ * Previously capped with `.slice(-12)`. A thorough run emits hundreds of
+ * steps, so the trail showed the last twelve numbered 01-12 - which reads as
+ * "the agent did twelve things" rather than "here are the twelve most recent
+ * of many". Windowing is a display concern; the caller decides how much to
+ * show and numbers by true position. The list is already bounded by the
+ * aggregate's 300-entry log cap.
+ */
 export function reasoningLines(aggregate: TraceAggregate): string[] {
   return aggregate.log
     .filter((entry) => entry.role !== 'event' || entry.type === 'lead_decompose')
-    .map(formatTraceLine)
-    .slice(-12);
+    .map(formatTraceLine);
 }
 
 function stepStatus(
