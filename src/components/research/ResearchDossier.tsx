@@ -1,6 +1,8 @@
 import type { ReactElement } from 'react';
 import type { BriefingView } from '../../lib/research/sseTypes.js';
 import { CitedMarkdown } from '../shared/CitedMarkdown.js';
+import { FigureCard } from './figures/FigureCard.js';
+import { parseFigure, type FigureSpec } from '../../../shared/figures.js';
 
 interface Props { briefing: BriefingView; }
 
@@ -94,6 +96,14 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
   const refIndex = new Map<string, number>(); // maps ANY cited id (incl #locators) to its source number
   refNum.forEach((n, b) => refIndex.set(b, n));
 
+  // Persisted figures arrive from disk or localStorage, which is the same
+  // untrusted path as the live stream - a report written by an older build can
+  // hold a shape this one no longer draws. Re-narrow through the one gate so a
+  // stale figure is dropped rather than crashing the report around it.
+  const figures = (briefing.figures ?? [])
+    .map((figure) => parseFigure(figure))
+    .filter((figure): figure is FigureSpec => figure !== null);
+
   // Global dedup: specialists often restate the same fact across sections. Show
   // each unique claim once, in the first section it appears, so every section
   // reads as new information rather than a repeated fact. (Render-side guard;
@@ -157,6 +167,21 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       {briefing.executiveRead && (
         <div className="t-lead mt-5 font-display text-textSecondary">
           <CitedMarkdown content={briefing.executiveRead} />
+        </div>
+      )}
+
+      {/* Figures - the quantitative evidence, placed between the executive read
+          and the sections that argue from it. Same cards the reader watched
+          arrive in the live trail, so the report is not a different artifact
+          from the run that produced it. */}
+      {figures.length > 0 && (
+        <div className="mt-6">
+          <p className="t-eyebrow mb-3 text-textTertiary">Figures</p>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {figures.map((figure) => (
+              <FigureCard key={figure.id} figure={figure} />
+            ))}
+          </div>
         </div>
       )}
 

@@ -67,10 +67,15 @@ export const gtexExpressionTool: Tool = {
     if (!gene) return [];
 
     try {
+      // Resolve aliases, not just official symbols. Specialists ask for the
+      // name the literature uses - TROP2, HER2, PD-L1 - while GTEx is keyed on
+      // the HGNC symbol (TACSTD2, ERBB2, CD274). A symbol-only lookup returned
+      // nothing for those, so the tool silently contributed no evidence at all
+      // to exactly the targets most likely to be researched.
       const queryParams = new URLSearchParams({
-        q: `symbol:${gene}`,
+        q: `symbol:${gene} OR alias:${gene}`,
         species: 'human',
-        fields: 'ensembl.gene',
+        fields: 'ensembl.gene,symbol',
       });
       const queryBody = await fetchJson(`${MYGENE_QUERY}?${queryParams.toString()}`, fetchImpl);
       const hit = isRecord(queryBody) && Array.isArray(queryBody.hits) && isRecord(queryBody.hits[0])
@@ -80,6 +85,15 @@ export const gtexExpressionTool: Tool = {
         ? ensemblGene(hit.ensembl.gene)
         : null;
       if (!ensembl) return [];
+
+      // Label with the resolved HGNC symbol: a figure headed "TROP2" while
+      // plotting TACSTD2 leaves the reader unable to check the source.
+      const resolvedSymbol = (hit && typeof hit.symbol === 'string' && hit.symbol.trim()
+        ? hit.symbol.trim()
+        : gene
+      ).toUpperCase();
+      const requestedSymbol = gene.toUpperCase();
+      const isAlias = resolvedSymbol !== requestedSymbol;
 
       const referenceBody = await fetchJson(
         `${GTEX_API}/reference/gene?geneId=${encodeURIComponent(ensembl)}`,
@@ -118,17 +132,23 @@ export const gtexExpressionTool: Tool = {
       );
 
       const retrievedAt = new Date().toISOString();
-      const geneUrl = `https://gtexportal.org/home/gene/${encodeURIComponent(gene)}`;
+      const geneUrl = `https://gtexportal.org/home/gene/${encodeURIComponent(resolvedSymbol)}`;
 
       // The full tissue distribution is the therapeutic-window argument. Emit it
       // as a figure so the reader sees the shape, not just the top four in prose.
       emitFigure({
         plot: 'tissue_expression_bar',
-        id: `gtex:${gene.toUpperCase()}`,
-        title: `${gene.toUpperCase()} expression across normal tissues`,
+        // Keyed on the resolved symbol so asking for TROP2 and TACSTD2 in one
+        // run updates a single figure instead of drawing the same data twice.
+        id: `gtex:${resolvedSymbol}`,
+        title: `${resolvedSymbol} expression across normal tissues`,
         subtitle:
           'Median TPM per tissue. High normal-tissue expression narrows the off-tumor safety window.',
-        params: { gene: gene.toUpperCase(), dataset: 'GTEx v8', tissues: tissues.length },
+        params: {
+          gene: isAlias ? `${resolvedSymbol} (asked as ${requestedSymbol})` : resolvedSymbol,
+          dataset: 'GTEx v8',
+          tissues: tissues.length,
+        },
         // Bare unit: "median" belongs in the subtitle, not repeated on every
         // value, or the reference legend reads "12.5 median TPM".
         unit: 'TPM',
@@ -159,10 +179,10 @@ export const gtexExpressionTool: Tool = {
         'informing the off-tumor safety window.';
 
       return [{
-        id: `GTEX:${gene.toUpperCase()}`,
+        id: `GTEX:${resolvedSymbol}`,
         kind: 'dataset',
         source: 'GTEx (normal tissue)',
-        title: `${gene.toUpperCase()} - GTEx normal-tissue median expression`,
+        title: `${resolvedSymbol} - GTEx normal-tissue median expression`,
         snippet,
         url: geneUrl,
         raw: { gencodeId, tissues: tissues.slice(0, 15).map((entry) => entry.tissue) },

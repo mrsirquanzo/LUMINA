@@ -7,6 +7,8 @@ import { CorrelationHeatmap } from './gating/CorrelationHeatmap';
 import { GatePlot } from './gating/GatePlot';
 import { useGating } from './gating/gatingStore';
 import { SubsetComposition } from './gating/SubsetComposition';
+import { FigureCard } from '../figures/FigureCard';
+import type { FigureSpec } from '../../../../shared/figures';
 
 // Report figures 1-5 are the same gated plots as the interactive steps, so we
 // render them live (they track the user's gates) instead of static PNGs.
@@ -35,6 +37,15 @@ interface WorkbookReportProps {
   references?: readonly EvidenceReference[];
   rankings?: WorkbookRun['rankings'];
   selectedSynergyModel?: string;
+  /**
+   * Live data figures produced during a research run.
+   *
+   * Distinct from `report.figures`, which are pre-rendered PNGs from the
+   * scenario workbooks and open in a lightbox. These are structured figures
+   * drawn from data the run actually fetched, so they render inline. Optional,
+   * so the flow/western/combo workbooks are untouched.
+   */
+  dataFigures?: FigureSpec[];
 }
 
 function renderBoldMarkdown(text: string) {
@@ -63,6 +74,7 @@ export function WorkbookReport({
   references = [],
   rankings,
   selectedSynergyModel = 'Bliss independence',
+  dataFigures = [],
 }: WorkbookReportProps) {
   const gating = useGating();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -145,6 +157,17 @@ export function WorkbookReport({
             </li>
           ))}
         </ul>
+
+        {dataFigures.length > 0 && (
+          <div className="mt-6">
+            <p className="t-eyebrow mb-3 text-textTertiary">Figures</p>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              {dataFigures.map((figure) => (
+                <FigureCard key={figure.id} figure={figure} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {gating && (
