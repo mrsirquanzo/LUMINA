@@ -25,6 +25,12 @@ export interface TraceAggregate {
   sectionsRag: Record<string, 'red' | 'amber' | 'green'>;
   auditFlags: number;
   log: TraceLogEntry[];
+  /**
+   * Total entries appended over the run's life, including any the 300-entry
+   * cap has since dropped. Without it the UI cannot tell a 300-step run from
+   * a 3,000-step one whose start scrolled off, and would report both as 300.
+   */
+  logTotal: number;
   /** Figures produced during the run, keyed by their stable id. */
   figures: Record<string, FigureSpec>;
 }
@@ -37,6 +43,7 @@ export const EMPTY_AGGREGATE: TraceAggregate = Object.freeze({
   sectionsRag: {} as Record<string, 'red' | 'amber' | 'green'>,
   auditFlags: 0,
   log: [] as TraceLogEntry[],
+  logTotal: 0,
   figures: {} as Record<string, FigureSpec>,
 });
 
