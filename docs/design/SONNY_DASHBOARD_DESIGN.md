@@ -10,8 +10,8 @@ Trustworthy, not flashy. No "AI dashboard" theatrics.
 
 ## 1. Atmosphere
 
-Structured, professional, conclusion-first.
-A clean light surface with hairline borders, restrained elevation, and disciplined density: efficient where it lists (watchlist, feed, runs) and generous where it concludes (the verdict and executive read get room to breathe).
+Structured, professional, evidence-first.
+A clean light surface with hairline borders, restrained elevation, and disciplined density: efficient where it lists (watchlist, feed, runs) and generous where it argues (the executive read and the figures get room to breathe).
 The look should read as a serious instrument a scientist trusts, not a marketing dashboard.
 
 Calibration: Density 6 (efficient, not cockpit-crammed), Variance 2 (structured, predictable), Motion 3 (restrained, functional).
@@ -28,7 +28,7 @@ Neutrals (slate ramp) - final token values from the locked mocks:
 - **Subtle** (#F1F5F9, slate-100) - hover rows, quiet panels (KOL, quotes)
 - **Border** (#E6EBF2) - 1px hairline structure. Border-driven separation over heavy shadows.
 - **Border-soft** (#EEF2F7) - internal dividers inside a card (lighter than the card's outer border).
-- **Primary text / ink** (#0F172A, slate-900) - headings, verdict, key figures
+- **Primary text / ink** (#0F172A, slate-900) - headings, key figures
 - **Secondary text** (#475569, slate-600) - body, metadata (minimum for body; never lighter)
 - **Muted text** (#94A3B8, slate-400) - captions, placeholders, micro labels ONLY (never body)
 
@@ -36,12 +36,12 @@ Primary (single accent):
 - **Primary / CTA** (#1D4ED8, blue-700) - primary buttons, active nav, links, focus rings. Hover #1E40AF.
 - **Primary tint** (#EFF6FF, blue-50) - active nav fill, selected states.
 
-Semantic status (functional only, never decorative) - these carry the GO/WATCH/NO-GO meaning. Each has a fill (the pill), a darker text shade (for status text on tint), and a tint (quiet backgrounds):
-- **Positive / GO** (#16A34A, green-600; text #15803D; tint #DCFCE7) - go verdict, supported, good developability
-- **Caution / WATCH** (#D97706, amber-600; text #B45309; tint #FEF3C7) - watch verdict, caution, moderate risk
-- **Critical / NO-GO** (#DC2626, red-600; text #B91C1C; tint #FEE2E2) - no-go verdict, severe risk, refuted
+Semantic status (functional only, never decorative) - these carry section confidence (RAG), not a recommendation. Each has a fill (the dot or pill), a darker text shade (for status text on tint), and a tint (quiet backgrounds). The token names remain `go` / `watch` / `nogo` in Tailwind for continuity:
+- **Positive / green** (#16A34A, green-600; text #15803D; tint #DCFCE7) - well supported, good developability
+- **Caution / amber** (#D97706, amber-600; text #B45309; tint #FEF3C7) - caution, moderate risk, thin evidence
+- **Critical / red** (#DC2626, red-600; text #B91C1C; tint #FEE2E2) - severe risk, refuted, contradicted
 
-Verdict pill = the single largest, boldest signal on a run or dossier: GO green fill / WATCH amber fill / NO-GO red fill, white text.
+These mark how well a *section* is supported. There is no verdict pill: the report does not hand down a GO/WATCH/NO-GO call, so nothing in the layout should imply one. Status colour stays at dot and chip scale.
 
 Contrast: all text meets WCAG AA (4.5:1). Color is never the only signal - RAG dots always pair with a text label.
 
@@ -61,7 +61,7 @@ Deliberately kept despite the dashboard-serif ban, and allowed ONLY here: the So
 Two jobs: (1) grounded identifiers - PMID / NCT / ENSG / patent no. / SEQ IDs / antibody sequences; (2) KPI numbers and tabular figures where alignment and the "precise instrument" read matter (the papers/evidence/tools counters, KOL weights). This is the "grounded and precise" signal - it visually marks every real, traceable token and every hard number.
 - **Micro labels:** Geist 600, 11px, 0.05em tracking, uppercase, muted slate - GLASS-BOX TRACE, WATCHLIST, KOL & INSTITUTIONAL TERRAIN.
 
-Scale (desktop): display/verdict 28-32px/700 (Geist) with serif run/section titles 19-26px/600 (Newsreader); H1 22px/600; H2 18px/600; body 15px/400 (line-height 1.6, measure capped ~70ch); small 13px; micro 11px.
+Scale (desktop): display 28-32px/700 (Geist) with serif run/section titles 19-26px/600 (Newsreader); H1 22px/600; H2 18px/600; body 15px/400 (line-height 1.6, measure capped ~70ch); small 13px; micro 11px.
 
 Fallback order matters: every stack names a real fallback (Inter for sans, Georgia for serif, JetBrains Mono/ui-monospace for mono) so first paint never lands on Times or a system default.
 
@@ -84,7 +84,7 @@ Two surface treatments layered over the flat slate/white base - subtle enough to
 - **Composer.** Liquid-glass floating bar: white surface, `rounded-xl`, slate-200 border that becomes blue-700 on focus (focus ring), inner-light refraction + soft shadow, faint radial atmosphere behind it. Left upload button opens a menu that routes the file to a skill (Research paper / Patent - extract sequences). Enter to run.
 - **Capability cards.** White, slate-200 border, `rounded-xl`, hover = blue-200 border + faint lift. Status line: green dot "Available", amber/bronze dot "Skill - available", muted "Coming soon" (dashed border, reduced opacity). 2-column grid (never a 3-equal-card row).
 - **Glass-box trace.** Bordered panel. Steps as a vertical checklist: done = green check, current = blue spinner ring, future = hollow slate ring. Specialists in a 2-column grid, each gaining a RAG dot on completion. Counters (papers / evidence / tools) as quiet KPI chips with Geist Mono figures. Legible and calm - this is the trust surface, not a light show. Log is virtualized/capped.
-- **Dossier.** Conclusion-first: the verdict pill is the largest element, then the executive read (Inter, ~70ch, relaxed leading), then RAG section chips (pill + colored dot + label), then KOL terrain in a slate-50 panel (PI, institution, weight), then references (mono ids, linked). Actions right-aligned.
+- **Report.** Evidence-first: the executive read leads (Inter, ~70ch, relaxed leading) carrying the framing and the key uncertainty, then the bull case and the risks, then the figures, then RAG section chips (pill + colored dot + label), then KOL terrain in a slate-50 panel (PI, institution, weight), then references (mono ids, linked). Actions right-aligned.
 - **Patent result.** SEQ ID chip + type + mono sequence rows; "Grounded to source PDF"; Export FASTA (primary).
 - **Watchlist / feed rows.** Hairline-separated list rows, status dot + label + metadata + optional badge; hover slate-50; row highlight.
 - **Drill-in.** Right-side drawer (~820px, full-screen < 768px), slide-in, scrim.
@@ -114,7 +114,7 @@ Two surface treatments layered over the flat slate/white base - subtle enough to
 
 ## 8. Anti-Patterns (banned)
 
-- No fabricated data or metrics. Every figure (papers, evidence, references, RAG, verdict, KOL weights, SEQ IDs) is grounded to a real engine event or evidence id - Sonny's "no token, no ship" made visual. No invented uptime/latency/percent stats, no "SYSTEM // 2025" labels.
+- No fabricated data or metrics. Every figure (papers, evidence, references, RAG, KOL weights, SEQ IDs) is grounded to a real engine event or evidence id - Sonny's "no token, no ship" made visual. No invented uptime/latency/percent stats, no "SYSTEM // 2025" labels.
 - No emojis as UI - SVG icons only (Lucide/Heroicons, one set, 24px viewBox, consistent sizing).
 - No purple/indigo "AI" accents, neon, glows, gradient headers, oversaturated fills, pure black.
 - No mono/serif headings; no hierarchy-by-size-alone.
@@ -130,7 +130,7 @@ Two surface treatments layered over the flat slate/white base - subtle enough to
 - Fonts: add Geist, Newsreader, Geist Mono (Google Fonts / fontsource); keep Inter + JetBrains Mono as fallbacks. Tailwind `fontFamily: { sans: ['Geist','Inter',...], display: ['Newsreader','Georgia',serif], mono: ['Geist Mono','JetBrains Mono',ui-monospace,...] }`. Load only the weights used (Geist 400/500/600/700, Newsreader 400/500/600 with opsz, Geist Mono 400/500) to keep first paint fast.
 - Encode the palette as Tailwind theme tokens (page/surface/subtle/border/border-soft/ink + primary + semantic go/watch/nogo with fill/text/tint) so components reference roles, not raw hex. Token values are the locked ones in Section 2 (page #F6F8FB, border #E6EBF2), matching the mocks exactly.
 - Material helpers: define reusable classes/utilities for `.glass` (liquid-glass refraction), the soft card shadow, the tactile `:active` press, and the fixed grain overlay - so the treatments stay consistent and are applied by role, not re-typed per component.
-- Information architecture (composer, glass-box, conclusion-first dossier, watchlist, feed, dossier library, drill-in) carries over from the mock; only the visual language is this professional slate/blue system, not the warm Ponder one.
+- Information architecture (composer, glass-box, report, watchlist, feed, report library, drill-in) carries over from the mock; only the visual language is this professional slate/blue system, not the warm Ponder one.
 
 ---
 
