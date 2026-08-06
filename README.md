@@ -21,12 +21,6 @@ The product bet: for high-stakes biotech decisions, a transparent reasoning trac
 - **Watchlist + Intelligence Feed.** Track targets and assets and get a monitored feed of new literature, trials, and filings, distilled into digests.
 - **Investment memo + PDF export.** Turn a report into a shareable memo.
 
-![Grounded report with live GTEx and HPA figures](docs/screenshots/report.png)
-
-![Glass-box trace running live](docs/screenshots/glass-box.png)
-
-![Intelligence feed](docs/screenshots/feed.png)
-
 ## Architecture
 
 LUMINA is a Vite/React front end over an Express backend. The interesting part is the **Sonny seam**:
