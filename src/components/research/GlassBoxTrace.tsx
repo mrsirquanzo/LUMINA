@@ -2,6 +2,8 @@ import type { ReactElement } from 'react';
 import { useStore } from 'zustand';
 import type { createTraceStore } from '../../lib/research/traceStore.js';
 import type { TraceLogEntry } from '../../lib/research/sseTypes.js';
+import type { FigureSpec } from '../../../shared/figures.js';
+import { FigureCard } from './figures/FigureCard.js';
 
 interface Props {
   traceStore: ReturnType<typeof createTraceStore> | null;
@@ -89,6 +91,7 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
   const sectionsRag = useStore(traceStore, (s) => s.agg.sectionsRag);
   const auditFlags = useStore(traceStore, (s) => s.agg.auditFlags);
   const log = useStore(traceStore, (s) => s.agg.log);
+  const figures = useStore(traceStore, (s) => s.agg.figures);
 
   const sectionEntries = Object.entries(sectionsRag);
 
@@ -202,7 +205,7 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
           {log.length === 0 ? (
             <p className="t-meta italic text-textTertiary">Waiting for events...</p>
           ) : (
-            log.map((entry, i) => <LogRow key={i} entry={entry} />)
+            log.map((entry, i) => <LogRow key={i} entry={entry} figures={figures} />)
           )}
         </div>
       </div>
@@ -214,8 +217,27 @@ function TracePanel({ traceStore }: { traceStore: ReturnType<typeof createTraceS
 // One Faraday-style trace line. Tool calls render as elevated cards with a
 // status dot + mono tool name + description; reads render as italic thoughts;
 // evidence shows the real title.
-function LogRow({ entry }: { entry: TraceLogEntry }): ReactElement {
+function LogRow({
+  entry,
+  figures,
+}: {
+  entry: TraceLogEntry;
+  figures: Record<string, FigureSpec>;
+}): ReactElement {
   const { role, label, detail, type } = entry;
+
+  // Figure: the chart itself, drawn at the point in the trail where the data
+  // came back. The reader watches the argument get made, not a summary of it.
+  if (role === 'figure') {
+    const figure = entry.figureId ? figures[entry.figureId] : undefined;
+    if (figure) return <FigureCard figure={figure} />;
+    return (
+      <div className="flex items-baseline gap-2 py-px">
+        <span className="t-eyebrow flex-none text-textTertiary">figure</span>
+        <span className="t-meta truncate text-textSecondary">{label}</span>
+      </div>
+    );
+  }
 
   // Tool call / tool result: elevated card with status dot + mono name.
   if (role === 'tool' || role === 'tool_result') {

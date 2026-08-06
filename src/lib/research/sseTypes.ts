@@ -1,14 +1,22 @@
+import type { FigureSpec } from '../../../shared/figures.js';
+
 // A permissive view of the engine TraceEvent union; we key off `type` and known fields.
 export type ResearchTraceEvent = { type: string; [k: string]: unknown };
 
 // A rendered trace log line. `role` groups the visual treatment (tool card vs
 // read/thought vs evidence); `detail` is the human-readable specifics pulled
 // from the raw event (tool args, evidence title, source locator).
+//
+// A `figure` entry holds no content of its own - it marks the position in the
+// trail where a figure was produced, and `figureId` resolves it out of
+// `TraceAggregate.figures`. Keeping the figure body out of the log means a
+// re-emit updates one record instead of leaving a stale copy behind.
 export interface TraceLogEntry {
   type: string;
   label: string;
   detail?: string;
-  role?: 'tool' | 'tool_result' | 'read' | 'evidence' | 'section' | 'audit' | 'verdict' | 'degraded' | 'event';
+  role?: 'tool' | 'tool_result' | 'read' | 'evidence' | 'section' | 'audit' | 'verdict' | 'degraded' | 'figure' | 'event';
+  figureId?: string;
 }
 
 export interface TraceAggregate {
@@ -17,6 +25,8 @@ export interface TraceAggregate {
   sectionsRag: Record<string, 'red' | 'amber' | 'green'>;
   auditFlags: number;
   log: TraceLogEntry[];
+  /** Figures produced during the run, keyed by their stable id. */
+  figures: Record<string, FigureSpec>;
 }
 
 // Frozen at the top level; foldTrace always copies (spreads) before writing, so the
@@ -27,6 +37,7 @@ export const EMPTY_AGGREGATE: TraceAggregate = Object.freeze({
   sectionsRag: {} as Record<string, 'red' | 'amber' | 'green'>,
   auditFlags: 0,
   log: [] as TraceLogEntry[],
+  figures: {} as Record<string, FigureSpec>,
 });
 
 export interface BriefingView {

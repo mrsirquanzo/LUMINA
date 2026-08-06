@@ -21,6 +21,9 @@ export default defineConfig({
   test: {
     // Exclude agent-scratch worktrees which contain duplicate copies of the repo's
     // test files (gitignored under .claude/worktrees) and would otherwise inflate the suite.
-    exclude: [...configDefaults.exclude, '.claude/**', '**/worktrees/**'],
+    // `dist/**` holds the compiled server output from `npm run build:server`; running
+    // the suite after a server build would otherwise execute stale compiled duplicates
+    // of every server test against the previous build's code.
+    exclude: [...configDefaults.exclude, '.claude/**', '**/worktrees/**', 'dist/**'],
   },
 })

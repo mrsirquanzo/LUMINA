@@ -2,9 +2,12 @@ import type { TraceEvent, Briefing } from '@mrsirquanzo/sonny-shared';
 import { buildEngineDeps, type EngineDeps, type Backend } from './engineDeps.js';
 import type { UploadedDocument } from './documentTool.js';
 import { installUsageSniffer, type RunMeta } from './runCost.js';
+import { setFigureSink } from './figureSink.js';
+import type { FigureSpec } from '../../../shared/figures.js';
 
 export type WorkerMessage =
   | { kind: 'trace'; event: TraceEvent }
+  | { kind: 'figure'; figure: FigureSpec }
   | { kind: 'done'; briefing: Briefing; runMeta?: RunMeta }
   | { kind: 'error'; message: string };
 
@@ -38,6 +41,9 @@ export async function runInWorker(
     const build = engine?.buildEngineDeps ?? buildEngineDeps;
     const deps = await build(opts.backend, opts.mode, opts.documents);
     const sniffer = installUsageSniffer();
+    // Tools emit figures through a module-level sink; route them onto the same
+    // message channel the trace uses so they land in the live trail in order.
+    setFigureSink((figure) => post({ kind: 'figure', figure }));
     const startedAt = Date.now();
     let briefing: Briefing;
     try {
@@ -48,6 +54,7 @@ export async function runInWorker(
       });
     } finally {
       sniffer.restore();
+      setFigureSink(null);
     }
     const runMeta: RunMeta = { backend: opts.backend, elapsedMs: Date.now() - startedAt, ...(await sniffer.summary(opts.backend)) };
     post({ kind: 'done', briefing, runMeta });

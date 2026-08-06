@@ -72,6 +72,8 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
       } else {
         publish(input.runId, m.event);
       }
+    } else if (m.kind === 'figure') {
+      publish(input.runId, { type: 'figure', figure: m.figure });
     } else if (m.kind === 'done') {
       publish(input.runId, { type: 'done', briefing: m.briefing, runMeta: m.runMeta });
       void persist(input.runId, m.briefing).catch((err) => {
