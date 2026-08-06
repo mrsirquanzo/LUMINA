@@ -2,9 +2,11 @@
 
 **A biotech target/asset diligence dashboard with a grounded, glass-box research agent.**
 
-LUMINA is the workspace where a skeptical scientist or BD/investment team asks a hard question about a drug target or asset and watches the reasoning happen. Its research agent, **Sonny**, runs live in front of you, streaming every source it reads and every inference it makes, then delivers a conclusion-first **GO / WATCH / NO-GO** dossier where each figure traces back to a real citation.
+LUMINA is the workspace where a skeptical scientist or BD/investment team asks a hard question about a drug target or asset and watches the reasoning happen. Its research agent, **Sonny**, runs live in front of you, streaming every source it reads and every inference it makes, then returns a balanced assessment - the case for and the case against - where every claim traces back to a real citation.
 
-The product bet: for high-stakes biotech decisions, a transparent reasoning trace and disciplined citations beat a confident black-box answer.
+Alongside the literature work, LUMINA runs **wet-lab workbenches**: reproducible analyses of your own IHC, flow cytometry, and western blot data, with the same show-your-working discipline.
+
+The product bet: for high-stakes biotech decisions, a transparent reasoning trace and disciplined citations beat a confident black-box answer. The agent's job is to sharpen the question and lay out the evidence, not to hand down a verdict.
 
 ![LUMINA home](docs/screenshots/home.png)
 
@@ -12,12 +14,13 @@ The product bet: for high-stakes biotech decisions, a transparent reasoning trac
 
 - **Ask Sonny.** A research composer takes a target or asset question and runs a grounded deep-research pass.
 - **Glass-box trace.** The agent's reasoning streams live over server-sent events. You see the sources, tool calls, and intermediate findings as they happen, not just the final answer.
-- **Conclusion-first dossiers.** Output leads with a GO / WATCH / NO-GO verdict, then the drivers, uncertainties, and triggers beneath it. Every claim carries a reference; the header shows the grounding ("Grounded / N refs").
-- **Dossier library.** Completed dossiers are saved, searchable, and re-openable, each card showing its reference count.
+- **Balanced, cited reports.** Six specialists cover target biology, mechanism, indication, clinical landscape, competitive/IP, and developability. Output leads with the framing and the key uncertainty, then the bull case and the risks beneath it. Every claim carries a reference; the header shows the grounding ("Grounded / N refs").
+- **Wet-lab workbenches.** IHC (DAB deconvolution, H-score, % positivity), flow cytometry (interactive gating you can drag, with every downstream number recomputed live), and western blot (background-corrected densitometry against a loading control).
+- **Report library.** Completed reports are saved, searchable, and re-openable, each card showing its reference count.
 - **Watchlist + Intelligence Feed.** Track targets and assets and get a monitored feed of new literature, trials, and filings, distilled into digests.
-- **Investment memo + PDF export.** Turn a dossier into a shareable memo.
+- **Investment memo + PDF export.** Turn a report into a shareable memo.
 
-![Dossier library](docs/screenshots/dossiers.png)
+![Report library](docs/screenshots/dossiers.png)
 
 ![Intelligence feed](docs/screenshots/feed.png)
 
@@ -34,14 +37,14 @@ The result is a live reasoning view with no extra network hop and no separate de
 ```
 Browser (React)  ──SSE──►  Express backend  ──MessagePort──►  Sonny engine (worker thread)
      ▲                          │                                    │
-     └────── dossier JSON ──────┘                          MCP retrieval tools
+     └────── report JSON ───────┘                          MCP retrieval tools
 ```
 
 ## Tech stack
 
 - **Frontend:** React 19, TypeScript, Vite, React Router, Tailwind CSS, TanStack Query, Zustand, Framer Motion
 - **Backend:** Express (local dev/runtime), Vercel serverless functions (deployed API)
-- **Agent/LLM:** Anthropic Claude, Google Gemini, Perplexity, orchestrated through the Sonny engine + MCP tools
+- **Agent/LLM:** pluggable backend - Anthropic, or any OpenAI-compatible endpoint (Groq, local Ollama) - orchestrated through the Sonny engine + MCP tools
 - **Testing:** Vitest
 
 ## Running it
@@ -61,7 +64,7 @@ See `docs/getting-started/START_GUIDE.md` and `docs/getting-started/API_SETUP.md
 
 ## Repository layout
 
-- `src/` — React app (dashboard, Sonny composer, glass-box trace, dossiers, Intelligence Feed)
+- `src/` — React app (dashboard, Sonny composer, glass-box trace, reports, workbenches, Intelligence Feed)
 - `server/` — Express backend and the Sonny worker seam
 - `api/` — Vercel serverless functions (deployed API)
 - `lib/` — shared client/agent logic

@@ -27,7 +27,7 @@ interface Capability {
 }
 
 const DEEP_RESEARCH_TEMPLATE: ResearchTemplate = {
-  prompt: 'Run a full due-diligence report on [target]. I want a conclusion-first, balanced assessment - the case for and the case against - grounded in literature and public data, with every claim cited to source.',
+  prompt: 'Run a full due-diligence report on [target]. I want a balanced assessment - the case for and the case against - grounded in literature and public data, with every claim cited to source.',
   target: undefined,
   contextChip: 'DepMap · GTEx · PubMed',
 };

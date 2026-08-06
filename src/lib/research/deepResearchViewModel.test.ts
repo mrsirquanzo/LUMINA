@@ -28,7 +28,8 @@ describe('deep research workbook mapping', () => {
     });
 
     // thesis is deliberately NOT in the summary: executiveRead already carries
-    // the framing and bottom line, so emitting both repeats the opening verbatim.
+    // the framing and the bottom line, so emitting both repeats the opening
+    // verbatim. Dropped in 486b475; this expectation was never updated.
     expect(mapped.report.summary).toEqual(['Executive summary']);
     expect(mapped.report.figures).toEqual([]);
     expect(mapped.contentSections).toEqual([
