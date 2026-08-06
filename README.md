@@ -14,13 +14,16 @@ The product bet: for high-stakes biotech decisions, a transparent reasoning trac
 
 - **Ask Sonny.** A research composer takes a target or asset question and runs a grounded deep-research pass.
 - **Glass-box trace.** The agent's reasoning streams live over server-sent events. You see the sources, tool calls, and intermediate findings as they happen, not just the final answer.
+- **Figures, drawn live.** When Sonny pulls expression data it plots it at the point the data lands, then carries the figure into the finished report. GTEx normal-tissue expression on a log axis, and the antibody-scored Human Protein Atlas panel beside it - the pair that decides an ADC safety window, since a target can look broad on RNA and turn out far more restricted at the protein level.
 - **Balanced, cited reports.** Six specialists cover target biology, mechanism, indication, clinical landscape, competitive/IP, and developability. Output leads with the framing and the key uncertainty, then the bull case and the risks beneath it. Every claim carries a reference; the header shows the grounding ("Grounded / N refs").
 - **Wet-lab workbenches.** IHC (DAB deconvolution, H-score, % positivity), flow cytometry (interactive gating you can drag, with every downstream number recomputed live), and western blot (background-corrected densitometry against a loading control).
 - **Report library.** Completed reports are saved, searchable, and re-openable, each card showing its reference count.
 - **Watchlist + Intelligence Feed.** Track targets and assets and get a monitored feed of new literature, trials, and filings, distilled into digests.
 - **Investment memo + PDF export.** Turn a report into a shareable memo.
 
-![Report library](docs/screenshots/dossiers.png)
+![Grounded report with live GTEx and HPA figures](docs/screenshots/report.png)
+
+![Glass-box trace running live](docs/screenshots/glass-box.png)
 
 ![Intelligence feed](docs/screenshots/feed.png)
 
