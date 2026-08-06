@@ -1,5 +1,13 @@
 # LUMINA Architecture Review
 
+> **Historical document.** This review captures an earlier design and is kept for
+> context, not as a description of the current build. It describes a dark UI (the
+> app is light), dashboard tiles that were never built (`ExpressionBiology`,
+> `BDExecutiveSummary`, `DealLandscape`), and a `StrategicRecommendation` /
+> Go-No-Go output that the product deliberately no longer produces - reports lay
+> out the case for and against rather than handing down a call. For the current
+> system see the README and `docs/design/SONNY_DASHBOARD_DESIGN.md`.
+
 ## Executive Summary
 
 LUMINA is an enterprise-grade biotech intelligence platform designed for pharmaceutical R&D decision-making. It combines a sophisticated multi-agent AI system with a sleek, Apple-inspired dark UI to deliver target validation, competitive analysis, and strategic recommendations.
