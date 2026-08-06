@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { AlertTriangle, ExternalLink } from 'lucide-react';
 import type { FigureSpec } from '../../../../shared/figures.js';
 import { TissueExpressionPlot } from './TissueExpressionPlot.js';
+import { ProteinTissueLevels } from './ProteinTissueLevels.js';
 
 const FALLBACK_PLOT_WIDTH = 300;
 
@@ -59,11 +60,16 @@ export function FigureCard({ figure }: { figure: FigureSpec }): ReactElement {
         <ParamLine params={figure.params} />
       </figcaption>
 
+      {/* Stat labels use tighter tracking than `t-eyebrow`: at 0.2em three
+          statistics wrap to a second line, reading as two groups of numbers
+          rather than one row. */}
       {figure.stats.length > 0 && (
-        <dl className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+        <dl className="mt-2 flex flex-wrap gap-x-3.5 gap-y-1">
           {figure.stats.map((stat) => (
             <div key={stat.label} className="flex items-baseline gap-1.5">
-              <dt className="t-eyebrow text-textTertiary">{stat.label}</dt>
+              <dt className="text-[10px] font-semibold uppercase tracking-[0.06em] text-textTertiary">
+                {stat.label}
+              </dt>
               <dd className="t-meta font-mono tabular-nums text-textPrimary">{stat.value}</dd>
             </div>
           ))}
@@ -71,18 +77,32 @@ export function FigureCard({ figure }: { figure: FigureSpec }): ReactElement {
       )}
 
       <div ref={ref} className="mt-2.5">
-        <TissueExpressionPlot figure={figure} width={width} />
+        {figure.plot === 'tissue_expression_bar' ? (
+          <TissueExpressionPlot figure={figure} width={width} />
+        ) : (
+          <ProteinTissueLevels figure={figure} width={width} />
+        )}
       </div>
 
-      <a
-        href={figure.source.url}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="t-meta mt-2 inline-flex items-center gap-1 text-textTertiary hover:text-primary"
-      >
-        {figure.source.label}
-        <ExternalLink className="h-3 w-3 flex-none" aria-hidden="true" />
-      </a>
+      {figure.caveat && (
+        <p className="t-meta mt-2 flex items-start gap-1.5 text-watch-text">
+          <AlertTriangle className="mt-px h-3 w-3 flex-none" aria-hidden="true" />
+          {figure.caveat}
+        </p>
+      )}
+
+      <p className="t-meta mt-2 text-textTertiary">
+        <a
+          href={figure.source.url}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="inline-flex items-center gap-1 hover:text-primary"
+        >
+          {figure.source.label}
+          <ExternalLink className="h-3 w-3 flex-none" aria-hidden="true" />
+        </a>
+        {figure.source.note && <span> · {figure.source.note}</span>}
+      </p>
     </figure>
   );
 }

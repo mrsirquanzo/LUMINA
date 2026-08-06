@@ -6,6 +6,7 @@ import { publish, closeRun } from './runBus.js';
 import type { WorkerMessage, WorkerOpts } from './worker.js';
 import { saveBriefing } from './runStore.js';
 import type { Briefing } from '@mrsirquanzo/sonny-shared';
+import type { FigureSpec } from '../../../shared/figures.js';
 
 export type PersistBriefing = (runId: string, briefing: Briefing) => Promise<void>;
 
@@ -33,7 +34,13 @@ function resolveWorkerBundle(): string {
   fs.mkdirSync(path.dirname(out), { recursive: true });
   buildSync({
     entryPoints: [src], outfile: out, bundle: true, format: 'esm',
-    platform: 'node', target: 'node20', external: ['@mrsirquanzo/*'],
+    platform: 'node', target: 'node20',
+    // cheerio (via parse5/htmlparser2) reaches for `buffer`, `stream` and
+    // `string_decoder` through CJS interop. Bundled into ESM those become
+    // `__require(...)` calls that throw "Dynamic require of \"buffer\" is not
+    // supported" the moment the worker loads. Left external it resolves from
+    // node_modules at runtime, the way the engine packages already do.
+    external: ['@mrsirquanzo/*', 'cheerio'],
   });
   cachedWorkerBundle = out;
   return out;
@@ -50,6 +57,13 @@ const defaultSpawn: SpawnWorker = (opts) => {
 export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, persist: PersistBriefing = saveBriefing): void {
   const handle = spawn(input);
   let finished = false;
+
+  // Figures stream live, but the run also has to end with them. Collected by
+  // id (so a re-emit replaces rather than duplicates) and in arrival order,
+  // then attached to the briefing on completion - which is the object that
+  // gets persisted, re-served by GET /:runId, and cached client-side. Anything
+  // else would need a second durable channel to keep in sync with this one.
+  const figures = new Map<string, FigureSpec>();
 
   function finish(): void {
     if (finished) return;
@@ -73,10 +87,14 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
         publish(input.runId, m.event);
       }
     } else if (m.kind === 'figure') {
+      figures.set(m.figure.id, m.figure);
       publish(input.runId, { type: 'figure', figure: m.figure });
     } else if (m.kind === 'done') {
-      publish(input.runId, { type: 'done', briefing: m.briefing, runMeta: m.runMeta });
-      void persist(input.runId, m.briefing).catch((err) => {
+      const briefing = figures.size
+        ? ({ ...m.briefing, figures: [...figures.values()] } as Briefing)
+        : m.briefing;
+      publish(input.runId, { type: 'done', briefing, runMeta: m.runMeta });
+      void persist(input.runId, briefing).catch((err) => {
         console.error(`[sonny] failed to persist run ${input.runId}:`, err);
       });
       finish();
@@ -94,12 +112,21 @@ export function startRun(input: WorkerOpts, spawn: SpawnWorker = defaultSpawn, p
 
   handle.on('exit', (code: number) => {
     if (finished) return;
-    // A worker that exits WITHOUT having posted done/error (silent exit) must still
-    // terminate the run, or its bus subscribers (e.g. an open SSE connection) are
-    // orphaned forever. Nonzero also surfaces an error; either way, finish() closes it.
-    if (code !== 0) {
-      publish(input.runId, { type: 'error', message: `worker exited ${code}` });
-    }
+    // Reaching exit while `finished` is false means the worker never delivered a
+    // briefing, whatever its exit code. Exit 0 used to be treated as benign and
+    // closed the run silently - the SSE stream simply stopped mid-event with no
+    // terminal frame, so the client sat on a report that never arrived and never
+    // said why. A worker that exits 0 without producing a briefing has failed;
+    // the only difference from a crash is that it declined to say so.
+    //
+    // Exit 0 here is usually the worker's event loop draining while work is
+    // still outstanding: a promise that can never settle, with no timer or
+    // socket left to hold the thread open.
+    const reason = code === 0
+      ? 'The research worker stopped before producing a report. This is usually a source request that never settled; the run has no partial result to show.'
+      : `The research worker exited unexpectedly (code ${code}).`;
+    console.error(`[sonny] run ${input.runId}: worker exited ${code} without a briefing`);
+    publish(input.runId, { type: 'error', message: reason });
     finish();
   });
 }

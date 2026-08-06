@@ -67,15 +67,22 @@ describe('startRun adapter', () => {
     expect(got.map((e) => e.type)).toEqual(['done']); // no trailing error
   });
 
-  it('closes and terminates the run on a silent clean exit (code 0, no done posted)', () => {
+  it('reports an error on a silent clean exit (code 0, no done posted)', () => {
     const { spawn, emit, wasTerminated } = fakeSpawn();
-    const got: Array<{ type: string }> = [];
+    const got: Array<{ type: string; message?: string }> = [];
     subscribe('r4', (e) => got.push(e as never));
     startRun({ runId: 'r4', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
     emit('exit', 0);
     // run is now closed: a later publish is a no-op, and the worker was terminated
     publish('r4', { type: 'error', message: 'late' } as never);
-    expect(got).toEqual([]); // no terminal event fabricated for a clean exit
+
+    // This case used to publish nothing, on the reasoning that exit 0 is a
+    // clean exit. It is not clean if no briefing was produced: the SSE stream
+    // just stopped mid-event and the client waited forever on a report that
+    // was never coming. Observed on two real runs before it was caught.
+    expect(got).toHaveLength(1);
+    expect(got[0].type).toBe('error');
+    expect(got[0].message).toContain('stopped before producing a report');
     expect(wasTerminated()).toBe(true);
   });
 
@@ -85,7 +92,9 @@ describe('startRun adapter', () => {
     subscribe('r5', (e) => got.push(e as never));
     startRun({ runId: 'r5', target: 'T', mode: 'fast', backend: 'ollama' }, spawn, async () => {});
     emit('exit', 3);
-    expect(got).toEqual([{ type: 'error', message: 'worker exited 3' }]);
+    expect(got).toEqual([
+      { type: 'error', message: 'The research worker exited unexpectedly (code 3).' },
+    ]);
     expect(wasTerminated()).toBe(true);
   });
 
@@ -109,5 +118,87 @@ describe('startRun adapter', () => {
     emit2('message', { kind: 'error', message: 'boom' } as never);
     await Promise.resolve();
     expect(calls2).toEqual([]);
+  });
+});
+
+function figureMessage(id: string, title: string): WorkerMessage {
+  return {
+    kind: 'figure',
+    figure: {
+      plot: 'tissue_expression_bar',
+      id,
+      title,
+      params: { gene: 'TACSTD2' },
+      unit: 'TPM',
+      bars: [{ label: 'Esophagus Mucosa', value: 1419.1 }],
+      stats: [],
+      source: {
+        label: 'GTEx v8',
+        url: 'https://gtexportal.org/home/gene/TACSTD2',
+        retrievedAt: '2026-07-28T18:00:00.000Z',
+      },
+    },
+  } as WorkerMessage;
+}
+
+describe('startRun figure persistence', () => {
+  it('streams each figure live and also attaches them to the finished briefing', async () => {
+    const { spawn, emit } = fakeSpawn();
+    const streamed: string[] = [];
+    let persisted: Record<string, unknown> | null = null;
+    subscribe('fig-run', (e) => streamed.push(e.type));
+
+    startRun(
+      { runId: 'fig-run', target: 'TROP2', mode: 'fast', backend: 'ollama' },
+      spawn,
+      async (_runId, briefing) => { persisted = briefing as unknown as Record<string, unknown>; },
+    );
+
+    emit('message', figureMessage('gtex:TACSTD2', 'GTEx'));
+    emit('message', figureMessage('hpa:TACSTD2', 'HPA'));
+    emit('message', { kind: 'done', briefing: { target: 'TROP2' } } as unknown as WorkerMessage);
+
+    // Live: both figures went out as they happened.
+    expect(streamed).toEqual(['figure', 'figure', 'done']);
+
+    // Durable: both survive on the briefing that gets written to disk.
+    await Promise.resolve();
+    const figures = (persisted as unknown as { figures?: Array<{ id: string }> })?.figures ?? [];
+    expect(figures.map((f) => f.id)).toEqual(['gtex:TACSTD2', 'hpa:TACSTD2']);
+  });
+
+  it('keeps one entry per figure id when a figure is re-emitted', async () => {
+    const { spawn, emit } = fakeSpawn();
+    let persisted: Record<string, unknown> | null = null;
+    startRun(
+      { runId: 'fig-dedupe', target: 'TROP2', mode: 'fast', backend: 'ollama' },
+      spawn,
+      async (_runId, briefing) => { persisted = briefing as unknown as Record<string, unknown>; },
+    );
+
+    emit('message', figureMessage('gtex:TACSTD2', 'first'));
+    emit('message', figureMessage('gtex:TACSTD2', 'second'));
+    emit('message', { kind: 'done', briefing: { target: 'TROP2' } } as unknown as WorkerMessage);
+
+    await Promise.resolve();
+    const figures = (persisted as unknown as { figures?: Array<{ title: string }> })?.figures ?? [];
+    expect(figures).toHaveLength(1);
+    expect(figures[0].title).toBe('second');
+  });
+
+  it('leaves the briefing untouched when a run produced no figures', async () => {
+    const { spawn, emit } = fakeSpawn();
+    let persisted: Record<string, unknown> | null = null;
+    startRun(
+      { runId: 'fig-none', target: 'TROP2', mode: 'fast', backend: 'ollama' },
+      spawn,
+      async (_runId, briefing) => { persisted = briefing as unknown as Record<string, unknown>; },
+    );
+
+    emit('message', { kind: 'done', briefing: { target: 'TROP2' } } as unknown as WorkerMessage);
+
+    await Promise.resolve();
+    // No empty `figures: []` key on briefings that never had any.
+    expect(persisted).toEqual({ target: 'TROP2' });
   });
 });

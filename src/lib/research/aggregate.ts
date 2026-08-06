@@ -80,6 +80,7 @@ export function foldTrace(
   const counts: Record<string, number> = { ...prev.counts };
   const sectionsRag: Record<string, 'red' | 'amber' | 'green'> = { ...prev.sectionsRag };
   const log: TraceLogEntry[] = [...prev.log];
+  let logTotal = prev.logTotal;
   const figures: Record<string, FigureSpec> = { ...prev.figures };
 
   for (const e of events) {
@@ -97,6 +98,7 @@ export function foldTrace(
       figures[figure.id] = figure;
       if (isNew) {
         log.push({ type: 'figure', role: 'figure', label: figure.title, figureId: figure.id });
+        logTotal += 1;
       }
       continue;
     }
@@ -122,6 +124,7 @@ export function foldTrace(
 
     // Append the rich, described entry to the log
     log.push(describe(e));
+    logTotal += 1;
   }
 
   // Cap log to most recent 300 entries
@@ -139,5 +142,5 @@ export function foldTrace(
     );
   }
 
-  return { phase, counts, sectionsRag, auditFlags, log: cappedLog, figures: liveFigures };
+  return { phase, counts, sectionsRag, auditFlags, log: cappedLog, logTotal, figures: liveFigures };
 }

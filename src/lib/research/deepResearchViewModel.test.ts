@@ -59,3 +59,44 @@ describe('deep research workbook mapping', () => {
     expect(events.some((event) => event.type === 'run_started')).toBe(false);
   });
 });
+
+describe('reasoningLines', () => {
+  it('returns every step, not a rolling window of the last twelve', () => {
+    const events = Array.from({ length: 40 }, (_, i) => ({
+      type: 'research_read',
+      specialist: 'target_biology',
+      sourceId: `PMID:${i}`,
+    }));
+    const aggregate = foldTrace(EMPTY_AGGREGATE, events);
+
+    // The old `.slice(-12)` made a 40-step run render as steps 01-12, which
+    // reads as the whole run rather than its tail.
+    expect(reasoningLines(aggregate)).toHaveLength(40);
+  });
+
+  it('surfaces a produced figure as its own reasoning step', () => {
+    const aggregate = foldTrace(EMPTY_AGGREGATE, [
+      {
+        type: 'figure',
+        figure: {
+          plot: 'tissue_expression_bar',
+          id: 'gtex:TACSTD2',
+          title: 'TACSTD2 expression across normal tissues',
+          params: {},
+          unit: 'TPM',
+          bars: [{ label: 'Lung', value: 1 }],
+          stats: [],
+          source: {
+            label: 'GTEx v8',
+            url: 'https://gtexportal.org/home/gene/TACSTD2',
+            retrievedAt: '',
+          },
+        },
+      },
+    ]);
+
+    expect(reasoningLines(aggregate)).toEqual([
+      'Plotted TACSTD2 expression across normal tissues',
+    ]);
+  });
+});

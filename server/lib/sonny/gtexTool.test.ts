@@ -15,9 +15,9 @@ const TISSUES = [
   { tissueSiteDetailId: 'Brain_Cortex', median: 0.2, unit: 'TPM' },
 ];
 
-function gtexFetch(tissues: unknown[] = TISSUES): typeof fetch {
+function gtexFetch(tissues: unknown[] = TISSUES, symbol = 'CDCP1'): typeof fetch {
   const responses = [
-    { hits: [{ ensembl: { gene: [{ gene: 'ENSG00000163814' }] } }] },
+    { hits: [{ symbol, ensembl: { gene: [{ gene: 'ENSG00000163814' }] } }] },
     { data: [{ gencodeId: 'ENSG00000163814.7' }] },
     { data: tissues },
   ];
@@ -106,5 +106,50 @@ describe('gtexExpressionTool', () => {
     const evidence = await gtexExpressionTool.call({ query: 'CDCP1' }, gtexFetch());
     expect(evidence).toHaveLength(1);
     expect(evidence[0].id).toBe('GTEX:CDCP1');
+  });
+});
+
+describe('gtexExpressionTool alias resolution', () => {
+  it('queries mygene by symbol OR alias, not symbol alone', async () => {
+    const calls: string[] = [];
+    const responses: unknown[] = [
+      { hits: [{ symbol: 'TACSTD2', ensembl: { gene: [{ gene: 'ENSG00000184292' }] } }] },
+      { data: [{ gencodeId: 'ENSG00000184292.6' }] },
+      { data: TISSUES },
+    ];
+    const fetchImpl = vi.fn(async (url: string) => {
+      calls.push(String(url));
+      return jsonResponse(responses.shift());
+    }) as unknown as typeof fetch;
+
+    await gtexExpressionTool.call({ query: 'TROP2' }, fetchImpl);
+
+    // A symbol-only lookup returns nothing for TROP2, so the tool used to
+    // contribute no GTEx evidence at all on the most-researched targets.
+    // URLSearchParams encodes the space as '+', which mygene accepts.
+    expect(decodeURIComponent(calls[0])).toContain('symbol:TROP2+OR+alias:TROP2');
+  });
+
+  it('labels the figure with the resolved HGNC symbol and names the alias asked for', async () => {
+    const figures: FigureSpec[] = [];
+    setFigureSink((figure) => figures.push(figure));
+
+    await gtexExpressionTool.call({ query: 'TROP2' }, gtexFetch(TISSUES, 'TACSTD2'));
+
+    const figure = figures[0];
+    expect(figure.id).toBe('gtex:TACSTD2');
+    expect(figure.title).toBe('TACSTD2 expression across normal tissues');
+    // The reader must be able to see which gene was actually plotted.
+    expect(figure.params.gene).toBe('TACSTD2 (asked as TROP2)');
+    expect(figure.source.url).toBe('https://gtexportal.org/home/gene/TACSTD2');
+  });
+
+  it('does not add an alias note when the official symbol was requested', async () => {
+    const figures: FigureSpec[] = [];
+    setFigureSink((figure) => figures.push(figure));
+
+    await gtexExpressionTool.call({ query: 'TACSTD2' }, gtexFetch(TISSUES, 'TACSTD2'));
+
+    expect(figures[0].params.gene).toBe('TACSTD2');
   });
 });

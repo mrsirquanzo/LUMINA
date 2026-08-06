@@ -81,7 +81,9 @@ describe('foldTrace figures', () => {
     ]);
 
     expect(second.log.filter((entry) => entry.role === 'figure')).toHaveLength(1);
-    expect(second.figures['gtex:TACSTD2'].bars[0].value).toBe(1900);
+    const updated = second.figures['gtex:TACSTD2'];
+    if (updated.plot !== 'tissue_expression_bar') throw new Error('wrong variant');
+    expect(updated.bars[0].value).toBe(1900);
   });
 
   it('keeps distinct figure ids as separate entries', () => {
@@ -120,5 +122,33 @@ describe('foldTrace figures', () => {
     foldTrace(first, [figureEvent({ id: 'gtex:ERBB2' })]);
     expect(Object.keys(first.figures)).toEqual(['gtex:TACSTD2']);
     expect(EMPTY_AGGREGATE.figures).toEqual({});
+  });
+});
+
+describe('foldTrace logTotal', () => {
+  it('counts every entry ever appended, not just the ones still in the log', () => {
+    const many: ResearchTraceEvent[] = Array.from({ length: 350 }, () => ({
+      type: 'evidence_registered',
+    }));
+    const aggregate = foldTrace(EMPTY_AGGREGATE, many);
+
+    // Without this the UI cannot tell a 300-step run from a 350-step one whose
+    // start scrolled off, and would report both as 300.
+    expect(aggregate.log).toHaveLength(300);
+    expect(aggregate.logTotal).toBe(350);
+  });
+
+  it('matches the log length when nothing has been trimmed', () => {
+    const aggregate = foldTrace(EMPTY_AGGREGATE, [
+      { type: 'tool_call', tool: 'gtex_expression' },
+      { type: 'tool_result', tool: 'gtex_expression', count: 1 },
+    ]);
+    expect(aggregate.logTotal).toBe(aggregate.log.length);
+  });
+
+  it('does not double-count a re-emitted figure', () => {
+    const first = foldTrace(EMPTY_AGGREGATE, [figureEvent()]);
+    const second = foldTrace(first, [figureEvent()]);
+    expect(second.logTotal).toBe(1);
   });
 });
