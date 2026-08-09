@@ -151,7 +151,14 @@ CSS custom properties follow: `--radius-card` moves 14px to 12px, `--radius-inse
 The sixteen arbitrary `rounded-[10px]` values are replaced with `rounded-md`.
 The two `rounded-[14px]` and one `rounded-[9px]` values are replaced with `rounded-lg` and `rounded-md` respectively.
 
-Form fields take `rounded-sm` at 4px. Notion is explicit that inputs stay tight and never take a pill radius, and this holds for the research composer as well.
+Form fields take `rounded-sm` at 4px. Notion is explicit that inputs stay tight and never take a pill radius.
+This covers the search input, select controls, the custom-answer field, and the URL input.
+
+**One documented exception: the research composer.**
+`.composer-shell` at `src/index.css:125` keeps its 26px radius.
+It is not a form field in the ordinary sense; it is the primary affordance of the product, and its soft silhouette is what makes the home surface legible as a place to start.
+Flattening it to 4px would cost the home screen its one clear entry signal in exchange for consistency nobody looking at the screen would notice.
+This is the only radius exception in the system. A second one is a spec violation.
 
 Pill radius `rounded-full` is reserved for the single highest-priority action on a surface, plus status dots and avatars.
 Notion's own rule places nav and utility buttons at 8px; in an application nearly every button is a utility button, so `rounded-md` is the default button shape.
@@ -204,6 +211,61 @@ Also replaces the arbitrary radius values listed above.
 Density, hierarchy, and spacing on the five main views: the research home, the intelligence feed, the watchlist, the project workspace, and the workbook run.
 This is where heading weight, row rhythm, and the flat-by-default card rule are actually judged on screen.
 
+## Migration hazards
+
+A read-only inventory sweep (Codex, 2026-08-08) counted 108 hardcoded hex occurrences across 20 files under `src/`, 31 distinct hex spellings, and 19 arbitrary pixel-radius classes.
+It also surfaced six hazards that a naive find-and-replace would walk straight into.
+
+**Hex-only replacement misses the old primary.**
+The current blue also exists as `--color-primary: 29 78 216` in `src/index.css:6`, as the array `[29, 78, 216]` in `CorrelationHeatmap.tsx:7`, and as `rgb()` / `rgba()` literals in the figure components and several shadows.
+PR 2 must sweep the decimal-triplet and `rgba()` forms, not just `#1D4ED8`.
+
+**Hex-only replacement misses the teal.**
+Beyond the nine `#2f9e8f` hits, matching teal survives as `rgba(47, 158, 143, ...)` at `GatePlot.tsx:216,244,247,283`.
+`GatePlot.tsx:493` also describes the control in accessible copy as "teal gate handles" - that string changes with the color, or a screen reader user is told to look for something that is not there.
+
+**`GatePlot` is a canvas and ignores the token layer.**
+`GatePlot.tsx:70,80,89,98,261` set colors through `fillStyle` and `strokeStyle` in JavaScript.
+No change to `tailwind.config.js` or `index.css` reaches them. This file needs its own explicit constants.
+
+**A second structural neutral palette is already in the codebase.**
+`#F8FAFC` at `index.css:88,118,318`, the `#F7F8FA` to `#EEF1F6` home-canvas gradient at `index.css:338`, and `#FBFBFA` on the sidebar at `Sidebar.tsx:259` are cool neutrals outside the token set.
+Left in place they will visibly fight the warm `#f6f5f4` canvas. They are part of PR 2, not optional cleanup.
+
+**`.surface-card` carries two different meanings.**
+Nearly every usage is a static page card, but `IntelligenceFeed.tsx:1455` uses the same class for an absolutely-positioned export dropdown.
+Removing the shadow from `.surface-card` globally would flatten that dropdown onto the content behind it. The dropdown needs the level 2 utility before the base class goes flat.
+
+**Heatmap text contrast is computed against the old ink.**
+`CorrelationHeatmap.tsx:25` picks white or `#0f172a` per cell using a 4.5:1 threshold.
+Moving ink to `rgba(0,0,0,0.95)` changes the composited result, so the threshold has to be revalidated against every generated cell color rather than assumed to still hold.
+
+### Two live bugs found during the sweep
+
+`shadow-card-hover` is used at `AnalysisPlan.tsx:126` and `WorkbookReport.tsx:405`, but `tailwind.config.js` defines only `boxShadow.card`.
+The CSS custom property `--shadow-card-hover` exists but does not create a Tailwind utility, so both native dialogs currently render with no shadow at all.
+PR 1 defines the level 2 utility and these two dialogs pick it up.
+
+`src/assets/react.svg` is dormant - no import found. It carries `#00D8FF`, which is why an unexplained cyan appears in a hex sweep. Not part of this work.
+
+## Chart series colors
+
+Deleting the teal breaks a four-series chart.
+`SubsetComposition.tsx:4-7` sets its series to the primary blue, the teal, gray `#64748b`, and `#D97706` - which is the semantic caution amber, so the "unswitched memory" category currently renders in the color this product uses to mean risk.
+
+PR 2 does the minimum that unblocks the token swap:
+the teal series gets a distinguishable neutral replacement, and the fourth series moves off the semantic amber token so a data category stops reading as a warning.
+
+A proper categorical ramp is deliberately out of scope here.
+Chart color is a different discipline from interface chrome and needs its own accessibility pass, including a colorblind-safe check.
+That later piece of work covers `SubsetComposition.tsx`, plus the saturated Apple system colors `#0A84FF`, `#30D158`, `#FF453A`, and `#FF9F0A` sitting untokenized in `src/constants/index.ts:889-892` and `src/constants/her2Baseline.ts:676-679`.
+
+## Derived primary tint
+
+Selected and active states currently use `#EFF6FF`, the blue-50 tint of the old primary, at `DossiersLibrary.tsx:146`.
+Notion defines no tint for its accent, so one is derived: `#ebf4fc`, which is `#0075de` at 8 percent on white.
+Marked derived, same as `subtle` and `borderSoft`.
+
 ## Verification
 
 Each PR is verified before it is called done.
@@ -212,9 +274,12 @@ Each PR is verified before it is called done.
 2. Every new text-on-surface pair measured for contrast. Body below 4.5:1 or large text below 3:1 blocks the PR.
 3. `ProjectWorkspace.test.tsx`, `ResearchDossier.test.tsx`, and `researchTemplateState.test.ts` pass.
 4. TypeScript check and production build clean.
-5. For PR 2, a grep confirms zero remaining occurrences of the removed hex values rather than a claim that they were replaced.
+5. For PR 2, a grep confirms zero remaining occurrences of the removed values rather than a claim that they were replaced.
+   The grep covers hex, `rgb()`, `rgba()`, and decimal-triplet forms, because the sweep showed the old primary and the teal both survive in non-hex spellings.
+6. The `GatePlot` canvas is checked visually, not by grep. Its colors live in JavaScript and no config change reaches them.
 
 ## Out of scope
 
 Information architecture, the chat-first framing of the home surface, dark mode, the broken authentication on the model routes, and any copy changes.
+The categorical chart palette is also out of scope beyond the minimum described above.
 Each is real work and each is tracked separately.
