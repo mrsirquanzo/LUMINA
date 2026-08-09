@@ -111,12 +111,19 @@ Headings move to weight 700 with explicit negative tracking. They currently sit 
 | title | 20px | 600 | 1.40 | -0.125px | Geist |
 | body | 14px | 400 | 1.50 | 0 | Geist |
 | caption | 12px | 400 | 1.43 | 0 | Geist |
-| eyebrow | 11px | 400 | 1.33 | +0.54px, uppercase | Geist Mono |
-| caption-label | 12px | 400 | 1.30 | +0.60px, uppercase | Geist Mono |
+| eyebrow | 11px | 600 | 1.35 | 0.2em, uppercase | Geist Mono |
+| caption-label | 12px | 400 | 1.30 | 0.05em, uppercase | Geist Mono |
 | identifier / figure | inherit | 400 | inherit | 0 | Geist Mono |
 | executive read | 16px | 400 | 1.6 | 0 | Newsreader |
 
-The eyebrow and caption-label tracking values come from the Figma reference, not Notion (see secondary reference below).
+**Correction made during implementation.**
+This table originally carried Figma's absolute tracking values, `+0.54px` on the eyebrow and `+0.60px` on the caption.
+Those are measured on an 18px face. Letter-spacing in absolute pixels does not transfer across font sizes, and at our 11px eyebrow `+0.54px` works out to 0.049em - roughly a quarter of the shipped 0.2em.
+
+The canonical `Design Language.md` specifies 0.2em to 0.3em for eyebrows, LUMINA already ships 0.2em, and that wide-tracked uppercase mono label is a signature of the interface.
+Trading it away on a value that does not transfer would have been a bad exchange, so the eyebrow keeps 0.2em.
+What survives from Figma is the part that does transfer: mono is scoped to eyebrows and captions, uppercase, with positive tracking.
+`caption-label` is set at 0.05em, tight enough to read as a distinct tier below the eyebrow.
 
 `caption-label` covers micro labels, table column headers, and metadata keys - short label strings.
 Descriptive caption text that reads as a sentence stays in `caption` at 12px Geist, sentence case.
@@ -202,6 +209,12 @@ Three pull requests, each of which leaves the application in a coherent state.
 Color tokens, radius scale, type scale with explicit tracking, and the three elevation levels.
 Because the application is token-driven, every surface shifts together.
 
+**Correction: PR 1 and PR 2 ship together.**
+This section originally claimed each PR leaves the application coherent.
+That is false for PR 1 in isolation, and the hazard sweep is what showed it: a second cool-neutral palette (`#F8FAFC`, `#FBFBFA`, the home-canvas gradient) lives in the component layer, so shipping the warm canvas without PR 2 would leave cool panels sitting on a warm ground.
+They are two commits on one branch and one review.
+PR 3 remains separate and genuinely is independent.
+
 **PR 2 - de-hardcode.**
 Replace the roughly 120 hardcoded hex values in `src` with token references, and delete `#2f9e8f`.
 The concentrations are `#E6EBF2` at 14 occurrences, `#FFFFFF` at 11, `#1D4ED8` at 6, and `#0F172A` at 6.
@@ -259,6 +272,20 @@ the teal series gets a distinguishable neutral replacement, and the fourth serie
 A proper categorical ramp is deliberately out of scope here.
 Chart color is a different discipline from interface chrome and needs its own accessibility pass, including a colorblind-safe check.
 That later piece of work covers `SubsetComposition.tsx`, plus the saturated Apple system colors `#0A84FF`, `#30D158`, `#FF453A`, and `#FF9F0A` sitting untokenized in `src/constants/index.ts:889-892` and `src/constants/her2Baseline.ts:676-679`.
+
+## Accent text fails AA on the canvas
+
+Found by the contrast gate during implementation, not predicted by the reference.
+
+`#0075de` measures 4.19:1 as body text on the `#f6f5f4` canvas. That fails WCAG AA.
+It clears only on pure white, at 4.57:1, which is why Notion's own site gets away with it - their links sit on white cards, not on the warm ground.
+LUMINA puts accent text directly on the canvas in several places.
+
+The fix is a text-only variant, `primaryText` `#0068c6`, which clears every ground in the system: page 5.08:1, subtle 4.74:1, surface 5.53:1.
+Fills, dots, borders and rings keep the vivid `#0075de`; anything set in type uses the darker one.
+
+This is wired through Tailwind's `textColor` key rather than by editing components, so `text-primary` resolves to `#0068c6` while `bg-primary` stays `#0075de`.
+The 25 files that already say `text-primary` became compliant without being touched.
 
 ## Derived primary tint
 
