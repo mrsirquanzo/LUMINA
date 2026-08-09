@@ -1,10 +1,12 @@
 import { useGating } from './gatingStore';
+import { CATEGORICAL } from '../../../../lib/chartPalette';
 
+// Slots assigned in fixed order from the shared palette, never cycled.
 const SUBSETS = [
-  { key: 'naive', label: 'Naive', color: '#0075de' },
-  { key: 'switched', label: 'Switched memory', color: '#8a5d4e' },
-  { key: 'doubleNegative', label: 'Double-negative', color: '#615d59' },
-  { key: 'unswitched', label: 'Unswitched memory', color: '#7656a8' },
+  { key: 'naive', label: 'Naive', color: CATEGORICAL[0] },
+  { key: 'switched', label: 'Switched memory', color: CATEGORICAL[1] },
+  { key: 'doubleNegative', label: 'Double-negative', color: CATEGORICAL[2] },
+  { key: 'unswitched', label: 'Unswitched memory', color: CATEGORICAL[3] },
 ] as const;
 
 export function SubsetComposition() {
@@ -42,7 +44,7 @@ export function SubsetComposition() {
             return (
               <div
                 key={key}
-                className="flex min-w-0 items-center justify-center overflow-hidden border-r border-white/70 last:border-r-0"
+                className="flex min-w-0 items-center justify-center overflow-hidden border-r-2 border-white last:border-r-0"
                 style={{ width: `${Math.max(0, Math.min(100, value))}%`, backgroundColor: color }}
                 title={`${label}: ${value.toFixed(1)}%`}
               >

@@ -1,3 +1,5 @@
+import { CATEGORICAL } from '../lib/chartPalette';
+
 import type {
   ValidationScore,
   DruggabilityScore,
@@ -885,11 +887,16 @@ export const IP_FTO_DATA = {
 
 export const MARKET_OPPORTUNITY_DATA = {
   tam: { value: 5.2, unit: 'B', year: 2030, cagr: 12.5, currency: 'USD' },
+  // NOTE: nothing imports this constant today - the colours below render nowhere.
+  // They are kept on the shared palette anyway so that wiring it up later cannot
+  // reintroduce series colours that collide with the go/watch/nogo ramp, which is
+  // what the previous Apple system colours did (a market segment in green read as
+  // a recommendation).
   segments: [
-    { name: 'TNBC', size: 2.1, share: 40, color: '#FF453A', patients: '45,000 annual' },
-    { name: 'NSCLC', size: 1.8, share: 35, color: '#0A84FF', patients: '180,000 annual' },
-    { name: 'Urothelial', size: 0.8, share: 15, color: '#30D158', patients: '85,000 annual' },
-    { name: 'Other Solid Tumors', size: 0.5, share: 10, color: '#FF9F0A', patients: 'various' },
+    { name: 'TNBC', size: 2.1, share: 40, color: CATEGORICAL[0], patients: '45,000 annual' },
+    { name: 'NSCLC', size: 1.8, share: 35, color: CATEGORICAL[1], patients: '180,000 annual' },
+    { name: 'Urothelial', size: 0.8, share: 15, color: CATEGORICAL[2], patients: '85,000 annual' },
+    { name: 'Other Solid Tumors', size: 0.5, share: 10, color: CATEGORICAL[3], patients: 'various' },
   ],
   competitiveDynamics:
     "Trodelvy holds first-mover advantage but safety profile creates opportunity for differentiation. Market likely to support 2-3 differentiated agents based on historical oncology market patterns. Pricing pressure expected but differentiation can support premium.",

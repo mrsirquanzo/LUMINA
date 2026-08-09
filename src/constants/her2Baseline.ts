@@ -1,3 +1,5 @@
+import { CATEGORICAL } from '../lib/chartPalette';
+
 import type {
   Citation,
   ClinicalActivity,
@@ -672,11 +674,12 @@ export const HER2_IP_FTO_DATA = {
 
 export const HER2_MARKET_OPPORTUNITY_DATA = {
   tam: { value: 20, unit: 'B', year: 2030, cagr: 8.5, currency: 'USD' },
+  // NOTE: nothing imports this constant today - see the note in constants/index.ts.
   segments: [
-    { name: 'HER2+ Breast', size: 8.0, share: 40, color: '#0A84FF', patients: 'Biomarker-defined subset' },
-    { name: 'HER2-low Breast', size: 7.0, share: 35, color: '#30D158', patients: 'Large expansion segment' },
-    { name: 'Gastric/GEJ', size: 2.0, share: 10, color: '#FF9F0A', patients: 'HER2+ subset' },
-    { name: 'HER2-mutant (lung/others)', size: 3.0, share: 15, color: '#FF453A', patients: 'NGS-defined subsets' },
+    { name: 'HER2+ Breast', size: 8.0, share: 40, color: CATEGORICAL[0], patients: 'Biomarker-defined subset' },
+    { name: 'HER2-low Breast', size: 7.0, share: 35, color: CATEGORICAL[1], patients: 'Large expansion segment' },
+    { name: 'Gastric/GEJ', size: 2.0, share: 10, color: CATEGORICAL[2], patients: 'HER2+ subset' },
+    { name: 'HER2-mutant (lung/others)', size: 3.0, share: 15, color: CATEGORICAL[3], patients: 'NGS-defined subsets' },
   ],
   competitiveDynamics:
     'Market is dominated by best-in-class ADCs and established antibody backbones. New entrants must show clear value in a segment where the incumbent does not fully solve the problem (CNS, safety, heterogeneity).',

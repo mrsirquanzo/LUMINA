@@ -1,10 +1,13 @@
 import { useMemo } from 'react';
 import { useGating } from './gatingStore';
 import { bCellMarkerCorrelation } from './model';
+import { DIVERGING } from '../../../../lib/chartPalette';
 
-const NEGATIVE = [220, 38, 38] as const;
-const NEUTRAL = [246, 245, 244] as const;
-const POSITIVE = [0, 117, 222] as const;
+// Diverging, not semantic. A negative correlation is a direction, not a bad
+// outcome - painting it in the no-go red told the reader it was a verdict.
+const NEGATIVE = DIVERGING.negative;
+const NEUTRAL = DIVERGING.neutral;
+const POSITIVE = DIVERGING.positive;
 
 function correlationCellStyle(value: number) {
   const bounded = Math.max(-1, Math.min(1, value));
@@ -71,7 +74,7 @@ export function CorrelationHeatmap() {
 
         <div className="mt-3 flex items-center gap-2" aria-label="Correlation color scale from negative one to positive one">
           <span className="t-meta font-mono tabular-nums text-textTertiary">-1</span>
-          <span className="h-2 flex-1 rounded-full bg-[linear-gradient(90deg,#dc2626_0%,#f6f5f4_50%,rgb(var(--color-primary))_100%)]" aria-hidden="true" />
+          <span className="h-2 flex-1 rounded-full bg-[linear-gradient(90deg,#93006a_0%,#f6f5f4_50%,#0075de_100%)]" aria-hidden="true" />
           <span className="t-meta font-mono tabular-nums text-textTertiary">+1</span>
         </div>
       </div>
