@@ -19,7 +19,7 @@ export function SonnyLogo({ size = 28, className }: SonnyLogoProps) {
       aria-label="Sonny"
       className={className}
     >
-      <rect width="32" height="32" rx="8.5" fill="#1D4ED8" />
+      <rect width="32" height="32" rx="8.5" fill="#0075de" />
       <path
         d="M20.5 11.2C20.5 8.6 12.3 8.2 12.3 12.4C12.3 15.6 19.9 15 19.9 19.7C19.9 24 11.2 23.6 11.2 20.6"
         stroke="#FFFFFF"

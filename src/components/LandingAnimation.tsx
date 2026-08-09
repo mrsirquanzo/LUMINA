@@ -43,10 +43,10 @@ const NODES: OrbitNode[] = [
 
 const PARTICLE_COUNT = 44;
 
-// Locked design system: trust-blue accent + slate, on a light slate page.
-const SKILL_COLOR = '#1D4ED8'; // trust blue
-const SOURCE_COLOR = '#475569'; // slate-600
-const INK = '#0F172A';
+// Locked design system: trust-blue accent + warm neutrals, on a warm page.
+const SKILL_COLOR = '#0075de'; // trust blue
+const SOURCE_COLOR = '#31302e';
+const INK = 'rgba(0,0,0,0.95)';
 
 type Phase = 'particles' | 'logo' | 'agents' | 'tagline' | 'fadeout';
 
@@ -167,7 +167,7 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
         className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
         style={{
           background:
-            'radial-gradient(circle at 50% 42%, rgba(29,78,216,0.07), rgba(246,248,251,0) 58%), #F6F8FB',
+            'radial-gradient(circle at 50% 42%, rgba(0,117,222,0.07), rgba(246,245,244,0) 58%), #f6f5f4',
         }}
       >
         {/* Whisper grain + fine atmosphere - fixed layer, no scroll repaint cost. */}
@@ -175,7 +175,7 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
           className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
-              'radial-gradient(rgba(15,23,42,0.035) 1px, transparent 1px)',
+              'radial-gradient(rgba(0,0,0,0.035) 1px, transparent 1px)',
             backgroundSize: '4px 4px',
             opacity: 0.5,
           }}
@@ -233,7 +233,7 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
                   className="absolute inset-0 blur-3xl -z-10"
                   style={{
                     background:
-                      'radial-gradient(circle, rgba(29,78,216,0.18), rgba(29,78,216,0.05), transparent 70%)',
+                      'radial-gradient(circle, rgba(0,117,222,0.18), rgba(0,117,222,0.05), transparent 70%)',
                     width: '420px',
                     height: '420px',
                     left: '50%',
@@ -291,14 +291,14 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
                         className="w-[72px] h-[72px] rounded-2xl flex items-center justify-center bg-white"
                         style={{
                           border: `1.5px solid ${color}33`,
-                          boxShadow: `0 6px 20px ${color}1F, 0 1px 2px rgba(15,23,42,0.05)`,
+                          boxShadow: `0 6px 20px ${color}1F, 0 1px 2px rgba(0,0,0,0.05)`,
                         }}
                       >
                         <Icon size={30} strokeWidth={1.75} style={{ color }} />
                       </div>
                       <span
                         className="text-[15px] font-medium whitespace-nowrap"
-                        style={{ color: node.kind === 'skill' ? SKILL_COLOR : '#64748B' }}
+                        style={{ color: node.kind === 'skill' ? SKILL_COLOR : '#615d59' }}
                       >
                         {node.label}
                       </span>
@@ -314,7 +314,7 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 whitespace-nowrap">
           <motion.p
             className="font-display italic text-xl tracking-wide"
-            style={{ color: '#475569' }}
+            style={{ color: '#31302e' }}
             initial={{ opacity: 0, y: 16 }}
             animate={{
               opacity: phase === 'fadeout' ? 0 : phase === 'tagline' ? 1 : 0,

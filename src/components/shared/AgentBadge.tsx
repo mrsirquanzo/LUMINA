@@ -48,7 +48,6 @@ const AgentBadge = memo(function AgentBadge({
     purple: 'bg-purple-100/20 border-purple-500/30 text-purple-400 hover:bg-purple-100/30',
     green: 'bg-green-100/20 border-green-500/30 text-green-400 hover:bg-green-100/30',
     orange: 'bg-orange-100/20 border-orange-500/30 text-orange-400 hover:bg-orange-100/30',
-    teal: 'bg-teal-100/20 border-teal-500/30 text-teal-400 hover:bg-teal-100/30',
     primary: 'bg-primary/20 border-primary/30 text-primary hover:bg-primary/30',
   };
 
@@ -84,4 +83,3 @@ const AgentBadge = memo(function AgentBadge({
 AgentBadge.displayName = 'AgentBadge';
 
 export default AgentBadge;
-

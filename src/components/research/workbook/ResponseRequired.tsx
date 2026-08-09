@@ -54,7 +54,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
                 id={`clarification-${clarification.id}`}
                 value={answers[clarification.id] ?? clarification.default}
                 onChange={(event) => setAnswers((current) => ({ ...current, [clarification.id]: event.target.value }))}
-                className="quiet-action t-body-sm w-full appearance-none rounded-[10px] border border-border bg-white px-3.5 py-3 pr-10 text-textPrimary outline-none hover:border-primary/25 focus:border-primary/50"
+                className="quiet-action t-body-sm w-full appearance-none rounded-sm border border-border bg-white px-3.5 py-3 pr-10 text-textPrimary outline-none hover:border-primary/25 focus:border-primary/50"
               >
                 {clarification.options.map((option) => <option key={option}>{option}</option>)}
               </select>
@@ -69,7 +69,7 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
                   value={answers[clarification.id] ?? ''}
                   onChange={(event) => setAnswers((current) => ({ ...current, [clarification.id]: event.target.value }))}
                   placeholder="Describe the analysis you want Sonny to use"
-                  className="quiet-action t-body-sm mt-1.5 w-full rounded-[10px] border border-border bg-white px-3.5 py-3 text-textPrimary outline-none placeholder:text-textTertiary hover:border-primary/25 focus:border-primary/50"
+                  className="quiet-action t-body-sm mt-1.5 w-full rounded-sm border border-border bg-white px-3.5 py-3 text-textPrimary outline-none placeholder:text-textTertiary hover:border-primary/25 focus:border-primary/50"
                   autoFocus
                 />
               </div>
@@ -96,14 +96,14 @@ export function ResponseRequired({ clarifications, accepted, onAccept }: Respons
           <button
             type="button"
             onClick={() => setCustomFor(clarifications[0]?.id ?? null)}
-            className="quiet-action t-meta rounded-[10px] border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary"
+            className="quiet-action t-meta rounded-md border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary"
           >
             Something else
           </button>
           <button
             type="button"
             onClick={() => onAccept(answers)}
-            className="quiet-action t-meta rounded-[10px] bg-primary px-4 py-2 font-semibold text-white shadow-sm hover:bg-primary/90"
+            className="quiet-action t-meta rounded-md bg-primary px-4 py-2 font-semibold text-white shadow-sm hover:bg-primary/90"
           >
             Accept
           </button>

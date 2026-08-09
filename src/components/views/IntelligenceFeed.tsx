@@ -1452,7 +1452,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                   <MoreHorizontal className="w-5 h-5" />
                 </button>
                 {showExportMenu && (
-                  <div className="surface-card absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden">
+                  <div className="surface-card absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden shadow-elevated">
                     <button
                       type="button"
                       onClick={() => {
@@ -1567,7 +1567,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                     }
                   }}
                   placeholder="Add a target or topic"
-                  className="quiet-action t-body w-full rounded-[10px] border border-border bg-white py-2.5 pl-10 pr-20 text-textPrimary placeholder:text-textTertiary hover:border-primary/20 focus:border-primary/40 focus:outline-none"
+                  className="quiet-action t-body w-full rounded-sm border border-border bg-white py-2.5 pl-10 pr-20 text-textPrimary placeholder:text-textTertiary hover:border-primary/20 focus:border-primary/40 focus:outline-none"
                 />
                 {feedSearchInput ? (
                   <button
@@ -1639,7 +1639,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       <main className="space-y-6 px-6 py-8">
         <section aria-labelledby="sonny-read-heading" className="surface-card relative overflow-hidden border-primary/15 bg-primary/[0.025] p-5">
           <div className="flex items-start gap-4">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-primary/15 bg-white text-primary shadow-card">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-primary/15 bg-white text-primary shadow-card">
               <Sparkles className="w-4 h-4 text-primary" />
             </div>
             <div className="min-w-0 flex-1">
@@ -1806,7 +1806,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                             setExpandedItemId(next);
                             if (next && !isDemoMode) void ensureArticleAnalysis(item);
                           }}
-                          className="quiet-action t-meta inline-flex items-center gap-1.5 rounded-[10px] bg-primary px-3 py-2 font-semibold text-white shadow-sm hover:bg-primary/90"
+                          className="quiet-action t-meta inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 font-semibold text-white shadow-sm hover:bg-primary/90"
                         >
                           {expanded ? (
                             <>Close read <ChevronUp className="w-3.5 h-3.5" /></>
@@ -1852,7 +1852,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                               <button
                                 type="button"
                                 onClick={() => void ensureArticleAnalysis(item)}
-                                className="quiet-action t-body rounded-[10px] border border-border bg-white px-3 py-2 font-semibold text-textPrimary hover:border-primary/25 hover:text-primary"
+                                className="quiet-action t-body rounded-md border border-border bg-white px-3 py-2 font-semibold text-textPrimary hover:border-primary/25 hover:text-primary"
                               >
                                 Retry
                               </button>

@@ -257,7 +257,7 @@ export default function SonnyChat({
             }}
             placeholder={placeholder}
             disabled={isLoading}
-            className="flex-1 px-4 py-2 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 disabled:opacity-50"
+            className="flex-1 px-4 py-2 bg-surface border border-white/10 rounded-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:border-primary/50 disabled:opacity-50"
           />
           <button
             onClick={() => handleSend()}

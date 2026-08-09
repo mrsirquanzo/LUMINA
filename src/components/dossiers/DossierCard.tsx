@@ -65,14 +65,13 @@ export function DossierCard({ item, onClick }: DossierCardProps) {
       }}
       className="tactile flex items-center gap-4 px-5 py-4 cursor-pointer transition-transform motion-safe:hover:-translate-y-0.5"
       style={{
-        background: '#fff',
-        border: '1px solid #E6EBF2',
-        borderRadius: 14,
-        boxShadow: '0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035)',
+        background: '#FFFFFF',
+        border: '1px solid #e6e6e6',
+        borderRadius: 12,
         outline: 'none',
       }}
       onFocus={(e) => {
-        e.currentTarget.style.outline = '2px solid rgba(29,78,216,0.5)';
+        e.currentTarget.style.outline = '2px solid rgba(0,117,222,0.5)';
         e.currentTarget.style.outlineOffset = '2px';
       }}
       onBlur={(e) => {

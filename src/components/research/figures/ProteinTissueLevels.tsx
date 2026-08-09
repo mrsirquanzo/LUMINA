@@ -22,17 +22,17 @@ const LABEL_CHAR_WIDTH = 5.8;
 const PLOT_RIGHT_PAD = 24;
 const AXIS_HEIGHT = 18;
 
-const INK = '#0F172A';
-const MUTED = '#5F6D80';
-const RULE = '#E6EBF2';
+const INK = 'rgba(0,0,0,0.95)';
+const MUTED = '#615d59';
+const RULE = '#e6e6e6';
 
 // One hue, four steps. Ordinal data gets an ordinal ramp, not four unrelated
 // colors that would read as four unrelated categories.
 const LEVEL_FILL: Record<ProteinLevel, string> = {
   'not detected': '#FFFFFF',
-  low: 'rgba(29, 78, 216, 0.32)',
-  medium: 'rgba(29, 78, 216, 0.64)',
-  high: 'rgb(29 78 216)',
+  low: 'rgba(0, 117, 222, 0.32)',
+  medium: 'rgba(0, 117, 222, 0.64)',
+  high: 'rgb(0 117 222)',
 };
 
 const LEVEL_TICK: Record<ProteinLevel, string> = {

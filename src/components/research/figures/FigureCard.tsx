@@ -50,7 +50,7 @@ export function FigureCard({ figure }: { figure: FigureSpec }): ReactElement {
   const { ref, width } = useMeasuredWidth<HTMLDivElement>();
 
   return (
-    <figure className="rounded-lg border border-border bg-surface px-3 py-2.5 shadow-card">
+    <figure className="rounded-lg border border-border bg-surface px-3 py-2.5">
       <figcaption>
         <p className="t-eyebrow text-textTertiary">figure</p>
         <p className="t-body-sm mt-1 font-medium text-textPrimary">{figure.title}</p>

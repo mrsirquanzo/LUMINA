@@ -129,7 +129,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
           bottom: 0,
           width: 820,
           maxWidth: '100vw',
-          background: '#F6F8FB',
+          background: '#f6f5f4',
           boxShadow: '-24px 0 70px rgba(15,23,38,.34)',
           display: 'flex',
           flexDirection: 'column',
@@ -146,7 +146,7 @@ export function DossierDrawer({ runId, onClose }: Props) {
             gap: 13,
             padding: '18px 26px',
             background: '#FFFFFF',
-            borderBottom: '1px solid #E6EBF2',
+            borderBottom: '1px solid #e6e6e6',
             flex: 'none',
           }}
         >
@@ -166,19 +166,19 @@ export function DossierDrawer({ runId, onClose }: Props) {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: '#fff',
-              border: '1px solid #E6EBF2',
-              borderRadius: 9,
+              background: '#FFFFFF',
+              border: '1px solid #e6e6e6',
+              borderRadius: 8,
               cursor: 'pointer',
-              color: '#475569',
+              color: '#31302e',
               padding: 0,
               transition: 'border-color 0.15s, color 0.15s',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#C7D2E4';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#0075de';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#E6EBF2';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#e6e6e6';
             }}
           >
             <X size={16} />

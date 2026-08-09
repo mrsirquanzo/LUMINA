@@ -3,8 +3,8 @@ import { useGating } from './gatingStore';
 import { bCellMarkerCorrelation } from './model';
 
 const NEGATIVE = [220, 38, 38] as const;
-const NEUTRAL = [248, 250, 252] as const;
-const POSITIVE = [29, 78, 216] as const;
+const NEUTRAL = [246, 245, 244] as const;
+const POSITIVE = [0, 117, 222] as const;
 
 function correlationCellStyle(value: number) {
   const bounded = Math.max(-1, Math.min(1, value));
@@ -22,7 +22,7 @@ function correlationCellStyle(value: number) {
   }, 0);
   return {
     backgroundColor: `rgb(${channels.join(' ')})`,
-    color: 1.05 / (luminance + 0.05) >= 4.5 ? '#ffffff' : '#0f172a',
+    color: 1.05 / (luminance + 0.05) >= 4.5 ? '#ffffff' : 'rgba(0,0,0,0.95)',
   };
 }
 
@@ -71,7 +71,7 @@ export function CorrelationHeatmap() {
 
         <div className="mt-3 flex items-center gap-2" aria-label="Correlation color scale from negative one to positive one">
           <span className="t-meta font-mono tabular-nums text-textTertiary">-1</span>
-          <span className="h-2 flex-1 rounded-full bg-[linear-gradient(90deg,#dc2626_0%,#f8fafc_50%,rgb(var(--color-primary))_100%)]" aria-hidden="true" />
+          <span className="h-2 flex-1 rounded-full bg-[linear-gradient(90deg,#dc2626_0%,#f6f5f4_50%,rgb(var(--color-primary))_100%)]" aria-hidden="true" />
           <span className="t-meta font-mono tabular-nums text-textTertiary">+1</span>
         </div>
       </div>

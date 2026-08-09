@@ -116,7 +116,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                 setPassword(e.target.value);
                 setError(null);
               }}
-              className="w-full px-4 py-3 bg-surface border border-white/10 rounded-lg text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-colors"
+              className="w-full px-4 py-3 bg-surface border border-white/10 rounded-sm text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-colors"
               placeholder="Enter access password"
               disabled={isLoading}
               required

@@ -71,11 +71,11 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           style={{
             width: 72,
             height: 72,
-            background: '#F1F5F9',
-            border: '1px solid #E6EBF2',
+            background: '#efedeb',
+            border: '1px solid #e6e6e6',
           }}
         >
-          <BookOpen size={32} style={{ color: '#94A3B8' }} />
+          <BookOpen size={32} style={{ color: '#615d59' }} />
         </span>
 
         <h2 className="t-h3 mb-2 text-center text-textPrimary">
@@ -92,17 +92,17 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
             onClick={onOpenSonny}
             className="t-body-sm inline-flex items-center gap-2 rounded-lg px-4 py-2.5 font-semibold text-white"
             style={{
-              background: '#1D4ED8',
-              boxShadow: '0 1px 3px rgba(29,78,216,.25)',
+              background: '#0075de',
+              boxShadow: '0 1px 3px rgba(0,117,222,.25)',
               border: 'none',
               cursor: 'pointer',
               transition: 'background 0.18s, transform 0.15s',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = '#1E40AF';
+              (e.currentTarget as HTMLButtonElement).style.background = '#005bab';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = '#1D4ED8';
+              (e.currentTarget as HTMLButtonElement).style.background = '#0075de';
             }}
             onMouseDown={(e) => {
               (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.98)';
@@ -143,9 +143,9 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
               onClick={() => setFilter(tab.key)}
               className="t-meta cursor-pointer rounded-full px-3 py-1.5 font-semibold"
               style={{
-                background: isActive ? '#EFF6FF' : '#fff',
-                border: `1px solid ${isActive ? 'transparent' : '#E6EBF2'}`,
-                color: isActive ? '#1D4ED8' : '#475569',
+                background: isActive ? '#ebf4fc' : '#FFFFFF',
+                border: `1px solid ${isActive ? 'transparent' : '#e6e6e6'}`,
+                color: isActive ? '#0075de' : '#31302e',
                 transition: 'background 0.15s, color 0.15s, border-color 0.15s',
               }}
             >
@@ -163,21 +163,21 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by target..."
           aria-label="Search reports by target"
-          className="t-body rounded-lg px-3.5 py-2.5 text-textPrimary placeholder:text-textTertiary"
+          className="t-body rounded-sm px-3.5 py-2.5 text-textPrimary placeholder:text-textTertiary"
           style={{
-            background: '#fff',
-            border: '1px solid #E6EBF2',
+            background: '#FFFFFF',
+            border: '1px solid #e6e6e6',
             outline: 'none',
             width: '100%',
             maxWidth: 360,
             transition: 'border-color 0.15s, box-shadow 0.15s',
           }}
           onFocus={(e) => {
-            e.currentTarget.style.borderColor = '#1D4ED8';
-            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.15)';
+            e.currentTarget.style.borderColor = '#0075de';
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,117,222,0.15)';
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#E6EBF2';
+            e.currentTarget.style.borderColor = '#e6e6e6';
             e.currentTarget.style.boxShadow = '';
           }}
         />

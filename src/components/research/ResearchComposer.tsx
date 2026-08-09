@@ -224,7 +224,7 @@ export function ResearchComposer({ onStart, initialQuery, seed, onOpenProject }:
               {projectMenuOpen && (
                 <div
                   role="menu"
-                  className="absolute bottom-full left-0 z-50 mb-2 max-h-72 w-64 overflow-y-auto rounded-xl border border-border bg-white p-1.5 shadow-[0_12px_32px_rgba(15,23,42,0.14)]"
+                  className="absolute bottom-full left-0 z-50 mb-2 max-h-72 w-64 overflow-y-auto rounded-xl border border-border bg-white p-1.5 shadow-elevated"
                 >
                   <p className="t-eyebrow px-2.5 pb-1.5 pt-1 text-textTertiary">Go to project</p>
                   {projects.map((project) => (

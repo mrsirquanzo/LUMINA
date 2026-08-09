@@ -101,7 +101,7 @@ function WorkbookRunContent({ run, onBack }: WorkbookRunProps) {
           <button
             type="button"
             onClick={resetReplay}
-            className="quiet-action t-meta inline-flex w-fit items-center gap-2 rounded-[10px] border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary"
+            className="quiet-action t-meta inline-flex w-fit items-center gap-2 rounded-md border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary"
           >
             <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
             Restart replay
@@ -177,7 +177,7 @@ function WorkbookRunContent({ run, onBack }: WorkbookRunProps) {
                 <select
                   value={pinProjectId}
                   onChange={(event) => setPinProjectId(event.target.value)}
-                  className="t-meta mt-2.5 h-9 w-full rounded-lg border border-border bg-white px-2.5 text-textSecondary outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
+                  className="t-meta mt-2.5 h-9 w-full rounded-sm border border-border bg-white px-2.5 text-textSecondary outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
                   aria-label="Project for this experiment"
                 >
                   <option value="">Choose a project</option>

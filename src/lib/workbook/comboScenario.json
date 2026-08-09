@@ -179,7 +179,7 @@
       },
       {
         "src": "/workbook/combo/fig_ranking.png",
-        "caption": "Combinations ranked by mean excess over Bliss in MALME-3M. Teal = synergistic, red = antagonistic."
+        "caption": "Combinations ranked by mean excess over Bliss in MALME-3M. Positive values are synergistic; red values are antagonistic."
       },
       {
         "src": "/workbook/combo/fig_single_agent.png",

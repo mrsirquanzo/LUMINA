@@ -37,14 +37,14 @@ function SkeletonRow() {
       <div
         className="h-[14px] rounded-md w-3/4 motion-safe:animate-[shimmer_1.4s_infinite_linear]"
         style={{
-          background: 'linear-gradient(90deg, #E6EBF2 0%, #F1F5F9 50%, #E6EBF2 100%)',
+          background: 'linear-gradient(90deg, #e6e6e6 0%, #efedeb 50%, #e6e6e6 100%)',
           backgroundSize: '200% 100%',
         }}
       />
       <div
         className="h-[11px] rounded-md w-2/5 motion-safe:animate-[shimmer_1.4s_infinite_linear]"
         style={{
-          background: 'linear-gradient(90deg, #E6EBF2 0%, #F1F5F9 50%, #E6EBF2 100%)',
+          background: 'linear-gradient(90deg, #e6e6e6 0%, #efedeb 50%, #e6e6e6 100%)',
           backgroundSize: '200% 100%',
         }}
       />

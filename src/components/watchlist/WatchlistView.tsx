@@ -33,7 +33,7 @@ function AddTargetInput({
         placeholder="Add a target - e.g. CDCP1"
         aria-label="Add a watchlist target"
         className="
-          t-body flex-1 h-10 px-3 rounded-lg
+          t-body flex-1 h-10 px-3 rounded-sm
           bg-surface border border-border text-textPrimary
           placeholder:text-textTertiary
           focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
@@ -48,7 +48,7 @@ function AddTargetInput({
         className="
           t-body inline-flex items-center gap-1.5 h-10 px-4 rounded-lg font-medium
           bg-primary text-white
-          hover:bg-[#1E40AF] active:scale-[0.98]
+          hover:bg-primaryPressed active:scale-[0.98]
           disabled:opacity-40 disabled:cursor-not-allowed
           transition-all duration-150
           motion-reduce:transition-none
@@ -104,8 +104,6 @@ function TargetCard({ target, unreadCount, onViewInFeed }: TargetCardProps) {
       className="
         flex flex-col gap-3 p-4 rounded-xl
         bg-surface border border-border
-        shadow-[0_1px_2px_rgba(15,23,42,.04),0_2px_8px_rgba(15,23,42,.035)]
-        hover:shadow-[0_2px_8px_rgba(15,23,42,.08),0_4px_16px_rgba(15,23,42,.06)]
         hover:border-blue-200
         hover:-translate-y-px
         active:scale-[0.98]

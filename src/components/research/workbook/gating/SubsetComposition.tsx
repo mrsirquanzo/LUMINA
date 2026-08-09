@@ -1,10 +1,10 @@
 import { useGating } from './gatingStore';
 
 const SUBSETS = [
-  { key: 'naive', label: 'Naive', color: '#1d4ed8' },
-  { key: 'switched', label: 'Switched memory', color: '#2f9e8f' },
-  { key: 'doubleNegative', label: 'Double-negative', color: '#64748b' },
-  { key: 'unswitched', label: 'Unswitched memory', color: '#d97706' },
+  { key: 'naive', label: 'Naive', color: '#0075de' },
+  { key: 'switched', label: 'Switched memory', color: '#8a5d4e' },
+  { key: 'doubleNegative', label: 'Double-negative', color: '#615d59' },
+  { key: 'unswitched', label: 'Unswitched memory', color: '#7656a8' },
 ] as const;
 
 export function SubsetComposition() {

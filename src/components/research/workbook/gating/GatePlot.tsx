@@ -3,7 +3,7 @@ import { RotateCcw } from 'lucide-react';
 import { useGating } from './gatingStore';
 import { fieldIndexes, type FlowEvent, type FlowField, type GateState, type GatingStep } from './model';
 
-const TEAL = '#2f9e8f';
+const PRIMARY = '#0075de';
 const PAD = { left: 58, right: 18, top: 20, bottom: 48 };
 const MIN_CANVAS_HEIGHT = 330;
 
@@ -67,7 +67,7 @@ function drawAxes(
   xRange: [number, number],
   yRange: [number, number],
 ) {
-  context.fillStyle = '#ffffff';
+  context.fillStyle = '#FFFFFF';
   context.fillRect(0, 0, plot.width, plot.height);
   context.font = '10px Geist, Inter, sans-serif';
   context.lineWidth = 1;
@@ -77,7 +77,7 @@ function drawAxes(
   for (let step = 0; step <= 4; step += 1) {
     const x = plot.chartLeft + (plot.chartRight - plot.chartLeft) * step / 4;
     const y = plot.chartBottom - (plot.chartBottom - plot.chartTop) * step / 4;
-    context.strokeStyle = step === 0 ? '#cbd5e1' : '#eef2f7';
+    context.strokeStyle = step === 0 ? '#e6e6e6' : '#f0f0f0';
     context.beginPath();
     context.moveTo(x, plot.chartTop);
     context.lineTo(x, plot.chartBottom);
@@ -86,7 +86,7 @@ function drawAxes(
     context.moveTo(plot.chartLeft, y);
     context.lineTo(plot.chartRight, y);
     context.stroke();
-    context.fillStyle = '#64748b';
+    context.fillStyle = '#615d59';
     context.fillText(formatTick(xRange[0] + (xRange[1] - xRange[0]) * step / 4), x, plot.chartBottom + 8);
     context.textAlign = 'right';
     context.textBaseline = 'middle';
@@ -95,7 +95,7 @@ function drawAxes(
     context.textBaseline = 'top';
   }
 
-  context.fillStyle = '#334155';
+  context.fillStyle = '#31302e';
   context.font = '11px Geist, Inter, sans-serif';
   context.fillText(axisLabel(xField), (plot.chartLeft + plot.chartRight) / 2, plot.height - 17);
   context.save();
@@ -119,7 +119,7 @@ function drawPoints(
   context.beginPath();
   context.rect(plot.chartLeft, plot.chartTop, plot.chartRight - plot.chartLeft, plot.chartBottom - plot.chartTop);
   context.clip();
-  context.fillStyle = 'rgba(15, 23, 42, 0.16)';
+  context.fillStyle = 'rgba(0, 0, 0, 0.16)';
   events.forEach((event) => {
     const x = dataToCanvas(event[xIndex], xRange, plot.chartLeft, plot.chartRight);
     const y = dataToCanvas(event[yIndex], yRange, plot.chartBottom, plot.chartTop);
@@ -215,11 +215,11 @@ export function GatePlot({ stepId }: { stepId: string }) {
         const x = plot.chartLeft + bin * binWidth;
         const value = xRange[0] + (bin + 0.5) / histogramCounts!.length * (xRange[1] - xRange[0]);
         const barHeight = count / histogramMaximum * (plot.chartBottom - plot.chartTop);
-        context.fillStyle = value < gating.gates.viability ? 'rgba(47, 158, 143, 0.58)' : 'rgba(100, 116, 139, 0.3)';
+        context.fillStyle = value < gating.gates.viability ? 'rgba(0, 117, 222, 0.58)' : 'rgba(97, 93, 89, 0.3)';
         context.fillRect(x + 0.5, plot.chartBottom - barHeight, Math.max(1, binWidth - 1), barHeight);
       });
       const thresholdX = dataToCanvas(gating.gates.viability, xRange, plot.chartLeft, plot.chartRight);
-      context.strokeStyle = TEAL;
+      context.strokeStyle = PRIMARY;
       context.lineWidth = 2;
       context.setLineDash([6, 4]);
       context.beginPath();
@@ -227,7 +227,7 @@ export function GatePlot({ stepId }: { stepId: string }) {
       context.lineTo(thresholdX, plot.chartBottom);
       context.stroke();
       context.setLineDash([]);
-      context.fillStyle = TEAL;
+      context.fillStyle = PRIMARY;
       context.font = '600 10px Geist, Inter, sans-serif';
       context.textAlign = thresholdX > plot.chartRight - 85 ? 'right' : 'left';
       context.fillText('live | dead', thresholdX + (thresholdX > plot.chartRight - 85 ? -6 : 6), plot.chartTop + 7);
@@ -241,14 +241,14 @@ export function GatePlot({ stepId }: { stepId: string }) {
       const crossX = dataToCanvas(thresholdX, xRange, plot.chartLeft, plot.chartRight);
       const crossY = dataToCanvas(thresholdY, yRange, plot.chartBottom, plot.chartTop);
       if (step.id === 'lineage') {
-        context.fillStyle = 'rgba(47, 158, 143, 0.1)';
+        context.fillStyle = 'rgba(0, 117, 222, 0.1)';
         context.fillRect(plot.chartLeft, plot.chartTop, crossX - plot.chartLeft, crossY - plot.chartTop);
       } else {
-        context.fillStyle = 'rgba(47, 158, 143, 0.055)';
+        context.fillStyle = 'rgba(0, 117, 222, 0.055)';
         context.fillRect(crossX, crossY, plot.chartRight - crossX, plot.chartBottom - crossY);
       }
       drawPoints(context, plot, events, indexes[step.x], indexes[yField], xRange, yRange);
-      context.strokeStyle = TEAL;
+      context.strokeStyle = PRIMARY;
       context.lineWidth = 1.8;
       context.setLineDash([6, 4]);
       context.beginPath();
@@ -258,7 +258,7 @@ export function GatePlot({ stepId }: { stepId: string }) {
       context.lineTo(plot.chartRight, crossY);
       context.stroke();
       context.setLineDash([]);
-      context.fillStyle = '#334155';
+      context.fillStyle = '#31302e';
       context.font = '600 10px Geist, Inter, sans-serif';
       if (step.id === 'lineage') {
         context.textAlign = 'left';
@@ -279,8 +279,8 @@ export function GatePlot({ stepId }: { stepId: string }) {
     }
 
     drawPoints(context, plot, events, indexes[step.x], indexes[yField], xRange, yRange);
-    context.strokeStyle = TEAL;
-    context.fillStyle = 'rgba(47, 158, 143, 0.09)';
+    context.strokeStyle = PRIMARY;
+    context.fillStyle = 'rgba(0, 117, 222, 0.09)';
     context.lineWidth = 1.8;
     context.setLineDash([6, 4]);
 
@@ -292,7 +292,7 @@ export function GatePlot({ stepId }: { stepId: string }) {
       context.fillRect(left, top, right - left, bottom - top);
       context.strokeRect(left, top, right - left, bottom - top);
       context.setLineDash([]);
-      context.fillStyle = TEAL;
+      context.fillStyle = PRIMARY;
       [[left, top], [right, top], [left, bottom], [right, bottom]].forEach(([x, y]) => context.fillRect(x - 4, y - 4, 8, 8));
     } else {
       const lo = gating.gates.singletRatio.lo;
@@ -472,14 +472,14 @@ export function GatePlot({ stepId }: { stepId: string }) {
     <section className="surface-inset overflow-hidden bg-white" data-gate-plot={step.id} aria-label={step.label}>
       <header className="flex flex-col gap-2 border-b border-borderSoft px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="t-eyebrow text-[#2f9e8f]">USER-DEFINED GATE · {events.length.toLocaleString()} EVENTS SHOWN</p>
+          <p className="t-eyebrow text-primary">USER-DEFINED GATE · {events.length.toLocaleString()} EVENTS SHOWN</p>
           <p className="t-body-sm mt-1 font-mono font-semibold tabular-nums text-textPrimary" aria-live="polite">{readout}</p>
         </div>
         <button
           type="button"
           onClick={gating.resetGates}
           disabled={gating.isDefault}
-          className="quiet-action t-meta inline-flex w-fit items-center gap-1.5 rounded-lg px-2 py-1.5 font-semibold text-textTertiary hover:bg-subtle hover:text-[#2f9e8f] disabled:cursor-default disabled:opacity-45"
+          className="quiet-action t-meta inline-flex w-fit items-center gap-1.5 rounded-lg px-2 py-1.5 font-semibold text-textTertiary hover:bg-subtle hover:text-primary disabled:cursor-default disabled:opacity-45"
         >
           <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
           Reset gates
@@ -489,8 +489,8 @@ export function GatePlot({ stepId }: { stepId: string }) {
         <canvas
           ref={canvasRef}
           tabIndex={0}
-          className="block max-w-full touch-none cursor-crosshair focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2f9e8f] focus-visible:ring-inset"
-          aria-label={`${step.label}. Drag the teal gate handles to adjust. Arrow keys nudge the active gate.`}
+          className="block max-w-full touch-none cursor-crosshair focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+          aria-label={`${step.label}. Drag the gate handles to adjust the boundary. Arrow keys nudge the active gate.`}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={stopDragging}
@@ -499,7 +499,7 @@ export function GatePlot({ stepId }: { stepId: string }) {
         />
       </div>
       <p className="t-meta border-t border-borderSoft bg-subtle/45 px-3.5 py-2 text-textTertiary">
-        Drag the teal boundary to set this gate. Downstream populations and the final report update together.
+        Drag the gate boundary to set this gate. Downstream populations and the final report update together.
       </p>
     </section>
   );

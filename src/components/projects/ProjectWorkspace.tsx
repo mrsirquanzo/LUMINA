@@ -102,7 +102,7 @@ export function ProjectWorkspace({ projectId, onOpenWorkbook }: ProjectWorkspace
                 onChange={(event) => setName(event.target.value)}
                 onBlur={commitName}
                 onKeyDown={handleNameKeyDown}
-                className="t-h1 w-full rounded-lg border border-primary/30 bg-white px-2 py-1 text-textPrimary outline-none ring-2 ring-primary/10"
+                className="t-h1 w-full rounded-sm border border-primary/30 bg-white px-2 py-1 text-textPrimary outline-none ring-2 ring-primary/10"
                 aria-label="Project name"
               />
             ) : (

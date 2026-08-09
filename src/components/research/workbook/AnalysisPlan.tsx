@@ -123,7 +123,7 @@ export function AnalysisPlan({ steps, current, total }: AnalysisPlanProps) {
         ref={dialogRef}
         onCancel={(event) => { event.preventDefault(); closeFigure(); }}
         onClick={(event) => { if (event.target === event.currentTarget) closeFigure(); }}
-        className="m-auto w-[min(94vw,1100px)] rounded-[14px] border border-border bg-white p-0 text-textPrimary shadow-card-hover backdrop:bg-slate-950/55"
+        className="m-auto w-[min(94vw,1100px)] rounded-lg border border-border bg-white p-0 text-textPrimary shadow-elevated backdrop:bg-slate-950/55"
         aria-label="Expanded analysis figure"
       >
         {activeFigure && (

@@ -90,7 +90,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, ru
         <main className="space-y-5">
           {status === 'error' && error && (
             <div className="flex items-start gap-3 rounded-xl border border-nogo/25 bg-white px-4 py-3.5" role="alert">
-              <span className="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[9px] bg-nogo-tint text-nogo">
+              <span className="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-md bg-nogo-tint text-nogo">
                 <AlertTriangle className="h-[18px] w-[18px]" aria-hidden="true" />
               </span>
               <div>
@@ -126,7 +126,7 @@ export function DeepResearchRun({ status, runId, traceStore, briefing, error, ru
         </main>
 
         {status === 'error' && (
-          <button type="button" onClick={onBack} className="quiet-action t-meta mt-5 inline-flex items-center gap-2 rounded-[10px] border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary">
+          <button type="button" onClick={onBack} className="quiet-action t-meta mt-5 inline-flex items-center gap-2 rounded-md border border-border bg-white px-3.5 py-2 font-semibold text-textSecondary hover:border-primary/25 hover:text-primary">
             <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
             Start another report
           </button>
