@@ -15,6 +15,22 @@ The Notion document ships application primitives LUMINA actually has - a sidebar
 Notion enforces exactly one structural accent, which matches the discipline LUMINA already claims, where Cohere runs three.
 Notion defines depth as a hairline plus a near-transparent layered shadow, which is the elevation philosophy LUMINA already documents.
 
+## Secondary reference: Figma
+
+The Figma design analysis (`https://getdesign.md/figma/design-md`) was evaluated as a co-primary reference and rejected as one.
+The two systems conflict on every structural axis: Notion sets a warm canvas and explicitly forbids full pages on clinical white, where Figma is built on pure white; Notion's single accent is blue, Figma's is black; Notion carries a four-step gray text ramp, Figma forbids mid-gray text outright; Notion's display type is weight 700, Figma's is 320 to 340, lighter than its own body.
+Adopting both would produce an incoherent system rather than a richer one.
+
+Figma's identity is its full-viewport pastel color-block sections. That is the one element LUMINA categorically cannot take, for the same reason the Notion sticker palette was cut.
+
+Three things are adopted from it, none of which conflict with Notion.
+
+**Monospace tracking.** Figma scopes its mono face to eyebrows and captions only, uppercase, with positive letter-spacing. Notion has no monospace at all, so the Geist Mono carve-out had no reference support. Figma supplies both the values and the confirmation that a narrowly scoped mono label face is a real pattern.
+
+**A fixed weight set.** Figma names its permitted weights and bans intermediates. Adopted as a governance rule.
+
+**Flat structural surfaces.** Figma uses no shadows and lets structure carry depth. This is a second independent source for the flat-by-default card decision below.
+
 ## Precedence note
 
 The canonical `Design Language.md` manual specifies a dark-first system with accent `#6f9bff`, and states that it outranks any external palette.
@@ -95,9 +111,21 @@ Headings move to weight 700 with explicit negative tracking. They currently sit 
 | title | 20px | 600 | 1.40 | -0.125px | Geist |
 | body | 14px | 400 | 1.50 | 0 | Geist |
 | caption | 12px | 400 | 1.43 | 0 | Geist |
-| eyebrow | 11px | 400 | 1.33 | uppercase | Geist Mono |
+| eyebrow | 11px | 400 | 1.33 | +0.54px, uppercase | Geist Mono |
+| caption-label | 12px | 400 | 1.30 | +0.60px, uppercase | Geist Mono |
 | identifier / figure | inherit | 400 | inherit | 0 | Geist Mono |
 | executive read | 16px | 400 | 1.6 | 0 | Newsreader |
+
+The eyebrow and caption-label tracking values come from the Figma reference, not Notion (see secondary reference below).
+
+`caption-label` covers micro labels, table column headers, and metadata keys - short label strings.
+Descriptive caption text that reads as a sentence stays in `caption` at 12px Geist, sentence case.
+Uppercasing a sentence would cost legibility for no gain.
+
+### Permitted weights
+
+Only 400, 500, 600, and 700. Intermediate weights are not used anywhere.
+This is a governance rule adopted from the Figma reference: a fixed weight set is what prevents weight drift across 59 component files, which is how the current 600-where-the-system-says-700 inconsistency arose.
 
 Body stays at 14px rather than Notion's 15px.
 LUMINA is an instrument with dense list surfaces - watchlist rows, feed rows, evidence tables - where a marketing site's reading rhythm would cost visible rows.
@@ -134,7 +162,7 @@ Elevation flips from "every card casts a shadow" to "a hairline is the default, 
 
 | Level | Treatment | Applies to |
 |---|---|---|
-| 0 flat | 1px `#e6e6e6`, no shadow | default cards on the page canvas |
+| 0 flat | 1px `#e6e6e6`, no shadow | default cards on the page canvas (Notion and Figma agree here) |
 | 1 soft | four-stop near-transparent stack | the research composer, floating panels, focused inputs |
 | 2 elevated | five-stop stack ending near `rgba(0,0,0,0.05) 0 23px 52px` | modals, popovers, the search palette |
 
