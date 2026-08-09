@@ -244,9 +244,10 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 />
 
-                {/* Newsreader wordmark, ink - the "published finding" voice */}
+                {/* Wordmark in Geist. The serif is no longer a display face -
+                    it survives only as .t-exec, the executive read. */}
                 <h1
-                  className="font-display text-7xl font-semibold tracking-tight select-none"
+                  className="text-7xl font-bold tracking-tight select-none"
                   style={{ color: INK, letterSpacing: '-0.02em' }}
                 >
                   LUMINA
@@ -310,10 +311,10 @@ export const LandingAnimation: React.FC<LandingAnimationProps> = ({
           </div>
         </div>
 
-        {/* Tagline - Newsreader italic, editorial voice */}
+        {/* Tagline in Geist. Not conclusion prose, so not the serif role. */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 whitespace-nowrap">
           <motion.p
-            className="font-display italic text-xl tracking-wide"
+            className="text-xl tracking-wide"
             style={{ color: '#31302e' }}
             initial={{ opacity: 0, y: 16 }}
             animate={{

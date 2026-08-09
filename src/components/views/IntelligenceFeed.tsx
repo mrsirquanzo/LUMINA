@@ -1637,9 +1637,9 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
       ) : null}
 
       <main className="space-y-6 px-6 py-8">
-        <section aria-labelledby="sonny-read-heading" className="surface-card relative overflow-hidden border-primary/15 bg-primary/[0.025] p-5">
+        <section aria-labelledby="sonny-read-heading" className="surface-card relative overflow-hidden p-5">
           <div className="flex items-start gap-4">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-primary/15 bg-white text-primary shadow-card">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-primary/15 bg-primaryTint text-primary">
               <Sparkles className="w-4 h-4 text-primary" />
             </div>
             <div className="min-w-0 flex-1">
@@ -1650,7 +1650,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                 </div>
                 <span className="t-meta font-mono text-textTertiary">{selectedSubscriptionLabel} / {feedItems.length} sources</span>
               </div>
-              <p className="t-lead mt-3 max-w-[82ch] font-display text-textSecondary line-clamp-5">
+              <p className="t-exec mt-3 max-w-[82ch] text-textSecondary line-clamp-5">
                 {automaticSonnyRead}
               </p>
               {digestError && !selectedDemoPack ? (
@@ -1786,7 +1786,7 @@ export default function IntelligenceFeed({ initialTarget }: IntelligenceFeedProp
                           <span className="t-eyebrow mb-0.5 block text-textTertiary">
                             {"Sonny's read"}
                           </span>
-                          <p className="t-body m-0 max-w-[76ch] font-display text-textSecondary line-clamp-2">
+                          <p className="t-body m-0 max-w-[76ch] text-textSecondary line-clamp-2">
                             {sonnysRead}
                           </p>
                         </div>

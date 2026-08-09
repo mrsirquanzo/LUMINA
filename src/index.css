@@ -665,13 +665,6 @@ body::after {
     font-family: 'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   }
 
-  .t-meta.font-display,
-  .t-body-sm.font-display,
-  .t-body.font-display,
-  .t-lead.font-display {
-    font-family: 'Newsreader', Georgia, serif;
-  }
-
   .focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black;
     @apply focus:ring-primary focus:ring-opacity-50;

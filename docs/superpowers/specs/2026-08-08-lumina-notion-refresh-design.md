@@ -221,8 +221,20 @@ The concentrations are `#E6EBF2` at 14 occurrences, `#FFFFFF` at 11, `#1D4ED8` a
 Also replaces the arbitrary radius values listed above.
 
 **PR 3 - surface pass.**
-Density, hierarchy, and spacing on the five main views: the research home, the intelligence feed, the watchlist, the project workspace, and the workbook run.
+Density, hierarchy, and spacing across the main views.
 This is where heading weight, row rhythm, and the flat-by-default card rule are actually judged on screen.
+
+The serif audit resolved to three verdicts rather than one:
+
+- **Conclusion prose keeps the serif**, via `.t-exec`. That is the executive read in `ResearchDossier.tsx` and the "Sonny's read" digest in `IntelligenceFeed.tsx`. Both are considered findings the reader stops and reads. The role is defined by what the text is, not by which component it lives in.
+- **Headings, wordmarks and taglines move to Geist.** The dossier section title, the `LandingAnimation` wordmark, and its tagline.
+- **A truncated row teaser moves to Geist body.** The two-line "Sonny's read" snippet inside a feed row is dense list content, not a published finding, and setting it in serif made a scannable row read as prose.
+
+The `.t-meta.font-display` compound rule is deleted. No component references `font-display` or `font-serif` any more.
+
+The feed digest card also lost its accent wash (`bg-primary/[0.025]`, `border-primary/15`).
+A full card painted in the accent is a structural use of a colour the reference reserves for actions.
+It is now a white card on the warm canvas, with hierarchy carried by the serif, the eyebrow and the icon.
 
 ## Migration hazards
 
