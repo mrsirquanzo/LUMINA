@@ -3,19 +3,9 @@ import { FileText } from 'lucide-react';
 export interface DossierItem {
   runId: string;
   target?: string;
-  verdict?: string;
   snippet: string;
   savedAt: number;
   refs?: number;
-}
-
-export function normalizeVerdict(verdict?: string): 'GO' | 'WATCH' | 'NO-GO' | 'UNKNOWN' {
-  if (!verdict) return 'UNKNOWN';
-  const v = verdict.trim().toUpperCase();
-  if (v === 'GO') return 'GO';
-  if (v === 'WATCH') return 'WATCH';
-  if (v === 'NO-GO' || v === 'NOGO' || v === 'NO GO') return 'NO-GO';
-  return 'UNKNOWN';
 }
 
 export function formatRelativeDate(ts: number): string {
