@@ -62,7 +62,7 @@ export default function SearchModal({ open, onClose, onSearch }: SearchModalProp
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ask Sonny anything about your target..."
-              className="flex-1 bg-surface border border-border rounded-lg px-4 py-3 text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="flex-1 bg-surface border border-border rounded-sm px-4 py-3 text-textPrimary placeholder:text-textTertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             <button
               type="button"

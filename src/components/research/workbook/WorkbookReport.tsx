@@ -174,14 +174,14 @@ export function WorkbookReport({
         <section className="surface-card overflow-hidden" data-flow-gate-report aria-label="Current flow gate results">
           <header className="flex flex-col gap-3 border-b border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
-              <p className="t-eyebrow text-[#2f9e8f]">CURRENT USER GATES</p>
+              <p className="t-eyebrow text-primary">CURRENT USER GATES</p>
               <h3 className="t-h3 mt-1 text-textPrimary">Live cascade readout</h3>
             </div>
             <button
               type="button"
               onClick={gating.resetGates}
               disabled={gating.isDefault}
-              className="quiet-action t-meta inline-flex w-fit items-center gap-2 rounded-[10px] border border-border bg-white px-3 py-2 font-semibold text-textSecondary hover:border-[#2f9e8f]/40 hover:text-[#2f9e8f] disabled:cursor-default disabled:opacity-45"
+              className="quiet-action t-meta inline-flex w-fit items-center gap-2 rounded-md border border-border bg-white px-3 py-2 font-semibold text-textSecondary hover:border-primary/40 hover:text-primary disabled:cursor-default disabled:opacity-45"
             >
               <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
               Reset gates
@@ -213,7 +213,7 @@ export function WorkbookReport({
                   <span className="t-meta font-mono font-semibold tabular-nums text-textPrimary">{Number(value).toFixed(1)}%</span>
                 </div>
                 <div className="h-1.5 overflow-hidden rounded-full bg-slate-200">
-                  <div className="h-full rounded-full bg-[#2f9e8f]" style={{ width: `${Math.max(0, Math.min(100, Number(value)))}%` }} />
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${Math.max(0, Math.min(100, Number(value)))}%` }} />
                 </div>
               </div>
             ))}
@@ -402,7 +402,7 @@ export function WorkbookReport({
           closeFigure();
         }}
         onClick={(event) => { if (event.target === event.currentTarget) closeFigure(); }}
-        className="m-auto w-[min(94vw,1100px)] rounded-[14px] border border-border bg-white p-0 text-textPrimary shadow-card-hover backdrop:bg-slate-950/55"
+        className="m-auto w-[min(94vw,1100px)] rounded-lg border border-border bg-white p-0 text-textPrimary shadow-elevated backdrop:bg-slate-950/55"
         aria-label="Expanded analysis figure"
       >
         {activeFigure && (

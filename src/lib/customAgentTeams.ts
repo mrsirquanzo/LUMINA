@@ -191,7 +191,7 @@ export const AGENT_INFO: Record<AgentType, { name: string; icon: string; descrip
     name: 'Market Research',
     icon: '📊',
     description: 'Market size, pricing, competitive landscape',
-    color: 'teal',
+    color: 'primary',
   },
 };
 

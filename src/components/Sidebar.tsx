@@ -155,7 +155,7 @@ function EmojiPicker({
   return createPortal(
     <div
       ref={popoverRef}
-      className="fixed z-[60] flex w-72 flex-col overflow-hidden rounded-xl border border-border bg-white shadow-[0_16px_48px_rgba(15,23,42,.16),0_2px_8px_rgba(15,23,42,.08)]"
+      className="fixed z-[60] flex w-72 flex-col overflow-hidden rounded-xl border border-border bg-white shadow-elevated"
       style={{ left, top, maxHeight: height }}
       role="dialog"
       aria-label={`Choose an icon for ${project.name}`}
@@ -167,7 +167,7 @@ function EmojiPicker({
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search emoji"
           aria-label="Search emoji"
-          className="t-body-sm h-8 w-full rounded-md border border-border bg-subtle px-2.5 text-textPrimary outline-none placeholder:text-textTertiary focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
+          className="t-body-sm h-8 w-full rounded-sm border border-border bg-subtle px-2.5 text-textPrimary outline-none placeholder:text-textTertiary focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
         />
       </div>
       <div className="custom-scrollbar overflow-y-auto p-2.5">
@@ -256,7 +256,7 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 flex w-[248px] flex-shrink-0 flex-col border-r border-border bg-[#FBFBFA] transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-40 flex w-[248px] flex-shrink-0 flex-col border-r border-border bg-surface transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0 ${
         mobileOpen ? 'translate-x-0 shadow-xl md:shadow-none' : '-translate-x-full'
       }`}
       aria-label="Main navigation"
@@ -275,7 +275,7 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
               type="button"
               onClick={() => id === 'feed' && onOpenFeedForTarget ? onOpenFeedForTarget() : onViewChange(id)}
               className={`tactile relative flex min-h-[30px] w-full items-center gap-2 rounded-md px-2.5 py-1 text-left transition-colors ${
-                isActive ? 'bg-primary/[0.07] text-primary' : 'text-textSecondary hover:bg-[rgba(15,23,42,.05)] hover:text-textPrimary'
+                isActive ? 'bg-primary/[0.07] text-primary' : 'text-textSecondary hover:bg-[rgba(0,0,0,.05)] hover:text-textPrimary'
               }`}
               aria-current={isActive ? 'page' : undefined}
             >
@@ -295,7 +295,7 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
           <button
             type="button"
             onClick={() => setProjectsOpen((open) => !open)}
-            className="group flex min-h-[30px] w-full items-center gap-1 rounded-md px-2 py-1 text-left text-textTertiary transition-colors hover:bg-[rgba(15,23,42,.04)] hover:text-textSecondary"
+            className="group flex min-h-[30px] w-full items-center gap-1 rounded-md px-2 py-1 text-left text-textTertiary transition-colors hover:bg-[rgba(0,0,0,.04)] hover:text-textSecondary"
             aria-expanded={projectsOpen}
           >
             <ChevronRight className={`h-3.5 w-3.5 flex-none transition-transform ${projectsOpen ? 'rotate-90' : ''}`} strokeWidth={1.8} aria-hidden="true" />
@@ -308,7 +308,7 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className={`group/project relative flex min-h-[30px] items-center gap-1 rounded-md px-1.5 transition-colors ${currentView === 'project' && selectedProjectId === project.id ? 'bg-primary/[0.07] text-primary' : 'text-textSecondary hover:bg-[rgba(15,23,42,.05)] hover:text-textPrimary'}`}
+                  className={`group/project relative flex min-h-[30px] items-center gap-1 rounded-md px-1.5 transition-colors ${currentView === 'project' && selectedProjectId === project.id ? 'bg-primary/[0.07] text-primary' : 'text-textSecondary hover:bg-[rgba(0,0,0,.05)] hover:text-textPrimary'}`}
                 >
                   {currentView === 'project' && selectedProjectId === project.id && <span className="absolute inset-y-1 left-0 w-0.5 rounded-r bg-primary" aria-hidden="true" />}
                   <button
@@ -328,7 +328,7 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
                       onChange={(event) => setEditingName(event.target.value)}
                       onBlur={commitRename}
                       onKeyDown={handleRenameKeyDown}
-                      className="t-body-sm h-7 min-w-0 flex-1 rounded border border-primary/30 bg-white px-1.5 text-textPrimary outline-none ring-2 ring-primary/10"
+                      className="t-body-sm h-7 min-w-0 flex-1 rounded-sm border border-primary/30 bg-white px-1.5 text-textPrimary outline-none ring-2 ring-primary/10"
                       aria-label="Project name"
                     />
                   ) : (
@@ -357,7 +357,7 @@ const Sidebar = memo(function Sidebar({ currentView, onViewChange, onOpenFeedFor
               <button
                 type="button"
                 onClick={addProject}
-                className="tactile flex min-h-[30px] w-full items-center gap-2 rounded-md px-2.5 py-1 text-textTertiary transition-colors hover:bg-[rgba(15,23,42,.05)] hover:text-textPrimary"
+                className="tactile flex min-h-[30px] w-full items-center gap-2 rounded-md px-2.5 py-1 text-textTertiary transition-colors hover:bg-[rgba(0,0,0,.05)] hover:text-textPrimary"
               >
                 <Plus className="h-4 w-4 flex-none" strokeWidth={1.75} aria-hidden="true" />
                 <span className="t-body-sm font-medium">New project</span>

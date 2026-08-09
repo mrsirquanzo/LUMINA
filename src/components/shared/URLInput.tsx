@@ -48,7 +48,7 @@ export default function URLInput({ onURLProcessed }: URLInputProps) {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="Enter website URL to analyze (e.g., https://example.com)"
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           disabled={isLoading}
           required
         />

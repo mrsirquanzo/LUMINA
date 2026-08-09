@@ -165,7 +165,7 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
       {/* Executive read - leads the report; the framing/bottom-line live here,
           so no separate thesis line (it duplicated the framing). Full width. */}
       {briefing.executiveRead && (
-        <div className="t-lead mt-5 font-display text-textSecondary">
+        <div className="t-exec mt-5 text-textSecondary">
           <CitedMarkdown content={briefing.executiveRead} />
         </div>
       )}
@@ -197,7 +197,7 @@ export default function ResearchDossier({ briefing }: Props): ReactElement {
                 {/* Section header: clear title + RAG status pill */}
                 <div className="flex items-baseline gap-3 flex-wrap">
                   {section.title && (
-                    <h3 className="font-display text-lg font-medium text-textPrimary">
+                    <h3 className="t-h3 text-textPrimary">
                       {section.title}
                     </h3>
                   )}

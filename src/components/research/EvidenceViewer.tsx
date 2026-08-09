@@ -130,13 +130,13 @@ export function EvidenceViewer({ citationId, references = [], onClose }: Evidenc
               href={sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="quiet-action t-body-sm inline-flex min-h-10 items-center gap-2 rounded-[10px] bg-primary px-4 py-2 font-semibold text-white hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2"
+              className="quiet-action t-body-sm inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 py-2 font-semibold text-white hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2"
             >
               Open source
               <ExternalLink className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
             </a>
           ) : (
-            <p className="t-body-sm rounded-[10px] border border-border bg-subtle px-4 py-3 text-textSecondary">
+            <p className="t-body-sm rounded-md border border-border bg-subtle px-4 py-3 text-textSecondary">
               A live source link was not included with this reference.
             </p>
           )}
@@ -153,7 +153,7 @@ export function EvidenceViewer({ citationId, references = [], onClose }: Evidenc
               {snippet && (
                 <section aria-labelledby="evidence-snippet-heading">
                   <h3 id="evidence-snippet-heading" className="t-eyebrow text-textTertiary">Cited text</h3>
-                  <blockquote className="t-body-sm mt-2 rounded-[10px] bg-subtle px-4 py-3.5 text-textSecondary">
+                  <blockquote className="t-body-sm mt-2 rounded-md bg-subtle px-4 py-3.5 text-textSecondary">
                     {snippet}
                   </blockquote>
                 </section>
@@ -167,7 +167,7 @@ export function EvidenceViewer({ citationId, references = [], onClose }: Evidenc
                       {rawRows.length} {rawRows.length === 1 ? 'field' : 'fields'}
                     </span>
                   </div>
-                  <div className="mt-2 overflow-hidden rounded-[10px] border border-border">
+                  <div className="mt-2 overflow-hidden rounded-md border border-border">
                     <table className="w-full border-collapse text-left">
                       <tbody className="divide-y divide-borderSoft">
                         {rawRows.map((row, index) => (
@@ -187,7 +187,7 @@ export function EvidenceViewer({ citationId, references = [], onClose }: Evidenc
               )}
             </div>
           ) : (
-            <div className="mt-6 rounded-[10px] border border-border bg-subtle px-4 py-4">
+            <div className="mt-6 rounded-md border border-border bg-subtle px-4 py-4">
               <h3 className="t-body-sm font-semibold text-textPrimary">Reference details unavailable</h3>
               <p className="t-meta mt-1 text-textSecondary">
                 This citation appears in the claim, but its reference metadata was not included with the report.

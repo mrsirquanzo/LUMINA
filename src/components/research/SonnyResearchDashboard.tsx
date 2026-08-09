@@ -52,7 +52,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed, onOpenProject
         <div className="relative mx-auto max-w-[1120px] px-4 pb-20 pt-9 sm:px-8 sm:pt-14 lg:px-10 lg:pb-24 lg:pt-[72px]">
           {/* Welcome */}
           <div className="relative z-[1] mb-7 text-center sm:mb-9">
-            <h1 className="font-serif text-[30px] leading-tight tracking-[-0.02em] text-textPrimary sm:text-[36px]">
+            <h1 className="text-[30px] font-bold leading-tight tracking-[-0.025em] text-textPrimary sm:text-[36px]">
               Welcome to Sonny
             </h1>
             <p className="mt-2 text-[15px] text-textSecondary sm:text-base">
@@ -83,7 +83,7 @@ export function SonnyResearchDashboard({ initialQuery, onOpenFeed, onOpenProject
           </div>
 
           {/* Latest signals block */}
-          <div className="relative z-[1] rounded-2xl border border-border bg-white/80 p-5 shadow-[0_8px_28px_rgba(15,23,42,0.04)] sm:p-7">
+          <div className="relative z-[1] rounded-2xl border border-border bg-white/80 p-5 sm:p-7">
             <LatestSignals onOpenFeed={onOpenFeed ?? (() => {})} />
           </div>
         </div>

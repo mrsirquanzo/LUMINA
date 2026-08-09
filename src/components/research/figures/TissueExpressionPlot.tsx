@@ -27,10 +27,10 @@ const DOT_RADIUS = 3;
 // Zero and sub-floor values would run to negative infinity on a log axis.
 const FLOOR_TPM = 0.1;
 
-const INK = '#0F172A';
-const MUTED = '#5F6D80';
-const RULE = '#E6EBF2';
-const ACCENT = 'rgb(29 78 216)';
+const INK = 'rgba(0,0,0,0.95)';
+const MUTED = '#615d59';
+const RULE = '#e6e6e6';
+const ACCENT = 'rgb(0 117 222)';
 
 function formatValue(value: number): string {
   if (value >= 100) return Math.round(value).toLocaleString('en-US');
