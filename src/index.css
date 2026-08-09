@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 :root {
-  /* Primary color - trust blue (persona accent unified) */
-  --color-primary: 29 78 216;
+  /* Single structural accent. Notion #0075de. The only colour that paints an action. */
+  --color-primary: 0 117 222;
+  --color-primary-pressed: 0 91 171;
 
   /* One application-wide type scale. */
   --type-eyebrow: 11px;
@@ -25,14 +26,28 @@
   --sp-6: 24px;
   --sp-7: 28px;
   --sp-8: 32px;
-  --radius-card: 14px;
-  --radius-inset: 10px;
-  --border-card: rgba(15, 23, 42, 0.08);
-  --border-card-emphasis: rgba(15, 23, 42, 0.16);
-  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.035), 0 5px 16px rgba(15, 23, 42, 0.04);
-  --shadow-card-hover: 0 2px 4px rgba(15, 23, 42, 0.04), 0 12px 28px rgba(15, 23, 42, 0.075);
-  --shadow-command: 0 2px 6px rgba(15, 23, 42, 0.04), 0 22px 60px rgba(30, 41, 59, 0.10);
-  --focus-ring: 0 0 0 2px #F6F8FB, 0 0 0 4px rgb(var(--color-primary) / 0.78);
+  --radius-card: 12px;
+  --radius-inset: 8px;
+  --border-card: #e6e6e6;
+  --border-card-emphasis: #d6d6d6;
+
+  /* Elevation. Level 0 is a hairline and no shadow - that is the default for a
+     static card. A shadow means the element genuinely floats. */
+  --shadow-level-1:
+    0 0.175px 1.041px rgba(0, 0, 0, 0.01),
+    0 0.8px 2.925px rgba(0, 0, 0, 0.02),
+    0 2.025px 7.847px rgba(0, 0, 0, 0.027),
+    0 4px 18px rgba(0, 0, 0, 0.04);
+  --shadow-level-2:
+    0 0.5px 2px rgba(0, 0, 0, 0.012),
+    0 2px 6px rgba(0, 0, 0, 0.02),
+    0 5px 14px rgba(0, 0, 0, 0.03),
+    0 12px 28px rgba(0, 0, 0, 0.04),
+    0 23px 52px rgba(0, 0, 0, 0.05);
+  --shadow-card: var(--shadow-level-1);
+  --shadow-card-hover: var(--shadow-level-1);
+  --shadow-command: var(--shadow-level-1);
+  --focus-ring: 0 0 0 2px #f6f5f4, 0 0 0 4px rgb(var(--color-primary) / 0.78);
   --motion-fast: 160ms;
   --motion-standard: 220ms;
   --ease-quiet: cubic-bezier(0.2, 0.75, 0.25, 1);
@@ -51,17 +66,18 @@ body {
   font-size: var(--type-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #F6F8FB;
-  color: #0F172A;
+  background-color: #f6f5f4;
+  color: rgba(0, 0, 0, 0.95);
   min-height: 100vh;
 }
 
 @layer components {
+  /* Level 0. A hairline is the default; static cards do not cast. Anything that
+     genuinely floats adds `shadow-elevated` explicitly. */
   .surface-card {
     border: 1px solid var(--border-card);
     border-radius: var(--radius-card);
     background: #FFFFFF;
-    box-shadow: var(--shadow-card);
   }
 
   .surface-card-interactive {
@@ -73,19 +89,19 @@ body {
 
   .surface-card-interactive:hover {
     border-color: rgb(var(--color-primary) / 0.22);
-    box-shadow: var(--shadow-card-hover);
+    box-shadow: var(--shadow-level-1);
     transform: translateY(-2px);
   }
 
   .surface-card-interactive:active {
-    box-shadow: var(--shadow-card);
+    box-shadow: none;
     transform: translateY(0);
   }
 
   .surface-inset {
     border: 1px solid var(--border-card);
     border-radius: var(--radius-inset);
-    background: #F8FAFC;
+    background: #efedeb;
   }
 
   .icon-action {
@@ -94,7 +110,7 @@ body {
     justify-content: center;
     border: 1px solid var(--border-card);
     border-radius: var(--radius-inset);
-    color: #64748B;
+    color: #615d59;
     background: #FFFFFF;
     transition:
       color var(--motion-fast) ease,
@@ -114,17 +130,19 @@ body {
   }
 
   .icon-action:disabled {
-    color: #94A3B8;
-    background: #F8FAFC;
+    color: #615d59;
+    background: #efedeb;
     cursor: not-allowed;
     opacity: 0.72;
   }
 
+  /* Documented radius exception: the composer is the primary affordance of the
+     product, not an ordinary form field. Every other input sits at 4px. */
   .composer-shell {
-    border: 1px solid rgba(15, 23, 42, 0.10);
+    border: 1px solid var(--border-card);
     border-radius: 26px;
     background: #FFFFFF;
-    box-shadow: var(--shadow-command);
+    box-shadow: var(--shadow-level-1);
     transition:
       border-color var(--motion-standard) var(--ease-quiet),
       box-shadow var(--motion-standard) var(--ease-quiet);
@@ -132,7 +150,7 @@ body {
 
   .composer-shell:focus-within {
     border-color: rgb(var(--color-primary) / 0.36);
-    box-shadow: var(--shadow-command), 0 0 0 4px rgb(var(--color-primary) / 0.06);
+    box-shadow: var(--shadow-level-1), 0 0 0 4px rgb(var(--color-primary) / 0.06);
   }
 
   .composer-send {
@@ -142,9 +160,9 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
-    background: #0F172A;
+    background: rgba(0, 0, 0, 0.95);
     color: #FFFFFF;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+    box-shadow: var(--shadow-level-1);
     transition:
       background-color var(--motion-fast) ease,
       box-shadow var(--motion-fast) ease,
@@ -152,8 +170,8 @@ body {
   }
 
   .composer-send:hover:not(:disabled) {
-    background: #1E293B;
-    box-shadow: 0 7px 18px rgba(15, 23, 42, 0.22);
+    background: rgba(0, 0, 0, 0.80);
+    box-shadow: var(--shadow-level-2);
   }
 
   .composer-send:active:not(:disabled) {
@@ -161,7 +179,7 @@ body {
   }
 
   .composer-send:disabled {
-    background: #CBD5E1;
+    background: #cfcbc7;
     box-shadow: none;
     cursor: not-allowed;
   }
@@ -169,7 +187,7 @@ body {
   .command-center-input {
     font-family: 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: clamp(17px, 1.7vw, 20px);
-    font-weight: 450;
+    font-weight: 400; /* was 450 - intermediate weights are banned by the fixed weight set */
     line-height: 1.55;
     letter-spacing: -0.012em;
   }
@@ -188,11 +206,11 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    border: 1px solid rgba(15, 23, 42, 0.9);
-    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.95);
+    border-radius: 8px;
     padding: 10px 16px;
-    background: #0F172A;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+    background: rgba(0, 0, 0, 0.95);
+    box-shadow: var(--shadow-level-1);
     color: #FFFFFF;
     font-family: 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: 13px;
@@ -205,8 +223,8 @@ body {
   }
 
   .premium-cta:hover:not(:disabled) {
-    background: #1E293B;
-    box-shadow: 0 7px 18px rgba(15, 23, 42, 0.2);
+    background: rgba(0, 0, 0, 0.80);
+    box-shadow: var(--shadow-level-2);
   }
 
   .premium-cta:active:not(:disabled) {
@@ -216,12 +234,10 @@ body {
   .hero-panel {
     height: 168px;
     overflow: hidden;
-    border: 1px solid rgba(59, 130, 246, 0.10);
+    border: 1px solid var(--border-card);
     border-radius: 12px;
     padding: 13px;
-    background:
-      radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.8), transparent 42%),
-      linear-gradient(135deg, rgba(219, 234, 254, 0.52), rgba(209, 250, 229, 0.40));
+    background: #efedeb;
   }
 
   .capability-grid {
@@ -235,11 +251,10 @@ body {
     min-width: 0;
     flex-direction: column;
     gap: 18px;
-    border: 1px solid rgba(15, 23, 42, 0.09);
+    border: 1px solid var(--border-card);
     border-radius: 16px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 10px 28px rgba(30, 41, 59, 0.045);
+    background: #FFFFFF;
     transition:
       border-color var(--motion-standard) var(--ease-quiet),
       box-shadow var(--motion-standard) var(--ease-quiet),
@@ -252,7 +267,7 @@ body {
 
   .premium-capability-card-available:hover {
     border-color: rgb(var(--color-primary) / 0.22);
-    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.045), 0 18px 40px rgba(30, 41, 59, 0.09);
+    box-shadow: var(--shadow-level-1);
     transform: translateY(-3px);
   }
 
@@ -268,8 +283,8 @@ body {
     align-items: center;
     justify-content: center;
     border: 1px solid rgb(var(--color-primary) / 0.10);
-    border-radius: 10px;
-    background: rgb(var(--color-primary) / 0.08);
+    border-radius: 8px;
+    background: #ebf4fc;
     color: rgb(var(--color-primary));
   }
 
@@ -288,11 +303,11 @@ body {
     align-items: center;
     justify-content: center;
     align-self: flex-start;
-    border: 1px solid rgba(100, 116, 139, 0.14);
-    border-radius: 10px;
+    border: 1px solid var(--border-card);
+    border-radius: 8px;
     padding: 10px 14px;
-    background: #F1F5F9;
-    color: #64748B;
+    background: #efedeb;
+    color: #615d59;
     font-family: 'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
     font-size: 11px;
     font-weight: 600;
@@ -308,14 +323,13 @@ body {
     border: 1px solid var(--border-card);
     border-radius: var(--radius-card);
     background: #FFFFFF;
-    box-shadow: var(--shadow-card);
   }
 
   .capability-media {
     overflow: hidden;
     border: 1px solid var(--border-card);
     border-radius: var(--radius-inset);
-    background: #F8FAFC;
+    background: #efedeb;
   }
 
   .quiet-action {
@@ -332,10 +346,10 @@ body {
   }
 }
 
+/* Flat warm canvas. Notion: the page ground is one warm paper tone, never a
+   gradient - figure/ground comes from white cards sitting on it. */
 .sonny-home-canvas {
-  background:
-    radial-gradient(circle at 52% -10%, rgba(255, 255, 255, 0.88), transparent 34%),
-    linear-gradient(180deg, #F7F8FA 0%, #EEF1F6 100%);
+  background: #f6f5f4;
 }
 
 :where(a[href], button, input, textarea, select, summary, [role="button"]):focus-visible {
@@ -370,18 +384,18 @@ body::after {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.15);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 3px;
   transition: background 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(15, 23, 42, 0.28);
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(15, 23, 42, 0.15) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
 }
 
 /* Modal Animation Keyframes */
@@ -481,7 +495,7 @@ body::after {
 
 .agent-output code {
   color: inherit;
-  background-color: rgba(15, 23, 42, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-size: 0.875em;
@@ -489,7 +503,7 @@ body::after {
 
 .agent-output pre {
   color: inherit;
-  background-color: rgba(15, 23, 42, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   padding: 1rem;
   border-radius: 0.5rem;
   overflow-x: auto;
@@ -570,6 +584,17 @@ body::after {
     line-height: 1.45;
   }
 
+  /* Short label strings only: table column headers, metadata keys, micro labels.
+     Descriptive caption text that reads as a sentence stays in .t-meta. */
+  .t-caption-label {
+    font-family: 'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    font-size: var(--type-meta);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
   .t-body-sm {
     font-family: 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: var(--type-body-sm);
@@ -588,28 +613,41 @@ body::after {
     line-height: 1.55;
   }
 
+  /* Headings are Geist at Notion's heavy-and-tight display voice. The serif is
+     no longer a heading face - it survives only as .t-exec below. */
   .t-h3 {
-    font-family: 'Newsreader', Georgia, serif;
+    font-family: 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: var(--type-h3);
-    font-weight: 500;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.00625em; /* Notion title: -0.125px at 20px */
   }
 
   .t-h2 {
-    font-family: 'Newsreader', Georgia, serif;
+    font-family: 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: var(--type-h2);
-    font-weight: 500;
-    line-height: 1.18;
-    letter-spacing: -0.015em;
+    font-weight: 700;
+    line-height: 1.23;
+    letter-spacing: -0.024em; /* Notion heading-2: -0.625px at 26px */
   }
 
   .t-h1 {
-    font-family: 'Newsreader', Georgia, serif;
+    font-family: 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: var(--type-h1);
-    font-weight: 500;
-    line-height: 1.12;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em; /* Notion heading-1 ratio: -1px at 40px */
+  }
+
+  /* The one surviving serif role: the executive read. This is the "published
+     finding" voice - a considered human conclusion, not a data readout. It must
+     never be used on a label, a metric, a button, or a table cell. */
+  .t-exec {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: var(--type-lead);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0;
   }
 
   .emoji-glyph {
@@ -673,8 +711,8 @@ body::after {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 2px 8px rgba(15,23,42,.035),
-    inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(226,232,240,.35);
+  box-shadow: 0 1px 2px rgba(0, 0, 0,.04), 0 2px 8px rgba(0, 0, 0,.035),
+    inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(230,230,230,.35);
 }
 
 .glass-elevated {
@@ -682,8 +720,8 @@ body::after {
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 4px 12px rgba(15,23,42,.06), 0 12px 32px rgba(15,23,42,.05),
-    inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(226,232,240,.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0,.06), 0 12px 32px rgba(0, 0, 0,.05),
+    inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(230,230,230,.4);
 }
 
 /* Utility Classes */
