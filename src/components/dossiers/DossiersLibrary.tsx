@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { useBriefingStore } from '../../lib/research/briefingStore';
-import { DossierCard, normalizeVerdict, type DossierItem } from './DossierCard';
+import { DossierCard, type DossierItem } from './DossierCard';
 import { DossierDrawer } from './DossierDrawer';
-
-type FilterTab = 'all' | 'GO' | 'WATCH' | 'NO-GO';
 
 interface DossiersLibraryProps {
   onOpenSonny?: () => void;
@@ -14,7 +12,6 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
   const briefings = useBriefingStore((s) => s.briefings);
   const savedAt = useBriefingStore((s) => s.savedAt);
 
-  const [filter, setFilter] = useState<FilterTab>('all');
   const [query, setQuery] = useState('');
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
 
@@ -23,41 +20,19 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
     .map(([runId, b]) => ({
       runId,
       target: b.target,
-      verdict: b.recommendation?.verdict,
       snippet: b.executiveRead?.split('\n')[0] ?? '',
       savedAt: savedAt[runId] ?? 0,
       refs: b.references?.length ?? 0,
     }))
     .sort((a, b) => b.savedAt - a.savedAt);
 
-  // Per-verdict counts (real, normalized)
-  const counts = {
-    GO: allItems.filter((i) => normalizeVerdict(i.verdict) === 'GO').length,
-    WATCH: allItems.filter((i) => normalizeVerdict(i.verdict) === 'WATCH').length,
-    'NO-GO': allItems.filter((i) => normalizeVerdict(i.verdict) === 'NO-GO').length,
-  };
-
-  // Apply filter + search
-  const visibleItems = allItems.filter((item) => {
-    const matchesFilter =
-      filter === 'all' || normalizeVerdict(item.verdict) === filter;
-    const matchesQuery =
-      !query ||
-      (item.target ?? '').toLowerCase().includes(query.toLowerCase());
-    return matchesFilter && matchesQuery;
-  });
+  // Search only. Reports are decision support, not a verdict, so there is
+  // nothing to filter a GO/WATCH/NO-GO tab by.
+  const visibleItems = allItems.filter((item) =>
+    !query || (item.target ?? '').toLowerCase().includes(query.toLowerCase()),
+  );
 
   const isStoreEmpty = allItems.length === 0;
-
-  const tabs: { key: FilterTab; label: string }[] = [
-    { key: 'all', label: `All - ${allItems.length}` },
-    { key: 'GO', label: counts.GO > 0 ? `GO - ${counts.GO}` : 'GO' },
-    { key: 'WATCH', label: counts.WATCH > 0 ? `WATCH - ${counts.WATCH}` : 'WATCH' },
-    {
-      key: 'NO-GO',
-      label: counts['NO-GO'] > 0 ? `NO-GO - ${counts['NO-GO']}` : 'NO-GO',
-    },
-  ];
 
   // ---- True-empty state (zero briefings in store) ----
   if (isStoreEmpty) {
@@ -132,31 +107,8 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
         Every completed research run, grounded and re-openable with its evidence.
       </p>
 
-      {/* Filter tabs */}
-      <div className="flex gap-2 mt-5 flex-wrap">
-        {tabs.map((tab) => {
-          const isActive = filter === tab.key;
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => setFilter(tab.key)}
-              className="t-meta cursor-pointer rounded-full px-3 py-1.5 font-semibold"
-              style={{
-                background: isActive ? '#ebf4fc' : '#FFFFFF',
-                border: `1px solid ${isActive ? 'transparent' : '#e6e6e6'}`,
-                color: isActive ? '#0075de' : '#31302e',
-                transition: 'background 0.15s, color 0.15s, border-color 0.15s',
-              }}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
-
       {/* Target search input */}
-      <div className="mt-4">
+      <div className="mt-5">
         <input
           type="text"
           value={query}
@@ -189,11 +141,7 @@ export function DossiersLibrary({ onOpenSonny }: DossiersLibraryProps) {
           // Filtered-to-empty - lighter inline message, distinct from the true-empty composition
           <div className="py-12 text-center">
             <p className="t-body text-textSecondary">
-              {query
-                ? `No reports match "${query}"`
-                : filter !== 'all'
-                  ? `No ${filter} reports`
-                  : 'No reports found'}
+              {query ? `No reports match "${query}"` : 'No reports found'}
             </p>
           </div>
         ) : (
